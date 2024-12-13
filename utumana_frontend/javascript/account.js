@@ -31,7 +31,7 @@ function on_load(){
 						userProvided = json;
 						document.getElementById("bio").value = json.bio;
 						
-						document.getElementById("profile_photo_user").src = json.profile_picture_url;
+						//document.getElementById("profile_photo_user").src = json.profile_picture_url;
 					})
 					.catch((error) => {
 						console.log(error);
@@ -86,11 +86,17 @@ function update_profile_picture(){
  */
 function saveSelectedPhotoOnServerDisk(file) {
 	
+	console.log("INIZIO TEST PALLAS");
+	
 	let formData = new FormData();
-	formData.append("img", file);
+	formData.append("img", file);//content-type=multipart/*
 	
+	let headersOth = new Headers();
+	headersOth.append("Authorization", "Bearer " + localStorage.getItem("token"));
+	headersOth.append("Content-type", "multipart/*");
 	
-	doFetch(prefixUrl + "api/user/store_photo", "POST", headers, formData)
+	doFetch(prefixUrl + "api/user/store_photo", "POST", headersOth, formData)
+	//doFetch(prefixUrl + "api/user/store_photo", "POST", headers, formData)
 	.then(json => {
 		printError(json);
 		console.log(json);
@@ -123,7 +129,7 @@ function saveSelectedPhotoOnServerDisk(file) {
 	popUpToClose.remove();
 	
 	
-	document.getElementById("profile_photo_user").src = userProvided.profilePictureUrl;
+	//document.getElementById("profile_photo_user").src = userProvided.profilePictureUrl;
 	
 }
 

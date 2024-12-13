@@ -244,7 +244,7 @@ public class UserController {
 			throw new TheJBeansException("" + e);
 		}
 		//File destination = new File("/Users/riccardogugolati/LAVORO/People First/CouchSurfing/TheJBeansCouchSurfing/src/main/resources/static/images/" + finalUrl);
-		File destination = new File("/tmp/image/" + finalUrl);
+		File destination = new File("/Users/riccardogugolati/nginx/Utumana/userImages/" + finalUrl);
 		try {
 			
 			System.out.println("SONO DENTRO AL TRY");
@@ -272,7 +272,7 @@ public class UserController {
 		
 		Map<String, String> map = new HashMap<String, String>();
 		String res = null;
-		res = "file:///tmp/image/" + finalUrl;
+		res = "/userImages/" + finalUrl;
 		map.put("url", res);
 	
 		return map;
