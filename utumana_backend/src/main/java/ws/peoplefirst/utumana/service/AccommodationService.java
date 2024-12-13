@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import ws.peoplefirst.utumana.dto.AccommodationDTO;
+import ws.peoplefirst.utumana.dto.BookingDTO;
 import ws.peoplefirst.utumana.dto.PriceDTO;
 import ws.peoplefirst.utumana.exception.ForbiddenException;
 import ws.peoplefirst.utumana.exception.IdNotFoundException;
@@ -646,5 +647,23 @@ public class AccommodationService {
 		}
 		
 		return returnedList;
+	}
+	
+	public Accommodation deleteAccommodation(Long accommodationId) {
+		Accommodation toDelete = findById(accommodationId);
+		
+		if(toDelete == null) {
+			throw new IdNotFoundException("Accommodation ID does not exist");
+		}
+		
+		List<BookingDTO> futureBookings = bookingRepository.findByStatusACCEPTEDOrDOINGAndAccommodationId(accommodationId);
+		
+		if(futureBookings.isEmpty()) {
+			toDelete.setHidingTimestamp(LocalDateTime.now());
+			accommodationRepository.save(toDelete);
+			return toDelete;		
+		} else {
+			throw new ForbiddenException("could not delete an accommodation with ongoing or future booking");
+		}
 	}
 }

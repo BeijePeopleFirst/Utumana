@@ -67,7 +67,13 @@ public interface BookingRepository extends JpaRepository<Booking,Long>{
             "(b.status = 'ACCEPTED' OR b.status = 'DOING') AND " +
             "b.checkIn <= :endDate AND " +
             "b.checkOut >= :startDate")
-     List<Booking> findAcceptedBookings(@Param("accommodationId") Long accommodationId, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+    public List<Booking> findAcceptedBookings(@Param("accommodationId") Long accommodationId, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
 	public abstract List<Booking> findByAccommodationAndUser(Accommodation acc, User user);
+	
+    @Query("SELECT new ws.peoplefirst.utumana.dto.BookingDTO(b.id, b.accommodation.mainPhotoUrl,b.accommodation.title,b.price,b.status,b.accommodation.id,b.checkIn,b.checkOut,b.review.id)  FROM Booking b WHERE " +
+            "b.accommodation.id = :accommodationId AND " +
+            "(b.status = 'ACCEPTED' OR b.status = 'DOING') AND b.isUnavailability IS false")
+    public List<BookingDTO> findByStatusACCEPTEDOrDOINGAndAccommodationId(@Param("accommodationId") Long accommodationId);
+
 }

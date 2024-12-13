@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ws.peoplefirst.utumana.dto.AccommodationDTO;
+import ws.peoplefirst.utumana.dto.BookingDTO;
 import ws.peoplefirst.utumana.dto.PriceDTO;
 import ws.peoplefirst.utumana.dto.UnavailabilityDTO;
 import ws.peoplefirst.utumana.dto.UserDTO;
@@ -244,45 +245,59 @@ public class AccommodationController {
 		return accommodationService.setAccommodationInfo(newOne);
 	}
 
+//	@PreAuthorize("hasAuthority('USER')")
+//	@DeleteMapping(value="/delete_accommodation/{id}")
+//	public Accommodation deleteAccommodationAPI(@PathVariable Long id, Authentication auth) {		
+//		Accommodation toDelete = accommodationService.findById(id);
+//
+//		if(toDelete == null) {
+//			logger.error("Accommodation ID does not exist");
+//			throw new IdNotFoundException("Accommodation ID does not exist");
+//		}
+//		else {
+//			
+//			
+//			if(accommodationService.hasNoBookings(toDelete)) {
+//				
+////				if(!currentUsr.equals(toDelete.getOwnerId()) && !user.getIsAdmin()) throw new ForbiddenException("Privileges requirements not satisfied: abort...");
+////				else {
+////					accommodationService.delete(toDelete);
+////					return toDelete;
+////				}
+//				
+//				//accommodationService.delete(toDelete);
+//				
+//				return toDelete;
+//			}
+//			else {
+//				AuthorizationUtility.checkIsAdminOrMe(auth, toDelete.getOwnerId());
+////				if(!currentUsr.equals(toDelete.getOwnerId()) && !user.getIsAdmin()) throw new ForbiddenException("Privileges requirements not satisfied: abort...");
+////				else {
+////					toDelete.setHidingTimestamp(LocalDateTime.now());
+////					accommodationService.save(toDelete);
+////					return toDelete;
+////				}
+//				
+//				toDelete.setHidingTimestamp(LocalDateTime.now());
+//				//accommodationService.save(toDelete);
+//				return toDelete;
+//			}
+//			
+//		}
+//	}
+	
 	@PreAuthorize("hasAuthority('USER')")
 	@DeleteMapping(value="/delete_accommodation/{id}")
-	public Accommodation deleteAccommodationAPI(@PathVariable Long id, Authentication auth) {		
+	public Accommodation deleteAccommodation(@PathVariable Long id, Authentication auth) {		
 		Accommodation toDelete = accommodationService.findById(id);
-
+		
 		if(toDelete == null) {
-			logger.error("Accommodation ID does not exist");
 			throw new IdNotFoundException("Accommodation ID does not exist");
 		}
-		else {
-			
-			
-			if(accommodationService.hasNoBookings(toDelete)) {
-				
-//				if(!currentUsr.equals(toDelete.getOwnerId()) && !user.getIsAdmin()) throw new ForbiddenException("Privileges requirements not satisfied: abort...");
-//				else {
-//					accommodationService.delete(toDelete);
-//					return toDelete;
-//				}
-				
-				//accommodationService.delete(toDelete);
-				
-				return toDelete;
-			}
-			else {
-				AuthorizationUtility.checkIsAdminOrMe(auth, toDelete.getOwnerId());
-//				if(!currentUsr.equals(toDelete.getOwnerId()) && !user.getIsAdmin()) throw new ForbiddenException("Privileges requirements not satisfied: abort...");
-//				else {
-//					toDelete.setHidingTimestamp(LocalDateTime.now());
-//					accommodationService.save(toDelete);
-//					return toDelete;
-//				}
-				
-				toDelete.setHidingTimestamp(LocalDateTime.now());
-				//accommodationService.save(toDelete);
-				return toDelete;
-			}
-			
-		}
+		
+		AuthorizationUtility.checkIsAdminOrMe(auth, toDelete.getOwnerId());
+		
+		return accommodationService.deleteAccommodation(id);
 	}
 	
 	@PreAuthorize("hasAuthority('USER')")

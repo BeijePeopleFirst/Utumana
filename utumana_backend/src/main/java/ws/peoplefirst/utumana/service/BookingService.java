@@ -354,4 +354,7 @@ public class BookingService {
 		return bookingRepository.findByAccommodationAndUser(acc, user);
 	}
 	
+	public List<BookingDTO> getAllAcceptedOrDoingBookings(Long accommodationId) {
+		return bookingRepository.findByStatusACCEPTEDOrDOINGAndAccommodationId(accommodationId);
+	}
 }
