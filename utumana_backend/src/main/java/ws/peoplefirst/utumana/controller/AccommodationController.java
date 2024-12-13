@@ -94,7 +94,21 @@ public class AccommodationController {
 	public Accommodation getSingleAccommodationAPI(@PathVariable Long id, Authentication auth) {	
 		logger.debug("GET /accommodation/" + id);
 		
-		Accommodation acc = accommodationService.findById(id);	
+		Accommodation acc = accommodationService.findByIdAndHidingTimestampIsNull(id);	
+		
+		if(acc != null) return acc;
+		else {
+			logger.error("Incorrect ID -- No Accommodation was found");
+			throw new IdNotFoundException("Incorrect ID -- No Accommodation was found");
+		}
+	}
+	
+	@PreAuthorize("hasAuthority('USER')")
+	@GetMapping(value="/rejected_accommodation/{id}")
+	public Accommodation getRejectedAccommodationAPI(@PathVariable Long id, Authentication auth) {	
+		logger.debug("GET /rejected_accommodation/" + id);
+		
+		Accommodation acc = accommodationService.findRejectedAccommodation(id);	
 		
 		if(acc != null) return acc;
 		else {
@@ -108,7 +122,7 @@ public class AccommodationController {
 	public Set<Service> getAccommodationServices(@PathVariable Long id, Authentication auth) {
 		logger.debug("GET /accommodation/" + id + "/services");
 		
-		Accommodation accommodation = accommodationService.findById(id);
+		Accommodation accommodation = accommodationService.findByIdAndHidingTimestampIsNull(id);
 		if(accommodation == null)
 			throw new IdNotFoundException("Accommodation with id " + id + " not found");
 		
@@ -120,7 +134,7 @@ public class AccommodationController {
 	public List<Availability> getAccommodationAvailabilities(@PathVariable Long id, Authentication auth) {
 		logger.debug("GET /accommodation/" + id + "/availabilities");
 		
-		Accommodation accommodation = accommodationService.findById(id);
+		Accommodation accommodation = accommodationService.findByIdAndHidingTimestampIsNull(id);
 		if(accommodation == null)
 			throw new IdNotFoundException("Accommodation with id " + id + " not found");
 		
@@ -132,7 +146,7 @@ public class AccommodationController {
 	public List<UnavailabilityDTO> getAccommodationUnavailabilitiesDTO(@PathVariable Long id, Authentication auth) {
 		logger.debug("GET /accommodation/" + id + "/unavailabilities");
 		
-		Accommodation accommodation = accommodationService.findById(id);
+		Accommodation accommodation = accommodationService.findByIdAndHidingTimestampIsNull(id);
 		if(accommodation == null)
 			throw new IdNotFoundException("Accommodation with id " + id + " not found");
 		
@@ -227,21 +241,6 @@ public class AccommodationController {
 
 		AuthorizationUtility.checkIsAdminOrMe(auth, newOne.getOwnerId());
 
-		/*
-		Accommodation acc = accommodationService.findById(newOne.getId());
-		
-		if(acc == null) {
-			logger.error("Accommodation not found");
-			throw new IdNotFoundException("Accommodation not found");
-		}
-		
-		if(!acc.getOwnerId().equals(newOne.getOwnerId())) {
-			logger.error("Unauthorized operation: the found Accommodation's owner does not match the provided Owner");
-			throw new ForbiddenException("Unauthorized operation: the found Accommodation's owner does not match the provided Owner");
-		}
-		
-		return accommodationService.substituteIfPresent(newOne);
-		*/
 		return accommodationService.setAccommodationInfo(newOne);
 	}
 
@@ -288,9 +287,9 @@ public class AccommodationController {
 	
 	@PreAuthorize("hasAuthority('USER')")
 	@DeleteMapping(value="/delete_accommodation/{id}")
-	public Accommodation deleteAccommodation(@PathVariable Long id, Authentication auth) {		
-		Accommodation toDelete = accommodationService.findById(id);
-		
+	public Accommodation deleteAccommodationAPI(@PathVariable Long id, Authentication auth) {		
+		Accommodation toDelete = accommodationService.findByIdAndHidingTimestampIsNull(id);
+
 		if(toDelete == null) {
 			throw new IdNotFoundException("Accommodation ID does not exist");
 		}
@@ -349,7 +348,7 @@ public class AccommodationController {
 		accommodationService.addFavourite(accommodationId, userId);
 		
 		//TODO decide what to return based on graphical view
-		return accommodationService.findById(accommodationId);
+		return accommodationService.findByIdAndHidingTimestampIsNull(accommodationId);
 	}
 	
 	@PreAuthorize("hasAuthority('USER')")
@@ -361,7 +360,7 @@ public class AccommodationController {
 		accommodationService.removeFavourite(accommodationId, userId);
 		
 		//TODO decide what to return based on graphical view
-		return accommodationService.findById(accommodationId);
+		return accommodationService.findByIdAndHidingTimestampIsNull(accommodationId);
 	}
 	
 	@PreAuthorize("hasAuthority('USER')")
@@ -399,6 +398,33 @@ public class AccommodationController {
 		}
 		
 		return accommodationService.getMyAccommodationsDTO(userId);
+	}
+	
+	
+	@PreAuthorize("hasAuthority('USER')")
+	@GetMapping(value="/pending_accommodations/{userId}")
+	public List<AccommodationDTO> getPendingAccommodationsDTO(@PathVariable Long userId, Authentication auth) {
+		
+		AuthorizationUtility.checkIsAdminOrMe(auth, userId);
+		if(usrService.findById(userId) == null) {
+			logger.error("The specified user does not exist");
+			throw new IdNotFoundException("The specified user does not exist");
+		}
+		
+		return accommodationService.getPendingAccommodationsDTO(userId);
+	}
+	
+	@PreAuthorize("hasAuthority('USER')")
+	@GetMapping(value="/rejected_accommodations/{userId}")
+	public List<AccommodationDTO> getRejectedAccommodationsDTO(@PathVariable Long userId, Authentication auth) {
+		
+		AuthorizationUtility.checkIsAdminOrMe(auth, userId);
+		if(usrService.findById(userId) == null) {
+			logger.error("The specified user does not exist");
+			throw new IdNotFoundException("The specified user does not exist");
+		}
+		
+		return accommodationService.getRejectedAccommodationsDTO(userId);
 	}
 	
 	@PreAuthorize("hasAuthority('USER')")
@@ -470,7 +496,7 @@ public class AccommodationController {
 	public ResponseEntity<Map<String, Object>> getAccomodationDetails(Authentication auth,@PathVariable(name = "accommodationId") Long accommodationId) {
 		UserDTO user = (UserDTO) auth.getPrincipal();
 		
-		Accommodation accommodation = accommodationService.findById(accommodationId);
+		Accommodation accommodation = accommodationService.findByIdAndHidingTimestampIsNull(accommodationId);
 		
 		Map<String, Object> res = new HashMap<>();
 		
@@ -507,7 +533,7 @@ public class AccommodationController {
 			throw new IdNotFoundException("House not found");
 		}
 		
-		return accommodationService.findById(accommodationId);
+		return accommodationService.findByIdAndHidingTimestampIsNull(accommodationId);
 	}
 	
 }

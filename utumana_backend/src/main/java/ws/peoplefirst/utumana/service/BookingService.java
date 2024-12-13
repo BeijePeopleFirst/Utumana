@@ -116,7 +116,7 @@ public class BookingService {
 	
 	public BookingDTO bookAndReturnBooking(Long userId, Long accommodationId, LocalDate checkIn, LocalDate checkOut, double price) {
 		User user = userService.getUserById(userId);
-		Accommodation accommodation = accommodationService.findById(accommodationId);
+		Accommodation accommodation = accommodationService.findByIdAndHidingTimestampIsNull(accommodationId);
 		
 		if(user == null) {
 			log.warn("bookAndReturnBooking user id not found "+userId);
@@ -202,7 +202,7 @@ public class BookingService {
 	
 	//rest controller
 	public List<BookingDTO> findUnavailabilities(Long accommodationId) {	
-		Accommodation accoommodation=accommodationService.findById(accommodationId);
+		Accommodation accoommodation=accommodationService.findByIdAndHidingTimestampIsNull(accommodationId);
 		if(accoommodation!=null) {			
 			return bookingRepository.findUnAvailabilities(accommodationId);
 		}else {
@@ -212,7 +212,7 @@ public class BookingService {
 	}
 	
 	public List<UnavailabilityDTO> findUnavailabilitiesDTO(Long accommodationId) {	
-		Accommodation accoommodation=accommodationService.findById(accommodationId);
+		Accommodation accoommodation=accommodationService.findByIdAndHidingTimestampIsNull(accommodationId);
 		if(accoommodation!=null) {			
 			return bookingRepository.findUnAvailabilitiesDTO(accommodationId);
 		}else {
@@ -280,7 +280,7 @@ public class BookingService {
 		selfBooking.setUser(loggedUser);
 		selfBooking.setUserId(userId);
 		
-		Accommodation accommodation=accommodationService.findById(unavailability.getAccommodationId());
+		Accommodation accommodation=accommodationService.findByIdAndHidingTimestampIsNull(unavailability.getAccommodationId());
 		if(accommodation.getOwnerId()!=userId) {
 			log.error("addUnAvailabilities accommodation with id "+unavailability.getAccommodationId()+
 					" belongs to "+accommodation.getOwnerId()+" your id is "+userId);
@@ -324,7 +324,7 @@ public class BookingService {
 		
 		//Una volta presa la lista di bookings controlla se ci sono sovrapposizioni e nel caso ritorna TRUE
 		User user = userService.findById(userId);
-		Accommodation acc = accommodationService.findById(accommodationId);
+		Accommodation acc = accommodationService.findByIdAndHidingTimestampIsNull(accommodationId);
 		
 		if(user == null) throw new IdNotFoundException("The provided User ID is not Valid");
 		if(acc == null) throw new IdNotFoundException("The provided Accommodation ID is not Valid");

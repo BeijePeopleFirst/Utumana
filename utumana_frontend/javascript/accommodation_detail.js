@@ -7,8 +7,17 @@ document.addEventListener('DOMContentLoaded', () => getAccommodationDetail(id));
 const userId = parseInt(localStorage.getItem("id"));
 
  function getAccommodationDetail(id) {	 
-	 doFetch(prefixUrl + 'api/accommodation/' + id, 'GET', headers, null)
-	 .then(json => {
+	let isRejected = params.get('rejected');
+	let endpoint;
+	if(isRejected != null && isRejected == "true"){
+		endpoint = 'api/rejected_accommodation/'
+	} else{
+		endpoint = 'api/accommodation/';
+	}
+	
+	
+	doFetch(prefixUrl + endpoint + id, 'GET', headers, null)
+	.then(json => {
 		
 		document.getElementsByClassName('loader')[0].remove();
 		

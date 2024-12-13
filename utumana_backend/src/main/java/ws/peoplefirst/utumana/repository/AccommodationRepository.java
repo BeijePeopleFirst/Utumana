@@ -123,11 +123,20 @@ public interface AccommodationRepository extends JpaRepository<Accommodation,Lon
 	public List<Accommodation> getAccommodationsToBeApproved();
 
 	@Query("SELECT new ws.peoplefirst.utumana.dto.AccommodationDTO(a.id, a.title, a.city, a.mainPhotoUrl, a.country) "
-			+ "FROM Accommodation as a WHERE a.approvalTimestamp IS NULL")
+			+ "FROM Accommodation as a WHERE a.approvalTimestamp IS NULL AND a.hidingTimestamp IS NULL")
 	public List<AccommodationDTO> getAccommodationDTOToBeApproved();
 
 	@Query("SELECT new ws.peoplefirst.utumana.dto.AccommodationDTO(a.id, a.title, a.city, a.mainPhotoUrl, a.country) FROM Accommodation as a "
-			+ "WHERE a.ownerId = :ownerId AND a.hidingTimestamp IS NULL")
+			+ "WHERE a.ownerId = :ownerId AND a.hidingTimestamp IS NULL AND a.approvalTimestamp IS NOT NULL")
 	public List<AccommodationDTO> findByOwnerIdDTO(@Param(value = "ownerId") Long loggedUserId);
+	
+	@Query("SELECT new ws.peoplefirst.utumana.dto.AccommodationDTO(a.id, a.title, a.city, a.mainPhotoUrl, a.country) FROM Accommodation as a "
+			+ "WHERE a.ownerId = :ownerId AND a.hidingTimestamp IS NULL AND a.approvalTimestamp IS NULL")
+	public List<AccommodationDTO> findByOwnerIdDTOPending(@Param(value = "ownerId") Long userId);
 
+	@Query("SELECT new ws.peoplefirst.utumana.dto.AccommodationDTO(a.id, a.title, a.city, a.mainPhotoUrl, a.country) FROM Accommodation as a "
+			+ "WHERE a.ownerId = :ownerId AND a.hidingTimestamp IS NOT NULL AND a.approvalTimestamp IS NULL")
+	public List<AccommodationDTO> findByOwnerIdDTORejected(@Param(value = "ownerId") Long userId);
+
+	public Accommodation findByIdAndApprovalTimestampIsNullAndHidingTimestampIsNotNull(Long id);
 }

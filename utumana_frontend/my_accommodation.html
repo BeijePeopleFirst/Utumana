@@ -13,12 +13,33 @@
 	<div id="header"></div>
 	
 	<div class="container">
-		
+		<h2>My accommodations</h2>
 		<div class="text-align-center">
 			<p id="error" class="error"></p>
 		</div>
 		
-		<div id="latest_accommodations" class="accommodations-cards">
+		<div id="my_accommodations" class="accommodations-cards">
+			<div class="loader"></div>
+		</div>
+	</div>
+	
+	<div class="container">
+		<h2>My accommodations waiting for approval</h2>
+		<div class="text-align-center">
+			<p id="error" class="error"></p>
+		</div>
+		
+		<div id="pending_accommodations" class="accommodations-cards">
+			<div class="loader"></div>
+		</div>
+	</div>
+	<div id="rejected_container" style="visibility:hidden;" class="container">
+		<h2>My accommodations that were rejected</h2>
+		<div class="text-align-center">
+			<p id="error" class="error"></p>
+		</div>
+		
+		<div id="rejected_accommodations" class="accommodations-cards">
 			<div class="loader"></div>
 		</div>
 	</div>
