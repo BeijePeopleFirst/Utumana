@@ -2,8 +2,6 @@ package ws.peoplefirst.utumana.repository;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
-import java.util.SortedMap;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -17,8 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ws.peoplefirst.utumana.dto.AccommodationDTO;
 import ws.peoplefirst.utumana.model.Accommodation;
-import ws.peoplefirst.utumana.model.Photo;
-import ws.peoplefirst.utumana.model.Service;
 
 @Repository
 public interface AccommodationRepository extends JpaRepository<Accommodation,Long>{
@@ -26,7 +22,6 @@ public interface AccommodationRepository extends JpaRepository<Accommodation,Lon
 	@Query(value = "SELECT a FROM Accommodation AS a WHERE a.approvalTimestamp IS NOT NULL AND a.hidingTimestamp IS NULL ORDER BY a.approvalTimestamp DESC")
 	public List<Accommodation> getLatestUploads(Pageable pageable);
 	
-	// https://www.javaguides.net/2023/08/spring-data-jpa-specific-columns.html
 	@Query(value = "SELECT new ws.peoplefirst.utumana.dto.AccommodationDTO(a.id, a.title, a.city, a.mainPhotoUrl, a.country) "
 			+ "FROM Accommodation as a WHERE a.approvalTimestamp IS NOT NULL AND a.hidingTimestamp IS NULL ORDER BY a.approvalTimestamp DESC")
 	public List<AccommodationDTO> getLatestUploadsDTO(Pageable pageable);
@@ -74,16 +69,7 @@ public interface AccommodationRepository extends JpaRepository<Accommodation,Lon
 			@Param(value="services") List<Long> serviceIds, @Param(value="servicesSize") Long servicesSize, Sort sort);
 
 
-	//0usage
-	public List<Accommodation> findAllByapprovalTimestampIsNull();
-	
-	
 	public Accommodation findByIdAndHidingTimestampIsNull(Long id);
-
-	//0usage
-	@Query("SELECT MAX(a.id) FROM Accommodation as a")
-	public Long getAccommodationMaxId();
-
 
 	@Modifying
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -117,12 +103,6 @@ public interface AccommodationRepository extends JpaRepository<Accommodation,Lon
 	
 	public List<Accommodation> findByOwnerIdAndHidingTimestampIsNull(Long ownerId);
 
-
-	@Deprecated		// use the one in ServiceRepository
-	@Query("SELECT s FROM Service as s WHERE LOWER(s.title) LIKE LOWER(CONCAT('%', :name, '%'))")
-	public List<Service> findServiceByName(@Param(value = "name") String name);
-
-
 	@Query(value="SELECT DISTINCT a FROM Accommodation as a "
 			+ "WHERE (:dest IS NULL OR a.country LIKE %:dest% OR a.city LIKE %:dest%) AND a.beds >= :numGuests AND a.approvalTimestamp IS NOT NULL AND a.hidingTimestamp IS NULL "
 			+ "AND EXISTS (SELECT av FROM a.availabilities AS av WHERE av.startDate <= :chkIn AND av.endDate >= :chkOut  AND av.pricePerNight = 0 )")
@@ -142,14 +122,9 @@ public interface AccommodationRepository extends JpaRepository<Accommodation,Lon
 	@Query("SELECT a FROM Accommodation as a WHERE a.approvalTimestamp IS NULL")
 	public List<Accommodation> getAccommodationsToBeApproved();
 
-	//0usage
-//	@Query("SELECT new ws.peoplefirst.utumana.dto.AccommodationDTO(a.id, a.title, a.city, a.mainPhotoUrl, a.country) FROM Accommodation as a where a.approvalTimestamp IS NULL")
-//	public List<AccommodationDTO> getAccommodationDTOToBeApproved();
-	
 	@Query("SELECT new ws.peoplefirst.utumana.dto.AccommodationDTO(a.id, a.title, a.city, a.mainPhotoUrl, a.country) "
 			+ "FROM Accommodation as a WHERE a.approvalTimestamp IS NULL")
 	public List<AccommodationDTO> getAccommodationDTOToBeApproved();
-
 
 	@Query("SELECT new ws.peoplefirst.utumana.dto.AccommodationDTO(a.id, a.title, a.city, a.mainPhotoUrl, a.country) FROM Accommodation as a "
 			+ "WHERE a.ownerId = :ownerId AND a.hidingTimestamp IS NULL")

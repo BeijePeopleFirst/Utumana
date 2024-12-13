@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
 import jakarta.persistence.PersistenceException;
 import ws.peoplefirst.utumana.dto.BookingDTO;
@@ -43,7 +42,6 @@ public class BookingService {
 	@Autowired
 	private AccommodationService accommodationService;
 	
-	//done for rest controller
 	public Map<String,LocalDate> checkDate(String checkInString,String checkOutString) {
 		if(checkInString.isBlank() || checkOutString.isBlank()) {
 			log.error("checkDate checkInString is blank ?"+checkInString.isBlank()+" checkOutString is blank "+checkOutString.isBlank());
@@ -68,11 +66,6 @@ public class BookingService {
 		return bookingRepository.findAllByUserIdAndIsUnavailabilityIsFalseOrderByCheckInDesc(userId);
 	}
 	
-//	public Booking findBookingByUserIdAndAccommodationId(Long userId, Long AccommodationId) {
-//		return bookingRepository.findByUserIdAndAccommodationId
-//	}
-	
-	//done for rest controller
 	public List<BookingDTO> findAllBookingsDTOById(Long userId) {
 		User user=userService.findById(userId);
 		if(user!=null) {			
@@ -83,13 +76,7 @@ public class BookingService {
 			throw new IdNotFoundException("user with given id does not exist");
 		}
 	}
-
-	//0 usage
-	public List<Booking> findAllHostBookings(Long ownerId) {
-		return bookingRepository.findAllByOwnerId(ownerId);
-	}
 	
-	//done for rest controller
 		public List<BookingDTO> findAllHostBookingsDTO(Long userId) {
 			User user=userService.findById(userId);
 			if(user!=null) {			
@@ -101,7 +88,6 @@ public class BookingService {
 			}
 		}
 	
-	//used in rest controller
 	public Booking hostActionOnBooking(Long bookingId,BookingStatus newStatus) {
 		Optional<Booking> optionalBooking=bookingRepository.findById(bookingId);
 		if(optionalBooking.isPresent()) {
@@ -126,31 +112,6 @@ public class BookingService {
 			throw new IdNotFoundException("booking not found");
 		}
 
-	}
-
-	//0 usage
-	public boolean book(Long userId, Long accommodationId, LocalDate checkIn, LocalDate checkOut, double price) {
-		User user = userService.getUserById(userId);
-		Accommodation accommodation = accommodationService.findById(accommodationId);
-		
-		if(user == null) throw new IdNotFoundException("cannot find current user");
-		
-		if(accommodation == null) throw new IdNotFoundException("cannot find current accomodation");
-		
-		Booking booking = new Booking();
-		booking.setAccommodation(accommodation);
-		booking.setUser(user);
-		booking.setCheckIn(LocalDateTime.of(checkIn, LocalTime.of(14, 0)));
-		booking.setCheckOut(LocalDateTime.of(checkOut, LocalTime.of(10, 0)));
-		booking.setPrice(price);
-		booking.setStatus(BookingStatus.PENDING);
-		
-		try {			
-			bookingRepository.save(booking);
-		}catch(PersistenceException e) {
-			throw new DBException("cannot save current booking");
-		}
-		return true;
 	}
 	
 	public BookingDTO bookAndReturnBooking(Long userId, Long accommodationId, LocalDate checkIn, LocalDate checkOut, double price) {
@@ -194,17 +155,6 @@ public class BookingService {
 		return !pending.isEmpty() ? pending.get(0).getId() : null;
 	}
 
-	//0 usage
-	public boolean deletePendingBooking(Model model, Long userId, Long accommodationId) {
-		return deleteBooking(model, userId, accommodationId, BookingStatus.PENDING);
-	}
-
-	//0 usage
-	public boolean deleteAcceptedBooking(Model model, Long userId, Long accommodationId) {
-		return deleteBooking(model, userId, accommodationId, BookingStatus.ACCEPTED);
-	}
-	
-	//done for rest controller
 	public Booking deleteBookingFromId(Long userId, Long bookingId) {
 		Optional<Booking> optionalBooking = bookingRepository.findById(bookingId);
 		
@@ -234,21 +184,6 @@ public class BookingService {
 			log.error("deleteBookingFromId booking with id "+bookingId+"does not exist");
 			throw new IdNotFoundException("booking not present");
 		}
-	}
-	
-	private boolean deleteBooking(Model model, Long userId, Long accommodationId, BookingStatus status) {
-		List<Booking> bookings = bookingRepository.findByUserIdAndAccommodationIdAndStatus(userId, accommodationId, status);
-		
-		if(bookings.isEmpty()) {
-			model.addAttribute("status", 400);
-			model.addAttribute("message", "Bad request: could not find a booking request to delete.");
-			return false;
-		}
-		
-		bookingRepository.delete(bookings.get(0));
-		
-		model.addAttribute("message", "Booking request deleted.");
-		return true;
 	}
 	
 	public List<Booking> getExpiredBookings() {
@@ -285,7 +220,6 @@ public class BookingService {
 		}
 	}
 	
-	//rest controller
 	public Booking deleteUnAvailabilities(Long userId,Long bookingId) {
 		Optional<Booking> optionalBooking=bookingRepository.findById(bookingId);
 		
@@ -311,7 +245,6 @@ public class BookingService {
 
 	}
 
-	//rest controller
 	public Booking addUnAvailabilities(Long userId,Availability unavailability) {
 		
 		Booking selfBooking=new Booking();

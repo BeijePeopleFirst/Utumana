@@ -1,6 +1,5 @@
 package ws.peoplefirst.utumana.repository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Repository;
 import ws.peoplefirst.utumana.dto.BookingDTO;
 import ws.peoplefirst.utumana.dto.UnavailabilityDTO;
 import ws.peoplefirst.utumana.model.Accommodation;
-import ws.peoplefirst.utumana.model.Availability;
 import ws.peoplefirst.utumana.model.Booking;
 import ws.peoplefirst.utumana.model.Review;
 import ws.peoplefirst.utumana.model.User;
@@ -26,7 +24,6 @@ public interface BookingRepository extends JpaRepository<Booking,Long>{
 	
 	public List<Booking> findAllByUserIdAndIsUnavailabilityIsFalseOrderByCheckInDesc(Long userId);
 	
-	//done for rest controller
 	@Query("SELECT new ws.peoplefirst.utumana.dto.BookingDTO(b.id, b.accommodation.mainPhotoUrl,b.accommodation.title,b.price,b.status,b.accommodation.id,b.checkIn,b.checkOut,b.review.id) "
 			+ "FROM Booking as b WHERE b.user.id = :userId AND b.isUnavailability IS false ORDER BY b.checkIn DESC")
 	public List<BookingDTO> findAllDTOByUserId(@Param(value="userId")Long userId);
@@ -34,7 +31,6 @@ public interface BookingRepository extends JpaRepository<Booking,Long>{
 	@Query("SELECT b from Booking as b WHERE b.accommodation.ownerId = :ownerId AND b.isUnavailability IS false ORDER BY b.checkIn DESC")
 	public List<Booking> findAllByOwnerId(@Param(value="ownerId")Long ownerId);
 	
-	//done for rest controller
 	@Query("SELECT new ws.peoplefirst.utumana.dto.BookingDTO(b.id, b.accommodation.mainPhotoUrl,b.accommodation.title,b.price,b.status,b.accommodation.id,b.checkIn,b.checkOut,b.review.id) "
 			+ "FROM Booking as b WHERE b.accommodation.ownerId = :ownerId  AND b.isUnavailability IS false ORDER BY b.checkIn DESC")
 	public List<BookingDTO> findAllDTOByOwnerId(@Param(value="ownerId")Long ownerId);

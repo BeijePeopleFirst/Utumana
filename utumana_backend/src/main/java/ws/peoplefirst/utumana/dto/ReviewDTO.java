@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import ws.peoplefirst.utumana.utility.JsonFormatter;
+import ws.peoplefirst.utumana.utility.Constants;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ReviewDTO {
@@ -52,7 +52,7 @@ public class ReviewDTO {
 	
 	@JsonGetter(value = "approval_timestamp")
 	public String getApprovalTimestampAString() {
-		return approvalTimestamp != null ? JsonFormatter.DATE_TIME_FORMATTER.format(approvalTimestamp) : null;
+		return approvalTimestamp != null ? Constants.DATE_TIME_FORMATTER.format(approvalTimestamp) : null;
 	}
 	
 }

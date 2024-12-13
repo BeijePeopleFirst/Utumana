@@ -1,13 +1,13 @@
 package ws.peoplefirst.utumana.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /*  That model uses two primary key, so for that reason we have to create a support Class ("UserAuthorityId"), to handle the id.
 *  That id will not be generated automatically, but must be set.

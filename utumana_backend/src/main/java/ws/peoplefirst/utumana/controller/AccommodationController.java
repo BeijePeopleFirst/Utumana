@@ -1,11 +1,10 @@
 package ws.peoplefirst.utumana.controller;
 
-import java.io.Console;
+import static org.springframework.http.ResponseEntity.ok;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import static org.springframework.http.ResponseEntity.ok;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -32,11 +31,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ws.peoplefirst.utumana.dto.AccommodationDTO;
-import ws.peoplefirst.utumana.dto.BookingDTO;
 import ws.peoplefirst.utumana.dto.PriceDTO;
 import ws.peoplefirst.utumana.dto.UnavailabilityDTO;
 import ws.peoplefirst.utumana.dto.UserDTO;
-import ws.peoplefirst.utumana.exception.DBException;
 import ws.peoplefirst.utumana.exception.ForbiddenException;
 import ws.peoplefirst.utumana.exception.IdNotFoundException;
 import ws.peoplefirst.utumana.exception.InvalidJSONException;
@@ -44,7 +41,6 @@ import ws.peoplefirst.utumana.exception.TheJBeansException;
 import ws.peoplefirst.utumana.model.Accommodation;
 import ws.peoplefirst.utumana.model.Availability;
 import ws.peoplefirst.utumana.model.Booking;
-import ws.peoplefirst.utumana.model.Photo;
 import ws.peoplefirst.utumana.model.Review;
 import ws.peoplefirst.utumana.model.Service;
 import ws.peoplefirst.utumana.service.AccommodationService;

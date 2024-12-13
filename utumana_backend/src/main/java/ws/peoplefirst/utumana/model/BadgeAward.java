@@ -1,7 +1,11 @@
 package ws.peoplefirst.utumana.model;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
@@ -11,12 +15,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
-import ws.peoplefirst.utumana.utility.JsonFormatter;
-
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSetter;
+import ws.peoplefirst.utumana.utility.Constants;
 
 
 @Entity
@@ -72,7 +71,7 @@ public class BadgeAward {
 
 	@JsonGetter(value = "award_date")
 	public String getAwardDateAsString() {
-		return awardDate != null ? JsonFormatter.DATE_FORMATTER.format(awardDate) : null;
+		return awardDate != null ? Constants.DATE_FORMATTER.format(awardDate) : null;
 	}
 	
 	public void setAwardDate(LocalDate awardDate) {
@@ -81,6 +80,6 @@ public class BadgeAward {
 	
 	@JsonSetter(value = "award_date")
 	public void setAwardDate(String awardDate) {
-		this.awardDate = awardDate != null ? LocalDate.parse(awardDate, JsonFormatter.DATE_FORMATTER) : null;	
+		this.awardDate = awardDate != null ? LocalDate.parse(awardDate, Constants.DATE_FORMATTER) : null;	
 	}
 }

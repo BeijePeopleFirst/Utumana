@@ -7,23 +7,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OrderBy;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
-import ws.peoplefirst.utumana.dto.ReviewDTO;
-import ws.peoplefirst.utumana.utility.JsonFormatter;
-
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -36,6 +19,23 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import ws.peoplefirst.utumana.dto.ReviewDTO;
+import ws.peoplefirst.utumana.utility.Constants;
 
 
 
@@ -211,7 +211,7 @@ public class User implements Serializable, UserDetails {
 
 	@JsonGetter(value = "archived_timestamp")
 	public String getArchivedTimestampAsString() {
-		return archivedTimestamp != null ? JsonFormatter.DATE_TIME_FORMATTER.format(archivedTimestamp) : null;
+		return archivedTimestamp != null ? Constants.DATE_TIME_FORMATTER.format(archivedTimestamp) : null;
 	}
 
 	public void setArchivedTimestamp(LocalDateTime archivedTimestamp) {
@@ -220,7 +220,7 @@ public class User implements Serializable, UserDetails {
 	
 	@JsonSetter(value = "archived_timestamp")
 	public void setArchivedTimestamp(String archivedTimestamp) {
-		this.archivedTimestamp = archivedTimestamp != null ? LocalDateTime.parse(archivedTimestamp, JsonFormatter.DATE_TIME_FORMATTER) : null;	
+		this.archivedTimestamp = archivedTimestamp != null ? LocalDateTime.parse(archivedTimestamp, Constants.DATE_TIME_FORMATTER) : null;	
 	}
 
 	public List<ReviewDTO> getReviews() {

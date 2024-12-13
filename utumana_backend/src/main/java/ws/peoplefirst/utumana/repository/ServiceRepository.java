@@ -12,8 +12,6 @@ import ws.peoplefirst.utumana.model.Service;
 
 @Repository
 public interface ServiceRepository extends JpaRepository<Service, Long> {
-	@Query("SELECT MAX(s.id) FROM Service as s")
-	public Long getMaxServiceId();
 	
 	public List<Service> findByTitleIgnoreCaseContaining(String title);
 	

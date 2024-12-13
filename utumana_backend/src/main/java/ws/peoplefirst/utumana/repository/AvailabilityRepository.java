@@ -10,14 +10,10 @@ import org.springframework.stereotype.Repository;
 
 import ws.peoplefirst.utumana.model.Accommodation;
 import ws.peoplefirst.utumana.model.Availability;
-import ws.peoplefirst.utumana.model.Booking;
 
 @Repository
 public interface AvailabilityRepository extends JpaRepository<Availability,Long>{
-	//0usage
-	@Query("SELECT MAX(a.id) FROM Availability as a")
-	public Long getMaxIndex();
-	
+
 	@Query("SELECT MIN(av.pricePerNight) FROM Availability as av WHERE av.accommodation.id = :accommodationId GROUP BY av.accommodation.id")
 	public Double getMinPricePerNight(@Param(value = "accommodationId") Long accommodationId);
 

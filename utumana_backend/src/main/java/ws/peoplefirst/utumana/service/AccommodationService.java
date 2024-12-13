@@ -2,12 +2,8 @@ package ws.peoplefirst.utumana.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -18,12 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
-import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import ws.peoplefirst.utumana.dto.AccommodationDTO;
 import ws.peoplefirst.utumana.dto.PriceDTO;
 import ws.peoplefirst.utumana.exception.ForbiddenException;
@@ -42,7 +33,6 @@ import ws.peoplefirst.utumana.repository.BookingRepository;
 import ws.peoplefirst.utumana.repository.ServiceRepository;
 import ws.peoplefirst.utumana.repository.UserRepository;
 import ws.peoplefirst.utumana.utility.BookingStatus;
-import ws.peoplefirst.utumana.utility.Container;
 
 @Service
 public class AccommodationService {
@@ -70,9 +60,6 @@ public class AccommodationService {
 	@Autowired
 	private ServiceService serviceService;
 	
-	
-	
-	
 	public boolean approveAccommodation(Long accommodationId) {
 		Accommodation accommodation = findById(accommodationId);
 		
@@ -83,25 +70,6 @@ public class AccommodationService {
 		}else {
 			return false;
 		}
-	}
-
-	//0 usage
-	public boolean rejectAccommodation(Long accommodationId) {
-		Accommodation accommodation = findById(accommodationId);
-		
-		if(accommodation != null) {
-			accommodationRepository.deleteById(accommodationId);
-			return true;
-		}else {
-			return false;
-		}
-	}
-
-
-	//0 usage
-	public List<Accommodation> getLatestUploads(int limit) {
-		Pageable pageable = PageRequest.of(0, limit);
-		return accommodationRepository.getLatestUploads(pageable);
 	}
 
 	public List<AccommodationDTO> getLatestUploadsDTO(int limit, Long userId) {
@@ -135,14 +103,8 @@ public class AccommodationService {
 
 	public List<AccommodationDTO> getAccommodationsDTOToBeApproved() {		
 		List<AccommodationDTO> res = accommodationRepository.getAccommodationDTOToBeApproved();
-		//res = configurePriceRanges(res);
 		
 		return res;
-	}
-
-	//0 usage
-	public List<Accommodation> getMyAccommodations(Long userId) {
-		return accommodationRepository.findByOwnerIdAndHidingTimestampIsNull(userId);
 	}
 
 	public List<AccommodationDTO> getMyAccommodationsDTO(Long loggedUserId) {
@@ -150,7 +112,6 @@ public class AccommodationService {
 		for(AccommodationDTO accommodationDTO : res) {
 			accommodationDTO.setIsFavourite(isFavourite(accommodationDTO.getId(), loggedUserId));
 		}
-		//res = configurePriceRanges(res);
 		
 		return res;
 	}
@@ -215,36 +176,6 @@ public class AccommodationService {
 		
 		userRepository.save(user);
 	}
-
-
-	//0 usage
-	public void storePhotos(List<Photo> photos) {
-		for(Photo p : photos)
-			accommodationRepository.savePhoto(p.getAccommodation().getId(), p.getPhotoUrl(), p.getOrder());
-	}
-
-	//0 usage
-	public void storeAvailabilities(List<Availability> av) {
-		for(Availability a : av) {
-			a.setId(null);
-			availabilityRepository.save(a);
-		}
-	}
-
-
-	//0 usage
-	public List<Accommodation> findByUserInput(String destination, LocalDate checkInDate, LocalDate checkOutDate,
-			Integer numberOfGuests) {
-		
-		return accommodationRepository.findByUserInput(destination, checkInDate, checkOutDate, numberOfGuests, Sort.by(Sort.DEFAULT_DIRECTION.DESC, "approvalTimestamp"));
-	}
-
-	//0 usage
-	private List<Accommodation> findByUserInputFree(String dest, LocalDate checkInDate, LocalDate checkOutDate,
-			Integer numGst) {
-		
-		return accommodationRepository.findByUserInputFree(dest, checkInDate, checkOutDate, numGst, Sort.by(Sort.Direction.DESC, "approvalTimestamp"));
-	}
 	
 	private Sort getSortFromOrderByParam(String orderBy) {
 		String orderField = orderBy.trim().split("-")[0];
@@ -267,20 +198,11 @@ public class AccommodationService {
 			results = accommodationRepository.findByUserInputDTO(destination, checkInDate, checkOutDate, numberOfGuests, sort);
 		} else {
 			results = accommodationRepository.findByUserInputDTOWithServices(destination, checkInDate, checkOutDate, numberOfGuests, serviceIds, (long) serviceIds.size(), sort);
-//			results = new ArrayList<AccommodationDTO>();
-//			for(Accommodation result : accommodationRepository.findByUserInput(destination, checkInDate, checkOutDate, numberOfGuests, sort)) {
-//				if(result.getServices().stream().map(ws.peoplefirst.utumana.model.Service::getId).collect(Collectors.toList()).containsAll(serviceIds)) {
-//					results.add(new AccommodationDTO(result.getId(), result.getTitle(), result.getCity(), result.getMainPhotoUrl(), result.getCountry()));
-//				}
-//			}
 		}
 		
 		for(AccommodationDTO accommodationDTO : results) {
 			accommodationDTO.setIsFavourite(isFavourite(accommodationDTO.getId(), userId));
 		}
-		
-		
-			// order by min price
 		
 		return results;
 	}
@@ -298,15 +220,6 @@ public class AccommodationService {
 				if(result.getServices().stream().map(ws.peoplefirst.utumana.model.Service::getId).collect(Collectors.toList()).containsAll(serviceIds)) {
 					results.add(new AccommodationDTO(result.getId(), result.getTitle(), result.getCity(), result.getMainPhotoUrl(), result.getCountry()));
 				}
-		//results = configurePriceRanges(results, checkInDate, checkOutDate);
-		//if(orderBy.trim().split("-")[0].equals("minPrice")) {
-			//System.out.println("Ordering by " + orderBy);
-			//if(orderBy.trim().split("-")[1].equalsIgnoreCase("asc")) {
-				//Collections.sort(results, Comparator.comparing(AccommodationDTO::getMinPrice));
-			//} else {
-				//Collections.sort(results, Comparator.comparing(AccommodationDTO::getMinPrice).reversed());
-			//}
-		//}
 			}
 		}
 		
@@ -316,20 +229,7 @@ public class AccommodationService {
 		
 		
 		return results;
-		//results = configurePriceRanges(results, checkInDate, checkOutDate);
 	}
-
-	// non usata. Da cancellare?
-	public List<Accommodation> findByOwnerIdAndTitleAndDescriptionAndBedsAndRoomsAndAddressNotesAndCapAndCityAndCountryAndProvinceAndStreetAndStreetNumber(
-			Long ownerId, String title, String description, Integer beds, Integer rooms, String addressNotes,
-			String cap, String city, String country, String province, String street, String streetNumber) {
-		
-		return accommodationRepository.findByOwnerIdAndTitleAndDescriptionAndBedsAndRoomsAndAddressNotesAndCapAndCityAndCountryAndProvinceAndStreetAndStreetNumberAndHidingTimestampIsNull(
-					ownerId, title, description, beds, rooms, 
-					addressNotes, cap, city, country, province, street, streetNumber);
-	}
-	
-	
 
 	public Accommodation insertAccommodation(Accommodation accommodation) {
 		// to be sure
@@ -344,8 +244,6 @@ public class AccommodationService {
 		// save accommodation
 		return accommodationRepository.save(accommodation);
 	}
-	
-	
 	
 	public Accommodation setAccommodationServices(Long accommodationId, List<Long> serviceIds, Long userId) {
 		Accommodation accommodation = findById(accommodationId);
@@ -365,6 +263,7 @@ public class AccommodationService {
 			throw new IdNotFoundException("Accommodation with id " + accommodationId  +" not found");
 		if(accommodation.getOwnerId() != userId)
 			throw new TheJBeansException("Error: logged user must be the accommodation's owner to modify its availabilities");
+		checkAvailabilites(availabilities);
 		
 		System.out.println(availabilities);
 		List<Availability> savedAvailabilities = new ArrayList<Availability>();
@@ -533,11 +432,6 @@ public class AccommodationService {
 		}
 	}
 
-	//0 usage
-	private boolean checkOwnerId(Long ownerId) {
-		return ownerId != null && userRepository.findById(ownerId).isPresent();
-	}
-	
 	private void checkAccommodationInfo(Accommodation accommodation) {
 		boolean ok = checkTitle(accommodation.getTitle()) && checkBeds(accommodation.getBeds()) && checkRooms(accommodation.getRooms());
 		if(!ok)
@@ -654,26 +548,6 @@ public class AccommodationService {
 		return accept;
 	}
 
-	private boolean checkServices(List<ws.peoplefirst.utumana.model.Service> services) {
-		List<ws.peoplefirst.utumana.model.Service> src = serviceRepository.findAll();
-		
-		
-		boolean accept = false;
-		
-		for(ws.peoplefirst.utumana.model.Service s : services) {
-			
-			if(s.getIconUrl() == null || s.getId() == null || s.getTitle() == null) return false;
-			
-			accept = false;
-			for(ws.peoplefirst.utumana.model.Service s2 : src)
-				if(s.getId().equals(s2.getId())) accept = true;
-			
-			if(!accept) return false;
-		}
-		
-		return accept;
-	}
-
 	private boolean checkCoordinates(String coordinates) {
 		if(coordinates != null) {
 			for(int i = 0; i < coordinates.length(); i++)
@@ -773,108 +647,4 @@ public class AccommodationService {
 		
 		return returnedList;
 	}
-
-	//0 usage
-	@Transactional
-	public Accommodation substituteIfPresent(Accommodation newOne) {
-		Accommodation acc = findById(newOne.getId());
-		
-		acc.setApprovalTimestamp(null);
-		
-		if(newOne.getAddressNotes() != null && !(newOne.getAddressNotes().equals(acc.getAddressNotes()))) {
-			acc.setAddressNotes(newOne.getAddressNotes());
-		}
-		
-		if(newOne.getBeds() != null && !(newOne.getBeds().equals(acc.getBeds()))) {
-			if(this.checkBeds(newOne.getBeds())) acc.setBeds(newOne.getBeds());
-			else throw new InvalidJSONException("Beds field not lecit");
-		}
-		
-		if(newOne.getCap() != null && !(newOne.getCap().equals(acc.getCap()))) {
-			if(this.checkCap(newOne.getCap())) acc.setCap(newOne.getCap());
-			else throw new InvalidJSONException("CAP field not lecit");
-		}
-		
-		if(newOne.getCity() != null && !(newOne.getCity().equals(acc.getCity()))) {
-			if(this.checkCity(newOne.getCity())) acc.setCity(newOne.getCity());
-			else throw new InvalidJSONException("City field not lecit");
-		}
-		
-		if(newOne.getCoordinates() != null && !(newOne.getCoordinates().equals(acc.getCoordinates()))) {
-			if(this.checkCoordinates(newOne.getCoordinates())) acc.setCoordinates(newOne.getCoordinates());
-			else throw new InvalidJSONException("Coordinates field not lecit");
-		}
-		
-		if(newOne.getCountry() != null && !(newOne.getCountry().equals(acc.getCountry()))) {
-			if(this.checkCountry(newOne.getCountry())) acc.setCountry(newOne.getCountry());
-			else throw new InvalidJSONException("Country field not lecit");
-		}
-		
-		if(newOne.getDescription() != null && !(newOne.getDescription().equals(acc.getDescription()))) {
-			acc.setDescription(newOne.getDescription());
-		}
-		
-		if(newOne.getPhotos() != null && newOne.getPhotos().size() > 0 && acc.getPhotos() != null && !newOne.getPhotos().equals(acc.getPhotos())) {
-			if(this.checkPhotos(newOne.getPhotos(), newOne.getMainPhotoUrl())) {
-				acc.setMainPhotoUrl(newOne.getMainPhotoUrl());
-				acc.setPhotos(newOne.getPhotos());
-				
-				System.out.println("CONTROLLO FATTO -> " + acc.getPhotos());
-				
-				for(Photo p : acc.getPhotos())
-					p.setAccommodation(acc);
-				
-			}
-			else throw new InvalidJSONException("Photos field not lecit");
-		}
-		
-		if(newOne.getProvince() != null && !(newOne.getProvince().equals(acc.getProvince()))) {
-			if(this.checkProvince(newOne.getProvince())) acc.setProvince(newOne.getProvince());
-			else throw new InvalidJSONException("Province field not lecit");
-		}
-		
-		if(newOne.getRooms() != null && !(newOne.getRooms().equals(acc.getRooms()))) {
-			if(this.checkRooms(newOne.getRooms())) acc.setRooms(newOne.getRooms());
-			else throw new InvalidJSONException("Rooms field not lecit");
-		}
-		
-		if(newOne.getServices() != null && !(newOne.getServices().equals(acc.getServices()))) {
-			if(this.checkServices(new ArrayList<ws.peoplefirst.utumana.model.Service>(newOne.getServices()))) acc.setServices(newOne.getServices());
-			else throw new InvalidJSONException("Services field not lecit");
-		}
-		
-		if(newOne.getStreet() != null && !(newOne.getStreet().equals(acc.getStreet()))) {
-			if(this.checkStreet(newOne.getStreet())) acc.setStreet(newOne.getStreet());
-			else throw new InvalidJSONException("Street field not lecit");
-		}
-		
-		if(newOne.getStreetNumber() != null && !(newOne.getStreetNumber().equals(acc.getStreetNumber()))) {
-			if(this.checkStreetNum(newOne.getStreetNumber())) acc.setStreetNumber(newOne.getStreetNumber());
-			else throw new InvalidJSONException("Street Number field not lecit");
-		}
-		
-		if(newOne.getTitle() != null && !newOne.getTitle().isEmpty() && !(newOne.getTitle().equals(acc.getTitle()))) {
-			if(this.checkTitle(newOne.getTitle())) acc.setTitle(newOne.getTitle());
-			else throw new InvalidJSONException("Title field not lecit");
-		}
-		
-		if(newOne.getAvailabilities() != null && !(newOne.getAvailabilities().equals(acc.getAvailabilities()))) {
-			checkAvailabilites(newOne.getAvailabilities());
-			
-			acc.setAvailabilities(newOne.getAvailabilities());
-			
-			for(Availability a : acc.getAvailabilities())
-				a.setAccommodation(acc);
-			
-		}
-		
-		if(newOne.getApprovalTimestamp() != null && !(newOne.getApprovalTimestamp().equals(acc.getApprovalTimestampJson()))) {
-			acc.setApprovalTimestamp(newOne.getApprovalTimestamp());
-		}
-		
-		accommodationRepository.save(acc);
-		return acc;
-	}
-
-
 }

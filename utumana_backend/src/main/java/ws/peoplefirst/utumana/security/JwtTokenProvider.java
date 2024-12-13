@@ -1,5 +1,9 @@
 package ws.peoplefirst.utumana.security;
 
+import java.util.Base64;
+import java.util.Date;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,19 +16,12 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletRequest;
 import ws.peoplefirst.utumana.dto.UserDTO;
 import ws.peoplefirst.utumana.exception.InvalidJwtAuthenticationException;
 import ws.peoplefirst.utumana.model.User;
 import ws.peoplefirst.utumana.service.UserService;
-
-import jakarta.annotation.PostConstruct;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-
-import java.net.CookieHandler;
-import java.util.Base64;
-import java.util.Date;
-import java.util.List;
 
 
 @Component

@@ -10,9 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
 
-import jakarta.servlet.http.HttpSession;
 import ws.peoplefirst.utumana.dto.ReviewDTO;
 import ws.peoplefirst.utumana.dto.UserDTO;
 import ws.peoplefirst.utumana.exception.IdNotFoundException;
@@ -22,6 +20,7 @@ import ws.peoplefirst.utumana.model.User;
 import ws.peoplefirst.utumana.model.UserAuthority;
 import ws.peoplefirst.utumana.repository.UserAuthorityRepository;
 import ws.peoplefirst.utumana.repository.UserRepository;
+import ws.peoplefirst.utumana.utility.Constants;
 
 
 @Service
@@ -35,63 +34,6 @@ public class UserService implements UserDetailsService {
 	
 	@Autowired
 	private UserAuthorityRepository userAuthorityRepository;
-	
-	public static final String EMAIL_REGEX = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$";
-	
-	public static final int MAX_PASSWORD_CHARACTERS = 30;
-	public static final int MIN_PASSWORD_CHARACTERS = 8;
-	public static final int MIN_PASSWORD_UPPER_CHARACTERS = 1;
-	public static final int MIN_PASSWORD_LOWER_CHARACTERS = 1;
-	public static final int MIN_PASSWORD_DIGIT_CHARACTERS = 1;
-	public static final int MIN_PASSWORD_SYMBOL_CHARACTERS = 1;
-
-	//0usage
-	public boolean isUserOK(User user,Model model,boolean isAdding) {
-		boolean isNameOK=user.getName()!=null && !user.getName().isEmpty() && !user.getName().isBlank()? true : false;
-		
-		if(!isNameOK) {
-			model.addAttribute("nameerror","the user name cannot be blank.");
-		}
-		
-		boolean isSurnameOK=user.getSurname()!=null && !user.getSurname().isEmpty() && !user.getSurname().isBlank()? true : false;
-		
-		if(!isSurnameOK) {
-			model.addAttribute("surnameerror","the user surname cannot be blank.");
-		}
-		
-		boolean isEmailOK=user.getEmail()!=null && !user.getEmail().isBlank() && user.getEmail().matches(EMAIL_REGEX) ? true : false;
-		
-		
-		if(!isEmailOK) {
-			model.addAttribute("emailerror","Invalid user email.");
-		}
-		
-		// if a new user has been added needs to verify on all current users
-		// if an already existing user has been edited it need to verify all the users except the edited one
-		if(isAdding) {
-			if(userRepository.findUserByEmail(user.getEmail())!=null) {
-				isEmailOK = false;
-				model.addAttribute("emailerror","duplicate user email.");
-			}
-		}else {			
-			if(userRepository.findUserByEmailExceptMe(user.getEmail(),user.getId())!=null) {
-				isEmailOK = false;
-				model.addAttribute("emailerror","duplicate user email.");
-			}
-		}
-		
-		boolean isPasswordOK = isValidPassword(user.getPassword());
-		
-		if(!isPasswordOK) {
-			model.addAttribute("passworderror","Invalid user password.");
-		}
-		
-		if(isNameOK && isSurnameOK && isEmailOK && (isPasswordOK || !isAdding)) {	
-			return true;
-		}
-		
-		return false;
-	}
 	
 	public boolean isUserOK(User user) {
 		if(user == null) {
@@ -139,7 +81,7 @@ public class UserService implements UserDetailsService {
 	}
 	
 	public boolean isValidEmail(String email) {
-		return email != null && !email.isBlank() && email.matches(EMAIL_REGEX);
+		return email != null && !email.isBlank() && email.matches(Constants.EMAIL_REGEX);
 	}
 	
 	public boolean isEmailUnique(String email, Long userId) {
@@ -149,7 +91,7 @@ public class UserService implements UserDetailsService {
 	public boolean isValidPassword(String password) {
 		if(password == null || password.isBlank())
 			return false;
-		if(password.length() < MIN_PASSWORD_CHARACTERS || password.length() > MAX_PASSWORD_CHARACTERS)
+		if(password.length() < Constants.MIN_PASSWORD_CHARACTERS || password.length() > Constants.MAX_PASSWORD_CHARACTERS)
 			return false;
 		
 		int countUpper = 0;
@@ -170,39 +112,9 @@ public class UserService implements UserDetailsService {
 				}
 		}
 		
-		return countUpper >= MIN_PASSWORD_UPPER_CHARACTERS && countLower >= MIN_PASSWORD_LOWER_CHARACTERS && countNumbers >= MIN_PASSWORD_DIGIT_CHARACTERS && countSymbols >= MIN_PASSWORD_SYMBOL_CHARACTERS;
+		return countUpper >= Constants.MIN_PASSWORD_UPPER_CHARACTERS && countLower >= Constants.MIN_PASSWORD_LOWER_CHARACTERS && 
+					countNumbers >= Constants.MIN_PASSWORD_DIGIT_CHARACTERS && countSymbols >= Constants.MIN_PASSWORD_SYMBOL_CHARACTERS;
 	}
-
-	//0usage
-	public boolean addUser(User user) {
-		user.setIsAdmin(false);
-		return saveUser(user);
-	}
-
-	//0usage
-	public boolean copyUserAndSave(User userToCopy) {
-		Optional<User> optionalUser=userRepository.findById(userToCopy.getId());
-		
-		if(optionalUser.isPresent()) {
-			User user=optionalUser.get();
-			
-			user.setName(userToCopy.getName());
-			user.setSurname(userToCopy.getSurname());
-			user.setEmail(userToCopy.getEmail());
-			user.setBio(userToCopy.getBio());
-			return saveUser(user);
-		}	
-		return false;
-	}
-
-	//0usage
-	public String goBacktoAdminTools(Model model,HttpSession session){
-		Long userId =  (Long) session.getAttribute("userId");
-		List<User> users=findAllUsersExceptMe(userId);
-		model.addAttribute("users", users);
-		return "admin_tools";
-	}
-	
 	
 	public List<User> findAllUsersExceptMe(Long userId){
 		return userRepository.findAllUserExceptMe(userId);
@@ -217,22 +129,6 @@ public class UserService implements UserDetailsService {
 			return false;
 		}
 		return true;
-	}
-
-	//0usage
-	public boolean deleteUserById(Long userId) {
-		try {			
-			userRepository.deleteById(userId);
-		}catch(RuntimeException e) {
-			log.error("Could not delete user by id with id " + userId + ". Exception message: " + e.getMessage());
-			return false;
-		}
-		return true;
-	}
-
-	//0usage
-	public User getUserByEmailAndPassword(String email, String password) {
-		return userRepository.findUserByEmailAndPasswordAndArchivedTimestampIsNull(email, password);
 	}
 	
 	public User getUserByEmail(String email) {

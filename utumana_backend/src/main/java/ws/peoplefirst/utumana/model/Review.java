@@ -2,19 +2,16 @@ package ws.peoplefirst.utumana.model;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonSetter;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import ws.peoplefirst.utumana.utility.JsonFormatter;
-
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonSetter;
+import ws.peoplefirst.utumana.utility.Constants;
 
 
 @Entity
@@ -73,7 +70,7 @@ public class Review {
 	
 	@JsonGetter(value = "approval_timestamp")
 	public String getApprovalTimestampAString() {
-		return approvalTimestamp != null ? JsonFormatter.DATE_TIME_FORMATTER.format(approvalTimestamp) : null;
+		return approvalTimestamp != null ? Constants.DATE_TIME_FORMATTER.format(approvalTimestamp) : null;
 	}
 
 	public void setApprovalTimestamp(LocalDateTime approvalTimestamp) {
@@ -82,7 +79,7 @@ public class Review {
 	
 	@JsonSetter(value = "approval_timestamp")
 	public void setApprovalTimestamp(String approvalTimestamp) {
-		this.approvalTimestamp = approvalTimestamp != null ? LocalDateTime.parse(approvalTimestamp, JsonFormatter.DATE_TIME_FORMATTER) : null;	
+		this.approvalTimestamp = approvalTimestamp != null ? LocalDateTime.parse(approvalTimestamp, Constants.DATE_TIME_FORMATTER) : null;	
 	}
 
 	public String getTitle() {
@@ -140,6 +137,4 @@ public class Review {
 				+ comfort + ", convenience=" + convenience + ", position=" + position + "]";
 	}
 	
-	
-
 }

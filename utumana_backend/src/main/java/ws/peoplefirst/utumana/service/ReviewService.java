@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
 import ws.peoplefirst.utumana.dto.ReviewDTO;
 import ws.peoplefirst.utumana.exception.ForbiddenException;
@@ -73,36 +72,6 @@ public class ReviewService {
 			return false;
 		return true;
 	}
-
-	//0 usage
-	public Double calculateOverallRating(Model model,Review review) throws IllegalArgumentException{
-		boolean isTitleOK = review.getTitle()!=null && !review.getTitle().isBlank();
-		
-		if(!isTitleOK) {
-			model.addAttribute("titleerror","the title cannot be blank.");
-		}
-		
-		boolean isPositionOK = review.getPosition()!=null;
-		if(!isPositionOK) {
-			model.addAttribute("positionerror","you must choose a grade for position.");
-		}
-		
-		boolean isConvenienceOK=review.getConvenience()!=null;
-		if(!isConvenienceOK) {
-			model.addAttribute("convenienceerror","you must choose a grade for convenience.");
-		}
-		
-		boolean isComfortOK=review.getComfort()!=null;
-		if(!isComfortOK) {
-			model.addAttribute("comforterror","you must choose a grade for comfort.");
-		}
-	
-		if(isTitleOK && isPositionOK && isConvenienceOK && isComfortOK) {
-			return (review.getPosition()+review.getConvenience()+review.getComfort())/3;
-		}else {
-			throw new IllegalArgumentException("missing some review values");
-		}
-	}
 	
 	public void deleteReview(Review review) {
 		if(review != null) {
@@ -111,13 +80,6 @@ public class ReviewService {
 			throw new NullPointerException("Review is null");
 		}
 	}
-
-	//0 usage
-	public void deleteReview(Long id) {
-		if(id != null)
-			reviewRepository.deleteById(id);
-	}
-	
 	
 	public Review acceptReview(Review review) {
 		if(review != null) {

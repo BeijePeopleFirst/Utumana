@@ -30,14 +30,8 @@ public class AvailabilityService {
 	@Autowired
 	private AvailabilityRepository availabilityRepository;
 	
-//	@Autowired
-//	private BookingService bookingService;
-	
 	@Autowired
 	private BookingRepository bookingRepository;
-	
-//	@Autowired
-//	private AccommodationService accommodationService;
 	
 	@Autowired
 	private AccommodationRepository accommodationRepository;
