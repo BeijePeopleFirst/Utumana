@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="ISO-8859-1">
+	<title>Add user</title>
+	<link rel="stylesheet" type="text/css" href="./css/table.css">
+	<link rel="stylesheet" type="text/css" href="./css/form.css">
+	<link rel="stylesheet" type="text/css" href="./css/header.css">
+	 <style>
+	  .error {
+			color: #ed1c24;
+			font-weight: bold;
+			font-size: 80%;
+		}
+  </style>
+</head>
+<body onload="init(); initHeader();">
+	<div id="header"></div>
+	<h2>Add user</h2>
+
+<form class="form-container"> <!-- PATCH -->
+  <label for="name">Name:</label>
+  <input id="name" type="text" name="name">
+  
+  <label for="surname">Surname:</label>
+  <input id="surname" type="text" name="surname">
+  
+  <label for="email">Email:</label>
+  <input id="email" type="text" name="email">
+  
+   <label for="password">Password:</label>
+  <input id="password" type="text" name="password">
+  
+  <label for="bio">Bio:</label>
+  <input id="bio" type="text" name="bio">
+  
+  <div class="button-container">
+  	<button type="button" name="create" onclick="createNewUser()" value="add">Add user</button>
+  	<button type="button" name="back" onclick="history.back()" value="back">Back</button>
+  </div>
+</form> 
+
+<div id="message"></div>
+<script type="text/javascript" src="./javascript/utils.js"></script>
+<script type="text/javascript" src="./javascript/add_user.js"></script>
+</body>
+</html>

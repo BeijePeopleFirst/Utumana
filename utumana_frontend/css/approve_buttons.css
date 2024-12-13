@@ -1,0 +1,26 @@
+@charset "ISO-8859-1";
+
+.right-button {
+	display:flex;
+	justify-content: center;
+	flex-direction:row;
+	gap: 10px;
+}
+
+.approved {
+	color:green;
+}
+
+.button_img{
+	border-radius: 50%;
+	width: 40px;
+       height: 40px;
+       object-fit: cover;
+       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.to-accept{
+	border: none;
+	background: transparent;
+	cursor: pointer;
+}

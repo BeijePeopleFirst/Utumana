@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Edit account</title>
+	<link rel=stylesheet href="../css/account.css">
+	<link rel="stylesheet" href="css/loader.css">
+	<script type="text/javascript" src="./javascript/utils.js"></script>
+	<script type="text/javascript" src="./javascript/account.js"></script>
+</head>
+<body onload="on_load()">
+
+	<div id="message"></div>
+
+	<div class="profile-container">
+ 
+		<h2>Account</h2>
+		<div class="img-container">
+			<div class="loader" style="left: 47%; top:47%"></div>
+			<img id="profile_photo_user" class="profile-picture" alt="Profile Picture" src="static/images/empty.png">
+	    </div>
+	    <input class="submit-button" type="button" onclick="update_profile_picture()" value="Change picture">
+
+        <form class="bio-form" onsubmit="update_bio()">
+            <textarea name="bio" id="bio"></textarea>
+            <p id="message"></p>
+            <div class="buttons">
+	            <input class="submit-button" type="submit" value="Save Bio">
+	            <a class="change-password-link" href="./reset_user_password.html">Change Password</a>
+            </div>
+        </form>
+        
+        <form class="bio-form">
+	        <button class="submit-button" type="button" onclick="back_to_profile()">Cancel</button>
+        </form>
+    </div>
+    
+    <script type="text/javascript">
+    	
+    </script>
+</body>
+</html>

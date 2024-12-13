@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Availability</title>
+	<link rel="stylesheet" href="css/form.css">
+	<link rel="stylesheet" href="css/post.css">
+	<link rel="stylesheet" href="css/table.css">
+	<link rel="stylesheet" href="css/header.css">
+	<script type="text/javascript" src="javascript/utils.js"></script>
+	<script type="text/javascript" src="javascript/html_utils.js"></script>
+	<script type="text/javascript" src="javascript/post.js"></script>
+	<script type="text/javascript" src="javascript/post_availabilities.js"></script>
+</head>
+<body onload="postAvailabilitiesOnLoad()">
+	<div id="header"></div>
+	
+	<div id="progress_bar" class="bar-container">
+		<div class="bar-background-color round-xlarge">
+	    	<div class="bar-color round-xlarge" style="width:75%">&nbsp;</div>
+		</div>	
+	</div>
+	
+<div id="container">
+
+	<h2>Choose when your accommodation will be available</h2>
+	<p>You can add both periods of availability and of unavailability: the booking system will take care of merging the information correctly.</p>
+		
+	<div class="form-container">
+		<h3>Availabilities</h3>
+		<div class="inline">
+			<label for="start_date">Start date: </label> &nbsp; 
+			<input type="date" id="av_start_date" name="start_date" onchange="setEndDateMin('av')" onclick="resetAvStartDateValidity()">
+			<span id="av_start_date_error" class="errormessage">The start date cannot be empty</span>
+		</div>
+		<div class="inline">
+			<label for="end_date">End date:* </label> &nbsp;&nbsp;
+			<input type="date" id="av_end_date" name="end_date" onclick="resetAvEndDateValidity()">
+			<span id="av_end_date_error" class="errormessage">The end date cannot be empty</span>
+		</div>
+		<span id="av_dates_error" class="errormessage">The availability periods cannot overlap</span>
+		
+		<div class="inline">
+			<label for="price">Price per night: </label> &nbsp;
+			<input type="number" id="price" name="price" value="0" min="0" step="0.01" onclick="resetAvPriceValidity()">
+		</div>
+		<span id="price_error" class="errormessage">The price must be a decimal number greater or equal to zero, with two decimal digits at most</span>
+		
+		<div class="button-container">
+		<button type="submit" onclick="addAvailability()">Add availability</button> &nbsp;
+		</div>
+		<p class="small">* the end date doesn't include the night between it and the following day.</p>
+		
+		<table id="availabilities">
+			<tr>
+				<th> Start Date </th><th> End Date </th><th> Price per night (&euro;) </th><th> </th>
+			</tr>
+		</table>
+		
+		<br>
+		
+		<h3>Unavailabilities</h3>
+		<div class="inline">
+			<label for="start_date">Start date: </label> &nbsp; 
+			<input type="date" id="unav_start_date" name="unav_start_date" onchange="setEndDateMin('un')" onclick="resetUnavStartDateValidity()">
+			<span id="unav_start_date_error" class="errormessage">The start date cannot be empty</span>
+		</div>
+		<div class="inline">
+			<label for="end_date">End date:* </label> &nbsp;&nbsp;
+			<input type="date" id="unav_end_date" name="unav_end_date"  onclick="resetUnavEndDateValidity()">
+			<span id="unav_end_date_error" class="errormessage">The end date cannot be empty</span>
+		</div>
+		<span id="unav_dates_error" class="errormessage">The unavailability periods cannot overlap</span>
+		
+		<div class="button-container">
+		<button type="submit" onclick="addUnavailability()">Add unavailability</button> &nbsp;
+		</div>
+		<p class="small">* the end date doesn't include the night between it and the following day.</p>
+		
+		<table id="unavailabilities">
+			<tr>
+				<th> Start Date </th><th> End Date </th><th> </th>
+			</tr>
+		</table>
+	</div>
+	
+	<br>
+	<span id="error" class="errormessage"></span>
+	
+	<div style="text-align:center;">
+    	<button type="submit" onclick="cancelAccommodationPost()">Cancel</button> &nbsp;
+		<button id="save_button" type="submit" onclick="seePostRecap()">Next</button> 
+	</div>
+</div>
+</body>
+</html>

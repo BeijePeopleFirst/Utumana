@@ -1,0 +1,78 @@
+@charset "UTF-8";
+
+.grid-container{
+	display: grid;
+	grid-template-areas: "filters accommodations";
+	grid-template-columns: 300px 1fr;
+    gap: 10px;
+    margin:10px;
+}
+
+.item1{
+	grid-area:"filters";
+	border: 1px solid lightgrey;
+	border-radius: 5px;
+	box-shadow: 0 2px 4px lightgrey;
+	display: flex;
+	flex-direction: column;
+	padding: 10px;
+	height: min-content;
+}
+
+.item2{
+	grid-area:"accommodations";
+	border: 1px solid lightgrey;
+	border-radius: 5px;
+	box-shadow: 0 2px 4px lightgrey;
+	padding: 5px;
+}
+
+.filter{
+	display:flex;
+	flex-direction:row;
+	justify-content: left;
+	margin-left: 20px;
+	margin-top:20px;
+}
+.filter img {
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+h2, h3 {
+	margin-left: 20px;
+}
+
+.item2 select {
+	padding: 8px 12px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	font-size: 14px;
+	background-color: #f1f1f1;
+	cursor: pointer;
+	margin:5px;
+}
+.item2 select:focus {
+	outline: none;
+	border-color: #666;
+}
+.item2 select option {
+	background-color: #f1f1f1;
+}
+
+.button-apply{
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    background-color: #c0c0c0;
+    color: white;
+    width: 150px;
+    margin-left: 20px;
+    margin-right:20px;
+}
+
+.button-apply:hover {
+    background-color: #808080;
+}

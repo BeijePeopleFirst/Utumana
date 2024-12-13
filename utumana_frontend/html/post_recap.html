@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Confirm accommodation info</title>
+	<link rel="stylesheet" href="css/form.css">
+	<link rel="stylesheet" href="css/post.css">
+	<link rel="stylesheet" href="css/table.css">
+	<link rel="stylesheet" href="css/header.css">
+	<script type="text/javascript" src="javascript/utils.js"></script>
+	<script type="text/javascript" src="javascript/html_utils.js"></script>
+	<script type="text/javascript" src="javascript/post.js"></script>
+	<script type="text/javascript" src="javascript/post_recap.js"></script>
+</head>
+<body onload="postRecapOnLoad()">
+	<div id="header"></div>
+	
+	<div id="progress_bar" class="bar-container">
+		<div class="bar-background-color round-xlarge">
+	    	<div id="colored-bar" class="bar-color round-xlarge" style="width:100%">you're almost there!</div>
+		</div>	
+	</div>
+	
+<div id="recap">
+	<h2>Confirm accommodation info</h2>
+	
+	<div class="form-container">
+	    <label for="title" >Title</label>
+	    <input id="title" name="title" type="text" disabled="disabled"/>
+	    
+	    <label for="description" >Description</label>
+	    <textarea id="description" name="description" disabled="disabled"></textarea>
+	    
+	    <div class="inline">
+	    <label for="beds" >Beds</label> &nbsp; 
+	    <input id="beds" name="beds" type="number" value="1" min="1" step="1" disabled="disabled"/>
+	    &nbsp; &nbsp;
+	    <label for="rooms" >Rooms</label> &nbsp; 
+	    <input id="rooms" name="rooms" type="number" value="1" min="0" step="1" disabled="disabled"/>
+	    </div>
+	    
+	    <label for="images" >Images:</label>
+	    <input id="images" name="images" type="file" multiple="multiple" accept="image/png, image/gif, image/jpeg" disabled="disabled"/>
+	    
+	    <!-- create into javascript -->
+	    <button type="button" onclick="window.location.href='post_intro.html'">Go back to edit</button> 
+	</div>
+	
+	<div class="form-container">
+		<h3>Services</h3>
+		
+		<div id="recap_services">
+		</div>
+		
+		<!-- create into javascript -->
+		<button type="button" onclick="window.location.href='post_services.html'">Go back to edit</button> 
+	</div>
+	
+	<div class="form-container address-container">
+		<h3>Address</h3>
+		<div class="address">
+			<div class="inline-container">
+			<label for="country" >Country</label>
+		    <input id="country" name="country" type="text" disabled="disabled"/>
+		    </div>
+		    
+		    <div class="inline-container">
+		    <label for="cap" >CAP</label>
+		    <input id="cap" name="cap" type="text" disabled="disabled"/>
+		    </div>
+		    
+		   <div class="inline-inputs-container">
+		    <label for="street" >Street</label>
+		    <input id="street" name="street" type="text" disabled="disabled"/>
+	
+		    <label id="str_num_label" for="str_num" >Street Number</label>
+		    <input id="str_num" name="str_num" type="text" disabled="disabled"/>
+		    </div>
+		    
+		    <div class="inline-inputs-container">
+		    <label for="city" >City</label>
+		    <input id="city" name="city" type="text" disabled="disabled"/>
+		    
+		    <label id="province_label" for="province" >Province code</label>
+		    <input id="province" name="province" type="text" disabled="disabled"/>
+		    </div>
+		    
+		    <div class="inline-container">
+		    <label for="info" >Other Info</label>
+		    <input id="info" name="info" type="text" disabled="disabled"/>
+		    </div>
+	    </div>
+	    
+	    <button type="button" onclick="window.location.href='post_address.html'">Go back to edit</button> 
+	</div>
+	
+	<div class="form-container">
+		<h3>Availabilities</h3>
+		<table id="availabilities">
+			<tr>
+				<th> Start Date </th><th> End Date </th><th> Price per night (&euro;) </th>
+			</tr>
+		</table>
+		
+		<br>
+		
+		<h3>Unavailabilities</h3>
+		<table id="unavailabilities">
+			<tr>
+				<th> Start Date </th><th> End Date </th>
+			</tr>
+		</table>
+		
+		<button type="button" onclick="window.location.href='post_availabilities.html'">Go back to edit</button> 
+	</div>
+	
+	<br>
+	<span id="error" class="errormessage"></span>
+	
+	<div style="text-align:center;">
+    	<button type="submit" onclick="cancelAccommodationPost()">Cancel</button> &nbsp;
+		<button type="submit" onclick="confirmAccommodationPost()">Submit accommodation</button> 
+	</div>
+</div>
+</body>
+</html>

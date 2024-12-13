@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+    <link rel="stylesheet" href="./css/profile.css">
+    <link rel="stylesheet" href="./css/header.css">
+     <link rel="stylesheet" href="css/modal.css">
+      <link rel="stylesheet" href="css/loader.css">
+    <link rel="stylesheet" href="./css/star.css">
+    <link rel="stylesheet" href="./css/form.css">
+    <link rel="stylesheet" href="./css/details_review.css">
+    
+    <script type="text/javascript" src="./javascript/utils.js"></script>
+    <script type="text/javascript" src="./javascript/modal.js"></script>
+    <script type="text/javascript" src="./javascript/profile.js"></script>
+</head>
+<body onload="load_user(); initHeader();">
+
+    <div id="header"></div>
+    
+    <div id="message"></div>
+
+    <div class="grid-container">
+        <div class="item2">
+            <div class="profile-container">
+            	<div class="loader" style="left: 47%; top:47%"></div>
+            </div>
+            
+            <div id="badges" class="badges">
+                <!-- Placeholder per i badge -->
+            </div>
+            
+            <div class="information">
+                <p>Name: <span id="user-name"></span></p>
+                <p>Surname: <span id="user-surname"></span></p>
+                <p>Email: <span id="user-email"></span></p>
+                <p>Bio: <span id="user-bio"></span></p>
+            </div>
+        </div>
+
+        <div class="item3">
+            <p>Reviews</p>
+            <div id="reviews-container">
+                <!-- Placeholder per le recensioni -->
+            </div>
+        </div>
+        
+        <div class="item4">
+            <nav class="column">
+                <a href="./my_accommodation.html">My accommodations</a>
+                <a href="./my_booking_host.html">Host dashboard</a> <!-- DA TOGLIERE? -->
+                <a href="./account.html">Account</a>
+                <div id="admin-link" style="visibility: collapse">
+                    <a href="./user_list.html">Admin Tools</a>
+                </div>
+            </nav>
+        </div>
+    </div>
+</body>
+</html>

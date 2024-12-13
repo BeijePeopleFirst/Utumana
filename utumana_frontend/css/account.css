@@ -1,0 +1,83 @@
+@charset "ISO-8859-1";
+
+body {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f5f5f5;
+}
+
+ .profile-container {
+ 	 display:flex;
+ 	 flex-direction:column;
+ 	 justify-content: center;
+     background-color: white;
+     padding: 30px;
+     border-radius: 8px;
+     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+ }
+ 
+ .img-container{
+ 	height: 150px;
+ }
+
+ .profile-picture {
+     width: 150px;
+     height: 150px;
+     border-radius: 50%;
+     object-fit: cover;
+     display: block;
+     margin: 0 auto 20px;
+     border: 3px solid black;
+     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+ }
+
+ .bio-form {
+     margin: 20px 0;
+ }
+
+ textarea {
+     width: 97%;
+     min-height: 100px;
+     padding: 12px;
+     border: 1px solid #ddd;
+     border-radius: 4px;
+     resize: vertical;
+     font-family: inherit;
+     margin-bottom: 10px;
+ }
+
+ .submit-button {
+     padding: 10px 20px;
+     border: none;
+     border-radius: 4px;
+     cursor: pointer;
+     font-size: 16px;
+ }
+
+ .submit-button:hover {
+ 	background-color: #707070;
+ }
+
+ .change-password-link {
+     display: inline-block;
+     margin-top: 20px;
+     color: #3498db;
+     text-decoration: none;
+     font-weight: bold;
+ }
+
+ .change-password-link:hover {
+     text-decoration: underline;
+ }
+ 
+ .buttons {
+	display:flex;
+	flex-direction: row;
+	justify-content: space-around;
+ }
+ 
+ h2{
+ 	text-align: center;
+ }

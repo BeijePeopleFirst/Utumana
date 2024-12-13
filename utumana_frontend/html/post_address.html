@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Set Address</title>
+	<link rel="stylesheet" href="css/form.css">
+	<link rel="stylesheet" href="css/post.css">
+	<link rel="stylesheet" href="css/table.css">
+	<link rel="stylesheet" href="css/header.css">
+	<script type="text/javascript" src="javascript/utils.js"></script>
+	<script type="text/javascript" src="javascript/html_utils.js"></script>
+	<script type="text/javascript" src="javascript/post.js"></script>
+	<script type="text/javascript" src="javascript/post_address.js"></script>
+</head>
+<body onload="postAddressOnLoad()">
+	<div id="header"></div>
+	
+	<div id="progress_bar" class="bar-container">
+		<div class="bar-background-color round-xlarge">
+	    	<div class="bar-color round-xlarge" style="width:50%">&nbsp;</div>
+		</div>	
+	</div>
+	
+<div id="container">
+	<h2>Address</h2>
+	
+	<div class="form-container address-container">
+		<div class="inline-container">
+		<label for="country" >Country</label>
+	    <input id="country" name="country" type="text" aria-errormessage="country_error" onclick="resetValidity('country')"/>
+	    </div>
+	    <span id="country_error" class="errormessage">The country is required</span>
+	    
+	    <div class="inline-container">
+	    <label for="cap" >CAP</label>
+	    <input id="cap" name="cap" type="text" aria-errormessage="cap_error" onclick="resetValidity('cap')"/>
+	    </div>
+	    <span id="cap_error" class="errormessage">The CAP must be a 5-digit number</span>
+	    
+	   <div class="inline-inputs-container">
+	    <label for="street" >Street</label>
+	    <input id="street" name="street" type="text" />
+
+	    <label id="str_num_label" for="str_num" >Street Number</label>
+	    <input id="str_num" name="str_num" type="text" />
+	    </div>
+	    
+	    <div class="inline-inputs-container">
+	    <label for="city" >City</label>
+	    <input id="city" name="city" type="text" />
+	    
+	    <label id="province_label" for="province" >Province code</label>
+	    <input id="province" name="province" type="text" />
+	    </div>
+	    
+	    <div class="inline-container">
+	    <label for="info" >Other Info</label>
+	    <input id="info" name="info" type="text" />
+	    </div>
+	</div>
+	
+	<br/>
+	<span id="error" class="errormessage"></span>
+	
+    <div style="text-align:center;">
+    	<button id="cancel_button" type="submit" onclick="cancelAccommodationPost()">Cancel</button> &nbsp;
+		<button id="save_button" type="submit" onclick="saveAccommodationAddress()">Next</button> 
+	</div>
+</div>
+</body>
+</html>

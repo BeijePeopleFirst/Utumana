@@ -1,0 +1,33 @@
+@charset "ISO-8859-1";
+
+table {
+    width: 90%;
+    border-collapse: collapse;
+    margin-top: 10px;
+   	margin-left: auto;
+   	margin-right:auto;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    font-size: 18px;
+	border-radius: 10px;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: center;
+    
+}
+
+th {
+	border-radius: 10px 10px 0 0;
+	border-bottom: 1px solid #ddd;
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #2c3e50;
+    text-align: center;
+}
+
+tr:hover {
+    background-color: #f8f9fa;
+    transition: background-color 0.2s ease;
+}

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>${title}</title>
+	 <link rel="stylesheet" href="css/accommodation.css">
+	 <link rel="stylesheet" href="css/star.css">
+	 <link rel="stylesheet" href="css/header.css">
+	 <link rel="stylesheet" href="css/modal.css">
+ 	 <link rel="stylesheet" href="css/loader.css">
+ 	 <link rel="stylesheet" href="css/calendar.css">
+	 <link rel="stylesheet" href="css/accommodation_details.css">
+	 <script type="text/javascript" src="javascript/utils.js"></script>
+	 <script type="text/javascript" src="javascript/accommodation_detail.js"></script>
+	 <script type="text/javascript" src="javascript/modal.js"></script>
+	  <script type="text/javascript" src="javascript/calendar.js"></script>
+</head>
+<body onload='initHeader();'>
+	<div id="header"></div>
+	
+	<div class="container">
+			
+		<div class="inline block" id="top">
+			<h2 class="inline-child" id="title"></h2> 
+		</div>
+		
+		<div class="images" id="photos">
+			<div class="loader" style="left: 100%; top: 50%"></div>
+		</div>
+		
+		<a id = morePhotos>See more photos</a>
+		
+		<div class="block title" id="generalInfo"></div>
+		
+	    <div class="block" id="rooms">
+	    <h3>Rooms</h3>
+	    </div>
+	
+		<div class=" block" id="description">
+		<h3>Description</h3>
+		</div>
+		
+		<div class="block" id="services">
+		<h3>Services</h3>
+		</div>
+		
+		<div class="block" id="availabilities">
+			<h3>Availabilities</h3>
+			<div id="av-container">
+			<div id="calendar">
+			<div class="loader"></div>
+			</div>
+			<div id="edit_av"></div>
+			</div>
+		</div>
+	    
+	    <div class=" block" id ="buttons">
+	    <h3>Book now </h3>
+	    </div>
+	    
+	    <div id="reviews">
+		<h3>Reviews </h3>
+		</div>
+		
+	</div>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Login</title>
+	<link rel="stylesheet" href="./css/form.css">
+	<script type="text/javascript" src="javascript/utils.js"></script>
+	<script type="text/javascript" src="./javascript/login.js"></script>
+</head>
+<body onload="checkToken()">
+	<h2>Login</h2>
+		
+		<div class="form-container">		
+			<label for="email">Email:</label>
+			<input type="text" name="email" id="email">
+		  
+			<label for="password">Password:</label>
+			<input type="password" name="password" id="password">
+		  
+		  	<div class="button-container">
+		  		<button type="submit" name="authentication" value="login" onclick="signin()">Login</button>
+		  		<button type="submit" name="resetpassword" value="resetpassword" onclick="resetPassword()">Forgot password?</button>
+		  	</div>
+		  	<div id="message" class="error"> </div>
+		</div>
+	  	
+</body>
+</html>

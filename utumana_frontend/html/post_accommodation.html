@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Post a new accommodation</title>
+  <link rel="stylesheet" href="css/form.css">
+  <link rel="stylesheet" href="css/post.css">
+  <link rel="stylesheet" href="css/table.css">
+  <script type="text/javascript" src="javascript/utils.js"></script>
+</head>
+<body>
+  
+  <h2>Post a new accommodation</h2>
+  
+	  <form class="form-container" action="./post_services" method="POST" enctype="multipart/form-data">
+	    <label for="title" >Title</label>
+	    <input id="title" name="title" type="text" /><br>
+	    
+	    <label for="description" >Description</label>
+	    <textarea id="description" name="description" rows="6"></textarea><br>
+	    
+	    <div class="inline">
+	    <label for="beds" >Beds</label> &nbsp; 
+	    <input id="beds" name="beds" type="number" value="1" min="1"/>
+	    </div><br>
+	    
+	    <div class="inline">
+	    <label for="rooms" >Rooms</label> &nbsp; 
+	    <input id="rooms" name="rooms" type="number" value="1" min="0"/>
+	    </div><br>
+	    
+	    <label for="post_image_file" >Choose images</label>
+	    <input id="post_image_file" name="post_image_file" type="file" multiple="multiple" accept="image/png, image/gif, image/jpeg" />
+	  </form>
+
+ 
+  <form class="form-container" action="./handle_post_services_operation" method="GET">
+   <h2>Choose services</h2>
+    <div class="services-grid-container">
+	    <div class="item1">
+	      <div>
+		      <label for="search_service" ></label>
+		      <input type="text" id="search_service" name="search_service" />
+		      <div class="button-container">
+		      <button type="submit" name="operation" value="search_service" >Search Service</button>&nbsp;&nbsp;&nbsp;
+		      <button type="submit" name="operation" value="update_page_post_acc_services" >Refresh Page</button>
+		      </div>
+	      </div>
+	     <!--   <c:if test="${not empty found_services_for_post}">
+	      	<br/>
+		      <c:forEach items="${found_services_for_post}" var="found_service">
+		        <div>
+			        <c:choose>
+			            <c:when test="${not empty selected_chkbxs[found_service.id] and selected_chkbxs[found_service.id] eq true}">
+			              <input type="checkbox" name="service_search${found_service.id}" id="service_search${found_service.id}" value="${found_service.id}" checked />
+			            </c:when>
+			            <c:otherwise>
+			              <input type="checkbox" name="service_search${found_service.id}" id="service_search${found_service.id}" value="${found_service.id}" />
+			            </c:otherwise>
+		          </c:choose>
+		          <label for="service_search${found_service.id}" >${found_service.title}</label><br>
+	          </div>
+		      </c:forEach>
+	      </c:if>-->
+	    </div>
+	    
+	    <div class="item2">
+	     <!--  <c:forEach items="${services}" var="service">
+	        <div>
+	          <c:choose>
+	            <c:when test="${not empty selected_chkbxs[service.id] and selected_chkbxs[service.id] eq true}">
+	              <input id="service${service.id}" name="service${service.id}" type="checkbox" value="${service.id}" checked />
+	            </c:when>
+	            <c:otherwise>
+	              <input id="service${service.id}" name="service${service.id}" type="checkbox" value="${service.id}" />
+	            </c:otherwise>
+	          </c:choose>
+	          <label for="service${service.id}" >${service.title}</label>
+	        </div>
+	      </c:forEach> --> 
+	    </div>
+    </div>
+	</form>  
+	
+	<form class="form-container" action="./post_availability" method="GET">
+	  	<h2>Address</h2>
+	    <label for="street" >Street</label>
+	    <input id="street" name="street" type="text" />
+	    <label for="str_num" >Street Number</label>
+	    <input id="str_num" name="str_num" type="text" />
+	    <label for="city" >City</label>
+	    <input id="city" name="city" type="text" />
+	    <label for="province" >Province code</label>
+	    <input id="province" name="province" type="text" />
+	    <label for="cap" >CAP</label>
+	    <input id="cap" name="cap" type="text" />
+	    <label for="country" >Country</label>
+	    <input id="country" name="country" type="text" />
+	    <label for="info" >Other Info</label>
+	    <input id="info" name="info" type="text" />
+	    
+	     <!--  <h2>${illegal_field_post_address}</h2>-->
+	</form>
+
+
+	<form class="form-container" action="add_acc_post_period" method="get">
+		<h2>Availability and unavailability periods</h2>
+		<p class="smaller">Choose when your accommodation will be available. 
+		You can add both periods of availability and of unavailability: the booking system will take care of merging the information correctly.</p>
+		<div class="inline">
+			<label for="start_date">Start date: </label> &nbsp; 
+			<input type="date" name="start_date" min="${today}" value="${start_date_value}">
+		</div>
+		<div class="inline">
+			<label for="end_date">End date:* </label> &nbsp;&nbsp;
+			<input type="date" name="end_date" min="${today}" value="${end_date_value}">
+		</div>
+		<div class="inline">
+			<label for="price">Daily price: </label> &nbsp;
+			<input type="number" id="price" name="price" value="0" min="0" step="0.01">
+		</div>
+		<div class="button-container">
+		<button type="submit" id="add_availabilty">Add availability</button> &nbsp;
+		</div>
+		<p class="small">* the end date doesn't include the night between it and the following day.</p>
+		
+		<table id="availabilities">
+			<tr>
+				<th> Start Date </th><th> End Date </th><th> Price per night </th><th> </th>
+			</tr>
+			<tr id="default"><td colspan=3> No availabilities yet</td></tr>
+			<!--  <c:if test="${not empty availabilities}">
+			
+				<c:forEach items="${availabilities}" var="availability">
+					<tr>
+						<td>${availability.startDate}</td><td>${availability.endDate}</td><td>${availability.pricePerNight}</td>
+						<td>
+							<form action="edit_av_acc_post" method="get">
+								<input type="hidden" name="start_date_edit" value="${availability.startDate}">
+								<input type="hidden" name="end_date_edit" value="${availability.endDate}">
+								<input type="hidden" name="start_date_del" value="${availability.startDate}">
+								<input type="hidden" name="end_date_del" value="${availability.endDate}">
+								
+								<input type="hidden" name="price_edit" value="${availability.pricePerNight}">
+								<c:forEach items="${availabilities}" var="avdatadedit">
+			      					<input type="hidden" name="availability${avdatadedit.id}" value="${avdatadedit.id}">
+			    				</c:forEach>
+								 <button type="submit" name="edit_av">Edit</button> &nbsp; 
+								 <button type="submit" name="delete_av" formaction="delete_av_acc_post">Delete</button>
+							</form>
+		
+						</td>		
+					</tr>		
+				</c:forEach>
+		
+			</c:if>-->
+		</table>
+		
+		<div class="inline">
+			<label for="start_date">Start date: </label> &nbsp; 
+			<input type="date" name="start_date" min="${today}" value="${start_date_value}">
+		</div>
+		<div class="inline">
+			<label for="end_date">End date:* </label> &nbsp;&nbsp;
+			<input type="date" name="end_date" min="${today}" value="${end_date_value}">
+		</div>
+		<div class="button-container">
+		<button type="submit" id="add_unavailabilty">Add unavailability</button> &nbsp;
+		</div>
+		<p class="small">* the end date doesn't include the night between it and the following day.</p>
+		
+		<table id="unavailabilities">
+			<tr>
+				<th> Start Date </th><th> End Date </th><th> </th>
+			</tr>
+			<tr id="default"><td colspan=2> No unavailabilities yet</td></tr>
+		</table>
+	</form>
+
+	<br>
+    <div style="text-align:center;">
+    	<button type="submit" onclick="cancelAccommodationPost()">Cancel</button> &nbsp;
+		<button type="submit" onclick="postAccommodation()">Submit accommodation</button> 
+	</div>
+
+</body>
+</html>

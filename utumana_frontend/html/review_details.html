@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Review Details</title>
+		<link rel="stylesheet" href="./css/star.css">
+		<link rel="stylesheet" href="./css/form.css">
+		<link rel="stylesheet" href="./css/loader.css">
+		<link rel="stylesheet" href="./css/details_review.css">
+		<link rel="stylesheet" href="./css/header.css">
+	</head>
+	<body onload="init(); initHeader();">
+		<div id="header"></div>
+		<div id="message"></div>
+		<h2>Review Details</h2>
+		
+		<div class="review">
+			<p id="review_title" class="review-title"></p><br>
+			
+			<div class="review-star">
+				<div class="star-rating">
+					<div class ="lable">
+						Overall rating:
+					</div>
+					<div id="overall_rating_stars"></div>
+				</div>
+						
+						
+				<div class="star-rating">
+					<div class ="lable">
+						Comfort:
+					</div>
+					<div id="comfort_stars"></div>
+				</div>
+			
+	
+				<div class="star-rating">
+					<div class ="lable">
+						Position:
+					</div>
+					<div id="position_stars"></div>
+				</div>
+			
+			
+				<div class="star-rating">
+					<div class ="lable">
+						Convenience:
+					</div>
+					<div id="convenience_stars"></div>
+				</div>
+			</div><br>
+			<p id="description_field_mid_page"></p>
+			<br>
+			<form> <!-- action="confirm_review" method="post" -->
+				<input type="text" id="title_input_form" name="title" readonly hidden="true">
+				<input type="number" id="overallRating_input_form" name="overallRating" readonly hidden="true">
+				<input type="number" id="comfort_input_form" name="comfort" readonly hidden="true">
+				<input type="number" id="position_input_form" name="position" readonly hidden="true">
+				<input type="number" id="convenience_input_form" name="convenience" readonly hidden="true">
+				<input type="text" id="description_input_form" name="description" readonly hidden="true">
+				
+				<div id="possible_buttons_section">
+					<button id="save_review_button" type="button" class="add_review_button" onclick="saveReview()" name="review_form" value="add">Send review</button>
+					<button type="button" class="back_to_editing_button" onclick="getBackToEditing()" name="review_form" value="back">Back</button>
+				</div>
+			</form>
+		
+		</div>
+		<script src="./javascript/utils.js"></script>
+		<script src="./javascript/review_details.js"></script>
+	</body>
+</html>

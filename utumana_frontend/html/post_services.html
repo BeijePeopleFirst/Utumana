@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Add services</title>
+	<link rel="stylesheet" href="css/form.css">
+	<link rel="stylesheet" href="css/post.css">
+	<link rel="stylesheet" href="css/table.css">
+	<link rel="stylesheet" href="css/header.css">
+	<script type="text/javascript" src="javascript/utils.js"></script>
+	<script type="text/javascript" src="javascript/post.js"></script>
+	<script type="text/javascript" src="javascript/post_services.js"></script>
+</head>
+<body onload="postServicesOnLoad()">
+	<div id="header"></div>
+
+	<div id="progress_bar" class="bar-container">
+		<div class="bar-background-color round-xlarge">
+	    	<div class="bar-color round-xlarge" style="width:25%">&nbsp;</div>
+		</div>	
+	</div>
+	
+<div id="services_container">
+	<h2 id="instruction">Add services</h2>
+	
+  	<div class="form-container services-grid-container">
+	    <div class="item1">
+	    	<div id="search_div">
+		    	<input type="text" id="search_service" name="search_service" placeholder="Search service..." onkeyup="document.getElementById('search_results').innerHTML = '' " onsubmit="searchService()"/>
+		    	<button type="submit" id="search_button" value="search_service" onclick="searchService()">Search</button>
+	     	</div>
+	    	<div id="search_results">
+	    	</div>
+	    </div>
+	    
+	    <div id="selected_services" class="item2">
+	    </div>
+    </div>
+    
+    <br/>
+    <span id="error" class="errormessage"></span>
+    
+    <div style="text-align:center;">
+    	<button id="cancel_button" type="submit" onclick="cancelAccommodationPost()">Cancel</button> &nbsp;
+		<button id="save_button" type="submit" onclick="saveAccommodationServices()">Next</button> 
+	</div>
+ </div>
+</body>
+</html>

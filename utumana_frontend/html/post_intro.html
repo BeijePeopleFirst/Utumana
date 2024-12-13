@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Post Accommodation</title>
+	<link rel="stylesheet" href="css/form.css">
+	<link rel="stylesheet" href="css/post.css">
+	<link rel="stylesheet" href="css/table.css">
+	<link rel="stylesheet" href="css/header.css">
+	<script type="text/javascript" src="javascript/utils.js"></script>
+	<script type="text/javascript" src="javascript/html_utils.js"></script>
+	<script type="text/javascript" src="javascript/post.js"></script>
+	<script type="text/javascript" src="javascript/post_intro.js"></script>
+</head>
+<body onload="postInfoOnLoad()">
+	<div id="header"></div>
+
+	<div id="progress_bar" class="bar-container" style="display:none;">
+		<div class="bar-background-color round-xlarge">
+	    	<div class="bar-color round-xlarge" style="width:5%">&nbsp;</div>
+		</div>	
+	</div>
+<div id="info-container">
+	<h2>Post a new accommodation</h2>
+  	
+	<!-- form enctype="multipart/form-data"-->
+	<div class="form-container">
+	    <label for="title" >Title</label>
+	    <input id="title" name="title" type="text" aria-errormessage="title_error" onclick="document.getElementById('title').ariaInvalid = 'false'"/>
+	    <span id="title_error" class="errormessage">A title is required</span>
+	    
+	    <label for="description" >Description</label>
+	    <textarea id="description" name="description" rows="14"></textarea>
+	    
+	    <div class="inline">
+	    <label for="beds" >Beds</label> &nbsp; 
+	    <input id="beds" name="beds" type="number" value="1" min="1" step="1" aria-errormessage="beds_error" onclick="resetValidityOfBeds()"/>
+	    &nbsp; &nbsp;
+	    <label for="rooms" >Rooms</label> &nbsp; 
+	    <input id="rooms" name="rooms" type="number" value="1" min="0" step="1" aria-errormessage="rooms_error" onclick="resetValidityOfRooms()"/>
+	    </div>
+	    <span id="beds_error" class="errormessage">The number of beds is required and must be an integer greater than zero</span>
+	    <span id="rooms_error" class="errormessage">The number of rooms is required and must be an integer greater or equal to zero</span>
+	    
+	    <label for="images" >Choose images (to select more than one file, click while pressing CTRL):</label>
+	    <input id="images" name="images" type="file" multiple="multiple" accept="image/png, image/gif, image/jpeg"  aria-errormessage="images_error" onclick="resetValidityOfImages()"/>
+	    <span id="images_error" class="errormessage">Choose at least one image</span>
+	</div>
+	
+	<br>
+	<span id="error" class="errormessage"></span>
+	
+	<div style="text-align:center;">
+    	<button type="submit" onclick="cancelAccommodationPost()">Cancel</button> &nbsp;
+		<button id="save_button" type="submit" onclick="saveAccommodationInfo()">Next</button> 
+	</div>
+</div>
+</body>
+</html>

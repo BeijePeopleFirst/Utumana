@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" type="text/css" href="./css/review.css">
+  <link rel="stylesheet" type="text/css" href="./css/form.css">
+  <link rel="stylesheet" href="./css/header.css">
+  <title>Review</title>
+  <style>
+	  .error {
+			color: #ed1c24;
+			font-weight: bold;
+			font-size: 80%;
+		}
+  </style>
+</head>
+
+<body onload="init()">
+
+	<div id="header"></div>
+	<div id="message"></div>
+	
+	<br><h2>Write Review</h2><br>
+ 	<form class="form-container"> <!-- action="confirm_review" method="get" -->
+	   <label for="review_title">Review title:</label>
+	   <input type="text" id="review_title" name="title" placeholder="Title">
+	   
+		<div class="container">
+ 	
+	 	<div class="review"> 	
+		 	<label for="comfort">Comfort:</label><br>
+			  <div class="rate">
+			    <input type="radio" id="cstar5" name="comfort" value="5" />
+			    <label for="cstar5" title="text">5 stars</label>
+			    <input type="radio" id="cstar4" name="comfort" value="4" />
+			    <label for="cstar4" title="text">4 stars</label>
+			    <input type="radio" id="cstar3" name="comfort" value="3" />
+			    <label for="cstar3" title="text">3 stars</label>
+			    <input type="radio" id="cstar2" name="comfort" value="2" />
+			    <label for="cstar2" title="text">2 stars</label>
+			    <input type="radio" id="cstar1" name="comfort" value="1" />
+			    <label for="cstar1" title="text">1 star</label>
+			  </div>
+	 	</div>
+	 	
+	 	<div class="review"> 	
+	 		<label for="position">Position:</label><br>
+			  <div class="rate">
+
+			    <input type="radio" id="pstar5" name="position" value="5" />
+			    <label for="pstar5" title="text">5 stars</label>
+			    <input type="radio" id="pstar4" name="position" value="4" />
+			    <label for="pstar4" title="text">4 stars</label>
+			    <input type="radio" id="pstar3" name="position" value="3" />
+			    <label for="pstar3" title="text">3 stars</label>
+			    <input type="radio" id="pstar2" name="position" value="2" />
+			    <label for="pstar2" title="text">2 stars</label>
+			    <input type="radio" id="pstar1" name="position" value="1" />
+			    <label for="pstar1" title="text">1 star</label>
+			  </div>
+	 	</div>
+	 	
+	 	<div class="review"> 
+	 		<label for="convenience">Convenience:</label><br>	
+			  <div class="rate">
+			    <input type="radio" id="star5" name="convenience" value="5"/>
+			    <label for="star5" title="text">5 stars</label>
+			    <input type="radio" id="star4" name="convenience" value="4" />
+			    <label for="star4" title="text">4 stars</label>
+			    <input type="radio" id="star3" name="convenience" value="3" />
+			    <label for="star3" title="text">3 stars</label>
+			    <input type="radio" id="star2" name="convenience" value="2" />
+			    <label for="star2" title="text">2 stars</label>
+			    <input type="radio" id="star1" name="convenience" value="1" />
+			    <label for="star1" title="text">1 star</label>
+			  </div>
+	 	</div>
+	 	
+	</div>
+	  <textarea name="description" id="review_description" rows="20" cols="60" placeholder="Description"></textarea>
+	  	<div class="button-container">
+	   <button type="button" onclick="goToDetails()" name="save_review_button" value="review">Save review</button>
+	   </div>
+ 	</form><br>
+ 	
+ 	<script src="./javascript/utils.js"></script>
+ 	<script src="./javascript/review.js"></script>
+	</body>
+
+</html>

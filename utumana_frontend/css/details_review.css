@@ -1,0 +1,28 @@
+@charset "ISO-8859-1";
+
+.review{
+	display:flex;
+	flex-direction: column;
+	justify-content: center;
+	width: 600px;
+	margin: 0 auto;
+	box-shadow: 0 2px 4px lightgrey;
+	padding: 15px;
+}
+
+.review-star{
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	width: 230px;
+}
+
+.star-rating{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+.review-title {
+	font-weight: bold;
+}

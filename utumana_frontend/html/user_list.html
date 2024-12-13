@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="ISO-8859-1">
+	<title>Admin tools</title>
+	<script src="./javascript/utils.js"></script>
+	<script src="./javascript/user_list.js"></script>
+	<link rel="stylesheet" href="./css/header.css">
+	<link rel="stylesheet" href="./css/loader.css">
+	<link rel="stylesheet" type="text/css" href="./css/table.css">
+	<link rel="stylesheet" type="text/css" href="./css/form.css">
+</head>
+<body onload="init(); initHeader();">
+	<div id="header"></div>
+	<div style="margin:40px;">
+	
+	<div class="button-container">
+	 	<button type="submit" name="add_new_user" onclick="add_new_user()">Add new user</button>
+		<button type="submit" name="accept_houses" onclick="accept_houses()">Accept houses</button>
+	</div>
+	
+	<div id="users">
+		<div class="loader" style="left:47%"></div>
+	</div>
+	<div id="message"></div>
+	</div>
+</body>
+</html>

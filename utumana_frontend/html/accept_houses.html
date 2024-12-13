@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+	 <meta charset="UTF-8">
+	 <title>Accept houses</title>
+	 <link rel="stylesheet" href="./css/header.css">
+	 <link rel="stylesheet" href="css/accommodation.css">
+	 <link rel="stylesheet" href="css/loader.css">
+	 <script type="text/javascript" src="javascript/utils.js"></script>
+	 <script type="text/javascript" src="javascript/myAccommodation.js"></script>
+</head>
+<body onload="initHeader();loadHousesToAccept();">
+	<div id="header"></div>
+	
+	<div class="container">
+		
+		<div class="text-align-center">
+			<p id="error" class="error"></p>
+		</div>
+		
+		<div id="latest_accommodations" class="accommodations-cards">
+			<div class="loader"></div>
+		</div>
+	</div>
+</body>
+</html>
