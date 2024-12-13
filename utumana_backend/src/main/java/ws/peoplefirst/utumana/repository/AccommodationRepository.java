@@ -72,14 +72,15 @@ public interface AccommodationRepository extends JpaRepository<Accommodation,Lon
 	public List<AccommodationDTO> findByUserInputDTOWithServices(@Param(value="dest") String destination, @Param(value="chkIn") LocalDate checkInDate,
 			@Param(value="chkOut") LocalDate checkOutDate, @Param(value="numGuests") Integer numberOfGuests, 
 			@Param(value="services") List<Long> serviceIds, @Param(value="servicesSize") Long servicesSize, Sort sort);
-		
-	
+
+
+	//0usage
 	public List<Accommodation> findAllByapprovalTimestampIsNull();
 	
 	
-	public Accommodation findByIdAndHidingTimestampIsNull(Long id); 
+	public Accommodation findByIdAndHidingTimestampIsNull(Long id);
 
-
+	//0usage
 	@Query("SELECT MAX(a.id) FROM Accommodation as a")
 	public Long getAccommodationMaxId();
 
@@ -141,7 +142,7 @@ public interface AccommodationRepository extends JpaRepository<Accommodation,Lon
 	@Query("SELECT a FROM Accommodation as a WHERE a.approvalTimestamp IS NULL")
 	public List<Accommodation> getAccommodationsToBeApproved();
 
-
+	//0usage
 //	@Query("SELECT new ws.peoplefirst.utumana.dto.AccommodationDTO(a.id, a.title, a.city, a.mainPhotoUrl, a.country) FROM Accommodation as a where a.approvalTimestamp IS NULL")
 //	public List<AccommodationDTO> getAccommodationDTOToBeApproved();
 	

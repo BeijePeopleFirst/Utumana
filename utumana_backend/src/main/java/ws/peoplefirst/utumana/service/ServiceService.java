@@ -20,7 +20,7 @@ public class ServiceService {
 		return new HashSet<ws.peoplefirst.utumana.model.Service>(serviceRepository.findAll());
 	}
 
-
+	//0usage
 	public ws.peoplefirst.utumana.model.Service findServiceById(Long id) {
 		return serviceRepository.findById(id).orElse(null);
 	}

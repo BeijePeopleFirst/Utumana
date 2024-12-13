@@ -14,7 +14,7 @@ import ws.peoplefirst.utumana.model.Booking;
 
 @Repository
 public interface AvailabilityRepository extends JpaRepository<Availability,Long>{
-
+	//0usage
 	@Query("SELECT MAX(a.id) FROM Availability as a")
 	public Long getMaxIndex();
 	

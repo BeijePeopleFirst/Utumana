@@ -16,10 +16,12 @@ public class PhotoService {
 	@Autowired
 	private PhotoRepository photoRepository;
 
+	//0 usage
 	public List<Photo> findByAccommodation(Accommodation base) {
 		return photoRepository.findByAccommodation(base);
 	}
 
+	//0 usage
 	@Transactional
 	public void save(Photo p) {
 		photoRepository.save(p);

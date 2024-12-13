@@ -85,6 +85,7 @@ public class AccommodationService {
 		}
 	}
 
+	//0 usage
 	public boolean rejectAccommodation(Long accommodationId) {
 		Accommodation accommodation = findById(accommodationId);
 		
@@ -95,9 +96,9 @@ public class AccommodationService {
 			return false;
 		}
 	}
-		
-	
-	
+
+
+	//0 usage
 	public List<Accommodation> getLatestUploads(int limit) {
 		Pageable pageable = PageRequest.of(0, limit);
 		return accommodationRepository.getLatestUploads(pageable);
@@ -138,7 +139,8 @@ public class AccommodationService {
 		
 		return res;
 	}
-	
+
+	//0 usage
 	public List<Accommodation> getMyAccommodations(Long userId) {
 		return accommodationRepository.findByOwnerIdAndHidingTimestampIsNull(userId);
 	}
@@ -213,29 +215,31 @@ public class AccommodationService {
 		
 		userRepository.save(user);
 	}
-	
-	
 
+
+	//0 usage
 	public void storePhotos(List<Photo> photos) {
 		for(Photo p : photos)
 			accommodationRepository.savePhoto(p.getAccommodation().getId(), p.getPhotoUrl(), p.getOrder());
 	}
 
+	//0 usage
 	public void storeAvailabilities(List<Availability> av) {
 		for(Availability a : av) {
 			a.setId(null);
 			availabilityRepository.save(a);
 		}
 	}
-	
-	
-	
+
+
+	//0 usage
 	public List<Accommodation> findByUserInput(String destination, LocalDate checkInDate, LocalDate checkOutDate,
 			Integer numberOfGuests) {
 		
 		return accommodationRepository.findByUserInput(destination, checkInDate, checkOutDate, numberOfGuests, Sort.by(Sort.DEFAULT_DIRECTION.DESC, "approvalTimestamp"));
 	}
 
+	//0 usage
 	private List<Accommodation> findByUserInputFree(String dest, LocalDate checkInDate, LocalDate checkOutDate,
 			Integer numGst) {
 		
@@ -528,7 +532,8 @@ public class AccommodationService {
 			throw new InvalidJSONException(errorMessage.toString());
 		}
 	}
-	
+
+	//0 usage
 	private boolean checkOwnerId(Long ownerId) {
 		return ownerId != null && userRepository.findById(ownerId).isPresent();
 	}
@@ -547,6 +552,7 @@ public class AccommodationService {
 	private boolean checkRooms(Integer rooms) {
 		return rooms != null && rooms >= 0;
 	}
+	//0 usage
 	private boolean checkMainPhotoUrl(String mainPhotoUrl) {
 		return mainPhotoUrl != null;
 	}
@@ -768,7 +774,7 @@ public class AccommodationService {
 		return returnedList;
 	}
 
-
+	//0 usage
 	@Transactional
 	public Accommodation substituteIfPresent(Accommodation newOne) {
 		Accommodation acc = findById(newOne.getId());

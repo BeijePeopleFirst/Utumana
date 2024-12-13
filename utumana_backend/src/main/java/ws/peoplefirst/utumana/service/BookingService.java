@@ -83,7 +83,8 @@ public class BookingService {
 			throw new IdNotFoundException("user with given id does not exist");
 		}
 	}
-	
+
+	//0 usage
 	public List<Booking> findAllHostBookings(Long ownerId) {
 		return bookingRepository.findAllByOwnerId(ownerId);
 	}
@@ -127,6 +128,7 @@ public class BookingService {
 
 	}
 
+	//0 usage
 	public boolean book(Long userId, Long accommodationId, LocalDate checkIn, LocalDate checkOut, double price) {
 		User user = userService.getUserById(userId);
 		Accommodation accommodation = accommodationService.findById(accommodationId);
@@ -192,10 +194,12 @@ public class BookingService {
 		return !pending.isEmpty() ? pending.get(0).getId() : null;
 	}
 
+	//0 usage
 	public boolean deletePendingBooking(Model model, Long userId, Long accommodationId) {
 		return deleteBooking(model, userId, accommodationId, BookingStatus.PENDING);
 	}
 
+	//0 usage
 	public boolean deleteAcceptedBooking(Model model, Long userId, Long accommodationId) {
 		return deleteBooking(model, userId, accommodationId, BookingStatus.ACCEPTED);
 	}

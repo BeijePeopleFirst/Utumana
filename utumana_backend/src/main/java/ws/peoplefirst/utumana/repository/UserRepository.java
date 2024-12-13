@@ -46,7 +46,8 @@ public interface UserRepository extends JpaRepository<User,Long>{
 
     @Query("SELECT b FROM BadgeAward AS b LEFT JOIN FETCH b.user WHERE b.user.id = :userId ORDER BY b.awardDate DESC, b.badge.score DESC")
     public List<BadgeAward> findAllUserBadges(@Param("userId") Long userId);
-    
+
+	//0usage
     @Query("SELECT u.id FROM User as u")
 	public List<Long> selectAllIds();
 

@@ -73,8 +73,8 @@ public class ReviewService {
 			return false;
 		return true;
 	}
-	
-	
+
+	//0 usage
 	public Double calculateOverallRating(Model model,Review review) throws IllegalArgumentException{
 		boolean isTitleOK = review.getTitle()!=null && !review.getTitle().isBlank();
 		
@@ -111,7 +111,8 @@ public class ReviewService {
 			throw new NullPointerException("Review is null");
 		}
 	}
-	
+
+	//0 usage
 	public void deleteReview(Long id) {
 		if(id != null)
 			reviewRepository.deleteById(id);

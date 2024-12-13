@@ -44,8 +44,8 @@ public class UserService implements UserDetailsService {
 	public static final int MIN_PASSWORD_LOWER_CHARACTERS = 1;
 	public static final int MIN_PASSWORD_DIGIT_CHARACTERS = 1;
 	public static final int MIN_PASSWORD_SYMBOL_CHARACTERS = 1;
-	
-	
+
+	//0usage
 	public boolean isUserOK(User user,Model model,boolean isAdding) {
 		boolean isNameOK=user.getName()!=null && !user.getName().isEmpty() && !user.getName().isBlank()? true : false;
 		
@@ -173,11 +173,13 @@ public class UserService implements UserDetailsService {
 		return countUpper >= MIN_PASSWORD_UPPER_CHARACTERS && countLower >= MIN_PASSWORD_LOWER_CHARACTERS && countNumbers >= MIN_PASSWORD_DIGIT_CHARACTERS && countSymbols >= MIN_PASSWORD_SYMBOL_CHARACTERS;
 	}
 
+	//0usage
 	public boolean addUser(User user) {
 		user.setIsAdmin(false);
 		return saveUser(user);
 	}
-	
+
+	//0usage
 	public boolean copyUserAndSave(User userToCopy) {
 		Optional<User> optionalUser=userRepository.findById(userToCopy.getId());
 		
@@ -192,7 +194,8 @@ public class UserService implements UserDetailsService {
 		}	
 		return false;
 	}
-	
+
+	//0usage
 	public String goBacktoAdminTools(Model model,HttpSession session){
 		Long userId =  (Long) session.getAttribute("userId");
 		List<User> users=findAllUsersExceptMe(userId);
@@ -215,7 +218,8 @@ public class UserService implements UserDetailsService {
 		}
 		return true;
 	}
-	
+
+	//0usage
 	public boolean deleteUserById(Long userId) {
 		try {			
 			userRepository.deleteById(userId);
@@ -226,6 +230,7 @@ public class UserService implements UserDetailsService {
 		return true;
 	}
 
+	//0usage
 	public User getUserByEmailAndPassword(String email, String password) {
 		return userRepository.findUserByEmailAndPasswordAndArchivedTimestampIsNull(email, password);
 	}
