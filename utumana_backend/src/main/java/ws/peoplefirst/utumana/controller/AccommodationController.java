@@ -118,14 +118,84 @@ public class AccommodationController {
 	}
 	
 	@PreAuthorize("hasAuthority('USER')")
+	@GetMapping(value = "/accommodation/{accommodationId}/info")
+	public ResponseEntity<Map<String, Object>> getAccomodationInfo(Authentication auth, 
+			@PathVariable(name = "accommodationId") Long accommodationId) {
+			
+		Accommodation accommodation = accommodationService.findById(accommodationId);
+		if(accommodation == null)
+			throw new IdNotFoundException("Accommodation with id " + accommodationId + " not found");
+		
+		if (accommodation.getApprovalTimestamp() != null && accommodation.getHidingTimestamp() != null) {
+			// accommodation deleted
+			throw new IdNotFoundException("Accommodation not found");
+		} else {
+			if(!AuthorizationUtility.getUserFromAuthentication(auth).getId().equals(accommodation.getOwnerId())) {
+				throw new ForbiddenException("Only owners can edit their accommodation");
+			}
+		}
+		
+		Map<String, Object> res = new HashMap<>();
+		
+		res.put("id", accommodation.getId());
+		res.put("title", accommodation.getTitle());
+		res.put("description", accommodation.getDescription());
+		res.put("beds", accommodation.getBeds());
+		res.put("rooms", accommodation.getRooms());
+		
+		return ok(res);
+	}
+	
+	@PreAuthorize("hasAuthority('USER')")
+	@GetMapping(value = "/accommodation/{accommodationId}/address")
+	public ResponseEntity<Map<String, Object>> getAccomodationAddress(Authentication auth, 
+			@PathVariable(name = "accommodationId") Long accommodationId) {
+			
+		Accommodation accommodation = accommodationService.findById(accommodationId);
+		if(accommodation == null)
+			throw new IdNotFoundException("Accommodation with id " + accommodationId + " not found");
+		
+		if (accommodation.getApprovalTimestamp() != null && accommodation.getHidingTimestamp() != null) {
+			// accommodation deleted
+			throw new IdNotFoundException("Accommodation not found");
+		} else {
+			if(!AuthorizationUtility.getUserFromAuthentication(auth).getId().equals(accommodation.getOwnerId())) {
+				throw new ForbiddenException("Only owners can edit their accommodation");
+			}
+		}
+		
+		Map<String, Object> res = new HashMap<>();
+		
+		res.put("id", accommodation.getId());
+		res.put("country", accommodation.getCountry());
+		res.put("cap", accommodation.getCap());
+		res.put("street", accommodation.getStreet());
+		res.put("street_number", accommodation.getStreetNumber());
+		res.put("city", accommodation.getCity());
+		res.put("province", accommodation.getProvince());
+		res.put("address_notes", accommodation.getAddressNotes());
+		
+		return ok(res);
+	}
+	
+	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value="/accommodation/{id}/services")
 	public Set<Service> getAccommodationServices(@PathVariable Long id, Authentication auth) {
 		logger.debug("GET /accommodation/" + id + "/services");
 		
-		Accommodation accommodation = accommodationService.findByIdAndHidingTimestampIsNull(id);
+		Accommodation accommodation = accommodationService.findById(id);
 		if(accommodation == null)
 			throw new IdNotFoundException("Accommodation with id " + id + " not found");
 		
+		if (accommodation.getApprovalTimestamp() != null && accommodation.getHidingTimestamp() != null) {
+			// accommodation deleted
+			throw new IdNotFoundException("Accommodation not found");
+		} else {
+			if(!AuthorizationUtility.getUserFromAuthentication(auth).getId().equals(accommodation.getOwnerId())) {
+				throw new ForbiddenException("Only owners can edit their accommodation");
+			}
+		}
+
 		return accommodationService.getAccommodationServices(id);
 	}
 	
@@ -134,9 +204,18 @@ public class AccommodationController {
 	public List<Availability> getAccommodationAvailabilities(@PathVariable Long id, Authentication auth) {
 		logger.debug("GET /accommodation/" + id + "/availabilities");
 		
-		Accommodation accommodation = accommodationService.findByIdAndHidingTimestampIsNull(id);
+		Accommodation accommodation = accommodationService.findById(id);
 		if(accommodation == null)
 			throw new IdNotFoundException("Accommodation with id " + id + " not found");
+		
+		if (accommodation.getApprovalTimestamp() != null && accommodation.getHidingTimestamp() != null) {
+			// accommodation deleted
+			throw new IdNotFoundException("Accommodation not found");
+		} else {
+			if(!AuthorizationUtility.getUserFromAuthentication(auth).getId().equals(accommodation.getOwnerId())) {
+				throw new ForbiddenException("Only owners can edit their accommodation");
+			}
+		}
 		
 		return avService.findByAccommodationId(id);
 	}
@@ -146,9 +225,18 @@ public class AccommodationController {
 	public List<UnavailabilityDTO> getAccommodationUnavailabilitiesDTO(@PathVariable Long id, Authentication auth) {
 		logger.debug("GET /accommodation/" + id + "/unavailabilities");
 		
-		Accommodation accommodation = accommodationService.findByIdAndHidingTimestampIsNull(id);
+		Accommodation accommodation = accommodationService.findById(id);
 		if(accommodation == null)
 			throw new IdNotFoundException("Accommodation with id " + id + " not found");
+		
+		if (accommodation.getApprovalTimestamp() != null && accommodation.getHidingTimestamp() != null) {
+			// accommodation deleted
+			throw new IdNotFoundException("Accommodation not found");
+		} else {
+			if(!AuthorizationUtility.getUserFromAuthentication(auth).getId().equals(accommodation.getOwnerId())) {
+				throw new ForbiddenException("Only owners can edit their accommodation");
+			}
+		}
 		
 		return bookingService.findUnavailabilitiesDTO(id);
 	}
@@ -286,8 +374,9 @@ public class AccommodationController {
 //	}
 	
 	@PreAuthorize("hasAuthority('USER')")
-	@DeleteMapping(value="/delete_accommodation/{id}")
-	public Accommodation deleteAccommodationAPI(@PathVariable Long id, Authentication auth) {		
+	@PatchMapping(value="/delete_accommodation/{id}")
+	public Accommodation deleteAccommodationAPI(@PathVariable Long id, Authentication auth) {
+		logger.debug("DELETE /delete_accommodation/" + id);
 		Accommodation toDelete = accommodationService.findByIdAndHidingTimestampIsNull(id);
 
 		if(toDelete == null) {
@@ -496,7 +585,7 @@ public class AccommodationController {
 	public ResponseEntity<Map<String, Object>> getAccomodationDetails(Authentication auth,@PathVariable(name = "accommodationId") Long accommodationId) {
 		UserDTO user = (UserDTO) auth.getPrincipal();
 		
-		Accommodation accommodation = accommodationService.findByIdAndHidingTimestampIsNull(accommodationId);
+		Accommodation accommodation = accommodationService.findById(accommodationId);
 		
 		Map<String, Object> res = new HashMap<>();
 		
@@ -529,11 +618,7 @@ public class AccommodationController {
 	@PatchMapping(value = "/approve_accommodation/{accommodation_id}")
 	public Accommodation approveHouse( @PathVariable (name="accommodation_id")Long accommodationId) {
 		
-		if(!accommodationService.approveAccommodation(accommodationId)) {
-			throw new IdNotFoundException("House not found");
-		}
-		
-		return accommodationService.findByIdAndHidingTimestampIsNull(accommodationId);
+		return accommodationService.approveAccommodation(accommodationId);
 	}
 	
 }

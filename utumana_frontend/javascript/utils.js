@@ -1,4 +1,4 @@
-const prefixUrl = 'http://localhost:8080/';
+const prefixUrl = 'http://localhost/';
 const staticUrl = '';
 const headers = createRequestHeaders();
 
@@ -15,6 +15,7 @@ async function doFetch(url, method, headers, body){
 	return fetch(url, {
 			  method: method, 
 			  headers: headers,
+			  mode: "cors",
 			  body: body
 		}).then(async response => {
 			if(response.status == 401) {
@@ -44,6 +45,7 @@ async function retry(url, method, headers, body){
 	return fetch(url, {
 		  method: method, 
 		  headers: headers,
+		  mode: "cors",
 		  body: body
 	});
 }
@@ -192,7 +194,10 @@ function displayAccommodationsCards(container, json, noAccommodationsMessage){
 		div.appendChild(element);
 		
 		element = document.createElement("p");
-		element.innerHTML = json[i].city + ", " + json[i].country;
+		let locationInfo = '';
+		if(json[i].city != null)
+			locationInfo = json[i].city + ", ";
+		element.innerHTML = locationInfo + json[i].country;
 		div.appendChild(element);
 		
 		element = getHeart(json[i].is_favourite, json[i].id);

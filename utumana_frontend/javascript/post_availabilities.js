@@ -1,4 +1,4 @@
-// depends on post.js, html_utils.js
+// depends on post.js, html_utils.js, utils.js
 
 var avLocalId = 0;
 var unavLocalId = 0;
@@ -6,6 +6,7 @@ var unavLocalId = 0;
 async function loadWhenEditing(){
 	const accommodationId = getIdFromURL(); 
 	if(accommodationId != null){
+		initHeader();
 		document.getElementById("progress_bar").style.display = "none";
 		document.getElementById("save_button").innerHTML = "Save changes";
 		
@@ -33,17 +34,6 @@ async function loadWhenEditing(){
 			if(json.status != null){
 				showError("container","Could not load the accommodation's unavailabilities. Please retry.");
 			} else {
-				/*	// extract info from Booking or BookingDTO
-				let unavailabilities = [];
-				let unav;
-				for(let booking of json){
-					unav = {
-						check_in: booking.check_in.slice(0, 10),
-						check_out: booking.check_out.slice(0, 10)
-					}
-					unavailabilities.push(unav);
-				}
-				*/
 				sessionStorage.setItem("unavailabilities", JSON.stringify(json));
 			}
 		})

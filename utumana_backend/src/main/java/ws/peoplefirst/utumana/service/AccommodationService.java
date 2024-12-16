@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -61,16 +62,15 @@ public class AccommodationService {
 	@Autowired
 	private ServiceService serviceService;
 	
-	public boolean approveAccommodation(Long accommodationId) {
+	public Accommodation approveAccommodation(Long accommodationId) {
 		Accommodation accommodation = findByIdAndHidingTimestampIsNull(accommodationId);
 		
-		if(accommodation != null) {
-			accommodation.setApprovalTimestamp(LocalDateTime.now());
-			accommodationRepository.save(accommodation);
-			return true;
-		}else {
-			return false;
+		if(accommodation == null) {
+			throw new IdNotFoundException("Accommodation with id " + accommodationId + " not found");
 		}
+		accommodation.setApprovalTimestamp(LocalDateTime.now());
+		return accommodationRepository.save(accommodation);
+
 	}
 
 	public List<AccommodationDTO> getLatestUploadsDTO(int limit, Long userId) {
@@ -92,6 +92,15 @@ public class AccommodationService {
 			throw new IdNotFoundException("accommodation not found");
 		}
 		return accommodation;
+	}
+	
+	public Accommodation findById(Long accommodationId) {
+		Optional<Accommodation> accommodation= accommodationRepository.findById(accommodationId);
+		if(accommodation.isEmpty()) {
+			logger.error("accommodation not found");
+			throw new IdNotFoundException("accommodation not found");
+		}
+		return accommodation.get();
 	}
 	
 	public List<Accommodation> getAllAccommodations() {
@@ -262,22 +271,23 @@ public class AccommodationService {
 	}
 	
 	public Accommodation setAccommodationServices(Long accommodationId, List<Long> serviceIds, Long userId) {
-		Accommodation accommodation = findByIdAndHidingTimestampIsNull(accommodationId);
+		Accommodation accommodation = findById(accommodationId);
 		
 		if(accommodation.getOwnerId() != userId)
 			throw new TheJBeansException("Error: logged user must be the accommodation's owner to modify its services");
 		
 		Set<ws.peoplefirst.utumana.model.Service> services = serviceService.getServicesByIds(serviceIds);
+		System.out.println("services: " + services);
 		accommodation.setServices(services);
 		return accommodationRepository.save(accommodation);
 	}
 	
 	public Accommodation setAccommodationAvailabilities(Long accommodationId, List<Availability> availabilities, Long userId) {
-		Accommodation accommodation = findByIdAndHidingTimestampIsNull(accommodationId);
+		Accommodation accommodation = findById(accommodationId);
 		
 		if(accommodation == null)
 			throw new IdNotFoundException("Accommodation with id " + accommodationId  +" not found");
-		if(accommodation.getOwnerId() != userId)
+		if(!accommodation.getOwnerId().equals(userId))
 			throw new TheJBeansException("Error: logged user must be the accommodation's owner to modify its availabilities");
 		checkAvailabilites(availabilities);
 		
@@ -306,11 +316,11 @@ public class AccommodationService {
 	}
 	
 	public Accommodation setAccommodationUnavailabilities(Long accommodationId, List<Booking> unavailabilities, Long userId) {
-		Accommodation accommodation = findByIdAndHidingTimestampIsNull(accommodationId);
+		Accommodation accommodation = findById(accommodationId);
 		
 		if(accommodation == null)
 			throw new IdNotFoundException("Accommodation with id " + accommodationId  +" not found");
-		if(accommodation.getOwnerId() != userId)
+		if(!accommodation.getOwnerId().equals(userId))
 			throw new TheJBeansException("Error: logged user must be the accommodation's owner to modify its unavailabilities");
 		
 		checkUnavailabilities(unavailabilities);
@@ -342,7 +352,7 @@ public class AccommodationService {
 		
 		checkAccommodationInfo(newOne);
 		
-		Accommodation accommodation = findByIdAndHidingTimestampIsNull(newOne.getId());
+		Accommodation accommodation = findById(newOne.getId());
 		if(accommodation == null)
 			throw new IdNotFoundException("Accommodation with id " + newOne.getId()  +" not found");
 		if(!accommodation.getOwnerId().equals(newOne.getOwnerId())) {
@@ -350,6 +360,7 @@ public class AccommodationService {
 		}
 		
 		accommodation.setApprovalTimestamp(null);
+		accommodation.setHidingTimestamp(null);
 		
 		accommodation.setTitle(newOne.getTitle());
 		accommodation.setDescription(newOne.getDescription());
@@ -365,7 +376,7 @@ public class AccommodationService {
 		
 		checkAddress(newOne);
 		
-		Accommodation accommodation = findByIdAndHidingTimestampIsNull(newOne.getId());
+		Accommodation accommodation = findById(newOne.getId());
 		if(accommodation == null)
 			throw new IdNotFoundException("Accommodation with id " + newOne.getId()  +" not found");
 		if(!accommodation.getOwnerId().equals(newOne.getOwnerId())) {
@@ -672,9 +683,10 @@ public class AccommodationService {
 		}
 		
 		List<BookingDTO> futureBookings = bookingRepository.findByStatusACCEPTEDOrDOINGAndAccommodationId(accommodationId);
-		
+		System.out.println("future bookings " + futureBookings);
 		if(futureBookings.isEmpty()) {
 			toDelete.setHidingTimestamp(LocalDateTime.now());
+			System.out.println(toDelete);
 			accommodationRepository.save(toDelete);
 			return toDelete;		
 		} else {

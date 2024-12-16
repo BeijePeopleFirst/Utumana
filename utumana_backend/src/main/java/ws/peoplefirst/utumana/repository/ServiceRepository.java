@@ -17,6 +17,6 @@ public interface ServiceRepository extends JpaRepository<Service, Long> {
 	
 	public Set<Service> findByIdIn(List<Long> ids);
 	
-	@Query("SELECT a.services FROM Accommodation as a WHERE a.id = :id AND a.hidingTimestamp IS NULL")
+	@Query("SELECT a.services FROM Accommodation as a WHERE a.id = :id")
 	public Set<Service> findByAccommodationId(@Param(value = "id") Long id);
 }

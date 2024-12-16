@@ -41,6 +41,11 @@ function loadRejectedAccommodations(){
 				const container = document.getElementById("rejected_accommodations");
 				displayAccommodationsCards(container, json, "No accommodations");
 				displayPrices(json);
+				
+				let rejected_buttons = document.getElementById("rejected_container").getElementsByTagName("button");
+				for(let i=0; i<rejected_buttons.length; i++){
+					rejected_buttons[i].setAttribute("onclick", "window.location.href='" + staticUrl + "accommodation_details.html?id=" + json[i].id + "&rejected=true'");
+				}
 			}
 		})
 		.catch((error) => {

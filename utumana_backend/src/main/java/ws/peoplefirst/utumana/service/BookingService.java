@@ -212,7 +212,7 @@ public class BookingService {
 	}
 	
 	public List<UnavailabilityDTO> findUnavailabilitiesDTO(Long accommodationId) {	
-		Accommodation accoommodation=accommodationService.findByIdAndHidingTimestampIsNull(accommodationId);
+		Accommodation accoommodation=accommodationService.findById(accommodationId);
 		if(accoommodation!=null) {			
 			return bookingRepository.findUnAvailabilitiesDTO(accommodationId);
 		}else {

@@ -7,7 +7,7 @@ function loadWhenEditing(accommodationId){
 	document.getElementById("save_button").innerHTML = "Save changes";
 	
 	// fetch accommodation's address
-	doFetch(prefixUrl + 'api/accommodation/' + accommodationId, 'GET', headers, null)
+	doFetch(prefixUrl + 'api/accommodation/' + accommodationId + '/address', 'GET', headers, null)
 	.then((json) => {
 		console.log(json);
 		

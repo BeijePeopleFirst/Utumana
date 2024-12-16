@@ -5,9 +5,9 @@ const id = params.get('id');
 document.addEventListener('DOMContentLoaded', () => getAccommodationDetail(id));
 
 const userId = parseInt(localStorage.getItem("id"));
+const isRejected = params.get('rejected');
 
  function getAccommodationDetail(id) {	 
-	let isRejected = params.get('rejected');
 	let endpoint;
 	if(isRejected != null && isRejected == "true"){
 		endpoint = 'api/rejected_accommodation/'
@@ -18,6 +18,21 @@ const userId = parseInt(localStorage.getItem("id"));
 	
 	doFetch(prefixUrl + endpoint + id, 'GET', headers, null)
 	.then(json => {
+		if(isError(json) === true){
+			const container = document.getElementById("container");
+			container.innerHTML = '';
+			container.style.margin = "50px";
+			
+			let h2 = document.createElement("h2");
+			h2.innerHTML = "Error :(";
+			container.appendChild(h2);
+			
+			let div = document.createElement("div");
+			div.style.textAlign = "center";
+			div.innerHTML = "Could not load accommodation";
+			container.appendChild(div);
+			return;
+		}
 		
 		document.getElementsByClassName('loader')[0].remove();
 		
@@ -38,7 +53,12 @@ const userId = parseInt(localStorage.getItem("id"));
 		
 		let generalInfo = document.getElementById("generalInfo");
 		let p = document.createElement('p');
-		p.innerText = json.city + ', ' + json.province + ', ' + json.country;
+		let locationInfo = '';
+		if(json.city != null)
+			locationInfo = json.city + ", ";
+		if(json.province != null)
+			locationInfo += json.province + ", ";
+		p.innerText = locationInfo + json.country;
 
 		generalInfo.appendChild(p);
 		 
@@ -123,66 +143,81 @@ const userId = parseInt(localStorage.getItem("id"));
 		 let buttons = document.getElementById("buttons");
 		 buttons.id = 'buttons';
 		 
-		 if(!json.approval_timestamp) { //accomodation not approved yet	
+		 if(!json.approval_timestamp) { //accomodation not approved yet
 			doFetch(prefixUrl + 'api/accommodation_info/' + json.id, 'GET', headers, null)
 			.then(info => {
 				 if (info.isAdmin == true) {
 		            let approve = createApproveButton(json);
 		            buttons.appendChild(approve);
 		            
-		            let reject = createRejectButton(json);
+		            let reject = createRejectButton(json.id);
 					buttons.appendChild(reject);
 												
-		        } else if(info.isOwner == true) {
+		        } else if(info.isOwner == true && !json.hiding_timestamp) {
 					buttons.innerHTML = "<p>Waiting for approval by the admin.</p>";
+				} else if (info.isOwner == true && json.hiding_timestamp) {	// accommodation rejected
+					let button = createDeleteButton(json.id)
+					buttons.appendChild(button);
+					
+					let editButton = createEditButton(json.id, "post_intro.html", 'Edit info');
+					document.getElementById("description").appendChild(editButton);
+					
+					editButton = createEditButton(json.id, "post_services.html", 'Edit services');
+					document.getElementById("services").appendChild(editButton);
+					
+					editButton = createEditButton(json.id, "post_address.html", 'Edit address');
+					document.getElementById("generalInfo").appendChild(editButton);
+					
+					editButton = createEditButton(json.id, "post_availabilities.html", 'Edit availability');
+					document.getElementById("edit_av").appendChild(editButton);	
 				}
 		    })
 		    .catch(error => {
 		        console.error('Admin check failed:', error);
 		    });
-			} else { // accommodation is already approved
-				doFetch(prefixUrl + 'api/accommodation_info/' + json.id, 'GET', headers, null)
-				.then(info => {
-					if(info.isAdmin == true) { //admin
-						buttons.innerHTML = "<p>Accommodation approved on: " + json.approvalTimestamp + "</p>"
-					
-						if(info.isOwner == false) { // admin but non owner
-							if(info.hasPendingBooking || info.hasAcceptedBooking) {
-								let div = document.createElement('div');
-								div.id = 'cancel';
-								div.classList.add('inline');
-								
-								buttons.appendChild(div);
-								
-								let span = document.createElement('span');
-								span.classList.add('inline-child');
-								span.textContent = info.hasPendingBooking == true? 
-													"Waiting for the host to accept your booking request. " :
-													"Your booking request was accepted. Please wait until after your stay to make a new booking";
-								
-								div.appendChild(span);
-								
-								let cancelButton = createCancelButton(json, info.bookingId);
-								div.appendChild(cancelButton);
-							} else {
-								let bookButton = createBookButton(json);
-								buttons.appendChild(bookButton);							
-							}		
-						} else if(info.isOwner == true) { // admin and owner
-							let editButton = createEditButton(json.id, "post_intro.html", 'Edit info');
-							document.getElementById("description").appendChild(editButton);
+		} else { // accommodation is already approved
+			doFetch(prefixUrl + 'api/accommodation_info/' + json.id, 'GET', headers, null)
+			.then(info => {
+				if(info.isAdmin == true) { //admin
+					buttons.innerHTML = "<p>Accommodation approved on: " + json.approval_timestamp + "</p>"
+				
+					if(info.isOwner == false) { // admin but non owner
+						if(info.hasPendingBooking || info.hasAcceptedBooking) {
+							let div = document.createElement('div');
+							div.id = 'cancel';
+							div.classList.add('inline');
 							
-							editButton = createEditButton(json.id, "post_services.html", 'Edit services');
-							document.getElementById("services").appendChild(editButton);
+							buttons.appendChild(div);
 							
-							editButton = createEditButton(json.id, "post_address.html", 'Edit address');
-							document.getElementById("generalInfo").appendChild(editButton);
+							let span = document.createElement('span');
+							span.classList.add('inline-child');
+							span.textContent = info.hasPendingBooking == true? 
+												"Waiting for the host to accept your booking request. " :
+												"Your booking request was accepted. Please wait until after your stay to make a new booking";
 							
-							editButton = createEditButton(json.id, "post_availabilities.html", 'Edit availability');
-							document.getElementById("edit_av").appendChild(editButton);						
-						}
-					
-					let deleteButton = createDeleteButton(json);
+							div.appendChild(span);
+							
+							let cancelButton = createCancelButton(json, info.bookingId);
+							div.appendChild(cancelButton);
+						} else {
+							let bookButton = createBookButton(json);
+							buttons.appendChild(bookButton);							
+						}		
+					} else if(info.isOwner == true) { // admin and owner
+						let editButton = createEditButton(json.id, "post_intro.html", 'Edit info');
+						document.getElementById("description").appendChild(editButton);
+						
+						editButton = createEditButton(json.id, "post_services.html", 'Edit services');
+						document.getElementById("services").appendChild(editButton);
+						
+						editButton = createEditButton(json.id, "post_address.html", 'Edit address');
+						document.getElementById("generalInfo").appendChild(editButton);
+						
+						editButton = createEditButton(json.id, "post_availabilities.html", 'Edit availability');
+						document.getElementById("edit_av").appendChild(editButton);						
+					}
+				
+					let deleteButton = createDeleteButton(json.id);
 					buttons.appendChild(deleteButton);
 					
 				} else { // not admin					
@@ -201,7 +236,7 @@ const userId = parseInt(localStorage.getItem("id"));
 						editButton = createEditButton(json.id, "post_availabilities.html", 'Edit availability');
 						document.getElementById("edit_av").appendChild(editButton);	
 						
-						let deleteButton = createDeleteButton(json);
+						let deleteButton = createDeleteButton(json.id);
 						buttons.appendChild(deleteButton);
 					} else { // not admin not owner
 						if(info.hasPendingBooking || info.hasAcceptedBooking) {
@@ -292,7 +327,7 @@ function createCancelButton(json, bookingId) {
 			let buttonToRemove = document.getElementById('delete');
 			if(buttonToRemove != null) buttonToRemove.remove();
 			document.getElementById('buttons').appendChild(createBookButton(json));
-			document.getElementById('buttons').appendChild(createDeleteButton(json));
+			document.getElementById('buttons').appendChild(createDeleteButton(json.id));
 		}
 		
 		let onCancel = function() {
@@ -304,7 +339,7 @@ function createCancelButton(json, bookingId) {
 	return cancelButton;
 }
 
-function createDeleteButton(json) {
+function createDeleteButton(id) {
 	let deleteButton = document.createElement('button');
 	deleteButton.id = 'delete';
 	deleteButton.classList.add('button');
@@ -314,7 +349,7 @@ function createDeleteButton(json) {
 		modalContent.innerHTML = '<h3>Confirm Delete Accommodation</h3>Are you sure you want to delete this accommodation?<br> ';
 		
 		let onConfirm = function() {
-			doFetch(prefixUrl + 'api/delete_accommodation/' + json.id,'DELETE', headers, null);
+			doFetch(prefixUrl + 'api/delete_accommodation/' + id,'DELETE', headers, null);
 			window.location.href = staticUrl + 'home.html';
 		}
 		
@@ -330,8 +365,10 @@ function createEditButton(id, htmlFileName, buttonText) {
 	let editButton = document.createElement('button');
 	editButton.textContent = buttonText;
 	editButton.classList.add('button');
+	
+	let onClickUrl = staticUrl + htmlFileName + '?id=' + id
 	editButton.onclick = () => {
-		window.location.href= staticUrl + htmlFileName + '?id=' + id;
+		window.location.href = onClickUrl;
 	};	
 	
 	return editButton;
@@ -352,7 +389,7 @@ function createApproveButton(json) {
 		modalContent.innerHTML = '<h3>Confirm Approve Accommodation</h3>Are you sure you want to approve this accommodation?<br> ';
 		
 		let onConfirm = function() {
-	        doFetch(prefixUrl + 'api/update_accommodation/', 'PATCH', headers, body)
+	        doFetch(prefixUrl + 'api/approve_accommodation/' + json.id, 'PATCH', headers, body)
 	        .then(result => {
 	            console.log('Approved:', result);
 	        })
@@ -368,7 +405,7 @@ function createApproveButton(json) {
     return approve;
 }			
 
-function createRejectButton(json) {
+function createRejectButton(id) {
 	let reject = document.createElement('button');
 	reject.classList.add('button');
     reject.textContent = 'Reject';
@@ -377,7 +414,7 @@ function createRejectButton(json) {
 		modalContent.innerHTML = '<h3>Confirm Reject Accommodation</h3>Are you sure you want to reject this accommodation?<br> ';
 		
 		let onConfirm = function() {
-			doFetch(prefixUrl + 'api/delete_accommodation/' + json.id, 'DELETE', headers, null)
+			doFetch(prefixUrl + 'api/delete_accommodation/' + id, 'PATCH', headers, null)
 	        .then(result => {
 	            console.log('Reject:', result);
 	        })
