@@ -18,7 +18,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {
 
-	private String allowedOrigins[] = new String[] {"http://localhost"};
+	private String allowedOrigins[] = new String[] {"http://localhost","http://localhost:8080"};
 
 	private String allowedMethods[] = new String[] {"HEAD", "GET", "PUT", "POST", "DELETE", "PATCH"}; //{"*"}; 
 	

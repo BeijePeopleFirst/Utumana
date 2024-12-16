@@ -2,8 +2,8 @@
  * 
  */
 const id = localStorage.getItem('id');
-//const headers = new Headers();
-//headers.append("Authorization", "Bearer " + localStorage.getItem("token"));
+const headersNoJson = new Headers();
+headersNoJson.append("Authorization", "Bearer " + localStorage.getItem("token"));
 
 let userProvided = undefined;
 
@@ -31,7 +31,7 @@ function on_load(){
 						userProvided = json;
 						document.getElementById("bio").value = json.bio;
 						
-						document.getElementById("profile_photo_user").src = json.profile_picture_url;
+						//document.getElementById("profile_photo_user").src = json.profile_picture_url;
 					})
 					.catch((error) => {
 						console.log(error);
@@ -89,8 +89,7 @@ function saveSelectedPhotoOnServerDisk(file) {
 	let formData = new FormData();
 	formData.append("img", file);
 	
-	
-	doFetch(prefixUrl + "api/user/store_photo", "POST", headers, formData)
+	doFetchCors(prefixUrl + "api/user/store_photo", "POST", headers, formData)
 	.then(json => {
 		printError(json);
 		console.log(json);
@@ -99,9 +98,7 @@ function saveSelectedPhotoOnServerDisk(file) {
 		console.log("NEXT");
 		console.log("bODY ->", body);
 		
-		let otherHeaders = createRequestHeaders();
-		
-		doFetch(prefixUrl + "api/user", "PATCH", otherHeaders, JSON.stringify(body))
+		doFetchCors(prefixUrl + "api/user", "PATCH", headers, JSON.stringify(body))
 			.then(json2 => {
 				printError(json2);
 			})
@@ -122,8 +119,9 @@ function saveSelectedPhotoOnServerDisk(file) {
 	let popUpToClose = document.getElementById("select_popup");
 	popUpToClose.remove();
 	
-	
-	document.getElementById("profile_photo_user").src = userProvided.profilePictureUrl;
+	console.log(document.getElementById("profile_photo_user"));
+	console.log(userProvided);
+	//document.getElementById("profile_photo_user").src = userProvided.profilePictureUrl;
 	
 }
 

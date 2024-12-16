@@ -7,6 +7,8 @@ function createRequestHeaders(){
 	
 	myHeaders.append("Content-Type", "application/json");
 	myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"));
+	myHeaders.append('Access-Control-Allow-Origin', 'http://localhost:8080');
+	myHeaders.append('Access-Control-Allow-Origin', 'http://localhost');
 	
 	return myHeaders;
 }
@@ -16,9 +18,29 @@ async function doFetch(url, method, headers, body){
 			  method: method, 
 			  headers: headers,
 			  body: body
+			  //mode: 'no-cors'
 		}).then(async response => {
 			if(response.status == 401) {
 				let retryResponse = await retry(url, method, headers, body);
+				if(retryResponse && retryResponse.ok){
+					return retryResponse.json();
+				} else throw Error("Fetch failed");
+			}else {
+				return response.json();
+			}
+		});
+}
+
+async function doFetchCors(url, method, headers, body){
+	return fetch(url, {
+			  method: method, 
+			  mode: 'no-cors',
+			  headers: headers,
+			  body: body
+			  //mode: 'no-cors'
+		}).then(async response => {
+			if(response.status == 401) {
+				let retryResponse = await retryCors(url, method, headers, body);
 				if(retryResponse && retryResponse.ok){
 					return retryResponse.json();
 				} else throw Error("Fetch failed");
@@ -44,7 +66,28 @@ async function retry(url, method, headers, body){
 	return fetch(url, {
 		  method: method, 
 		  headers: headers,
-		  body: body
+		  body: body,
+	});
+}
+
+async function retryCors(url, method, headers, body){
+	// try to refresh token
+	let refreshed = await refreshTokenCors();
+	console.log("refreshed =",refreshed);
+	if(!refreshed){
+		console.log("Could not refresh token");
+		
+		logout();
+		return;
+	}
+	
+	// retry fetch
+	headers.set("Authorization", "Bearer " + localStorage.getItem("token"));
+	return fetch(url, {
+		  method: method, 
+		  mode: 'no-cors',
+		  headers: headers,
+		  body: body,
 	});
 }
 
@@ -67,7 +110,42 @@ async function refreshToken(){
 	await fetch(prefixUrl + 'api/refresh_token', {
 			  method: 'POST', 
 			  headers: {"Content-Type": "application/json"},
-			  body:	JSON.stringify({refresh_token: refresh_token})
+			  body:	JSON.stringify({refresh_token: refresh_token}),
+		}).then(async response => {
+			if(response.ok){
+				let json = await response.json();
+				console.log("Refresh ok. json = ", json);
+				localStorage.setItem("token", json.token);
+				document.cookie = "refresh_token=" + json.refresh_token;
+				refreshed = true;
+			} else {
+				refreshed = false;
+			}
+		});
+	return refreshed;
+}
+
+async function refreshTokenCors(){
+	let refresh_token = null;
+	let cookies = document.cookie.split("; ");
+	console.log("document.cookie ", document.cookie, " cookies = ", cookies);
+	for(let i=0; i<cookies.length; i++){
+		if(cookies[i].indexOf("refresh_token") >= 0){
+			refresh_token = '' + cookies[i].split("=")[1];
+		}
+	}
+	console.log("Refresh token from cookie: ", refresh_token);
+	if(refresh_token == null){
+		console.log("Error: no refresh token");
+		return false;
+	}
+	
+	let refreshed;
+	await fetch(prefixUrl + 'api/refresh_token', {
+			  method: 'POST', 
+			  mode: 'no-cors',
+			  headers: {"Content-Type": "application/json"},
+			  body:	JSON.stringify({refresh_token: refresh_token}),
 		}).then(async response => {
 			if(response.ok){
 				let json = await response.json();

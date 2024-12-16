@@ -27,8 +27,8 @@ import ws.peoplefirst.utumana.service.UserService;
 @Component
 public class JwtTokenProvider {    
 
-	//@Value("${authToken.secretKey}")
-	private String secretKey = "TheJBeansKey";// = "TheJBeansKey";
+	@Value("${authToken.secretKey}")
+	private String secretKey;// = "TheJBeansKey";
 	
 	@Value("${authToken.validityInMilliseconds}")
 	private long validityInMilliseconds;// = 3600000; // 1h   

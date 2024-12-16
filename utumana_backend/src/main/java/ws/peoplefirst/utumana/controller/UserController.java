@@ -16,6 +16,8 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -40,11 +43,15 @@ import ws.peoplefirst.utumana.service.UserService;
 import ws.peoplefirst.utumana.utility.AuthorizationUtility;
 
 
+
 @RestController
 @RequestMapping(value = "/api")
 public class UserController {
 	
 	private Logger log = LoggerFactory.getLogger(this.getClass());
+	
+	//@Value("${photo.storePath}")
+	private String storePath = "/html/usersImages";
 	
 	@Autowired
 	private UserService userService;
@@ -223,7 +230,7 @@ public class UserController {
 	}
 	
 	@PreAuthorize("hasAuthority('USER')")
-	@PostMapping(value = "/user/store_photo")
+	@PostMapping(value = "/user/store_photo", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
 	public Map<String, String> storePhotoOnServer(@RequestParam MultipartFile img, Authentication auth) {
 		
 		System.out.println("File -> " + img);
@@ -243,8 +250,8 @@ public class UserController {
 			// TODO Auto-generated catch block
 			throw new TheJBeansException("" + e);
 		}
-		//File destination = new File("/Users/riccardogugolati/LAVORO/People First/CouchSurfing/TheJBeansCouchSurfing/src/main/resources/static/images/" + finalUrl);
-		File destination = new File("/tmp/image/" + finalUrl);
+
+		File destination = new File(storePath + finalUrl);
 		try {
 			
 			System.out.println("SONO DENTRO AL TRY");
@@ -253,8 +260,6 @@ public class UserController {
 			content = img.getBytes();
 			
 			out.write(content);
-			
-			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
