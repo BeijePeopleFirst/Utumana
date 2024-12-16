@@ -491,39 +491,3 @@ function createStarsReview(review, type = new String()){
 	
 	return div;
 }
-
-function getHeart(isFavorite) {
-    let heart = document.createElement('button');
-    heart.classList.add('inline-child');
-    heart.id = 'heart';
-    
-    heart.innerHTML = isFavorite ? '<img src="static/icons/favorite_24dp_EA3323_FILL1_wght400_GRAD0_opsz24.svg" alt="remove from favourites" />' 
-    							 : '<img src="static/icons/favorite_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg" alt="add to favourites" />';
-    
-    heart.onclick = () => {
-        isFavorite = !isFavorite;
-        
-     heart.innerHTML = isFavorite ? '<img src="static/icons/favorite_24dp_EA3323_FILL1_wght400_GRAD0_opsz24.svg" alt="remove from favourites" />' 
-    							 : '<img src="static/icons/favorite_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg" alt="add to favourites" />';
-       
-        if (isFavorite) {
-			doFetch(prefixUrl + 'api/add-favourite/' + userId + '/' + id, 'PATCH', headers, null)
-			    .then(response => {
-			        console.log('Aggiunto ai preferiti');
-			    })
-			    .catch(error => {
-			        console.error('Errore nell\'aggiunta ai preferiti', error);
-			    });
-        } else {
-            doFetch(prefixUrl + 'api/remove-favourite/' + userId + '/' + id, 'PATCH', headers, null)
-			    .then(response => {
-			        console.log('Rimosso dai preferiti');
-			    })
-			    .catch(error => {
-			        console.error('Errore nella rimozione dai preferiti', error);
-			    });
-        }
-    };
-    
-    return heart;
-}

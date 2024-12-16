@@ -95,8 +95,8 @@ public class User implements Serializable, UserDetails {
 	@JsonIgnore
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	@JoinTable(name = "favourite", joinColumns = {
-            @JoinColumn(name = "user_id", referencedColumnName = "id", insertable = false, nullable = false, updatable = false) }, inverseJoinColumns = {
-                    @JoinColumn(name = "accommodation_id", referencedColumnName = "id", insertable = false, nullable = false, updatable = false) })
+            @JoinColumn(name = "user_id", referencedColumnName = "id", insertable = true, nullable = false, updatable = true) }, inverseJoinColumns = {
+                    @JoinColumn(name = "accommodation_id", referencedColumnName = "id", insertable = true, nullable = false, updatable = true) })
 	private List<Accommodation> favourites;
 	
 	@Transient

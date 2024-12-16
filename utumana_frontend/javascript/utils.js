@@ -255,14 +255,14 @@ function getHeart(isFavorite, id) {
     heart.classList.add('inline-child');
     heart.id = 'heart';
     
-    heart.innerHTML = isFavorite ? '<img style="height: 30px; width: 30px; box-shadow: none;" src="static/icons/favorite_24dp_EA3323_FILL1_wght400_GRAD0_opsz24.svg" alt="remove from favourites" />' 
-    							 : '<img style="height: 30px; width: 30px; box-shadow: none;" src="static/icons/favorite_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg" alt="add to favourites" />';
+    heart.innerHTML = isFavorite ? '<img style="height: 30px; width: 30px; box-shadow: none;" src="icons/favorite_24dp_EA3323_FILL1_wght400_GRAD0_opsz24.svg" alt="remove from favourites" />' 
+    							 : '<img style="height: 30px; width: 30px; box-shadow: none;" src="icons/favorite_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg" alt="add to favourites" />';
     
     heart.onclick = () => {
         isFavorite = !isFavorite;
         
-     heart.innerHTML = isFavorite ? '<img style="height: 30px; width: 30px; box-shadow: none;" src="static/icons/favorite_24dp_EA3323_FILL1_wght400_GRAD0_opsz24.svg" alt="remove from favourites" />' 
-    							 : '<img style="height: 30px; width: 30px; box-shadow: none;" src="static/icons/favorite_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg" alt="add to favourites" />';
+     heart.innerHTML = isFavorite ? '<img style="height: 30px; width: 30px; box-shadow: none;" src="icons/favorite_24dp_EA3323_FILL1_wght400_GRAD0_opsz24.svg" alt="remove from favourites" />' 
+    							 : '<img style="height: 30px; width: 30px; box-shadow: none;" src="icons/favorite_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg" alt="add to favourites" />';
        
         if (isFavorite) {
 			doFetch(prefixUrl + 'api/add-favourite/' + userId + '/' + id, 'PATCH', headers, null)
