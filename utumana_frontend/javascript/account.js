@@ -85,15 +85,26 @@ function update_profile_picture(){
  * @param {File} file
  */
 function saveSelectedPhotoOnServerDisk(file) {
-	
+	console.log("PRINTO IL FILE SOTTO");
+	console.log(file);
 	console.log("INIZIO TEST PALLAS");
 	
 	let formData = new FormData();
 	formData.append("img", file);//content-type=multipart/*
 	
+	console.log("STAMPO FORM DATA");
+	console.log(formData);
+	
+	
 	let headersOth = new Headers();
 	headersOth.append("Authorization", "Bearer " + localStorage.getItem("token"));
-	headersOth.append("Content-type", "multipart/*");
+	headersOth.append("Content-type", "multipart/form-data; boundary=<calculated when request is sent>");
+	headersOth.append("Content-Length", "<calculated when request is sent>");
+	headersOth.append("Accept", "*/*");
+	headersOth.append("Accept-Encoding", "gzip,deflate,br");
+	headersOth.append("Connection", "keep-alive");
+	headersOth.append("Host", "<calculated when request is sent>");
+		
 	
 	doFetch(prefixUrl + "api/user/store_photo", "POST", headersOth, formData)
 	//doFetch(prefixUrl + "api/user/store_photo", "POST", headers, formData)
