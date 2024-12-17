@@ -250,7 +250,11 @@ public class ConfigurationClass {
                     authorize.requestMatchers("/api/signin").permitAll();
                     authorize.requestMatchers("/check").permitAll();
                     authorize.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
-                    authorize.anyRequest().authenticated();
+                    authorize.requestMatchers("/swagger-ui/**")
+                    .permitAll()
+                    .requestMatchers("/v3/api-docs*/**")
+                    .permitAll();
+                     authorize.anyRequest().authenticated();
                 }).httpBasic(Customizer.withDefaults());
 
         http.exceptionHandling( exception -> exception
@@ -260,6 +264,8 @@ public class ConfigurationClass {
 
         return http.build();
     }
+    
+
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
