@@ -80,7 +80,30 @@ async function saveAccommodationInfo(){
 	sessionStorage.setItem("description", description);
 	sessionStorage.setItem("beds", beds);
 	sessionStorage.setItem("rooms", rooms);
-	sessionStorage.setItem("images", JSON.stringify(images.files));
+	
+	let contents = undefined;
+	
+	let formDataAttempt = new FormData();
+	formDataAttempt.append("files", images.files);
+	
+	let headersOth = new Headers();
+	headersOth.append("Authorization", "Bearer " + localStorage.getItem("token"));
+	headersOth.append("Accept", "*/*");
+	
+	contents = await doFetch(prefixUrl + "api/fetch_files_content", "POST", headersOth, formDataAttempt)
+					.then(json => {
+						printError(json);
+					})
+					.catch(error => {
+						console.log(error, "Error trying to fetch file data");
+
+						// show error to user
+						let errorMessage = document.getElementById("error");
+						errorMessage.innerHTML = "Error saving changes. Please check your file info and retry.";
+						errorMessage.style.visibility = "visible";
+					});
+	
+	sessionStorage.setItem("images", JSON.stringify(contents));
 	
 	
 	const accommodationId = getIdFromURL(); 

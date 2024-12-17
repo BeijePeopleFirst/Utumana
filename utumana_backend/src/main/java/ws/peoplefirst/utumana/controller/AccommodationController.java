@@ -2,6 +2,7 @@ package ws.peoplefirst.utumana.controller;
 
 import static org.springframework.http.ResponseEntity.ok;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -9,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +19,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -29,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import ws.peoplefirst.utumana.dto.AccommodationDTO;
 import ws.peoplefirst.utumana.dto.PriceDTO;
@@ -493,6 +497,25 @@ public class AccommodationController {
 		}
 		
 		return accommodationService.findById(accommodationId);
+	}
+	
+	
+	@PreAuthorize("hasAuthority('ADMIN')")
+	@PostMapping(value = "/fetch_files_content", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public List<String> fetchFilesContent(@RequestParam List<MultipartFile> files, Authentication auth) {
+		List<String> data = new ArrayList<>();
+		
+		for(MultipartFile f : files) {
+			try {
+				String base64Encoded = Base64.getEncoder().encodeToString(f.getBytes());
+	            data.add(base64Encoded);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return data;
 	}
 	
 }

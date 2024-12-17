@@ -150,7 +150,48 @@ async function confirmAccommodationPost(){
 	for(let indexP = 0; indexP < test.length; indexP++)
 		console.log("STAMPo POST PARSE -> ", test[indexP]);
 	
-	let photoArrayUrls = await storePhotoInArray(JSON.parse(sessionStorage.getItem("images")));
+	
+	let headersOth = new Headers();
+	headersOth.append("Authorization", "Bearer " + localStorage.getItem("token"));
+	headersOth.append("Accept", "*/*");
+	
+	let parsedData = JSON.parse(sessionStorage.getItem("images"));
+	let hope = [];
+	
+	for(let d of parsedData) {
+		/*let blob = new Blob([d], { type: 'application/octet-stream' });
+
+		// Crea un File utilizzando il Blob, specificando un nome di file
+		const file = new File([blob], 'samplefile.jpg', {
+		  type: blob.type,
+		});
+		
+		hope.push(file);*/
+		
+		// Decodifica la stringa Base64 in un array di byte
+	    let byteCharacters = atob(d);  // atob decodifica la Base64
+	    let byteArrays = [];
+
+	    // Converte la stringa Base64 in un array di byte
+	    for (let i = 0; i < byteCharacters.length; i++) {
+	        byteArrays.push(byteCharacters.charCodeAt(i));
+	    }
+
+	    // Crea un Blob con i byte decodificati
+	    let blob = new Blob([new Uint8Array(byteArrays)], { type: 'image/jpeg' });  // Assicurati di usare il tipo MIME corretto (jpeg, png, ecc.)
+
+	    // Crea un File dal Blob, specificando un nome di file
+	    const file = new File([blob], 'samplefile.jpg', {
+	        type: blob.type,
+	    });
+
+	    // Aggiungi il file all'array di file
+	    hope.push(file);
+	}
+	
+	
+	
+	let photoArrayUrls = await storePhotoInArray(hope);
 	
 	let photoObjList = null;
 	if(photoArrayUrls != null) {
