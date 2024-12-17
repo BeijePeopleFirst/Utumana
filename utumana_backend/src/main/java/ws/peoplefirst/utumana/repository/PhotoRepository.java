@@ -11,6 +11,6 @@ import ws.peoplefirst.utumana.model.Photo;
 @Repository
 public interface PhotoRepository extends JpaRepository<Photo, Long> {
 
-	public abstract List<Photo> findByAccommodation(Accommodation base);
+	public abstract List<Photo> findByAccommodationId(Long accommodationId);
 
 }

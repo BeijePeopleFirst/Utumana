@@ -1,5 +1,6 @@
 package ws.peoplefirst.utumana.model;
 
+import java.util.List;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -31,11 +32,11 @@ public class Photo {
 	@Column(name = "order")
 	private Integer order;
 	
-	@JsonIgnore
-	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "accommodation_id")
-    private Accommodation accommodation;
-
+	@Column(name = "accommodation_id")
+	@JsonProperty(value = "accommodation_id")
+	private Long accommodationId;
+	
+	private List<String> photos;
 	
 	public Long getId() {
 		return id;
@@ -44,16 +45,14 @@ public class Photo {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
-	
-//	public Accommodation getAccommodation() {
-//		return accommodation;
-//	}
-//
-//	public void setAccommodation(Accommodation accommodation) {
-//		this.accommodation = accommodation;
-//	}
-	
+
+	public Long getAccommodationID() {
+		return accommodationId;
+	}
+
+	public void setAccommodationID(Long accommodationID) {
+		this.accommodationId = accommodationID;
+	}
 
 	public String getPhotoUrl() {
 		return photoUrl;
@@ -86,6 +85,14 @@ public class Photo {
 			return false;
 		Photo other = (Photo) obj;
 		return Objects.equals(photoUrl, other.photoUrl);
+	}
+
+	public List<String> getPhotos() {
+		return photos;
+	}
+
+	public void setPhotos(List<String> photos) {
+		this.photos = photos;
 	}
 	
 	

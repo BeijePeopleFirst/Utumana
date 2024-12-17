@@ -80,14 +80,14 @@ async function saveAccommodationInfo(){
 	sessionStorage.setItem("description", description);
 	sessionStorage.setItem("beds", beds);
 	sessionStorage.setItem("rooms", rooms);
-	sessionStorage.setItem("images", JSON.stringify(images.files));
+	let photoArrayUrls = await storePhotoInArray(images.files);
 	
+	sessionStorage.setItem("images", JSON.stringify(photoArrayUrls));
 	
 	const accommodationId = getIdFromURL(); 
 	if(accommodationId == null){
 		window.location.href = staticUrl + 'post_services.html';
 	} else {
-		let photoArrayUrls = await storePhotoInArray(images.files);
 		
 		let photoObjList = null;
 		if(photoArrayUrls != null) {
@@ -101,10 +101,7 @@ async function saveAccommodationInfo(){
 					photoObjList[photoObjList.length] = newPhoto;
 				}
 		}
-		
-		
-		
-		
+
 		// save info changes (approvalTimestamp = null will be set in backend)
 		const accommodation = {
 			id: 		parseInt(accommodationId),

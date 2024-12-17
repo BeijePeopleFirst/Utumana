@@ -36,11 +36,6 @@ public class PhotoService {
 	@Autowired
 	private PhotoRepository photoRepository;
 
-	//0 usage
-	public List<Photo> findByAccommodation(Accommodation base) {
-		return photoRepository.findByAccommodation(base);
-	}
-
 	public Map<String, String> storePhotoOnServer(MultipartFile img, UserDTO loggedUser) {
 
 		String orFilename = img.getOriginalFilename();

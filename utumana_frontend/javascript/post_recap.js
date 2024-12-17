@@ -145,25 +145,7 @@ function appendUnavailability(table, unavailability){
 
 async function confirmAccommodationPost(){
 	
-	let test = JSON.parse(sessionStorage.getItem("images"));
-	
-	for(let indexP = 0; indexP < test.length; indexP++)
-		console.log("STAMPo POST PARSE -> ", test[indexP]);
-	
-	let photoArrayUrls = await storePhotoInArray(JSON.parse(sessionStorage.getItem("images")));
-	
-	let photoObjList = null;
-	if(photoArrayUrls != null) {
-		photoObjList = [];
-		for(let index = 0; index < photoArrayUrls.length; index) {
-				let newPhoto = {
-					photo_url: photoArrayUrls[index],
-					order: index,
-				}
-				
-				photoObjList[photoObjList.length] = newPhoto;
-			}
-	}
+	let photoArrayUrls = sessionStorage.getItem("images");
 	
 	let accommodation = {
 		owner_id: 	parseInt(localStorage.getItem("id")),
@@ -173,7 +155,7 @@ async function confirmAccommodationPost(){
 		country:	sessionStorage.getItem("country"),
 		cap:		sessionStorage.getItem("cap"),
 		main_photo_url: photoArrayUrls[0],
-		photos: photoObjList,
+		photos: JSON.stringify(photoArrayUrls)
 		//approval_timestamp: "2024-12-09",
 		//hiding_timestamp: "2024-12-09"
 	}

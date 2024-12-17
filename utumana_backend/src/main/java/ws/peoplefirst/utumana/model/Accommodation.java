@@ -92,16 +92,14 @@ public class Accommodation {
 	@Column(name = "main_photo_url")
 	private String mainPhotoUrl;
 	
+	private List<String> photos;
+	
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
 	@OrderColumn(name="service_order")
 	@JoinTable(name = "service_availability", joinColumns = {
             @JoinColumn(name = "accommodation_id", referencedColumnName = "id", insertable = false, nullable = false, updatable = false) }, inverseJoinColumns = {
                     @JoinColumn(name = "service_id", referencedColumnName = "id", insertable = false, nullable = false, updatable = false) })
 	private Set<Service> services;
-	
-	@OneToMany(mappedBy = "accommodation", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@OrderColumn(name = "order")
-	private List<Photo> photos;
 
 
 	@OneToMany(mappedBy = "accommodation", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -144,15 +142,6 @@ public class Accommodation {
 	public void setServices(Set<Service> services) {
 		this.services = services;
 	}
-	
-	public List<Photo> getPhotos() {
-		return photos;
-	}
-	
-	public void setPhotos(List<Photo> photos) {
-		this.photos = photos;
-	}
-
 	
 	public String getTitle() {
 		return title;
@@ -304,6 +293,11 @@ public class Accommodation {
 	public void setHidingTimestampJson(String date) {
 		this.hidingTimestamp = JsonFormatter.parseStringIntoDateTime(date);
 	}
+	
+	@JsonSetter(value = "photos")
+	public void setPhotoFromJson(List<String> photosUrl) {
+		
+	}
 
 	@Override
 	public String toString() {
@@ -312,7 +306,15 @@ public class Accommodation {
 				+ ", rooms=" + rooms + ", street=" + street + ", streetNumber=" + streetNumber + ", addressNotes="
 				+ addressNotes + ", city=" + city + ", cap=" + cap + ", province=" + province + ", country=" + country
 				+ ", coordinates=" + coordinates + ", mainPhotoUrl=" + mainPhotoUrl + ", services=" + services
-				+ ", photos=" + photos + ", availabilities=" + availabilities + "]";
+				+ ", availabilities=" + availabilities + "]";
+	}
+
+	public List<String> getPhotos() {
+		return this.photos;
+	}
+
+	public void setPhotos(List<String> photos) {
+		this.photos = photos;
 	}
 
 	
