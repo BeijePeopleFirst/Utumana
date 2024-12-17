@@ -98,12 +98,7 @@ function saveSelectedPhotoOnServerDisk(file) {
 	
 	let headersOth = new Headers();
 	headersOth.append("Authorization", "Bearer " + localStorage.getItem("token"));
-	headersOth.append("Content-type", "multipart/form-data; boundary=<calculated when request is sent>");
-	headersOth.append("Content-Length", "<calculated when request is sent>");
 	headersOth.append("Accept", "*/*");
-	headersOth.append("Accept-Encoding", "gzip,deflate,br");
-	headersOth.append("Connection", "keep-alive");
-	headersOth.append("Host", "<calculated when request is sent>");
 		
 	
 	doFetch(prefixUrl + "api/user/store_photo", "POST", headersOth, formData)

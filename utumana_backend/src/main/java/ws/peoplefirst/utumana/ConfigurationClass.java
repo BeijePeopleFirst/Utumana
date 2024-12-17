@@ -258,6 +258,8 @@ public class ConfigurationClass {
 
         http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
+        http.cors(Customizer.withDefaults());
+        
         return http.build();
     }
 
