@@ -278,7 +278,7 @@ public class UserController {
 		
 		Map<String, String> map = new HashMap<String, String>();
 		String res = null;
-		res = "/userImages/" + finalUrl;
+		res = "/images/" + finalUrl;
 		map.put("url", res);
 	
 		return map;
