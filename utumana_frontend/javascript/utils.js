@@ -75,7 +75,7 @@ async function refreshToken(){
 				let json = await response.json();
 				console.log("Refresh ok. json = ", json);
 				localStorage.setItem("token", json.token);
-				document.cookie = "refresh_token=" + json.refresh_token;
+				document.cookie = "refresh_token=" + json.refresh_token + ";SameSite=None";
 				refreshed = true;
 			} else {
 				refreshed = false;

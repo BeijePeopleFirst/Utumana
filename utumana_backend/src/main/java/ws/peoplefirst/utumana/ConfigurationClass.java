@@ -77,10 +77,10 @@ public class ConfigurationClass {
 ////        return transactionManager;
 ////    }
 //    
-//    @Bean
-//    public MultipartResolver multipartResolver() {
-//    	return new StandardServletMultipartResolver();
-//    }
+    @Bean
+    public MultipartResolver multipartResolver() {
+    	return new StandardServletMultipartResolver();
+    }
 //      
 ////    //SECURITY
 ////    protected void configure(HttpSecurity http) throws Exception {
@@ -258,6 +258,8 @@ public class ConfigurationClass {
 
         http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
+        http.cors(Customizer.withDefaults());
+        
         return http.build();
     }
 
