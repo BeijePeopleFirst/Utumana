@@ -16,6 +16,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -47,6 +48,9 @@ import ws.peoplefirst.utumana.utility.AuthorizationUtility;
 public class UserController {
 	
 	private Logger log = LoggerFactory.getLogger(this.getClass());
+	
+	@Value("${photoPrefixPath.path}")
+	private String destinationPathPhotoPrefix;
 	
 	@Autowired
 	private UserService userService;
@@ -246,7 +250,7 @@ public class UserController {
 			throw new TheJBeansException("" + e);
 		}
 		//File destination = new File("/Users/riccardogugolati/LAVORO/People First/CouchSurfing/TheJBeansCouchSurfing/src/main/resources/static/images/" + finalUrl);
-		File destination = new File("/Users/riccardogugolati/nginx/Utumana/userImages/" + finalUrl);
+		File destination = new File(destinationPathPhotoPrefix + finalUrl);
 		try {
 			
 			System.out.println("SONO DENTRO AL TRY");
