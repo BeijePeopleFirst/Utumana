@@ -281,3 +281,58 @@ function getHeart(isFavorite, id) {
     return heart;
 }
 
+/**
+ * @param {Array} photos
+ */
+async function storePhotoInArray(photos) {
+	
+	console.log("STAMPO PHOTOS I UTILS -> ", photos);
+	
+	
+	if(!photos || photos.length == 0) return null;
+	
+	let arrayRes = [];
+	
+	for(let index = 0; index < photos.length; index++) {
+		arrayRes[arrayRes.length] = await saveSinglePhoto(photos[index]);
+	}
+	
+	return arrayRes;
+}
+
+
+async function saveSinglePhoto(file) {
+	
+	console.log("STAMPO IL FILE In UTILS -> ", file);
+	
+	let result = undefined;
+	
+	let formData = new FormData();
+	formData.append("img", file);//content-type=multipart/*
+	
+	console.log("STAMPO FORM DATA");
+	console.log(formData);
+	
+	
+	let headersOth = new Headers();
+	headersOth.append("Authorization", "Bearer " + localStorage.getItem("token"));
+	headersOth.append("Accept", "*/*");
+		
+	
+	await doFetch(prefixUrl + "api/user/store_photo", "POST", headersOth, formData)
+	.then(json => {
+		printError(json);
+		console.log(json);
+		result = json.url;
+		
+	})
+	.catch(error => {
+		let msg = document.getElementById("message");
+		msg.innerHTML = error.message;
+		msg.style.color = "red";
+		console.error(error);
+	});
+	
+	return result;
+}
+

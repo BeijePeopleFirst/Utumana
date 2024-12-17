@@ -64,12 +64,12 @@ function resetValidities(){
 	resetValidityOfImages()
 }
 
-function saveAccommodationInfo(){
+async function saveAccommodationInfo(){
 	const title = document.getElementById("title").value;
 	const description = document.getElementById("description").value;
 	const beds = document.getElementById("beds").value;
 	const rooms = document.getElementById("rooms").value;
-	const images = document.getElementById("images");	// TODO
+	const images = document.getElementById("images");
 	
 	resetValidities();
 	
@@ -80,12 +80,31 @@ function saveAccommodationInfo(){
 	sessionStorage.setItem("description", description);
 	sessionStorage.setItem("beds", beds);
 	sessionStorage.setItem("rooms", rooms);
-	//sessionStorage.setItem("images", )
+	sessionStorage.setItem("images", JSON.stringify(images.files));
+	
 	
 	const accommodationId = getIdFromURL(); 
 	if(accommodationId == null){
 		window.location.href = staticUrl + 'post_services.html';
 	} else {
+		let photoArrayUrls = await storePhotoInArray(images.files);
+		
+		let photoObjList = null;
+		if(photoArrayUrls != null) {
+			photoObjList = [];
+			for(let index = 0; index < photoArrayUrls.length; index) {
+					let newPhoto = {
+						photo_url: photoArrayUrls[index],
+						order: index
+					}
+					
+					photoObjList[photoObjList.length] = newPhoto;
+				}
+		}
+		
+		
+		
+		
 		// save info changes (approvalTimestamp = null will be set in backend)
 		const accommodation = {
 			id: 		parseInt(accommodationId),
@@ -93,7 +112,9 @@ function saveAccommodationInfo(){
 			title: 		title,
 			description: description,
 			beds: 		parseInt(beds),
-			rooms: 		parseInt(rooms)
+			rooms: 		parseInt(rooms),
+			main_photo_url: photoArrayUrls[0],
+			photos: photoObjList
 		}
 		
 		doFetch(prefixUrl + 'api/accommodation/' + accommodationId, 'PATCH', headers, JSON.stringify(accommodation))

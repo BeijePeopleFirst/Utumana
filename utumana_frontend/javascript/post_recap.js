@@ -143,7 +143,28 @@ function appendUnavailability(table, unavailability){
 	table.appendChild(tr);
 }
 
-function confirmAccommodationPost(){
+async function confirmAccommodationPost(){
+	
+	let test = JSON.parse(sessionStorage.getItem("images"));
+	
+	for(let indexP = 0; indexP < test.length; indexP++)
+		console.log("STAMPo POST PARSE -> ", test[indexP]);
+	
+	let photoArrayUrls = await storePhotoInArray(JSON.parse(sessionStorage.getItem("images")));
+	
+	let photoObjList = null;
+	if(photoArrayUrls != null) {
+		photoObjList = [];
+		for(let index = 0; index < photoArrayUrls.length; index) {
+				let newPhoto = {
+					photo_url: photoArrayUrls[index],
+					order: index,
+				}
+				
+				photoObjList[photoObjList.length] = newPhoto;
+			}
+	}
+	
 	let accommodation = {
 		owner_id: 	parseInt(localStorage.getItem("id")),
 		title: 		sessionStorage.getItem("title"),
@@ -151,7 +172,8 @@ function confirmAccommodationPost(){
 		rooms: 		parseInt(sessionStorage.getItem("rooms")),
 		country:	sessionStorage.getItem("country"),
 		cap:		sessionStorage.getItem("cap"),
-		main_photo_url: "static/images/house1.jpg",	// TODO PUT REAL URL when implementing photos upload
+		main_photo_url: photoArrayUrls[0],
+		photos: photoObjList,
 		//approval_timestamp: "2024-12-09",
 		//hiding_timestamp: "2024-12-09"
 	}

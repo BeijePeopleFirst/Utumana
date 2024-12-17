@@ -39,6 +39,7 @@ import ws.peoplefirst.utumana.exception.InvalidJSONException;
 import ws.peoplefirst.utumana.exception.TheJBeansException;
 import ws.peoplefirst.utumana.model.BadgeAward;
 import ws.peoplefirst.utumana.model.User;
+import ws.peoplefirst.utumana.service.PhotoService;
 import ws.peoplefirst.utumana.service.UserService;
 import ws.peoplefirst.utumana.utility.AuthorizationUtility;
 
@@ -54,6 +55,9 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private PhotoService photoService;
 	
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@GetMapping(value = "/users")
@@ -237,51 +241,7 @@ public class UserController {
 		
 		if(img == null || img.isEmpty()) throw new InvalidJSONException("You have to provide a photo");
 		
-		String orFilename = img.getOriginalFilename();
-		byte[] content = null;
-		FileOutputStream out = null;
-		String finalUrl = null;
-		try {
-			
-			finalUrl = URLEncoder.encode(loggedUser.getId() + "_" + new Date().getTime() + "." + orFilename.substring(orFilename.lastIndexOf('.') + 1), StandardCharsets.UTF_8.toString());
-			
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			throw new TheJBeansException("" + e);
-		}
-		//File destination = new File("/Users/riccardogugolati/LAVORO/People First/CouchSurfing/TheJBeansCouchSurfing/src/main/resources/static/images/" + finalUrl);
-		File destination = new File(destinationPathPhotoPrefix + finalUrl);
-		try {
-			
-			System.out.println("SONO DENTRO AL TRY");
-			destination.createNewFile();
-			out = new FileOutputStream(destination);
-			content = img.getBytes();
-			
-			out.write(content);
-			
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		finally {
-			
-			try {
-				out.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-		}
-		
-		Map<String, String> map = new HashMap<String, String>();
-		String res = null;
-		res = "/userImages/" + finalUrl;
-		map.put("url", res);
-	
-		return map;
+		return photoService.storePhotoOnServer(img, loggedUser);
 	}
 }
 	

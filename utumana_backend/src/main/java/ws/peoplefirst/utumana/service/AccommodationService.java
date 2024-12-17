@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -59,6 +60,9 @@ public class AccommodationService {
 	
 	@Autowired
 	private ServiceService serviceService;
+	
+	@Autowired
+	private PhotoService photoService;
 	
 	public boolean approveAccommodation(Long accommodationId) {
 		Accommodation accommodation = findById(accommodationId);
@@ -333,7 +337,10 @@ public class AccommodationService {
 			throw new ForbiddenException("Unauthorized operation: the accommodation's owner does not match the logged user");
 		}
 		
+		accommodation.setMainPhotoUrl(newOne.getMainPhotoUrl());
+		
 		accommodation.setApprovalTimestamp(null);
+		accommodation.setPhotos(newOne.getPhotos()); //Fare un salvataggio a parte delle foto nel DB???
 		
 		accommodation.setTitle(newOne.getTitle());
 		accommodation.setDescription(newOne.getDescription());

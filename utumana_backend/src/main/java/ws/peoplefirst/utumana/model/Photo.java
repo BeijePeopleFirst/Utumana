@@ -46,13 +46,13 @@ public class Photo {
 	}
 	
 	
-	public Accommodation getAccommodation() {
-		return accommodation;
-	}
-
-	public void setAccommodation(Accommodation accommodation) {
-		this.accommodation = accommodation;
-	}
+//	public Accommodation getAccommodation() {
+//		return accommodation;
+//	}
+//
+//	public void setAccommodation(Accommodation accommodation) {
+//		this.accommodation = accommodation;
+//	}
 	
 
 	public String getPhotoUrl() {
@@ -88,7 +88,5 @@ public class Photo {
 		return Objects.equals(photoUrl, other.photoUrl);
 	}
 	
-	
-
 	
 }
