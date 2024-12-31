@@ -2,8 +2,9 @@
 <html>
 <head>
 	 <meta charset="UTF-8">
-	 <title>My accommodation</title>
-	 <link rel="stylesheet" href="./css/header.css">
+	 <title>My accommodations</title>
+	 <link rel="icon" href="icons/utumana.ico" /> 
+	 <link rel="stylesheet" href="css/header.css">
 	 <link rel="stylesheet" href="css/accommodation.css">
 	 <link rel="stylesheet" href="css/loader.css">
 	 <script type="text/javascript" src="javascript/utils.js"></script>
@@ -13,12 +14,33 @@
 	<div id="header"></div>
 	
 	<div class="container">
-		
+		<h2>My accommodations</h2>
 		<div class="text-align-center">
 			<p id="error" class="error"></p>
 		</div>
 		
-		<div id="latest_accommodations" class="accommodations-cards">
+		<div id="my_accommodations" class="accommodations-cards">
+			<div class="loader"></div>
+		</div>
+	</div>
+	
+	<div class="container">
+		<h2>My accommodations waiting for approval</h2>
+		<div class="text-align-center">
+			<p id="error" class="error"></p>
+		</div>
+		
+		<div id="pending_accommodations" class="accommodations-cards">
+			<div class="loader"></div>
+		</div>
+	</div>
+	<div id="rejected_container" style="visibility:hidden;" class="container">
+		<h2>My accommodations that were rejected</h2>
+		<div class="text-align-center">
+			<p id="error" class="error"></p>
+		</div>
+		
+		<div id="rejected_accommodations" class="accommodations-cards">
 			<div class="loader"></div>
 		</div>
 	</div>

@@ -92,11 +92,11 @@ public class Accommodation {
 	@Column(name = "main_photo_url")
 	private String mainPhotoUrl;
 	
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@OrderColumn(name="service_order")
 	@JoinTable(name = "service_availability", joinColumns = {
-            @JoinColumn(name = "accommodation_id", referencedColumnName = "id", insertable = false, nullable = false, updatable = false) }, inverseJoinColumns = {
-                    @JoinColumn(name = "service_id", referencedColumnName = "id", insertable = false, nullable = false, updatable = false) })
+            @JoinColumn(name = "accommodation_id", referencedColumnName = "id", insertable = true, nullable = false, updatable = true) }, inverseJoinColumns = {
+                    @JoinColumn(name = "service_id", referencedColumnName = "id", insertable = true, nullable = false, updatable = true) })
 	private Set<Service> services;
 	
 	@OneToMany(mappedBy = "accommodation", cascade = CascadeType.ALL, fetch = FetchType.EAGER)

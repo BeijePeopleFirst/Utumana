@@ -21,7 +21,7 @@ function signin() {
 			let json = await response.json();
 			localStorage.setItem('id',json.id);
 			localStorage.setItem("token", json.token);
-			document.cookie = "refresh_token=" + json.refresh_token;
+			document.cookie = "refresh_token=" + json.refresh_token;// + ";SameSite=Lax";
  			window.location.href = staticUrl + "home.html";
  		}else{
 			 message.innerHTML="Error Occurred: invalid email or password";

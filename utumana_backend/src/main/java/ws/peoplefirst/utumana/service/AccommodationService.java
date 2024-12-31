@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import ws.peoplefirst.utumana.dto.AccommodationDTO;
+import ws.peoplefirst.utumana.dto.BookingDTO;
 import ws.peoplefirst.utumana.dto.PriceDTO;
 import ws.peoplefirst.utumana.exception.ForbiddenException;
 import ws.peoplefirst.utumana.exception.IdNotFoundException;
@@ -60,16 +62,15 @@ public class AccommodationService {
 	@Autowired
 	private ServiceService serviceService;
 	
-	public boolean approveAccommodation(Long accommodationId) {
-		Accommodation accommodation = findById(accommodationId);
+	public Accommodation approveAccommodation(Long accommodationId) {
+		Accommodation accommodation = findByIdAndHidingTimestampIsNull(accommodationId);
 		
-		if(accommodation != null) {
-			accommodation.setApprovalTimestamp(LocalDateTime.now());
-			accommodationRepository.save(accommodation);
-			return true;
-		}else {
-			return false;
+		if(accommodation == null) {
+			throw new IdNotFoundException("Accommodation with id " + accommodationId + " not found");
 		}
+		accommodation.setApprovalTimestamp(LocalDateTime.now());
+		return accommodationRepository.save(accommodation);
+
 	}
 
 	public List<AccommodationDTO> getLatestUploadsDTO(int limit, Long userId) {
@@ -84,13 +85,22 @@ public class AccommodationService {
 	}
 	
 
-	public Accommodation findById(Long accommodationId) {
+	public Accommodation findByIdAndHidingTimestampIsNull(Long accommodationId) {
 		Accommodation accommodation= accommodationRepository.findByIdAndHidingTimestampIsNull(accommodationId);
 		if(accommodation==null) {
 			logger.error("accommodation not found");
 			throw new IdNotFoundException("accommodation not found");
 		}
 		return accommodation;
+	}
+	
+	public Accommodation findById(Long accommodationId) {
+		Optional<Accommodation> accommodation= accommodationRepository.findById(accommodationId);
+		if(accommodation.isEmpty()) {
+			logger.error("accommodation not found");
+			throw new IdNotFoundException("accommodation not found");
+		}
+		return accommodation.get();
 	}
 	
 	public List<Accommodation> getAllAccommodations() {
@@ -105,7 +115,7 @@ public class AccommodationService {
 		List<AccommodationDTO> res = accommodationRepository.getAccommodationDTOToBeApproved();
 		
 		return res;
-	}
+	}	
 
 	public List<AccommodationDTO> getMyAccommodationsDTO(Long loggedUserId) {
 		List<AccommodationDTO> res = accommodationRepository.findByOwnerIdDTO(loggedUserId);
@@ -116,6 +126,21 @@ public class AccommodationService {
 		return res;
 	}
 	
+	public List<AccommodationDTO> getPendingAccommodationsDTO(Long userId) {		
+		List<AccommodationDTO> res = accommodationRepository.findByOwnerIdDTOPending(userId);
+		for(AccommodationDTO accommodationDTO : res) {
+			accommodationDTO.setIsFavourite(isFavourite(accommodationDTO.getId(), userId));
+		}
+		return res;
+	}
+	
+	public List<AccommodationDTO> getRejectedAccommodationsDTO(Long userId) {		
+		List<AccommodationDTO> res = accommodationRepository.findByOwnerIdDTORejected(userId);
+		for(AccommodationDTO accommodationDTO : res) {
+			accommodationDTO.setIsFavourite(isFavourite(accommodationDTO.getId(), userId));
+		}
+		return res;
+	}
 	
 	
 	public Set<ws.peoplefirst.utumana.model.Service> getAccommodationServices(Long id){		
@@ -151,7 +176,7 @@ public class AccommodationService {
 			return;
 		
 		User user = userRepository.getUserWithFavourites(userId);
-		Accommodation newFavouriteAccommodation = findById(accommodationId);
+		Accommodation newFavouriteAccommodation = findByIdAndHidingTimestampIsNull(accommodationId);
 		
 		List<Accommodation> favourites = user.getFavourites();
 		favourites.add(newFavouriteAccommodation);
@@ -252,6 +277,7 @@ public class AccommodationService {
 			throw new TheJBeansException("Error: logged user must be the accommodation's owner to modify its services");
 		
 		Set<ws.peoplefirst.utumana.model.Service> services = serviceService.getServicesByIds(serviceIds);
+		System.out.println("services: " + services);
 		accommodation.setServices(services);
 		return accommodationRepository.save(accommodation);
 	}
@@ -261,7 +287,7 @@ public class AccommodationService {
 		
 		if(accommodation == null)
 			throw new IdNotFoundException("Accommodation with id " + accommodationId  +" not found");
-		if(accommodation.getOwnerId() != userId)
+		if(!accommodation.getOwnerId().equals(userId))
 			throw new TheJBeansException("Error: logged user must be the accommodation's owner to modify its availabilities");
 		checkAvailabilites(availabilities);
 		
@@ -294,7 +320,7 @@ public class AccommodationService {
 		
 		if(accommodation == null)
 			throw new IdNotFoundException("Accommodation with id " + accommodationId  +" not found");
-		if(accommodation.getOwnerId() != userId)
+		if(!accommodation.getOwnerId().equals(userId))
 			throw new TheJBeansException("Error: logged user must be the accommodation's owner to modify its unavailabilities");
 		
 		checkUnavailabilities(unavailabilities);
@@ -334,6 +360,7 @@ public class AccommodationService {
 		}
 		
 		accommodation.setApprovalTimestamp(null);
+		accommodation.setHidingTimestamp(null);
 		
 		accommodation.setTitle(newOne.getTitle());
 		accommodation.setDescription(newOne.getDescription());
@@ -646,5 +673,28 @@ public class AccommodationService {
 		}
 		
 		return returnedList;
+	}
+	
+	public Accommodation deleteAccommodation(Long accommodationId) {
+		Accommodation toDelete = findByIdAndHidingTimestampIsNull(accommodationId);
+		
+		if(toDelete == null) {
+			throw new IdNotFoundException("Accommodation ID does not exist");
+		}
+		
+		List<BookingDTO> futureBookings = bookingRepository.findByStatusACCEPTEDOrDOINGAndAccommodationId(accommodationId);
+		System.out.println("future bookings " + futureBookings);
+		if(futureBookings.isEmpty()) {
+			toDelete.setHidingTimestamp(LocalDateTime.now());
+			System.out.println(toDelete);
+			accommodationRepository.save(toDelete);
+			return toDelete;		
+		} else {
+			throw new ForbiddenException("could not delete an accommodation with ongoing or future booking");
+		}
+	}
+
+	public Accommodation findRejectedAccommodation(Long accommodationId) {
+		return accommodationRepository.findByIdAndApprovalTimestampIsNullAndHidingTimestampIsNotNull(accommodationId);
 	}
 }

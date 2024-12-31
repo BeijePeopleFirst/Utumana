@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ws.peoplefirst.utumana.dto.AccommodationDTO;
+import ws.peoplefirst.utumana.dto.BookingDTO;
 import ws.peoplefirst.utumana.dto.PriceDTO;
 import ws.peoplefirst.utumana.dto.UnavailabilityDTO;
 import ws.peoplefirst.utumana.dto.UserDTO;
@@ -93,13 +94,88 @@ public class AccommodationController {
 	public Accommodation getSingleAccommodationAPI(@PathVariable Long id, Authentication auth) {	
 		logger.debug("GET /accommodation/" + id);
 		
-		Accommodation acc = accommodationService.findById(id);	
+		Accommodation acc = accommodationService.findByIdAndHidingTimestampIsNull(id);	
 		
 		if(acc != null) return acc;
 		else {
 			logger.error("Incorrect ID -- No Accommodation was found");
 			throw new IdNotFoundException("Incorrect ID -- No Accommodation was found");
 		}
+	}
+	
+	@PreAuthorize("hasAuthority('USER')")
+	@GetMapping(value="/rejected_accommodation/{id}")
+	public Accommodation getRejectedAccommodationAPI(@PathVariable Long id, Authentication auth) {	
+		logger.debug("GET /rejected_accommodation/" + id);
+		
+		Accommodation acc = accommodationService.findRejectedAccommodation(id);	
+		
+		if(acc != null) return acc;
+		else {
+			logger.error("Incorrect ID -- No Accommodation was found");
+			throw new IdNotFoundException("Incorrect ID -- No Accommodation was found");
+		}
+	}
+	
+	@PreAuthorize("hasAuthority('USER')")
+	@GetMapping(value = "/accommodation/{accommodationId}/info")
+	public ResponseEntity<Map<String, Object>> getAccomodationInfo(Authentication auth, 
+			@PathVariable(name = "accommodationId") Long accommodationId) {
+			
+		Accommodation accommodation = accommodationService.findById(accommodationId);
+		if(accommodation == null)
+			throw new IdNotFoundException("Accommodation with id " + accommodationId + " not found");
+		
+		if (accommodation.getApprovalTimestamp() != null && accommodation.getHidingTimestamp() != null) {
+			// accommodation deleted
+			throw new IdNotFoundException("Accommodation not found");
+		} else {
+			if(!AuthorizationUtility.getUserFromAuthentication(auth).getId().equals(accommodation.getOwnerId())) {
+				throw new ForbiddenException("Only owners can edit their accommodation");
+			}
+		}
+		
+		Map<String, Object> res = new HashMap<>();
+		
+		res.put("id", accommodation.getId());
+		res.put("title", accommodation.getTitle());
+		res.put("description", accommodation.getDescription());
+		res.put("beds", accommodation.getBeds());
+		res.put("rooms", accommodation.getRooms());
+		
+		return ok(res);
+	}
+	
+	@PreAuthorize("hasAuthority('USER')")
+	@GetMapping(value = "/accommodation/{accommodationId}/address")
+	public ResponseEntity<Map<String, Object>> getAccomodationAddress(Authentication auth, 
+			@PathVariable(name = "accommodationId") Long accommodationId) {
+			
+		Accommodation accommodation = accommodationService.findById(accommodationId);
+		if(accommodation == null)
+			throw new IdNotFoundException("Accommodation with id " + accommodationId + " not found");
+		
+		if (accommodation.getApprovalTimestamp() != null && accommodation.getHidingTimestamp() != null) {
+			// accommodation deleted
+			throw new IdNotFoundException("Accommodation not found");
+		} else {
+			if(!AuthorizationUtility.getUserFromAuthentication(auth).getId().equals(accommodation.getOwnerId())) {
+				throw new ForbiddenException("Only owners can edit their accommodation");
+			}
+		}
+		
+		Map<String, Object> res = new HashMap<>();
+		
+		res.put("id", accommodation.getId());
+		res.put("country", accommodation.getCountry());
+		res.put("cap", accommodation.getCap());
+		res.put("street", accommodation.getStreet());
+		res.put("street_number", accommodation.getStreetNumber());
+		res.put("city", accommodation.getCity());
+		res.put("province", accommodation.getProvince());
+		res.put("address_notes", accommodation.getAddressNotes());
+		
+		return ok(res);
 	}
 	
 	@PreAuthorize("hasAuthority('USER')")
@@ -111,6 +187,15 @@ public class AccommodationController {
 		if(accommodation == null)
 			throw new IdNotFoundException("Accommodation with id " + id + " not found");
 		
+		if (accommodation.getApprovalTimestamp() != null && accommodation.getHidingTimestamp() != null) {
+			// accommodation deleted
+			throw new IdNotFoundException("Accommodation not found");
+		} else {
+			if(!AuthorizationUtility.getUserFromAuthentication(auth).getId().equals(accommodation.getOwnerId())) {
+				throw new ForbiddenException("Only owners can edit their accommodation");
+			}
+		}
+
 		return accommodationService.getAccommodationServices(id);
 	}
 	
@@ -123,6 +208,15 @@ public class AccommodationController {
 		if(accommodation == null)
 			throw new IdNotFoundException("Accommodation with id " + id + " not found");
 		
+		if (accommodation.getApprovalTimestamp() != null && accommodation.getHidingTimestamp() != null) {
+			// accommodation deleted
+			throw new IdNotFoundException("Accommodation not found");
+		} else {
+			if(!AuthorizationUtility.getUserFromAuthentication(auth).getId().equals(accommodation.getOwnerId())) {
+				throw new ForbiddenException("Only owners can edit their accommodation");
+			}
+		}
+		
 		return avService.findByAccommodationId(id);
 	}
 	
@@ -134,6 +228,15 @@ public class AccommodationController {
 		Accommodation accommodation = accommodationService.findById(id);
 		if(accommodation == null)
 			throw new IdNotFoundException("Accommodation with id " + id + " not found");
+		
+		if (accommodation.getApprovalTimestamp() != null && accommodation.getHidingTimestamp() != null) {
+			// accommodation deleted
+			throw new IdNotFoundException("Accommodation not found");
+		} else {
+			if(!AuthorizationUtility.getUserFromAuthentication(auth).getId().equals(accommodation.getOwnerId())) {
+				throw new ForbiddenException("Only owners can edit their accommodation");
+			}
+		}
 		
 		return bookingService.findUnavailabilitiesDTO(id);
 	}
@@ -226,63 +329,63 @@ public class AccommodationController {
 
 		AuthorizationUtility.checkIsAdminOrMe(auth, newOne.getOwnerId());
 
-		/*
-		Accommodation acc = accommodationService.findById(newOne.getId());
-		
-		if(acc == null) {
-			logger.error("Accommodation not found");
-			throw new IdNotFoundException("Accommodation not found");
-		}
-		
-		if(!acc.getOwnerId().equals(newOne.getOwnerId())) {
-			logger.error("Unauthorized operation: the found Accommodation's owner does not match the provided Owner");
-			throw new ForbiddenException("Unauthorized operation: the found Accommodation's owner does not match the provided Owner");
-		}
-		
-		return accommodationService.substituteIfPresent(newOne);
-		*/
 		return accommodationService.setAccommodationInfo(newOne);
 	}
 
+//	@PreAuthorize("hasAuthority('USER')")
+//	@DeleteMapping(value="/delete_accommodation/{id}")
+//	public Accommodation deleteAccommodationAPI(@PathVariable Long id, Authentication auth) {		
+//		Accommodation toDelete = accommodationService.findById(id);
+//
+//		if(toDelete == null) {
+//			logger.error("Accommodation ID does not exist");
+//			throw new IdNotFoundException("Accommodation ID does not exist");
+//		}
+//		else {
+//			
+//			
+//			if(accommodationService.hasNoBookings(toDelete)) {
+//				
+////				if(!currentUsr.equals(toDelete.getOwnerId()) && !user.getIsAdmin()) throw new ForbiddenException("Privileges requirements not satisfied: abort...");
+////				else {
+////					accommodationService.delete(toDelete);
+////					return toDelete;
+////				}
+//				
+//				//accommodationService.delete(toDelete);
+//				
+//				return toDelete;
+//			}
+//			else {
+//				AuthorizationUtility.checkIsAdminOrMe(auth, toDelete.getOwnerId());
+////				if(!currentUsr.equals(toDelete.getOwnerId()) && !user.getIsAdmin()) throw new ForbiddenException("Privileges requirements not satisfied: abort...");
+////				else {
+////					toDelete.setHidingTimestamp(LocalDateTime.now());
+////					accommodationService.save(toDelete);
+////					return toDelete;
+////				}
+//				
+//				toDelete.setHidingTimestamp(LocalDateTime.now());
+//				//accommodationService.save(toDelete);
+//				return toDelete;
+//			}
+//			
+//		}
+//	}
+	
 	@PreAuthorize("hasAuthority('USER')")
-	@DeleteMapping(value="/delete_accommodation/{id}")
-	public Accommodation deleteAccommodationAPI(@PathVariable Long id, Authentication auth) {		
-		Accommodation toDelete = accommodationService.findById(id);
+	@PatchMapping(value="/delete_accommodation/{id}")
+	public Accommodation deleteAccommodationAPI(@PathVariable Long id, Authentication auth) {
+		logger.debug("DELETE /delete_accommodation/" + id);
+		Accommodation toDelete = accommodationService.findByIdAndHidingTimestampIsNull(id);
 
 		if(toDelete == null) {
-			logger.error("Accommodation ID does not exist");
 			throw new IdNotFoundException("Accommodation ID does not exist");
 		}
-		else {
-			
-			
-			if(accommodationService.hasNoBookings(toDelete)) {
-				
-//				if(!currentUsr.equals(toDelete.getOwnerId()) && !user.getIsAdmin()) throw new ForbiddenException("Privileges requirements not satisfied: abort...");
-//				else {
-//					accommodationService.delete(toDelete);
-//					return toDelete;
-//				}
-				
-				//accommodationService.delete(toDelete);
-				
-				return toDelete;
-			}
-			else {
-				AuthorizationUtility.checkIsAdminOrMe(auth, toDelete.getOwnerId());
-//				if(!currentUsr.equals(toDelete.getOwnerId()) && !user.getIsAdmin()) throw new ForbiddenException("Privileges requirements not satisfied: abort...");
-//				else {
-//					toDelete.setHidingTimestamp(LocalDateTime.now());
-//					accommodationService.save(toDelete);
-//					return toDelete;
-//				}
-				
-				toDelete.setHidingTimestamp(LocalDateTime.now());
-				//accommodationService.save(toDelete);
-				return toDelete;
-			}
-			
-		}
+		
+		AuthorizationUtility.checkIsAdminOrMe(auth, toDelete.getOwnerId());
+		
+		return accommodationService.deleteAccommodation(id);
 	}
 	
 	@PreAuthorize("hasAuthority('USER')")
@@ -334,7 +437,7 @@ public class AccommodationController {
 		accommodationService.addFavourite(accommodationId, userId);
 		
 		//TODO decide what to return based on graphical view
-		return accommodationService.findById(accommodationId);
+		return accommodationService.findByIdAndHidingTimestampIsNull(accommodationId);
 	}
 	
 	@PreAuthorize("hasAuthority('USER')")
@@ -346,7 +449,7 @@ public class AccommodationController {
 		accommodationService.removeFavourite(accommodationId, userId);
 		
 		//TODO decide what to return based on graphical view
-		return accommodationService.findById(accommodationId);
+		return accommodationService.findByIdAndHidingTimestampIsNull(accommodationId);
 	}
 	
 	@PreAuthorize("hasAuthority('USER')")
@@ -384,6 +487,33 @@ public class AccommodationController {
 		}
 		
 		return accommodationService.getMyAccommodationsDTO(userId);
+	}
+	
+	
+	@PreAuthorize("hasAuthority('USER')")
+	@GetMapping(value="/pending_accommodations/{userId}")
+	public List<AccommodationDTO> getPendingAccommodationsDTO(@PathVariable Long userId, Authentication auth) {
+		
+		AuthorizationUtility.checkIsAdminOrMe(auth, userId);
+		if(usrService.findById(userId) == null) {
+			logger.error("The specified user does not exist");
+			throw new IdNotFoundException("The specified user does not exist");
+		}
+		
+		return accommodationService.getPendingAccommodationsDTO(userId);
+	}
+	
+	@PreAuthorize("hasAuthority('USER')")
+	@GetMapping(value="/rejected_accommodations/{userId}")
+	public List<AccommodationDTO> getRejectedAccommodationsDTO(@PathVariable Long userId, Authentication auth) {
+		
+		AuthorizationUtility.checkIsAdminOrMe(auth, userId);
+		if(usrService.findById(userId) == null) {
+			logger.error("The specified user does not exist");
+			throw new IdNotFoundException("The specified user does not exist");
+		}
+		
+		return accommodationService.getRejectedAccommodationsDTO(userId);
 	}
 	
 	@PreAuthorize("hasAuthority('USER')")
@@ -488,11 +618,7 @@ public class AccommodationController {
 	@PatchMapping(value = "/approve_accommodation/{accommodation_id}")
 	public Accommodation approveHouse( @PathVariable (name="accommodation_id")Long accommodationId) {
 		
-		if(!accommodationService.approveAccommodation(accommodationId)) {
-			throw new IdNotFoundException("House not found");
-		}
-		
-		return accommodationService.findById(accommodationId);
+		return accommodationService.approveAccommodation(accommodationId);
 	}
 	
 }

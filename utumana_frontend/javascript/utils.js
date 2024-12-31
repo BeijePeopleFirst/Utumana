@@ -1,4 +1,4 @@
-const prefixUrl = 'http://localhost:8080/';
+const prefixUrl = 'http://localhost/';
 const staticUrl = '';
 const headers = createRequestHeaders();
 
@@ -15,6 +15,7 @@ async function doFetch(url, method, headers, body){
 	return fetch(url, {
 			  method: method, 
 			  headers: headers,
+			  mode: "cors",
 			  body: body
 		}).then(async response => {
 			if(response.status == 401) {
@@ -44,6 +45,7 @@ async function retry(url, method, headers, body){
 	return fetch(url, {
 		  method: method, 
 		  headers: headers,
+		  mode: "cors",
 		  body: body
 	});
 }
@@ -73,7 +75,7 @@ async function refreshToken(){
 				let json = await response.json();
 				console.log("Refresh ok. json = ", json);
 				localStorage.setItem("token", json.token);
-				document.cookie = "refresh_token=" + json.refresh_token;
+				document.cookie = "refresh_token=" + json.refresh_token + ";SameSite=None";
 				refreshed = true;
 			} else {
 				refreshed = false;
@@ -192,7 +194,10 @@ function displayAccommodationsCards(container, json, noAccommodationsMessage){
 		div.appendChild(element);
 		
 		element = document.createElement("p");
-		element.innerHTML = json[i].city + ", " + json[i].country;
+		let locationInfo = '';
+		if(json[i].city != null)
+			locationInfo = json[i].city + ", ";
+		element.innerHTML = locationInfo + json[i].country;
 		div.appendChild(element);
 		
 		element = getHeart(json[i].is_favourite, json[i].id);
@@ -250,14 +255,14 @@ function getHeart(isFavorite, id) {
     heart.classList.add('inline-child');
     heart.id = 'heart';
     
-    heart.innerHTML = isFavorite ? '<img style="height: 30px; width: 30px; box-shadow: none;" src="static/icons/favorite_24dp_EA3323_FILL1_wght400_GRAD0_opsz24.svg" alt="remove from favourites" />' 
-    							 : '<img style="height: 30px; width: 30px; box-shadow: none;" src="static/icons/favorite_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg" alt="add to favourites" />';
+    heart.innerHTML = isFavorite ? '<img style="height: 30px; width: 30px; box-shadow: none;" src="icons/favorite_24dp_EA3323_FILL1_wght400_GRAD0_opsz24.svg" alt="remove from favourites" />' 
+    							 : '<img style="height: 30px; width: 30px; box-shadow: none;" src="icons/favorite_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg" alt="add to favourites" />';
     
     heart.onclick = () => {
         isFavorite = !isFavorite;
         
-     heart.innerHTML = isFavorite ? '<img style="height: 30px; width: 30px; box-shadow: none;" src="static/icons/favorite_24dp_EA3323_FILL1_wght400_GRAD0_opsz24.svg" alt="remove from favourites" />' 
-    							 : '<img style="height: 30px; width: 30px; box-shadow: none;" src="static/icons/favorite_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg" alt="add to favourites" />';
+     heart.innerHTML = isFavorite ? '<img style="height: 30px; width: 30px; box-shadow: none;" src="icons/favorite_24dp_EA3323_FILL1_wght400_GRAD0_opsz24.svg" alt="remove from favourites" />' 
+    							 : '<img style="height: 30px; width: 30px; box-shadow: none;" src="icons/favorite_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg" alt="add to favourites" />';
        
         if (isFavorite) {
 			doFetch(prefixUrl + 'api/add-favourite/' + userId + '/' + id, 'PATCH', headers, null)

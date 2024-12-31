@@ -77,10 +77,10 @@ public class ConfigurationClass {
 ////        return transactionManager;
 ////    }
 //    
-//    @Bean
-//    public MultipartResolver multipartResolver() {
-//    	return new StandardServletMultipartResolver();
-//    }
+    @Bean
+    public MultipartResolver multipartResolver() {
+    	return new StandardServletMultipartResolver();
+    }
 //      
 ////    //SECURITY
 ////    protected void configure(HttpSecurity http) throws Exception {
@@ -250,7 +250,11 @@ public class ConfigurationClass {
                     authorize.requestMatchers("/api/signin").permitAll();
                     authorize.requestMatchers("/check").permitAll();
                     authorize.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
-                    authorize.anyRequest().authenticated();
+                    authorize.requestMatchers("/swagger-ui/**")
+                    .permitAll()
+                    .requestMatchers("/v3/api-docs*/**")
+                    .permitAll();
+                     authorize.anyRequest().authenticated();
                 }).httpBasic(Customizer.withDefaults());
 
         http.exceptionHandling( exception -> exception
@@ -258,8 +262,12 @@ public class ConfigurationClass {
 
         http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
+        http.cors(Customizer.withDefaults());
+        
         return http.build();
     }
+    
+
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {

@@ -87,4 +87,12 @@ public class BookingDTO {
 	public Long getReviewId() {
 		return reviewId;
 	}
+
+	@Override
+	public String toString() {
+		return "BookingDTO [id=" + id + ", accommodationMainPhotoURL=" + accommodationMainPhotoURL
+				+ ", accommodationName=" + accommodationName + ", checkIn=" + checkIn + ", checkOut=" + checkOut
+				+ ", price=" + price + ", status=" + status + ", accommodationId=" + accommodationId + ", reviewId="
+				+ reviewId + "]";
+	}
 }

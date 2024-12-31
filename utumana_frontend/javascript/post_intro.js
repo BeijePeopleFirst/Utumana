@@ -6,8 +6,8 @@ function loadWhenEditing(accommodationId){
 	document.getElementById("progress_bar").style.display = "none";
 	document.getElementById("save_button").innerHTML = "Save changes";
 	
-	// fetch accommodation info and put it in sessionStorage
-	doFetch(prefixUrl + 'api/accommodation/' + accommodationId, 'GET', headers, null)
+	// fetch accommodation info
+	doFetch(prefixUrl + 'api/accommodation/' + accommodationId + '/info', 'GET', headers, null)
 	.then((json) => {
 		if(json.id == null){
 			console.log(json);
