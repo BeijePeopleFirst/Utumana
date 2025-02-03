@@ -17,6 +17,9 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -77,12 +80,12 @@ public class AccommodationController {
 	
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value="/accommodations")
-	public List<Accommodation> getAllAccommodationsAPI(Authentication auth) {
+	public Page<Accommodation> getAllAccommodationsAPI(Authentication auth, Pageable pageable) {
 		logger.debug("GET /accommodations");
+
+		Page<Accommodation> list = accommodationService.getAllAccommodations(pageable);
 		
-		List<Accommodation> list = accommodationService.getAllAccommodations();
-		
-		if(list == null || list.size() == 0) return new ArrayList<Accommodation>();
+		if(list == null || list.isEmpty()) return new PageImpl<Accommodation>(new ArrayList<Accommodation>());
 		else {
 			return list;
 		}

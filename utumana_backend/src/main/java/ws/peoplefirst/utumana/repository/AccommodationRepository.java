@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -17,7 +18,7 @@ import ws.peoplefirst.utumana.dto.AccommodationDTO;
 import ws.peoplefirst.utumana.model.Accommodation;
 
 @Repository
-public interface AccommodationRepository extends JpaRepository<Accommodation,Long>{
+public interface AccommodationRepository extends JpaRepository<Accommodation,Long> {
 	
 	@Query(value = "SELECT a FROM Accommodation AS a WHERE a.approvalTimestamp IS NOT NULL AND a.hidingTimestamp IS NULL ORDER BY a.approvalTimestamp DESC")
 	public List<Accommodation> getLatestUploads(Pageable pageable);
