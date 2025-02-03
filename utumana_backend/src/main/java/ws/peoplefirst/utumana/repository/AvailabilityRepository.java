@@ -3,6 +3,8 @@ package ws.peoplefirst.utumana.repository;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -22,7 +24,7 @@ public interface AvailabilityRepository extends JpaRepository<Availability,Long>
 
 	public List<Availability> findByAccommodation(Accommodation base);
 	
-	public List<Availability> findByAccommodationId(Long accommodationId);
+	public Page<Availability> findByAccommodationId(Long accommodationId, Pageable pageable);
 	
     @Query("SELECT av FROM Availability av WHERE " +
             "av.accommodation.id = :accommodationId AND " +

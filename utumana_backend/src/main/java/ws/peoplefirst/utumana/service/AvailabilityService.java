@@ -11,6 +11,8 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import ws.peoplefirst.utumana.exception.ForbiddenException;
@@ -113,8 +115,8 @@ public class AvailabilityService {
 		return availabilityRepository.findByAccommodation(base);
 	}
 	
-	public List<Availability> findByAccommodationId(Long accommodationId) {
-		return availabilityRepository.findByAccommodationId(accommodationId);
+	public Page<Availability> findByAccommodationId(Long accommodationId, Pageable pageable) {
+		return availabilityRepository.findByAccommodationId(accommodationId, pageable);
 	}
 	
 	public Map<LocalDate, Double> findAvailableDatesByMonth(Long accommodationId, String startDateString,  String endDateString) {

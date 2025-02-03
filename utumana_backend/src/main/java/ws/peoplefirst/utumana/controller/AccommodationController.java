@@ -119,14 +119,14 @@ public class AccommodationController {
 	
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value="/accommodation/{id}/availabilities")
-	public List<Availability> getAccommodationAvailabilities(@PathVariable Long id, Authentication auth) {
+	public Page<Availability> getAccommodationAvailabilities(@PathVariable Long id, Authentication auth, Pageable pageable) {
 		logger.debug("GET /accommodation/" + id + "/availabilities");
 		
 		Accommodation accommodation = accommodationService.findById(id);
 		if(accommodation == null)
 			throw new IdNotFoundException("Accommodation with id " + id + " not found");
 		
-		return avService.findByAccommodationId(id);
+		return avService.findByAccommodationId(id,pageable);
 	}
 	
 	@PreAuthorize("hasAuthority('USER')")
