@@ -3,7 +3,25 @@
 	"welcome": "Bentornato!",
 	"email_label": "Indirizzo email",
 	"password_label": "Password",
-	"forget_password": "Hai dimenticato la assword?",
+	"forget_password": "Hai dimenticato la password?",
 	"button_text": "Login"
-	}
+	},
+"header" : {
+	"profile": "Profilo",
+	"favourites": "Preferiti",
+	"accommodations": "Le mie sistemazioni",
+	"admin": "Admin Dashboard",
+	"logout": "Logout",
+	"create": "Crea",
+	"bookings": "Le mie prenotazioni",
+	"host-dashboard": "Dashboard Host"
+},
+
+"search": {
+	"city": "Città",
+	"date-error": "La data è obbligatoria",
+	"min-person": "min: 1 persona",
+	"people": "Persone",
+	"search": "Cerca"
+}
 }
