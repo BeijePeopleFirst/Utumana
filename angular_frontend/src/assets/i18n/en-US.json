@@ -1,5 +1,9 @@
 {"greeting" : "hello",
 "login": {
-	"welcome": "Welcome back!"
+	"welcome": "Welcome back!",
+	"email_label": "Email address",
+	"password_label": "Password",
+	"forget_password": "Forget password?",
+	"button_text": "Login"
 	}
 }

@@ -1,5 +1,9 @@
 {"greeting":"Ciao",
 "login": {
-	"welcome": "Bentornato!"
+	"welcome": "Bentornato!",
+	"email_label": "Indirizzo email",
+	"password_label": "Password",
+	"forget_password": "Hai dimenticato la assword?",
+	"button_text": "Login"
 	}
 }
