@@ -1,5 +1,15 @@
 {"greeting":"Ciao",
 "login": {
 	"welcome": "Bentornato!"
-	}
+	},
+"header" : {
+	"profile": "Profilo",
+	"favourites": "Preferiti",
+	"accommodations": "Le mie sistemazioni",
+	"admin": "Admin Dashboard",
+	"logout": "Logout",
+	"create": "Crea",
+	"bookings": "Le mie prenotazioni",
+	"host-dashboard": "Dashboard Host"
+}
 }

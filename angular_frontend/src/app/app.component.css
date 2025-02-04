@@ -1,0 +1,10 @@
+.footer {
+    background-color: #f3f4f6; /* Grigio chiaro */
+    text-align: center;
+    padding: 1rem;
+    font-size: 0.875rem;
+    color: #4b5563; /* Grigio scuro */
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+  }
