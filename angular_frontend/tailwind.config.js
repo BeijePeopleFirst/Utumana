@@ -6,6 +6,10 @@ module.exports = {
       colors: {
         primary: 'cyan-800',
         secondary: '#10b981',
+		neutral: {
+			1: 'neutral-50',
+			2: 'cyan-50'
+		}
       }
     },
   },
