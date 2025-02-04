@@ -53,21 +53,21 @@ export class Accommodation {
     public get description(): (string | undefined) {
         return this._description;
     }
-    public set description(value: string) {
+    public set description(value: (string | undefined)) {
         this._description = value;
     }
 
     public get approvalTimestamp(): (Date | undefined) {
         return this._approvalTimestamp;
     }
-    public set approvalTimestamp(value: Date) {
+    public set approvalTimestamp(value: (Date | undefined)) {
         this._approvalTimestamp = value;
     }
 
     public get hidingTimestamp(): (Date | undefined) {
         return this._hidingTimestamp;
     }
-    public set hidingTimestamp(value: Date) {
+    public set hidingTimestamp(value: (Date | undefined)) {
         this._hidingTimestamp = value;
     }
 
@@ -88,28 +88,28 @@ export class Accommodation {
     public get street(): (string | undefined) {
         return this._street;
     }
-    public set street(value: string) {
+    public set street(value: (string | undefined)) {
         this._street = value;
     }
 
     public get streetNumber(): (string | undefined) {
         return this._streetNumber;
     }
-    public set streetNumber(value: string) {
+    public set streetNumber(value: (string | undefined)) {
         this._streetNumber = value;
     }
 
     public get addressNotes(): (string | undefined) {
         return this._addressNotes;
     }
-    public set addressNotes(value: string) {
+    public set addressNotes(value: (string | undefined)) {
         this._addressNotes = value;
     }
 
     public get city(): (string | undefined) {
         return this._city;
     }
-    public set city(value: string) {
+    public set city(value: (string | undefined)) {
         this._city = value;
     }
 
@@ -123,7 +123,7 @@ export class Accommodation {
     public get province(): (string | undefined) {
         return this._province;
     }
-    public set province(value: string) {
+    public set province(value: (string | undefined)) {
         this._province = value;
     }
 
@@ -137,7 +137,7 @@ export class Accommodation {
     public get coordinates(): (string | undefined) {
         return this._coordinates;
     }
-    public set coordinates(value: string) {
+    public set coordinates(value: (string | undefined)) {
         this._coordinates = value;
     }
 
