@@ -1,15 +1,13 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./src/**/*.{html,ts}"],
+  content: ["./src/app/components/**/*.{html,ts,css}"],
   theme: {
     extend: {
       colors: {
-        primary: "red", // Blu personalizzato
-        secondary: "#9333EA", // Viola personalizzato
-        accent: "#F59E0B", // Arancione acceso
-      },
+        primary: 'black',
+        secondary: '#10b981',
+      }
     },
   },
   plugins: [],
 }
-
