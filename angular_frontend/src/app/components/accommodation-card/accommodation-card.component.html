@@ -1,1 +1,26 @@
-<div>{{accommodation.title}}</div>
+<ng-container *ngIf="invalidAccommodation" id="invalid-accommodation-container">
+  <h1 class="text-orange-700 text-3xl">Error 404 Not Found: Invalid Accommodation ID Provided</h1>
+</ng-container>
+
+<ng-container *ngIf="invalidUserId || userNotLogged">
+  <h1 class="text-orange-700 text-3xl">Error 401 Unauthorized: Need to be Logged-in with a lecit account</h1>
+</ng-container>
+
+<ng-container *ngIf="!invalidAccommodation && !invalidUserId && !userNotLogged" id="accommodation-details-container">
+  <div class="flex flex-row">
+    <div class="mx-2">{{accommodation.title}}</div>
+    <div id="heart">
+      <img class="w-10" *ngIf="isFavourite" src="/src/assets/icons/heart-full.png" (click)="toggleIsFavourite()" />
+      <img class="w-10" *ngIf="!isFavourite" src="/src/assets/icons/heart-empty.png" (click)="toggleIsFavourite()" />      
+    </div>
+    <div *ngIf="isAdminOrMe" id="bin-icon" class="absolute right-20">
+      <img class="w-10" src="/src/assets/icons/bin.png" (click)="deleteAccommodation()" />
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="message">
+  <button type="button" (click)="clearMessage()">clear</button>
+  <br>
+  <h1 class="text-blue-800">{{message}}</h1>
+</ng-container>

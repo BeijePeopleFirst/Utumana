@@ -4,7 +4,7 @@ import { Service } from "./service";
 
 export class Accommodation {
 	
-	private _id!: number;
+	private _id?: number;
 	private _ownerId!: number;
 	private _title!: string;
 	private _description?: string;
@@ -29,10 +29,10 @@ export class Accommodation {
     constructor() 
     {}
 
-    public get id(): number {
+    public get id(): (number | undefined) {
         return this._id;
     }
-    public set id(value: number) {
+    public set id(value: (number | undefined)) {
         this._id = value;
     }
 
