@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import iconURL from 'src/costants';
 
 @Component({
   selector: 'app-root',
@@ -11,4 +12,6 @@ export class AppComponent {
 	// set default language
 	translateService.setDefaultLang('en-US');
   }
+  title = 'angular_frontend';
+  iconUrl = iconURL;
 }
