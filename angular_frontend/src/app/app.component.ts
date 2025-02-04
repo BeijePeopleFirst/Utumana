@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import iconURL from 'src/costants';
 
@@ -8,7 +9,9 @@ import iconURL from 'src/costants';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  constructor(private translateService: TranslateService){
+  constructor(private translateService: TranslateService,
+    public router: Router
+  ){
 	// set default language
 	translateService.setDefaultLang('en-US');
   }
