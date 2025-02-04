@@ -11,5 +11,13 @@
 	"create": "Crea",
 	"bookings": "Le mie prenotazioni",
 	"host-dashboard": "Dashboard Host"
+},
+
+"search": {
+	"city": "Città",
+	"date-error": "La data è obbligatoria",
+	"min-person": "min: 1 persona",
+	"people": "Persone",
+	"search": "Cerca"
 }
 }

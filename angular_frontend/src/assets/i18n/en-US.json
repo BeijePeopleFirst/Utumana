@@ -11,5 +11,12 @@
 	"create": "Create",
 	"bookings": "My bookings",
 	"host-dashboard": "Host Dashboard"
+},
+"search": {
+	"city": "City",
+	"date-error": "Date is mandatory",
+	"min-person": "min: 1 person",
+	"people": "People",
+	"search": "Search"
 }
 }

@@ -25,7 +25,7 @@
             </svg>
           </button>
   
-          <div *ngIf="isLanguageMenuOpen" class="absolute top-full right-0 mt-3 w-32 rounded-xl bg-white shadow-lg ring-1 ring-gray-900/5">
+          <div *ngIf="isLanguageMenuOpen" class="absolute top-full right-0 mt-3 w-32 rounded-xl bg-white shadow-lg ring-1 ring-gray-900/5 z-10">
             <div class="p-2 space-y-1">
               <button *ngFor="let lang of languages" (click)="changeLanguage(lang.code)" class="flex items-center gap-x-2 px-4 py-2 text-sm text-gray-900 hover:bg-gray-50 w-full text-left">
                 <img class="h-5 w-auto" [src]="iconUrl + '/flags/' + lang.code + '.png'" alt="">
@@ -43,7 +43,7 @@
             </svg>
           </button>
   
-          <div *ngIf="isProfileMenuOpen" class="absolute top-full right-0 mt-3 w-48 rounded-xl bg-white shadow-lg ring-1 ring-gray-900/5">
+          <div *ngIf="isProfileMenuOpen" class="absolute top-full right-0 mt-3 w-48 rounded-xl bg-white shadow-lg ring-1 ring-gray-900/5 z-10">
             <div class="p-4 space-y-2">
               <a routerLink="/profile" class="block px-4 py-2 text-sm text-gray-900 hover:bg-gray-50">{{'header.profile' | translate}}</a>
               <a routerLink="/favourites" class="block px-4 py-2 text-sm text-gray-900 hover:bg-gray-50">{{'header.favourites' | translate}}</a>
@@ -57,7 +57,7 @@
     </nav>
   </header>
   <router-outlet></router-outlet>
-  <footer class="footer">
+  <footer class="bg-gray-100 text-center p-4 text-sm text-gray-600 w-full mt-auto">
     <p>&copy; {{ currentYear }} My Company. All rights reserved.</p>
   </footer>
   
