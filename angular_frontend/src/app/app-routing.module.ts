@@ -4,6 +4,7 @@ import { AccommodationCardComponent } from './components/accommodation-card/acco
 import { LoginComponent } from './components/login/login.component';
 
 const routes: Routes = [
+  {path: '', component: AccommodationCardComponent},
 	{path: 'login', component: LoginComponent}
 ];
 

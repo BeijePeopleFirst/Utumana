@@ -89,9 +89,51 @@ export class AccommodationCardComponent implements OnInit {
   toggleIsFavourite() {
     this.isFavourite = !this.isFavourite;
 
-    aggiungere logica per aggiungere il preferito
+    if(!this.userId) {
+      this.userNotLogged = true;
+      return;
+    }
 
-    continuare html da sotto riga de ChannelSplitterNode, quyidi da createInjectableType, OROV Country inclusa
+    if(!this.accommodation.id) {
+      this.invalidAccommodation = true;
+      return;
+    }
+
+    if(this.isFavourite) this.accommodationService.addFavourite(this.userId, this.accommodation.id).subscribe(
+        result => {
+          if(!result) {
+            this.message = "An Error occurred";
+            return;
+          }
+          else if("message" in result) {
+            this.message = result.message;
+            return;
+          }
+          else {
+            this.message = "Added to favourites -> " + result;
+            return;
+          }
+        }
+      );
+
+    else this.accommodationService.removeFavourite(this.userId, this.accommodation.id).subscribe(
+        result => {
+          if(!result) {
+            this.message = "An Error occurred";
+            return;
+          }
+          else if("message" in result) {
+            this.message = result.message;
+            return;
+          }
+          else {
+            this.message = "Removed from favourites -> " + result;
+            return;
+          }
+        }
+      );
+
+    
   }
 
   deleteAccommodation() {

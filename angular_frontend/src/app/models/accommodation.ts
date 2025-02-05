@@ -29,6 +29,15 @@ export class Accommodation {
     constructor() 
     {}
 
+    public toString(): string {
+        return "Accommodation [id=" + this.id + ", ownerId=" + this.ownerId + ", title=" + this.title + ", description=" + this.description
+        + ", approvalTimestamp=" + this.approvalTimestamp + ", hidingTimestamp=" + this.hidingTimestamp + ", beds=" + this.beds
+        + ", rooms=" + this.rooms + ", street=" + this.street + ", streetNumber=" + this.streetNumber + ", addressNotes="
+        + this.addressNotes + ", city=" + this.city + ", cap=" + this.cap + ", province=" + this.province + ", country=" + this.country
+        + ", coordinates=" + this.coordinates + ", mainPhotoUrl=" + this.mainPhotoUrl + ", services=" + this.services
+        + ", photos=" + this.photos + ", availabilities=" + this.availabilities + "]";
+    }
+
     public get id(): (number | undefined) {
         return this._id;
     }
