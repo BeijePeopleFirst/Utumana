@@ -14,7 +14,7 @@ export class AppComponent {
   isLanguageMenuOpen = false;
   selectedLanguage = 'en-US'; 
   iconUrl = iconURL
-  title= 'angular_frontend'; 
+  title= 'Utumana'; 
   currentYear: number = new Date().getFullYear();
 
   languages = [
