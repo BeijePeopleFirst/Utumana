@@ -47,7 +47,6 @@ export class AccommodationDetailsComponent implements OnInit {
   ngOnInit(): void {
 
     let id: (string | undefined | null) = this.route.snapshot.params["accommodation_id"];
-    id="91";
 
     if(!id || id == "") {
       this.invalidAccommodation = true;

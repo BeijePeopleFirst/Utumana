@@ -16,10 +16,10 @@ export class AccommodationService {
   public getAccommodationById(id: number): Observable<(Accommodation | null)> {
     let headers = this.getAuth();
 
-    console.log("ECCOMI QUI");
+    console.log("ECCOMI QUI", id);
     console.log(headers);
 
-    return this.http.get<(Accommodation | {time: string, status: string, message: string})>(BACKEND_URL_PREFIX + "/accommodation/" + id, {headers})
+    return this.http.get<(Accommodation | {time: string, status: string, message: string})>(BACKEND_URL_PREFIX + "/api/accommodation/" + id, {headers})
                       .pipe(
                         map(response => {
                           if("message" in response) return null;
