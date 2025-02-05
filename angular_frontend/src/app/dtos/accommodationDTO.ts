@@ -1,4 +1,4 @@
-export class AccomodationDTO{
+export class AccommodationDTO{
     constructor(
         public id: number,
         public title: string,

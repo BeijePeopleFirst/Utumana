@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { catchError, map, Observable, of } from 'rxjs';
 import { Accommodation } from '../models/accommodation';
 import { BACKEND_URL_PREFIX } from 'src/costants';
+import { AccommodationDTO } from '../dtos/accommodationDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +12,24 @@ export class AccommodationService {
   
 
   constructor(private http: HttpClient) { }
+
+  public getLatestUploads(): Observable<(AccommodationDTO[] | null)>{
+    let token: (string | null) = localStorage.getItem("token");
+    let headers = new HttpHeaders(token ? { Authorization: `Bearer ${token}` } : {});
+    return this.http.get<(AccommodationDTO[] | {time: string, status: string, message: string})>(BACKEND_URL_PREFIX + "/api/get_latest_uploads" , {headers})
+    .pipe(
+      map(response => {
+        if("message" in response) return null;
+        else return response;
+      }),
+
+      catchError(error => {
+        console.error(error);
+        return of(null);
+      })
+    )
+}
+
 
 
   public getAccommodationById(id: number): Observable<(Accommodation | null)> {

@@ -39,7 +39,6 @@
 	"street-number-placeholder-input-field": "Street Number",
 	"city-input-field-error": "If provided the field 'City' needs ONLY letters",
 	"province-input-field-error": "If provided the field 'Province' needs ONLY letters",
-	"country-input-field-error": "Lecit field 'Country' required (with only letters)",
 	"cap-input-field-error": "Lecit field 'CAP' required",
 	"street-input-field-error": "If provided the field 'Street' needs ONLY letters",
 	"street-number-input-field-error": "Field 'Street Number' must be a lecit value",
@@ -49,6 +48,17 @@
 	"rooms-word": "Rooms",
 	"beds-word": "Beds",
 	"beds-input-field-error": "Lecit Beds number required",
-	"rooms-input-field-error": "Lecit Rooms number required"
+	"rooms-input-field-error": "Lecit Rooms number required",
+	"country-input-field-error": "Lecit field 'Country' required (with only letters)"
+},
+
+"home":{
+	"latest":"Latest uploads",
+	"liked":"Most liked accommodation",
+	"review":"Reviews"
+},
+
+"profile": {
+	"reviews_title": "Reviews received"
 }
 }

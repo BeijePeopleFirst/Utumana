@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Review } from 'src/app/models/review';
 
 @Component({
   selector: 'app-review-cards',
@@ -6,5 +7,6 @@ import { Component } from '@angular/core';
   styleUrls: ['./review-cards.component.css']
 })
 export class ReviewCardsComponent {
-
+  @Input() reviews!: Review[];
+  @Input() userName!: string;
 }
