@@ -86,9 +86,28 @@ export class AccommodationService {
                       )
   }
 
+  updateAccommodationInfo(accommodation: Accommodation): Observable<Accommodation | null | {message: string, status: string, time: string}> {
+    let headers = this.getAuth();
+    console.log(accommodation);
+
+    return this.http.patch<Accommodation | null | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/accommodation/" + accommodation.id, {newOne: JSON.stringify(accommodation)}, {headers})
+                      .pipe(
+                        catchError(error => {
+                          console.error("Errore in Service Accommodation", error);
+                          return of();
+                        })
+                      )
+  }
+
   private getAuth(): HttpHeaders {
-    let token: (string | null) = localStorage.getItem("token");
-    let headers = new HttpHeaders(token ? { Authorization: `Bearer ${token}` } : {});
+    let token: string | null = localStorage.getItem("token");
+    let headers = new HttpHeaders();
+
+    if (token) {
+      headers = headers.set("Authorization", `Bearer ${token}`);
+    }
+
+    headers = headers.set("Content-Type", "application/json");
 
     return headers;
   }

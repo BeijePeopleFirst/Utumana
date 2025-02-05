@@ -7,51 +7,61 @@
   </ng-container>
   
   <ng-container *ngIf="!invalidAccommodation && !invalidUserId && !userNotLogged" id="accommodation-details-container">
-    <div class="flex flex-row">
-      <div class="mx-2">{{accommodation.title}}</div>
-      <div id="heart">
-        <img class="w-7 cursor-pointer" *ngIf="isFavourite" src="/assets/icons/heart-full.png" (click)="toggleIsFavourite()" />
-        <img class="w-7 cursor-pointer" *ngIf="!isFavourite" src="/assets/icons/heart-empty.png" (click)="toggleIsFavourite()" />      
-      </div>
-      <div *ngIf="isAdminOrMe" id="bin-icon" class="absolute right-20">
-        <img class="w-10 cursor-pointer" src="/assets/icons/bin.png" (click)="deleteAccommodation()" />
-      </div>
-    </div>
-    <div class="flex flex-row">
-      <div>
-        {{accommodation.city}}, {{accommodation.province}}, {{accommodation.country}}
-      </div>
-      <div *ngIf="isAdminOrMe">
-        <img class="w-7 cursor-pointer" src="/assets/icons/pencil.png" (click)="toggleEditCityProvCountry()" />
-      </div>
-    </div>
-    <div id="images" class="flex flex-row">
-
-      <!-- TODO ALL IMAGES + CAROUSEL -->
-      <!-- -------------------------------------------------------------------------------------- -->
-      <img id="biggest-image" [src]="'http://localhost:8080/' + accommodation.photos[0].photo_url" />
-
-      <img src="/assets/icons/pencil.png" (click)="toggleEditPhotosPerspective()" class="w-7 absolute top-0 right-0 cursor-pointer" *ngIf="accommodation.photos.length === 1" id="pencil-one-image" />
-      
-      <div *ngIf="accommodation.photos.length > 1" id="other-images" class="flex flex-col">
-        <div class="flex flex-row">
-          <img id="image-oth1" [src]="accommodation.photos[1].photo_url" />
-          <img src="/assets/icons/pencil.png" (click)="toggleEditPhotosPerspective()" class="w-7 absolute top-0 right-0 cursor-pointer" *ngIf="accommodation.photos.length === 2" id="pencil-two-images" />
-          <div>
-            <img id="image-oth2" [src]="accommodation.photos[2].photo_url" *ngIf="accommodation.photos.length > 2" />
-            <img src="/assets/icons/pencil.png" (click)="toggleEditPhotosPerspective()" *ngIf="accommodation.photos.length >= 3" id="pencil-three-images" class="w-7 absolute top-0 right-0 cursor-pointer" />
-          </div>
+    <div class="flex flex-col items-center justify-center">
+      <div class="flex flex-row">
+        <div class="mx-2 text-5xl">{{accommodation.title}}</div>
+        <div id="heart">
+          <img class="w-7 cursor-pointer" *ngIf="isFavourite" src="/assets/icons/heart-full.png" (click)="toggleIsFavourite()" />
+          <img class="w-7 cursor-pointer" *ngIf="!isFavourite" src="/assets/icons/heart-empty.png" (click)="toggleIsFavourite()" />      
         </div>
-
-        <div class="flex flex-row" *ngIf="accommodation.photos.length > 3">
-          <img id="image-oth3" [src]="accommodation.photos[3].photo_url" />
-          <div>
-            <img id="image-oth4" [src]="accommodation.photos[4].photo_url" *ngIf="accommodation.photos.length > 4" />
-            <div class="cursor-pointer absolute bottom-0 right-0" (click)="toggleViewMorePhotosPerspective()" *ngIf="accommodation.photos.length > 5">{{("accommodation-card-details.view-more-photos" | translate)}}</div>
-          </div>
+        <div *ngIf="isAdminOrMe" id="bin-icon" class="absolute right-20">
+          <img class="w-10 cursor-pointer" src="/assets/icons/bin.png" (click)="deleteAccommodation()" />
         </div>
       </div>
-      <!-- -------------------------------------------------------------------------------------- -->
+      <div class="flex flex-row">
+        <div class="text-4xl">
+          {{accommodation.city}}, {{accommodation.province}}, {{accommodation.country}}
+        </div>
+        <div class="mx-3" *ngIf="isAdminOrMe">
+          <img class="w-7 cursor-pointer" src="/assets/icons/pencil.png" (click)="toggleEditCityProvCountry()" />
+        </div>
+      </div>
+      <div id="images" class="flex flex-row mt-8">
+
+        <!-- TODO ALL IMAGES + CAROUSEL -->
+        <!-- -------------------------------------------------------------------------------------- -->
+        <img id="biggest-image" [src]="'http://localhost:8080/' + accommodation.photos[0].photo_url" />
+
+        <img src="/assets/icons/pencil.png" (click)="toggleEditPhotosPerspective()" class="w-7 absolute top-0 right-0 cursor-pointer" *ngIf="accommodation.photos.length === 1" id="pencil-one-image" />
+        
+        <div *ngIf="accommodation.photos.length > 1" id="other-images" class="flex flex-col">
+          <div class="flex flex-row">
+            <img id="image-oth1" [src]="accommodation.photos[1].photo_url" />
+            <img src="/assets/icons/pencil.png" (click)="toggleEditPhotosPerspective()" class="w-7 absolute top-0 right-0 cursor-pointer" *ngIf="accommodation.photos.length === 2" id="pencil-two-images" />
+            <div>
+              <img id="image-oth2" [src]="accommodation.photos[2].photo_url" *ngIf="accommodation.photos.length > 2" />
+              <img src="/assets/icons/pencil.png" (click)="toggleEditPhotosPerspective()" *ngIf="accommodation.photos.length >= 3" id="pencil-three-images" class="w-7 absolute top-0 right-0 cursor-pointer" />
+            </div>
+          </div>
+
+          <div class="flex flex-row" *ngIf="accommodation.photos.length > 3">
+            <img id="image-oth3" [src]="accommodation.photos[3].photo_url" />
+            <div>
+              <img id="image-oth4" [src]="accommodation.photos[4].photo_url" *ngIf="accommodation.photos.length > 4" />
+              <div class="cursor-pointer absolute bottom-0 right-0" (click)="toggleViewMorePhotosPerspective()" *ngIf="accommodation.photos.length > 5">{{("accommodation-card-details.view-more-photos" | translate)}}</div>
+            </div>
+          </div>
+        </div>
+        <!-- -------------------------------------------------------------------------------------- -->
+      </div>
+      <div class="flex flex-row mt-8">
+        <div class="text-4xl">
+          {{accommodation.rooms}} {{"accommodation-card-details.rooms-word" | translate}}, {{accommodation.beds}} {{"accommodation-card-details.beds-word" | translate}}
+        </div>
+        <div class="mx-3" *ngIf="isAdminOrMe">
+          <img class="w-7 cursor-pointer" src="/assets/icons/pencil.png" (click)="toggleEditRoomsBeds()" />
+        </div>
+      </div>
     </div>
   </ng-container>
   
@@ -136,7 +146,7 @@
   
           <div class="flex flex-row mt-6 items-center">
             <button class="btn-primary mr-2" type="button" (click)="toggleEditCityProvCountry()" >{{("accommodation-card-details.close-btn-city-prov-country-form" | translate)}}</button>
-            <button class="btn-primary" type="button" (click)="confirmFormCityCountryProv()" >{{("accommodation-card-details.submit-btn-city-prov-country-form" | translate)}}</button>
+            <button [disabled]="cityProvCountryForm.invalid" class="btn-primary" type="button" (click)="confirmFormCityCountryProv()" >{{("accommodation-card-details.submit-btn-city-prov-country-form" | translate)}}</button>
           </div>
         </div>
       </form>
@@ -147,11 +157,60 @@
     <ng-container *ngTemplateOutlet="editCityProvCountryTemplate"></ng-container>
   </ng-container>
 
+  <!-- TODO -->
   <ng-template #viewMorePhotos>
 
   </ng-template>
 
   <ng-container *ngIf="showViewMorePhotosPerspective">
     <ng-container *ngTemplateOutlet="viewMorePhotos"></ng-container>
+  </ng-container>
+
+  <ng-template #editRoomsBedsPerspective>
+    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+      <form #roomsBedsForm="ngForm">
+        <div class="flex flex-col items-center justify-center">
+
+          <div class="flex flex-row">
+            <label class="label-primary" for="rooms-input-popup">Rooms: </label>
+            <div>
+              <input name="rooms-input-popup" class="input-primary" [(ngModel)]="roomsNum" #roomsInPopup="ngModel" id="rooms-input-popup" type="text" [value]="accommodation.rooms" required pattern="[1-9]+[0-9]*" />
+              <div class="error-message" *ngIf="roomsInPopup.invalid && (!roomsInPopup.pristine && roomsInPopup.dirty) && (roomsInPopup.hasError('pattern') || roomsInPopup.hasError('required'))">
+                {{"accommodation-card-details.rooms-input-field-error" | translate}}
+              </div>
+            </div>
+          </div>
+  
+          <div class="flex flex-row">
+            <label class="label-primary" for="beds-input-popup">Beds: </label>
+            <div>
+              <input name="beds-input-popup" class="input-primary" [(ngModel)]="bedsNum" #bedsInPopup="ngModel" id="beds-input-popup" type="text" [value]="accommodation.beds" required pattern="[1-9]+[0-9]*" />
+              <div class="error-message" *ngIf="bedsInPopup.invalid && (!bedsInPopup.pristine && bedsInPopup.dirty) && (bedsInPopup.hasError('pattern') || bedsInPopup.hasError('required'))">
+                {{"accommodation-card-details.beds-input-field-error" | translate}}
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-row mt-6 items-center">
+            <button class="btn-primary mr-2" type="button" (click)="toggleEditRoomsBeds()" >{{("accommodation-card-details.close-btn-city-prov-country-form" | translate)}}</button>
+            <button [disabled]="roomsBedsForm.invalid" class="btn-primary" type="button" (click)="confirmFormRoomsBeds()" >{{("accommodation-card-details.submit-btn-city-prov-country-form" | translate)}}</button>
+          </div>
+
+        </div>
+      </form>
+    </div>
+  </ng-template>
+
+  <ng-container *ngIf="showViewEditRoomsBedsPerspective">
+    <ng-container *ngTemplateOutlet="editRoomsBedsPerspective"></ng-container>
+  </ng-container>
+
+  <!-- TODO -->
+  <ng-template #editPhotosPerspective>
+
+  </ng-template>
+
+  <ng-container *ngIf="showViewEditPhotosPerspective">
+    <ng-container *ngTemplateOutlet="editPhotosPerspective"></ng-container>
   </ng-container>
   

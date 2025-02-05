@@ -45,6 +45,10 @@
 	"street-number-input-field-error": "Field 'Street Number' must be a lecit value",
 	"close-btn-city-prov-country-form": "Close",
 	"submit-btn-city-prov-country-form": "Confirm",
-	"view-more-photos": "More Photos"
+	"view-more-photos": "More Photos",
+	"rooms-word": "Rooms",
+	"beds-word": "Beds",
+	"beds-input-field-error": "Lecit Beds number required",
+	"rooms-input-field-error": "Lecit Rooms number required"
 }
 }

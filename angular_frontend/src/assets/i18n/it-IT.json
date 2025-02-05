@@ -46,6 +46,10 @@
 	"street-number-input-field-error": "Il campo 'Numero Civico' deve essere valido",
 	"close-btn-city-prov-country-form": "Chiudi",
 	"submit-btn-city-prov-country-form": "Conferma",
-	"view-more-photos": "Altre Foto"
+	"view-more-photos": "Altre Foto",
+	"rooms-word": "Stanze",
+	"beds-word": "Letti",
+	"beds-input-field-error": "Valido numero di Letti richiesto",
+	"rooms-input-field-error": "Valido numero di Stanze richiesto"
 }
 }
