@@ -4,11 +4,15 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#0e7490', // cyan-800
-        secondary: '#10b981', // emerald-500
+        primary: {
+          DEFAULT: '#0e7490', // cyan-800
+          dark: '#164e63',
+          light: '#0891b2'
+        },
+        secondary: '#fb923c', // orange-400
         neutral: {
-          1: '#fafafa', // neutral-50
-          2: '#ecfeff'  // cyan-50
+          1: '#fcfcfc', // neutral-50
+          2: '#fff7ed'  // orange-50
         }
       }
     }
