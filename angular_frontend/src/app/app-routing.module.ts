@@ -4,12 +4,12 @@ import { AccommodationCardComponent } from './components/accommodation-card/acco
 import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
 import { authGuard } from './services/auth.guard';
-import { ReviewCardComponent } from './components/review-card/review-card.component';
+import { ProfileComponent } from './components/profile/profile.component';
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: '', component: HomeComponent, canActivate: [authGuard]},
-  {path: 'review/:id', component: ReviewCardComponent, canActivate: [authGuard]}
+  {path: 'profile', component: ProfileComponent, canActivate: [authGuard]}
   // { path: '**', component: PageNotFoundComponent }
 ];
 

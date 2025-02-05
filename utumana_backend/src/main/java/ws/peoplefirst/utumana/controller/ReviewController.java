@@ -124,7 +124,7 @@ public class ReviewController {
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping("/review/user/{userId}")
 	public List<ReviewDTO> getAllUserReview(@PathVariable Long userId, Authentication auth) {
-		log.debug("DELETE /review/user/" + userId);
+		log.debug("GET /review/user/" + userId);
 		return reviewService.getUserReview(userId);
 	}
 	

@@ -39,5 +39,8 @@
 	"city-input-field-error": "Se inserito il campo 'Citta'' deve contenere solo lettere",
 	"province-input-field-error": "Se inserito il campo 'Provincia' deve contenere solo lettere",
 	"country-input-field-error": "Valido campo 'Paese' richiesto (solo lettere)"
+},
+"profile": {
+	"reviews_title": "Recensioni ricevute"
 }
 }

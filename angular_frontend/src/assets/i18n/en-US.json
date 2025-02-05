@@ -38,5 +38,9 @@
 	"city-input-field-error": "If provided the field 'City' needs ONLY letters",
 	"province-input-field-error": "If provided the field 'Province' needs ONLY letters",
 	"country-input-field-error": "Lecit field 'Country' required (with only letters)"
+},
+
+"profile": {
+	"reviews_title": "Reviews received"
 }
 }
