@@ -1,24 +1,59 @@
-<div class="py-16">
-    <div class="flex bg-neutral-1 rounded-lg shadow-lg overflow-hidden mx-auto max-w-sm lg:max-w-4xl">
+<div class="py-16 h-dvh flex">
+    <div class="flex place-self-center w-full bg-neutral-1 rounded-lg shadow-lg overflow-hidden m-auto max-w-sm lg:max-w-4xl">
         <div class="hidden lg:block lg:w-1/2 bg-cover bg-[url('/assets/images/login.jpg')]">
         </div>
         <div class="w-full p-8 lg:w-1/2">
             <h2 class="text-2xl font-bold text-primary text-center">Utumana</h2>
             <p class="text-xl text-primary text-center">{{'login.welcome' | translate}}</p>
-            <div class="mt-4">
-                <label class="block text-secondary text-sm font-bold mb-2">{{'login.email_label' | translate}}</label>
-                <input class="bg-neutral-1 text-gray-700 focus:outline-none focus:shadow-outline focus:bg-neutral-2 focus:border-secondary border border-gray-300 rounded py-2 px-4 block w-full appearance-none" type="email" />
-            </div>
-            <div class="mt-4">
-                <div class="flex justify-between">
-                    <label class="block text-secondary text-sm font-bold mb-2">{{'login.password_label' | translate}}</label>
-                    <a href="#" class="text-xs text-gray-500 self-center">{{'login.forget_password' | translate}}</a>
+            <form class="form" (ngSubmit)="login()" #loginForm="ngForm">
+                <div class="mt-4">
+                    <label class="label-primary">{{'login.email_label' | translate}}</label>
+                    <input class="input-primary" [ngClass]="{'alert-danger': email.invalid && showEmailError}" 
+                    type="email" id="email" name="email" autocomplete="email" 
+                    required pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"   
+                    [(ngModel)]="user.email" #email="ngModel" 
+                    (input)="showEmailError = false; emailError = false;" />
                 </div>
-                <input class="bg-neutral-1 text-gray-700 focus:outline-none focus:shadow-outline focus:bg-neutral-2 focus:border-secondary border border-gray-300 rounded py-2 px-4 block w-full appearance-none" type="password" />
-            </div>
-            <div class="mt-8 grid justify-items-center">
-                <button class="bg-primary text-white font-bold py-2 px-4 w-1/2 rounded hover:bg-gray-600">{{'login.button_text' | translate}}</button>
-            </div>
+                <ng-container *ngIf="showEmailError">
+                    <div *ngIf="email.errors?.['required']" class="error-message">
+                        {{'login.email_required' | translate}}
+                    </div>
+                    <div *ngIf="email.errors?.['pattern']" class="error-message">
+                        {{'login.email_invalid' | translate}}
+                    </div>
+                    <div *ngIf="emailError" class="error-message">
+                        {{'login.email_unknown' | translate}}
+                    </div>
+                </ng-container>
+                <div class="mt-4">
+                    <div class="flex justify-between">
+                        <label class="label-primary">{{'login.password_label' | translate}}</label>
+                        <a href="#" class="text-xs text-gray-500 self-center">{{'login.forget_password' | translate}}</a>
+                    </div>
+                    <input class="input-primary" [ngClass]="{'alert-danger': password.invalid && showPasswordError}" 
+                    type="password" id="password" name="password" autocomplete="current-password"
+                    required minlength="8"
+                    [(ngModel)]="user.password" #password="ngModel" 
+                    (input)="showPasswordError = false; passwordError = false;"/>
+                </div>
+                <ng-container *ngIf="showPasswordError" >
+                    <div *ngIf="password.errors?.['required']" class="error-message">
+                        {{'login.password_required' | translate}}
+                    </div>
+                    <div *ngIf="password.errors?.['minlength']" class="error-message">
+                        {{'login.password_short' | translate}}
+                    </div>
+                    <div *ngIf="passwordError" class="error-message">
+                        {{'login.password_wrong' | translate}}
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="genericError">
+                    <div class="error-message">{{'login.error' | translate}}</div>
+                </ng-container>
+                <div class="mt-8 grid justify-items-center">
+                    <button type="submit" class="btn-primary">{{'login.button_text' | translate}}</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

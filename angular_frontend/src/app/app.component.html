@@ -1,4 +1,4 @@
-<ng-container *ngIf="router.url !== '/login'">
+<ng-container *ngIf="isLogin === false">
 <header class="bg-neutral-2">
     <nav class="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
       <div class="flex lg:flex-1">
@@ -61,7 +61,7 @@
 
   <router-outlet></router-outlet>
 
-<ng-container *ngIf="router.url !== '/login'">
+<ng-container *ngIf="isLogin === false">
   <footer class="bg-gray-100 text-center p-4 text-sm text-gray-600 w-full mt-auto">
     <p>&copy; {{ currentYear }} My Company. All rights reserved.</p>
   </footer>

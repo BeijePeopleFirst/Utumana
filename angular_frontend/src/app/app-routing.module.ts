@@ -3,11 +3,14 @@ import { RouterModule, Routes } from '@angular/router';
 import { AccommodationCardComponent } from './components/accommodation-card/accommodation-card.component';
 import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
+import { authGuard } from './services/auth.guard';
 import { AccommodationDetailsComponent } from './components/accommodation-details/accommodation-details.component';
 
 const routes: Routes = [
-  {path: '', component: AccommodationDetailsComponent},
-	{path: 'login', component: LoginComponent},
+  {path: 'login', component: LoginComponent},
+  {path: '', component: HomeComponent, canActivate: [authGuard]},
+  {path: 'accommodation/:accommodation_id', component: AccommodationDetailsComponent}
+  // { path: '**', component: PageNotFoundComponent }
 ];
 
 @NgModule({

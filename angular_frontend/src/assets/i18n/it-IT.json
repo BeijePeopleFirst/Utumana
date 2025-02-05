@@ -2,9 +2,16 @@
 "login": {
 	"welcome": "Bentornato!",
 	"email_label": "Indirizzo email",
+	"email_required": "Email è necessaria",
+	"email_invalid": "Email non valida",
+	"email_unknown": "Email non trovata",
 	"password_label": "Password",
+	"password_required": "Password è necessaria",
+	"password_short": "Password troppo corta",
+	"password_wrong": "Password errata",
 	"forget_password": "Hai dimenticato la password?",
-	"button_text": "Login"
+	"button_text": "Login",
+	"error": "Errore sconosciuto. Per favore, riprova."
 	},
 "header" : {
 	"profile": "Profilo",

@@ -207,7 +207,7 @@ public class UserService implements UserDetailsService {
 	public User loadUserByUsername(String email) throws UsernameNotFoundException {
 		try {
 			User user = userRepository.findUserByEmail(email);
-			if (user == null) new UsernameNotFoundException("email: " + email + " not found");
+			if (user == null) throw new UsernameNotFoundException("email: " + email + " not found");
 
 			return user;
 		} catch (Exception e) {
