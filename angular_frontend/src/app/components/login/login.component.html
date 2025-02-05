@@ -14,7 +14,7 @@
                     [(ngModel)]="user.email" #email="ngModel" 
                     (input)="showEmailError = false; emailError = false;" />
                 </div>
-                <ng-container *ngIf="email.invalid && showEmailError">
+                <ng-container *ngIf="showEmailError">
                     <div *ngIf="email.errors?.['required']" class="error-message">
                         {{'login.email_required' | translate}}
                     </div>
@@ -36,7 +36,7 @@
                     [(ngModel)]="user.password" #password="ngModel" 
                     (input)="showPasswordError = false; passwordError = false;"/>
                 </div>
-                <ng-container *ngIf="password.invalid && showPasswordError" >
+                <ng-container *ngIf="showPasswordError" >
                     <div *ngIf="password.errors?.['required']" class="error-message">
                         {{'login.password_required' | translate}}
                     </div>
@@ -47,7 +47,7 @@
                         {{'login.password_wrong' | translate}}
                     </div>
                 </ng-container>
-                <ng-container *ngIf="error500">
+                <ng-container *ngIf="genericError">
                     <div class="error-message">{{'login.error' | translate}}</div>
                 </ng-container>
                 <div class="mt-8 grid justify-items-center">
