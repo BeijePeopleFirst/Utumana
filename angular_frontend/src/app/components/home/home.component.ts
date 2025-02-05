@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AccommodationDTO } from 'src/app/dtos/accommodationDTO';
+import { AccommodationService } from 'src/app/services/accommodation.service';
 import { iconURL } from 'src/costants';
 
 @Component({
@@ -10,15 +12,18 @@ import { iconURL } from 'src/costants';
 export class HomeComponent implements OnInit {
   iconUrl = iconURL;
 
+  latestUploads: AccommodationDTO[] | null=null;
+  mostLiked:  AccommodationDTO[] | null=null;
+
   constructor(
-    private router: Router
+    private router: Router,
+    private accommodationService:AccommodationService
   ){ }
   
   ngOnInit(): void {
-    // if not token, redirect to login
-    const token = localStorage.getItem("token");
-	  if(!token){
-      this.router.navigate(['login']);
-    }
+    this.accommodationService.getLatestUploads().subscribe((accommodations)=>{
+      this.latestUploads=accommodations;
+      this.mostLiked=accommodations;
+    });
   }
 }
