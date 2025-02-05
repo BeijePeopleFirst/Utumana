@@ -1,5 +1,26 @@
 {"greeting" : "hello",
 "login": {
-	"welcome": "Welcome back!"
-	}
+	"welcome": "Welcome back!",
+	"email_label": "Email address",
+	"password_label": "Password",
+	"forget_password": "Forget password?",
+	"button_text": "Login"
+	},
+"header": {
+	"profile": "Profile",
+	"favourites": "Favourites",
+	"accommodations": "My Accommodations",
+	"admin": "Admin Dashboard",
+	"logout": "Logout",
+	"create": "Create",
+	"bookings": "My bookings",
+	"host-dashboard": "Host Dashboard"
+},
+"search": {
+	"city": "City",
+	"date-error": "Date is mandatory",
+	"min-person": "min: 1 person",
+	"people": "People",
+	"search": "Search"
+}
 }

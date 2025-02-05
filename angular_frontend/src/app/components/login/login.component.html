@@ -1,1 +1,24 @@
-<p>login works!</p>
+<div class="py-16">
+    <div class="flex bg-neutral-1 rounded-lg shadow-lg overflow-hidden mx-auto max-w-sm lg:max-w-4xl">
+        <div class="hidden lg:block lg:w-1/2 bg-cover bg-[url('/assets/images/login.jpg')]">
+        </div>
+        <div class="w-full p-8 lg:w-1/2">
+            <h2 class="text-2xl font-bold text-primary text-center">Utumana</h2>
+            <p class="text-xl text-primary text-center">{{'login.welcome' | translate}}</p>
+            <div class="mt-4">
+                <label class="block text-secondary text-sm font-bold mb-2">{{'login.email_label' | translate}}</label>
+                <input class="bg-neutral-1 text-gray-700 focus:outline-none focus:shadow-outline focus:bg-neutral-2 focus:border-secondary border border-gray-300 rounded py-2 px-4 block w-full appearance-none" type="email" />
+            </div>
+            <div class="mt-4">
+                <div class="flex justify-between">
+                    <label class="block text-secondary text-sm font-bold mb-2">{{'login.password_label' | translate}}</label>
+                    <a href="#" class="text-xs text-gray-500 self-center">{{'login.forget_password' | translate}}</a>
+                </div>
+                <input class="bg-neutral-1 text-gray-700 focus:outline-none focus:shadow-outline focus:bg-neutral-2 focus:border-secondary border border-gray-300 rounded py-2 px-4 block w-full appearance-none" type="password" />
+            </div>
+            <div class="mt-8 grid justify-items-center">
+                <button class="bg-primary text-white font-bold py-2 px-4 w-1/2 rounded hover:bg-gray-600">{{'login.button_text' | translate}}</button>
+            </div>
+        </div>
+    </div>
+</div>

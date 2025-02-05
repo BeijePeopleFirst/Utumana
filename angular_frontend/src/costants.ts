@@ -1,6 +1,7 @@
 
 const iconURL = "\\assets\\icons"
 const BACKEND_URL_PREFIX = "http://localhost:8080"
+const prefixUrl = "http://localhost:4200"
 
 export default iconURL;
-export { BACKEND_URL_PREFIX }
+export { iconURL, prefixUrl, BACKEND_URL_PREFIX };
