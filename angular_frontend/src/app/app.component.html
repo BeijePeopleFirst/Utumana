@@ -50,7 +50,7 @@
               <a routerLink="/favourites" class="block px-4 py-2 text-sm text-gray-900 hover:bg-gray-50">{{'header.favourites' | translate}}</a>
               <a routerLink="/my_accommodations" class="block px-4 py-2 text-sm text-gray-900 hover:bg-gray-50">{{'header.accommodations' | translate}}</a>
               <a routerLink="/admin_dashboard" class="block px-4 py-2 text-sm text-gray-900 hover:bg-gray-50">{{'header.admin' | translate}}</a>
-              <a routerLink="/logout" class="block px-4 py-2 text-sm text-gray-900 hover:bg-gray-50">{{'header.logout' | translate}}</a>       
+              <a (click)="authService.logout()" class="block px-4 py-2 text-sm text-gray-900 hover:bg-gray-50 cursor-pointer">{{'header.logout' | translate}}</a>       
             </div>
           </div>
         </div>

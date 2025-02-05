@@ -3,6 +3,7 @@ import { Component, DoCheck, HostListener, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { iconURL } from 'src/costants';
 import { Location } from '@angular/common';
+import { AuthService } from './services/auth.service';
 
 
 @Component({
@@ -26,7 +27,8 @@ export class AppComponent implements DoCheck {
 
   constructor(
     private translate: TranslateService,
-    private location: Location
+    private location: Location,
+    public authService: AuthService
   ) {
     this.selectedLanguage = this.translate.currentLang || 'en-US';
     this.translate.use(this.selectedLanguage);
