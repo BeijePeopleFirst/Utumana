@@ -22,7 +22,15 @@
     @apply bg-neutral-1 text-gray-700 focus:outline-none focus:shadow-sm focus:bg-neutral-2 focus:border-secondary border border-gray-300 rounded py-2 px-4 block w-full appearance-none;
   }
 
+  .alert-danger {
+    @apply bg-red-50 border-red-700;
+  }
+
   .label-primary {
     @apply block text-secondary text-sm font-bold mb-2;
+  }
+
+  .error-message {
+    @apply block text-red-700 text-sm font-semibold mt-1 mb-2;
   }
 }
