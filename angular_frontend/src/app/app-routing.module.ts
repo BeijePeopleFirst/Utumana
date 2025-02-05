@@ -3,10 +3,12 @@ import { RouterModule, Routes } from '@angular/router';
 import { AccommodationCardComponent } from './components/accommodation-card/accommodation-card.component';
 import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
+import { authGuard } from './services/auth.guard';
 
 const routes: Routes = [
-  {path: '', component: HomeComponent},
-	{path: 'login', component: LoginComponent},
+  {path: 'login', component: LoginComponent},
+  {path: '', component: HomeComponent, canActivate: [authGuard]},
+  // { path: '**', component: PageNotFoundComponent }
 ];
 
 @NgModule({

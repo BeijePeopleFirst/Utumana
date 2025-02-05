@@ -1,7 +1,8 @@
-import { Router } from '@angular/router';
-import { Component, HostListener } from '@angular/core';
+import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router';
+import { Component, DoCheck, HostListener, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { iconURL } from 'src/costants';
+import { Location } from '@angular/common';
 
 
 @Component({
@@ -9,7 +10,8 @@ import { iconURL } from 'src/costants';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements DoCheck {
+  isLogin: boolean = false;
   isProfileMenuOpen = false;
   isLanguageMenuOpen = false;
   selectedLanguage = 'en-US'; 
@@ -24,10 +26,14 @@ export class AppComponent {
 
   constructor(
     private translate: TranslateService,
-    public router: Router
+    private location: Location
   ) {
     this.selectedLanguage = this.translate.currentLang || 'en-US';
     this.translate.use(this.selectedLanguage);
+  }
+
+  ngDoCheck(): void {
+    this.isLogin = this.location.path().indexOf('/login') >= 0;
   }
 
   toggleProfileMenu(event: Event) {
