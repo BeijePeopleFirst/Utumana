@@ -29,5 +29,14 @@
 	"min-person": "min: 1 person",
 	"people": "People",
 	"search": "Search"
+},
+
+"accommodation-card-details": {
+	"city-placeholder-input-field": "City",
+	"province-placeholder-input-field": "Province",
+	"country-placeholder-input-field": "Country",
+	"city-input-field-error": "If provided the field 'City' needs ONLY letters",
+	"province-input-field-error": "If provided the field 'Province' needs ONLY letters",
+	"country-input-field-error": "Lecit field 'Country' required (with only letters)"
 }
 }

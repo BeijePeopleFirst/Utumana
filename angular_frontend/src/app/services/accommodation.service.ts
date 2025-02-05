@@ -8,6 +8,7 @@ import { BACKEND_URL_PREFIX } from 'src/costants';
   providedIn: 'root'
 })
 export class AccommodationService {
+  
 
   constructor(private http: HttpClient) { }
 
@@ -37,5 +38,38 @@ export class AccommodationService {
     return this.http.patch<Accommodation | {message: string, status: string, time: string} | null>(BACKEND_URL_PREFIX + "/delete_accommodation/" + id, {headers})
     .pipe(catchError(err => {console.error(err); return of()}))
 
+  }
+
+  ///remove-favourite/{user_id}/{accommodation_id}
+  removeFavourite(userId: number, id: number) {
+    let token: (string | null) = localStorage.getItem("token");
+    let headers = new HttpHeaders(token ? { Authorization: `Bearer ${token}` } : {});
+
+    return this.http.patch<Accommodation | null | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/remove-favourite/" + userId + "/" + id, {headers})
+                      .pipe(
+                        catchError(
+                          error => {
+                            console.error(error);
+                            return of();
+                          }
+                        )
+                      )
+
+  }
+
+  ///add-favourite/{user_id}/{accommodation_id}
+  addFavourite(userId: number, id: number): Observable<Accommodation | null | {message: string, status: string, time: string}> {
+    let token: (string | null) = localStorage.getItem("token");
+    let headers = new HttpHeaders(token ? { Authorization: `Bearer ${token}` } : {});
+
+    return this.http.patch<Accommodation | null | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/add-favourite/" + userId + "/" + id, {headers})
+                      .pipe(
+                        catchError(
+                          error => {
+                            console.error(error);
+                            return of();
+                          }
+                        )
+                      )
   }
 }
