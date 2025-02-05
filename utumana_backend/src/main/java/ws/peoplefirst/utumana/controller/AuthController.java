@@ -16,6 +16,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -84,17 +85,16 @@ public class AuthController {
 	@PreAuthorize("permitAll()")
 	@PostMapping("/signin")
 	public ResponseEntity<Map<String, Object>> signin(@RequestBody AuthCredentials credentials, HttpServletResponse response) throws RuntimeException {
-		System.out.println("POST /signin");
 		log.debug("POST /signin");
-		System.out.println(credentials.getEmail() + "please " + credentials.getPassword());
+		System.out.println(credentials.getEmail() + " " + credentials.getPassword());
 
 		try {
 			String email = credentials.getEmail();
+			User user = userService.loadUserByUsername(email);
 			//authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, credentials.getPassword()));
 			UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(email, credentials.getPassword());
 			log.error(usernamePasswordAuthenticationToken.getCredentials().toString());
-			authenticationManager.authenticate(usernamePasswordAuthenticationToken);
-			User user = userService.loadUserByUsername(email);
+			authenticationManager.authenticate(usernamePasswordAuthenticationToken);		
  
 			String token = jwtTokenProvider.createToken(email, user.getAuthorityList());
 
@@ -113,9 +113,12 @@ public class AuthController {
 			res.put("id", user.getId());
 
 			return ok(res);
+		} catch (UsernameNotFoundException e) {
+			e.printStackTrace();
+			throw new BadCredentialsException("Email not found");
 		} catch (AuthenticationException e) {
 			e.printStackTrace();
-			throw new BadCredentialsException("Invalid email/password supplied");
+			throw new BadCredentialsException("Invalid password supplied");
 		} catch (RuntimeException e) {
 			throw e;
 		}
