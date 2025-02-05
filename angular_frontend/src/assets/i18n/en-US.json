@@ -40,6 +40,12 @@
 	"country-input-field-error": "Lecit field 'Country' required (with only letters)"
 },
 
+"home":{
+	"latest":"Latest uploads",
+	"liked":"Most liked accommodation",
+	"review":"Reviews"
+},
+
 "profile": {
 	"reviews_title": "Reviews received"
 }

@@ -40,6 +40,12 @@
 	"province-input-field-error": "Se inserito il campo 'Provincia' deve contenere solo lettere",
 	"country-input-field-error": "Valido campo 'Paese' richiesto (solo lettere)"
 },
+
+"home":{
+	"latest":"Caricamenti recenti",
+	"liked":"Le piu consigliate",
+	"review":"Recensioni"
+},
 "profile": {
 	"reviews_title": "Recensioni ricevute"
 }

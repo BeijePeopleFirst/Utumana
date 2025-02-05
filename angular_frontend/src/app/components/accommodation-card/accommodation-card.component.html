@@ -1,1 +1,13 @@
-ACCOMMODATION CARD
+    <a routerLink="/accommodation/{{accommodation?.id}}">
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden flex-1 flex flex-col" >
+            <img [src]="'http://localhost:8080/'+accommodation?.main_photo_url" [alt]="accommodation?.main_photo_url">
+          <div class="p-4 flex-1 flex flex-col">
+            <h3 class="mb-4 text-2xl">{{accommodation?.title}}</h3>
+            <div class="mb-4 text-grey-darker text-sm flex-1">
+              <p> {{accommodation?.city}} - {{accommodation?.province}} - {{accommodation?.country}}</p>
+            </div>
+            <p class="border-t border-grey-light pt-2 text-xs text-grey hover:text-red uppercase no-underline tracking-wide">{{accommodation?.min_price | currency:'EUR':'symbol-narrow':'1.2-2':'it-IT'}} - {{accommodation?.max_price | currency:'EUR':'symbol-narrow':'1.2-2':'it-IT'}}</p>
+            <button type="submit" class="btn-primary">Book now</button>
+          </div>
+        </div>  
+    </a>
