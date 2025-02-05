@@ -1,10 +1,127 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Accommodation } from 'src/app/models/accommodation';
+import { AccommodationService } from 'src/app/services/accommodation.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-accommodation-card',
   templateUrl: './accommodation-card.component.html',
   styleUrls: ['./accommodation-card.component.css']
 })
-export class AccommodationCardComponent {
+export class AccommodationCardComponent implements OnInit {
+
+  userId?: number;
+
+  //A User ID was not provided:
+  userNotLogged: boolean = true;
+
+  //Is the provided User ID lecit?
+  invalidUserId: boolean = true;
+
+  accommodation!: Accommodation;
+  invalidAccommodation: boolean = false;
+  isFavourite: boolean = false;
+  isAdminOrMe: boolean = false;
+
+  message?: string;
+
+
+  constructor(
+    private accommodationService: AccommodationService,
+    private userService: UserService,
+    private route: ActivatedRoute
+  ) 
+  {}
+
+  ngOnInit(): void {
+
+    let id: (string | undefined | null) = this.route.snapshot.params["accommodation_id"];
+
+    if(!id || id == "") {
+      this.invalidAccommodation = true;
+      return;
+    }
+
+    this.accommodationService.getAccommodationById(Number(id)).subscribe(
+      data => {
+        if(!data) {
+          this.invalidAccommodation = true;
+        }
+        else {
+          this.invalidAccommodation = false;
+          this.accommodation = data;
+
+          this.userId = localStorage.getItem("userId") ? Number(localStorage.getItem("userId")) : undefined;
+
+          if(!this.userId) {
+            this.userNotLogged = true;
+            return;
+          }
+          else {
+            this.userNotLogged = false;
+
+            this.userService.getUserById(this.userId).subscribe(
+              user => {
+                if(!user || "message" in user) {
+                  this.invalidUserId = true;
+                  return;
+                }
+                else {
+                  this.invalidUserId = false;
+
+                  if(user.isAdmin) this.isAdminOrMe = true;
+                  else {
+                    if(user.id == this.accommodation.ownerId) this.isAdminOrMe = true;
+                    else this.isAdminOrMe = false;
+                  }
+                }
+              }
+            );
+
+            return;
+          }
+        }
+      }
+    )
+  }
+
+  toggleIsFavourite() {
+    this.isFavourite = !this.isFavourite;
+
+    
+  }
+
+  deleteAccommodation() {
+    if(this.accommodation.id) this.accommodationService.deleteAccommodation(this.accommodation.id).subscribe(
+      result => 
+        {
+          if(!result) {
+            console.error("Error occurred");
+            this.message = "Error occurred";
+            return;
+          }
+          else if("message" in result) {
+            console.error(result.message);
+            this.message = result.message;
+            return;
+          }
+          else {
+            console.log("Deleted Accommodation -> ", result);
+            this.message = "Deleted Accommodation -> " + result;
+            return;
+          }
+        }
+      );
+    
+      else {
+        this.invalidAccommodation = true;
+        return;
+      }
+  }
+
+  clearMessage() {
+    this.message = undefined;
+  }
 
 }
