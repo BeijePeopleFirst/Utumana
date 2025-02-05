@@ -1,1 +1,85 @@
-<p>accommodation-details works!</p>
+<ng-container *ngIf="invalidAccommodation" id="invalid-accommodation-container">
+    <h1 class="text-orange-700 text-3xl">Error 404 Not Found: Invalid Accommodation ID Provided</h1>
+  </ng-container>
+  
+  <ng-container *ngIf="invalidUserId || userNotLogged">
+    <h1 class="text-orange-700 text-3xl">Error 401 Unauthorized: Need to be Logged-in with a lecit account</h1>
+  </ng-container>
+  
+  <ng-container *ngIf="!invalidAccommodation && !invalidUserId && !userNotLogged" id="accommodation-details-container">
+    <div class="flex flex-row">
+      <div class="mx-2">{{accommodation.title}}</div>
+      <div id="heart">
+        <img class="w-10" *ngIf="isFavourite" src="/src/assets/icons/heart-full.png" (click)="toggleIsFavourite()" />
+        <img class="w-10" *ngIf="!isFavourite" src="/src/assets/icons/heart-empty.png" (click)="toggleIsFavourite()" />      
+      </div>
+      <div *ngIf="isAdminOrMe" id="bin-icon" class="absolute right-20">
+        <img class="w-10" src="/src/assets/icons/bin.png" (click)="deleteAccommodation()" />
+      </div>
+    </div>
+    <div class="flex flex-row">
+      <div>
+        {{accommodation.city}}, {{accommodation.province}}, {{accommodation.country}}
+      </div>
+      <div *ngIf="isAdminOrMe">
+        <img class="w-10" src="/src/assets/icons/pencil.png" (click)="toggleEditCityProvCountry()" />
+      </div>
+    </div>
+  </ng-container>
+  
+  <ng-container *ngIf="message">
+    <button type="button" (click)="clearMessage()">clear</button>
+    <br>
+    <h1 class="text-blue-800">{{message}}</h1>
+  </ng-container>
+  
+  <ng-template #editCityProvCountryTemplate>
+    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+      <form #cityProvCountryForm="ngForm">
+        <div class="flex flex-col items-center justify-center">
+          <div class="flex flex-row">
+            <label class="label-primary" for="city-input-popup">City: </label>
+            <div>
+              <input class="input-primary" [(ngModel)]="cityInputField" #cityInPopup="ngModel" id="city-input-popup" type="text" 
+              [value]="accommodation.city ? accommodation.city : ('accommodation-card-details.city-placeholder-input-field' | translate)"
+              pattern="[a-zA-Z]+" />
+              <div class="border-solid border-secondary border-2 bg-neutral-1" *ngIf="cityInPopup.invalid && (!cityInPopup.pristine && cityInPopup.dirty) && cityInPopup.hasError('pattern')">
+                {{"accommodation-card-details.city-input-field-error" | translate}}
+              </div>
+            </div>
+          </div>
+  
+          <div class="flex flex-row">
+            <label class="label-primary" for="prov-input-popup">Province: </label>
+            <div>
+              <input class="input-primary" [(ngModel)]="provinceInputField" #provInPopup="ngModel" id="prov-input-popup" type="text" 
+              [value]="accommodation.province ? accommodation.province : ('accommodation-card-details.province-placeholder-input-field' | translate)"
+              pattern="[a-zA-Z]+" />
+              <div class="border-solid border-secondary border-2 bg-neutral-1" *ngIf="provInPopup.invalid && (!provInPopup.pristine && provInPopup.dirty) && provInPopup.hasError('pattern')">
+                {{"accommodation-card-details.province-input-field-error" | translate}}
+              </div>
+            </div>
+          </div>
+  
+          <div class="flex flex-row">
+            <label class="label-primary" for="country-input-popup">Country: </label>
+            <div>
+              <input class="input-primary" [(ngModel)]="countryInputField" #countryInPopup="ngModel" id="country-input-popup" type="text" [value]="accommodation.country" required pattern="[a-zA-Z]+" />
+              <div class="border-solid border-secondary border-2 bg-neutral-1" *ngIf="countryInPopup.invalid && (!countryInPopup.pristine && countryInPopup.dirty) && (countryInPopup.hasError('pattern') || countryInPopup.hasError('required'))">
+                {{"accommodation-card-details.country-input-field-error" | translate}}
+              </div>
+            </div>
+          </div>
+  
+          <div class="flex flex-row mt-">
+  
+          </div>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+  
+  <ng-container *ngIf="showEditCityProvCountry">
+    <ng-container *ngTemplateOutlet="editCityProvCountryTemplate"></ng-container>
+  </ng-container>
+  

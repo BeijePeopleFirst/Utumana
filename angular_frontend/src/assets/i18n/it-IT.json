@@ -23,5 +23,14 @@
 	"min-person": "min: 1 persona",
 	"people": "Persone",
 	"search": "Cerca"
+},
+
+"accommodation-card-details": {
+	"city-placeholder-input-field": "Citta'",
+	"province-placeholder-input-field": "Provincia",
+	"country-placeholder-input-field": "Paese",
+	"city-input-field-error": "Se inserito il campo 'Citta'' deve contenere solo lettere",
+	"province-input-field-error": "Se inserito il campo 'Provincia' deve contenere solo lettere",
+	"country-input-field-error": "Valido campo 'Paese' richiesto (solo lettere)"
 }
 }
