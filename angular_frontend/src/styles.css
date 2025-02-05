@@ -33,4 +33,17 @@
   .error-message {
     @apply block text-red-700 text-sm font-semibold mt-1 mb-2;
   }
+
+  h1, h2, h3, h4 {
+    @apply text-primary font-bold mb-5;
+  }
+  h5, h6 {
+    @apply text-secondary font-bold mb-3;
+  }
+  h1 { @apply text-5xl; }
+  h2 { @apply text-4xl; }
+  h3 { @apply text-3xl; }
+  h4 { @apply text-2xl; }
+  h5 { @apply text-xl; }
+  h6 { @apply text-lg; }
 }
