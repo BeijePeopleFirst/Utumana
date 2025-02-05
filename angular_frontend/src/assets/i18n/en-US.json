@@ -28,8 +28,16 @@
 	"city-placeholder-input-field": "City",
 	"province-placeholder-input-field": "Province",
 	"country-placeholder-input-field": "Country",
+	"street-placeholder-input-field": "Street",
+	"street-number-placeholder-input-field": "Street Number",
 	"city-input-field-error": "If provided the field 'City' needs ONLY letters",
 	"province-input-field-error": "If provided the field 'Province' needs ONLY letters",
-	"country-input-field-error": "Lecit field 'Country' required (with only letters)"
+	"country-input-field-error": "Lecit field 'Country' required (with only letters)",
+	"cap-input-field-error": "Lecit field 'CAP' required",
+	"street-input-field-error": "If provided the field 'Street' needs ONLY letters",
+	"street-number-input-field-error": "Field 'Street Number' must be a lecit value",
+	"close-btn-city-prov-country-form": "Close",
+	"submit-btn-city-prov-country-form": "Confirm",
+	"view-more-photos": "More Photos"
 }
 }

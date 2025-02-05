@@ -28,6 +28,11 @@ export class AccommodationDetailsComponent implements OnInit {
   cityInputField?: string;
   provinceInputField?: string;
   countryInputField?: string;
+  CAPInputField?: string;
+  streetInputField?: string;
+  strNumInputField?: string;
+
+  showViewMorePhotosPerspective: boolean = false;
 
   message?: string;
 
@@ -42,6 +47,7 @@ export class AccommodationDetailsComponent implements OnInit {
   ngOnInit(): void {
 
     let id: (string | undefined | null) = this.route.snapshot.params["accommodation_id"];
+    id="91";
 
     if(!id || id == "") {
       this.invalidAccommodation = true;
@@ -57,7 +63,8 @@ export class AccommodationDetailsComponent implements OnInit {
           this.invalidAccommodation = false;
           this.accommodation = data;
 
-          this.userId = localStorage.getItem("userId") ? Number(localStorage.getItem("userId")) : undefined;
+          //this.userId = localStorage.getItem("userId") ? Number(localStorage.getItem("userId")) : undefined;
+          this.userId = 1;
 
           if(!this.userId) {
             this.userNotLogged = true;
@@ -171,6 +178,53 @@ export class AccommodationDetailsComponent implements OnInit {
 
   toggleEditCityProvCountry() {
     this.showEditCityProvCountry = !this.showEditCityProvCountry;
+  }
+
+  confirmFormCityCountryProv() {
+    if(!this.countryInputField) {
+      this.toggleEditCityProvCountry();
+      this.message = "Country is REQUIRED";
+      return;
+    }
+
+    if(!this.CAPInputField) {
+      this.toggleEditCityProvCountry();
+      this.message = "CAP is REQUIRED";
+      return;
+    }
+
+    this.accommodation.streetNumber = this.strNumInputField;
+    this.accommodation.street = this.streetInputField;
+    this.accommodation.province = this.provinceInputField;
+    this.accommodation.country = this.countryInputField;
+    this.accommodation.city = this.cityInputField;
+    this.accommodation.cap = this.CAPInputField;
+
+    if(!this.userId) {
+      this.userNotLogged = true;
+      return;
+    }
+
+    this.accommodationService.updateAccommodationAddress(this.userId, this.accommodation).subscribe(
+      result => {
+        if(!result) this.message = "An error occurred";
+        else if("message" in result) this.message = result.message;
+        else this.message = "updated Accommodation -> " + result;
+
+        this.toggleEditCityProvCountry();
+      }
+    );
+
+  }
+
+  //Need to create the perspective itself
+  toggleViewMorePhotosPerspective() {
+    this.showViewMorePhotosPerspective = !this.showViewMorePhotosPerspective;
+  }
+
+  //Need to create the perspective itself
+  toggleEditPhotosPerspective() {
+    //TODO
   }
 
   clearMessage() {
