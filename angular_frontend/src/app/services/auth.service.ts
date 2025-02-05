@@ -18,8 +18,7 @@ interface LoginResponse {
   providedIn: 'root',
 })
 export class AuthService {
-  isLoggedIn = false;
-  redirectUrl: string | null = null;
+  isLoggedIn: boolean = localStorage.getItem("token") != null;
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json; charset=UTF-8', 'Accept-Type': 'application/json; charset=UTF-8' })
   };
@@ -27,7 +26,9 @@ export class AuthService {
   constructor(
     private router: Router,
     private http: HttpClient
-  ){ }
+  ){
+    
+   }
 
   login(user: AuthCredentials): Observable<{ok: boolean, status: number, message: string}> {
     return this.http.post<LoginResponse>(`${BACKEND_URL_PREFIX}/api/signin`, user, this.httpOptions).pipe(
