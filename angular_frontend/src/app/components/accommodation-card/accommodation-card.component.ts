@@ -89,9 +89,7 @@ export class AccommodationCardComponent implements OnInit {
   toggleIsFavourite() {
     this.isFavourite = !this.isFavourite;
 
-    aggiungere logica per aggiungere il preferito
-
-    continuare html da sotto riga de ChannelSplitterNode, quyidi da createInjectableType, OROV Country inclusa
+    
   }
 
   deleteAccommodation() {
