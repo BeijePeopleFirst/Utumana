@@ -1,19 +1,5 @@
 package ws.peoplefirst.utumana.controller;
 
-import static org.springframework.http.ResponseEntity.ok;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,16 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 import ws.peoplefirst.utumana.dto.AccommodationDTO;
 import ws.peoplefirst.utumana.dto.PriceDTO;
 import ws.peoplefirst.utumana.dto.UnavailabilityDTO;
@@ -41,19 +18,21 @@ import ws.peoplefirst.utumana.exception.ForbiddenException;
 import ws.peoplefirst.utumana.exception.IdNotFoundException;
 import ws.peoplefirst.utumana.exception.InvalidJSONException;
 import ws.peoplefirst.utumana.exception.TheJBeansException;
-import ws.peoplefirst.utumana.model.Accommodation;
-import ws.peoplefirst.utumana.model.Availability;
-import ws.peoplefirst.utumana.model.Booking;
-import ws.peoplefirst.utumana.model.Review;
-import ws.peoplefirst.utumana.model.Service;
-import ws.peoplefirst.utumana.service.AccommodationService;
-import ws.peoplefirst.utumana.service.AvailabilityService;
-import ws.peoplefirst.utumana.service.BookingService;
-import ws.peoplefirst.utumana.service.PhotoService;
-import ws.peoplefirst.utumana.service.UserService;
+import ws.peoplefirst.utumana.model.*;
+import ws.peoplefirst.utumana.service.*;
 import ws.peoplefirst.utumana.utility.AuthorizationUtility;
 import ws.peoplefirst.utumana.utility.Constants;
 import ws.peoplefirst.utumana.utility.JsonFormatter;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+
+import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
 @RequestMapping(value="/api")
@@ -290,7 +269,7 @@ public class AccommodationController {
 	
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value="/get_latest_uploads")
-	public List<AccommodationDTO> getLatestUploadsDTO(@RequestParam(value="check_in",required=false) String checkIn, 
+	public List<AccommodationDTO> getLatestUploadsDTO(@RequestParam(value="check_in",required=false) String checkIn,
 			@RequestParam(value="check_out",required=false) String checkOut, 
 			Authentication auth) {
 		
@@ -392,6 +371,7 @@ public class AccommodationController {
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value = "/search")
 	public List<AccommodationDTO> searchResults(
+//			TODO: why is destination required=false?
 			@RequestParam(name = "destination",required=false) String destination,
 			@RequestParam(name = "check-in") String checkIn, 
 			@RequestParam(name = "check-out") String checkOut, 
@@ -441,7 +421,7 @@ public class AccommodationController {
 		
 		List<AccommodationDTO> resList = new ArrayList<AccommodationDTO>();
 		Long userId = AuthorizationUtility.getUserFromAuthentication(auth).getId();
-		
+//		TODO: can we use Spring data for filters?
 		if(freeOnly) {
 			resList = accommodationService.findByUserInputFreeDTO(destination, checkInDate, checkOutDate, numberOfGuests, serviceIds, orderBy, userId);
 		}
