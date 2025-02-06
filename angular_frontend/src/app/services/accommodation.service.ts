@@ -61,12 +61,7 @@ public getSearchResults(): Observable<AccommodationDTO[] | null> {
 }
 
   public getAccommodationById(id: number): Observable<(Accommodation | null)> {
-    let headers = this.getAuth();
-
-    console.log("ECCOMI QUI", id);
-    console.log(headers);
-
-    return this.http.get<(Accommodation | {time: string, status: string, message: string})>(BACKEND_URL_PREFIX + "/api/accommodation/" + id, {headers})
+    return this.http.get<(Accommodation | {time: string, status: string, message: string})>(BACKEND_URL_PREFIX + "/api/accommodation/" + id)
                       .pipe(
                         map(response => {
                           if("message" in response) return null;
@@ -152,15 +147,7 @@ public getSearchResults(): Observable<AccommodationDTO[] | null> {
   }
 
   private getAuth(): HttpHeaders {
-    let token: string | null = localStorage.getItem("token");
     let headers = new HttpHeaders();
-
-    if (token) {
-      headers = headers.set("Authorization", `Bearer ${token}`);
-    }
-
-    headers = headers.set("Content-Type", "application/json");
-
     return headers;
   }
 }

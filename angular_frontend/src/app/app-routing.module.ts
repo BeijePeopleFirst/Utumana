@@ -14,14 +14,14 @@ import { SearchPageComponent } from './components/search-page/search-page.compon
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
-  {path: '', component: HomeComponent, canActivate: [authGuard]},
-  {path: 'review/:id', component: ReviewCardComponent, canActivate: [authGuard]},
-  {path: 'profile', component: ProfileComponent, canActivate: [authGuard]},
-  {path: 'create', component: CreateAccommodationAddressComponent, canActivate: [authGuard]},
-  {path: 'my_bookings', component: MyBookingsComponent, canActivate: [authGuard]},
-  {path: 'host_dashboard', component: HostDashboardComponent, canActivate: [authGuard]},
-  {path: 'accommodation/:id', component: AccommodationDetailsComponent, canActivate: [authGuard] },
-  {path: 'search_page', component: SearchPageComponent, canActivate: [authGuard]}
+  {path: '', component: HomeComponent},
+  {path: 'review/:id', component: ReviewCardComponent},
+  {path: 'profile', component: ProfileComponent},
+  {path: 'create', component: CreateAccommodationAddressComponent},
+  {path: 'my_bookings', component: MyBookingsComponent},
+  {path: 'host_dashboard', component: HostDashboardComponent},
+  {path: 'accommodation/:id', component: AccommodationDetailsComponent},
+  {path: 'search_page', component: SearchPageComponent}
   // { path: '**', component: PageNotFoundComponent }
 ];
 

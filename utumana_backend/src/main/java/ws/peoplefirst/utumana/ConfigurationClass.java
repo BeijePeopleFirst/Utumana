@@ -248,6 +248,7 @@ public class ConfigurationClass {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((authorize) -> {
                     authorize.requestMatchers("/api/signin").permitAll();
+                    authorize.requestMatchers("/api/refresh_token").permitAll();
                     authorize.requestMatchers("/check").permitAll();
                     authorize.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                     authorize.requestMatchers("/swagger-ui/**")
