@@ -1,10 +1,11 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
-import { tap, delay, map, catchError } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
+import { tap, delay, map, catchError, filter, switchMap } from 'rxjs/operators';
 import { BACKEND_URL_PREFIX } from 'src/costants';
 import { AuthCredentials } from '../dtos/authCredential';
+import { RefreshToken } from '../models/refreshToken';
 
 interface LoginResponse {
   email: string,
@@ -19,6 +20,10 @@ interface LoginResponse {
 })
 export class AuthService {
   isLoggedIn: boolean = localStorage.getItem("token") != null;
+
+  private refreshInProgress = false;
+  private refreshTokenSubject = new BehaviorSubject<string | null>(null);
+
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json; charset=UTF-8', 'Accept-Type': 'application/json; charset=UTF-8' })
   };
@@ -62,5 +67,33 @@ export class AuthService {
     // Set to "Thu, 01 Jan 1970 00:00:00 GMT"
     for (let i = 0; i < allCookies.length; i++)
       document.cookie = allCookies[i] + "=;expires=" + new Date(0).toUTCString();
+    }
+
+    public refreshToken(refresh_token:RefreshToken | null): Observable<any>{
+      if (this.refreshInProgress) {
+        return this.refreshTokenSubject.pipe(
+          filter(token => token !== null),
+          switchMap(() => throwError(() => new Error('Token refresh already in progress')))
+        );
+      }
+
+      return this.http.post<LoginResponse>(`${BACKEND_URL_PREFIX}/api/refresh_token`, refresh_token,this.httpOptions).pipe(
+        map(json => {
+
+          localStorage.setItem('id',json.id.toString());
+          localStorage.setItem("token", json.token);
+          document.cookie = "refresh_token=" + json.refresh_token;
+
+          this.refreshTokenSubject.next(json.refresh_token);
+          return json;
+        }),
+        tap(() => {
+          this.isLoggedIn = true;
+        }),
+        catchError((err) => {
+          this.logout();
+          return of(err);
+        })
+      );
     }
 }
