@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 import { AccommodationDTO } from 'src/app/dtos/accommodationDTO';
 import { AccommodationService } from 'src/app/services/accommodation.service';
 
@@ -7,12 +8,17 @@ import { AccommodationService } from 'src/app/services/accommodation.service';
   templateUrl: './accommodation-cards.component.html',
   styleUrls: ['./accommodation-cards.component.css']
 })
-export class AccommodationCardsComponent {
+export class AccommodationCardsComponent implements OnInit {
   @Input() accommodations:AccommodationDTO[] | null=null;
-
+  accommodations$!: Observable<AccommodationDTO[] | null>;
+  
   test:number[]=[1,2,3,4,5,6];
 
   constructor(
       private accommodationService:AccommodationService
     ){ }
+
+   ngOnInit(){
+    this.accommodations$ = this.accommodationService.getSearchResults();  
+  }
 }

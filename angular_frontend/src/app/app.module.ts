@@ -30,6 +30,7 @@ import { CreateAccommodationAvailabilityComponent } from './components/create-ac
 import { CreateAccommodationRecapComponent } from './components/create-accommodation-recap/create-accommodation-recap.component';
 import { AccommodationCardsComponent } from './components/accommodation-cards/accommodation-cards.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SearchPageComponent } from './components/search-page/search-page.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -60,7 +61,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     CreateAccommodationPhotosComponent,
     CreateAccommodationAvailabilityComponent,
     CreateAccommodationRecapComponent,
-    AccommodationCardsComponent
+    AccommodationCardsComponent,
+    SearchPageComponent
   ],
   imports: [
     BrowserModule,

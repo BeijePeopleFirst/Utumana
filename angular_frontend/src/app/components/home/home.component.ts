@@ -21,9 +21,6 @@ export class HomeComponent implements OnInit {
   ){ }
   
   ngOnInit(): void {
-    this.accommodationService.getLatestUploads().subscribe((accommodations)=>{
-      this.latestUploads=accommodations;
-      this.mostLiked=accommodations;
-    });
+    this.accommodationService.getLatestUploads();
   }
 }

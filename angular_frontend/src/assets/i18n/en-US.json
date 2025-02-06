@@ -28,7 +28,9 @@
 	"date-error": "Date is mandatory",
 	"min-person": "min: 1 person",
 	"people": "People",
-	"search": "Search"
+	"search": "Search",
+	"checkInError": "checkIn date invalid",
+	"checkoutInconcistency": "checkIn not before checkOut"
 },
 
 "accommodation-card-details": {

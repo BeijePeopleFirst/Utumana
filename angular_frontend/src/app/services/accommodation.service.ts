@@ -1,22 +1,25 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, map, Observable, of } from 'rxjs';
+import { BehaviorSubject, catchError, debounceTime, map, Observable, of, Subject, switchMap } from 'rxjs';
 import { Accommodation } from '../models/accommodation';
 import { BACKEND_URL_PREFIX } from 'src/costants';
 import { AccommodationDTO } from '../dtos/accommodationDTO';
+import { FormGroup } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccommodationService {
-  
+  private accommodationsSubject = new BehaviorSubject<AccommodationDTO[] | null>(null);
+  public accommodations$ = this.accommodationsSubject.asObservable();
+  private searchParamsSubject = new BehaviorSubject<any>(null);
 
   constructor(private http: HttpClient) { }
 
-  public getLatestUploads(): Observable<(AccommodationDTO[] | null)>{
+  public getLatestUploads(): void{
     let token: (string | null) = localStorage.getItem("token");
     let headers = new HttpHeaders(token ? { Authorization: `Bearer ${token}` } : {});
-    return this.http.get<(AccommodationDTO[] | {time: string, status: string, message: string})>(BACKEND_URL_PREFIX + "/api/get_latest_uploads" , {headers})
+    this.http.get<(AccommodationDTO[] | {time: string, status: string, message: string})>(BACKEND_URL_PREFIX + "/api/get_latest_uploads" , {headers})
     .pipe(
       map(response => {
         if("message" in response) return null;
@@ -27,10 +30,35 @@ export class AccommodationService {
         console.error(error);
         return of(null);
       })
-    )
+    ).subscribe(data => this.accommodationsSubject.next(data))
 }
 
+public searchAccommodations(params: any) {
+  this.searchParamsSubject.next(params)
+}
 
+public getSearchResults(): Observable<AccommodationDTO[] | null> {
+  return this.searchParamsSubject.pipe(
+    debounceTime(300),
+    switchMap(params => {
+      if (!params) return this.accommodations$;
+      console.log('params: ', params);
+      const headers = this.getAuth();
+      return this.http.get<AccommodationDTO[] | { message: string }>(
+        `${BACKEND_URL_PREFIX}/api/search`, { 
+          headers, 
+          params 
+        }
+      ).pipe(
+        map(response => "message" in response ? null : response),
+        catchError(error => {
+          console.error(error);
+          return of(null);
+        })
+      );
+    })
+  );
+}
 
   public getAccommodationById(id: number): Observable<(Accommodation | null)> {
     let headers = this.getAuth();
@@ -116,6 +144,11 @@ export class AccommodationService {
                           return of();
                         })
                       )
+  }
+
+
+  getSearchAccommodations() {
+
   }
 
   private getAuth(): HttpHeaders {
