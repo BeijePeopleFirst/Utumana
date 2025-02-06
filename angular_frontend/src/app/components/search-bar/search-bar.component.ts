@@ -32,14 +32,14 @@ export class SearchBarComponent {
 
   search() {
     if (this.searchForm.valid) {
-      this.accommodationService.searchAccommodations(this.searchForm.value);
+      const params = this.accommodationService.getParams(this.searchForm.value)
+      console.log(params)
+      this.accommodationService.searchAccommodations(params);
       this.router.navigate(['/search_page']);
     } else {
       console.log('Il form non è valido!');
     }
   }
 
-  getParams(form: FormGroup<any>) {
 
-  }
-}
+  }  

@@ -5,6 +5,7 @@ import { Accommodation } from '../models/accommodation';
 import { BACKEND_URL_PREFIX } from 'src/costants';
 import { AccommodationDTO } from '../dtos/accommodationDTO';
 import { FormGroup } from '@angular/forms';
+import { params } from '../models/searchParams';
 
 @Injectable({
   providedIn: 'root'
@@ -43,11 +44,9 @@ public getSearchResults(): Observable<AccommodationDTO[] | null> {
     switchMap(params => {
       if (!params) return this.accommodations$;
       console.log('params: ', params);
-      const headers = this.getAuth();
       return this.http.get<AccommodationDTO[] | { message: string }>(
         `${BACKEND_URL_PREFIX}/api/search`, { 
-          headers, 
-          params 
+          params
         }
       ).pipe(
         map(response => "message" in response ? null : response),
@@ -58,6 +57,20 @@ public getSearchResults(): Observable<AccommodationDTO[] | null> {
       );
     })
   );
+}
+
+getParams(form: any): params {
+  console.log(form)
+  const params: params = {
+    "city": form.city,
+    "check-in": form.check_in,
+    "check-out": form.check_out,
+    "number_of_guests": form.people,
+    "free_only": false,
+    "services": [""],
+    "order_by": "price"
+  }
+  return params;
 }
 
   public getAccommodationById(id: number): Observable<(Accommodation | null)> {
