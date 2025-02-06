@@ -1,11 +1,6 @@
 package ws.peoplefirst.utumana.controller;
 
-import static org.springframework.http.ResponseEntity.ok;
-
-import java.net.UnknownHostException;
-import java.util.HashMap;
-import java.util.Map;
-
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,16 +11,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
-import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.web.bind.annotation.*;
 import ws.peoplefirst.utumana.dto.AuthCredentials;
 import ws.peoplefirst.utumana.dto.UserDTO;
 import ws.peoplefirst.utumana.model.RefreshToken;
@@ -34,6 +20,12 @@ import ws.peoplefirst.utumana.security.JwtTokenProvider;
 import ws.peoplefirst.utumana.service.RefreshTokenService;
 import ws.peoplefirst.utumana.service.UserService;
 import ws.peoplefirst.utumana.utility.AuthorizationUtility;
+
+import java.net.UnknownHostException;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.springframework.http.ResponseEntity.ok;
 
 
 @RestController
@@ -83,10 +75,10 @@ public class AuthController {
 
 	@PreAuthorize("permitAll()")
 	@PostMapping("/signin")
-	public ResponseEntity<Map<String, Object>> signin(@RequestBody AuthCredentials credentials, HttpServletResponse response) throws RuntimeException {
+	public ResponseEntity<Map<String, Object>> signIn(@RequestBody AuthCredentials credentials, HttpServletResponse response) throws RuntimeException {
 		System.out.println("POST /signin");
 		log.debug("POST /signin");
-		System.out.println(credentials.getEmail() + "please " + credentials.getPassword());
+		System.out.println(credentials.getEmail() + " please " + credentials.getPassword());
 
 		try {
 			String email = credentials.getEmail();
@@ -163,7 +155,7 @@ public class AuthController {
 		System.out.println("POST /refresh_token");
 		System.out.println("Refresh token = " + refreshToken.getRefreshToken());
 		try {
-			return this.signin(refreshTokenService.getAuthenticationFromRefreshToken(refreshToken.getRefreshToken()), response);
+			return this.signIn(refreshTokenService.getAuthenticationFromRefreshToken(refreshToken.getRefreshToken()), response);
 		} catch (RuntimeException e) {
 			throw e;
 		}
