@@ -54,7 +54,7 @@
         </div>
         <!-- -------------------------------------------------------------------------------------- -->
       </div>
-      <div class="flex flex-row mt-8">
+      <div class="flex flex-row mt-8 border-4 border-solid border-secondary">
         <div class="text-4xl">
           {{accommodation.rooms}} {{"accommodation-card-details.rooms-word" | translate}}, {{accommodation.beds}} {{"accommodation-card-details.beds-word" | translate}}
         </div>
@@ -67,13 +67,13 @@
       <!-- HOST INFO SECTION -->
       <!-------------------------------------------------------------------------------------------------------------------------------------------------->
       <div id="host-info-div" class="mt-10 text-4xl">
-        <div id="horizontal-flex" class="flex flex-row">
+        <div id="horizontal-flex" class="flex flex-row border-4 border-solid border-secondary">
           <div class="m-auto" id="profile-picture-and-badge">
             <!--<img id="profile-picture" class="w-12" [src]="'http://localhost:8080' + accommodationOwner.profilePictureUrl" />-->
             <!-- <img id="badge-picture" /> --> <!-- TODO -->
              <p>gatto</p>
           </div>
-          <div id="host-details" class="flex flex-col items-center content-center">
+          <div id="host-details" class="flex flex-col items-center content-center border-l-4 border-solid border-secondary">
             <p>{{accommodationOwner.name}} {{accommodationOwner.surname}}</p>
             <div>
               <p class="relative mt-1 left-1">Bio:</p>
@@ -85,6 +85,23 @@
         </div>
       </div>
       <!-------------------------------------------------------------------------------------------------------------------------------------------------->
+      <div id="desc-availabilities-booknow-div" class="flex flex-row">
+        <div class="flex flex-col items-center justify-center align-middle">
+          <div id="description-acc" class="flex flex-col items-start">
+            <p>{{("accommodation-card-details.description-word" | translate)}}:</p>
+            <p>{{accommodation.description}}</p>
+          </div>
+          <div id="availabilities-acc">
+            <p>{{("accommodation-card-details.availabilities-word" | translate)}}:</p>
+            <div *ngFor="let a of accommodation.availabilities">
+              <!--TODO-->
+            </div>
+          </div>
+        </div>
+        <div>
+          <button (click)="bookNow()" class="m-0 btn-primary">{{("accommodation-card-details.book-now" | translate)}}</button>
+        </div>
+      </div>
     </div>
   </ng-container>
   

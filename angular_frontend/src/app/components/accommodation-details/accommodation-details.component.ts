@@ -289,6 +289,11 @@ export class AccommodationDetailsComponent implements OnInit {
     );
   }
 
+  //TODO
+  bookNow() {
+
+  }
+
   clearMessage() {
     this.message = undefined;
   }
