@@ -47,10 +47,8 @@
   h5 { @apply text-xl; }
   h6 { @apply text-lg; }
 
-  .stars-container { @apply flex flex-row justify-start gap-0 align-middle}
-  .star-container { @apply text-2xl leading-5 text-center align-middle fill-current; }
-  .star-half-container { @apply bg-gradient-to-r from-yellow-500 to-gray-300 from-50% to-50% bg-clip-text text-transparent; }
-  .star-full { @apply w-5 h-5 text-yellow-500; }
-  .star-half { @apply w-5 h-5; }
-  .star-empty { @apply w-5 h-5 text-gray-300; }
+  a { @apply underline text-secondary; }
+  a:hover { @apply cursor-pointer text-secondary-dark; }
+  a:active { @apply text-secondary-light; }
+  nav a {@apply no-underline; }
 }
