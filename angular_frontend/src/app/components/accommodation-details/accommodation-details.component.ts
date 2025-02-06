@@ -52,7 +52,7 @@ export class AccommodationDetailsComponent implements OnInit {
 
   ngOnInit(): void {
 
-    let id: (string | undefined | null) = this.route.snapshot.params["accommodation_id"];
+    let id: (string | undefined | null) = this.route.snapshot.params["id"];
 
     if(!id || id == "") {
       this.invalidAccommodation = true;
@@ -91,7 +91,7 @@ export class AccommodationDetailsComponent implements OnInit {
 
                   if(user.isAdmin) this.isAdminOrMe = true;
                   else {
-                    if(user.id == this.accommodation.ownerId) this.isAdminOrMe = true;
+                    if(user.id == this.accommodation.owner_id) this.isAdminOrMe = true;
                     else this.isAdminOrMe = false;
                   }
                 }
@@ -129,7 +129,7 @@ export class AccommodationDetailsComponent implements OnInit {
             return;
           }
           else {
-            this.message = "Added to favourites -> " + result;
+            this.message = "Added to favourites -> " + result.toString();
             return;
           }
         }
@@ -146,7 +146,7 @@ export class AccommodationDetailsComponent implements OnInit {
             return;
           }
           else {
-            this.message = "Removed from favourites -> " + result;
+            this.message = "Removed from favourites -> " + result.toString();
             return;
           }
         }
@@ -171,7 +171,7 @@ export class AccommodationDetailsComponent implements OnInit {
           }
           else {
             console.log("Deleted Accommodation -> ", result);
-            this.message = "Deleted Accommodation -> " + result;
+            this.message = "Deleted Accommodation -> " + result.toString();
             return;
           }
         }
@@ -200,7 +200,7 @@ export class AccommodationDetailsComponent implements OnInit {
       return;
     }
 
-    this.accommodation.streetNumber = this.strNumInputField?.trim();
+    this.accommodation.street_number = this.strNumInputField?.trim();
     this.accommodation.street = this.streetInputField?.trim();
     this.accommodation.province = this.provinceInputField?.trim();
     this.accommodation.country = this.countryInputField.trim();
@@ -216,7 +216,7 @@ export class AccommodationDetailsComponent implements OnInit {
       result => {
         if(!result) this.message = "An error occurred";
         else if("message" in result) this.message = result.message;
-        else this.message = "updated Accommodation -> " + result;
+        else this.message = "updated Accommodation -> " + result.toString();
 
         this.toggleEditCityProvCountry();
       }
@@ -253,7 +253,7 @@ export class AccommodationDetailsComponent implements OnInit {
       result => {
         if(!result) this.message = "An error occurred";
         else if("message" in result) this.message = result.message;
-        else this.message = "Updated Accommodation -> " + result;
+        else this.message = "Updated Accommodation -> " + result.toString();
 
         this.toggleEditRoomsBeds();
       }
