@@ -1,12 +1,20 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AccommodationCardComponent } from './components/accommodation-card/accommodation-card.component';
 import {HttpClientModule,HttpClient, HTTP_INTERCEPTORS} from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AuthInterceptor } from './interceptors/auth.service';
+
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { registerLocaleData } from '@angular/common';
+import localeIt from '@angular/common/locales/it';
+import localeEn from '@angular/common/locales/en'
+registerLocaleData(localeIt);
+registerLocaleData(localeEn);
+
 import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
 import { SearchBarComponent } from './components/search-bar/search-bar.component';
@@ -29,8 +37,6 @@ import { CreateAccommodationPhotosComponent } from './components/create-accommod
 import { CreateAccommodationAvailabilityComponent } from './components/create-accommodation-availability/create-accommodation-availability.component';
 import { CreateAccommodationRecapComponent } from './components/create-accommodation-recap/create-accommodation-recap.component';
 import { AccommodationCardsComponent } from './components/accommodation-cards/accommodation-cards.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AuthInterceptor } from './interceptors/auth.service';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
