@@ -14,9 +14,7 @@ export class AccommodationService {
   constructor(private http: HttpClient) { }
 
   public getLatestUploads(): Observable<(AccommodationDTO[] | null)>{
-    let token: (string | null) = localStorage.getItem("token");
-    let headers = new HttpHeaders(token ? { Authorization: `Bearer ${token}` } : {});
-    return this.http.get<(AccommodationDTO[] | {time: string, status: string, message: string})>(BACKEND_URL_PREFIX + "/api/get_latest_uploads" , {headers})
+    return this.http.get<(AccommodationDTO[] | {time: string, status: string, message: string})>(BACKEND_URL_PREFIX + "/api/get_latest_uploads")
     .pipe(
       map(response => {
         if("message" in response) return null;
@@ -33,12 +31,7 @@ export class AccommodationService {
 
 
   public getAccommodationById(id: number): Observable<(Accommodation | null)> {
-    let headers = this.getAuth();
-
-    console.log("ECCOMI QUI", id);
-    console.log(headers);
-
-    return this.http.get<(Accommodation | {time: string, status: string, message: string})>(BACKEND_URL_PREFIX + "/api/accommodation/" + id, {headers})
+    return this.http.get<(Accommodation | {time: string, status: string, message: string})>(BACKEND_URL_PREFIX + "/api/accommodation/" + id)
                       .pipe(
                         map(response => {
                           if("message" in response) return null;
@@ -124,15 +117,7 @@ export class AccommodationService {
   }
 
   private getAuth(): HttpHeaders {
-    let token: string | null = localStorage.getItem("token");
     let headers = new HttpHeaders();
-
-    if (token) {
-      headers = headers.set("Authorization", `Bearer ${token}`);
-    }
-
-    headers = headers.set("Content-Type", "application/json");
-
     return headers;
   }
 }
