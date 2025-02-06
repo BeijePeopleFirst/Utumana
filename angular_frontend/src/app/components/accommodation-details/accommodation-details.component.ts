@@ -28,6 +28,17 @@ export class AccommodationDetailsComponent implements OnInit {
   cityInputField?: string;
   provinceInputField?: string;
   countryInputField?: string;
+  CAPInputField?: string;
+  streetInputField?: string;
+  strNumInputField?: string;
+
+  showViewMorePhotosPerspective: boolean = false;
+
+  showViewEditRoomsBedsPerspective: boolean = false;
+  bedsNum?: string;
+  roomsNum?: string;
+
+  showViewEditPhotosPerspective: boolean = false;
 
   message?: string;
 
@@ -57,7 +68,10 @@ export class AccommodationDetailsComponent implements OnInit {
           this.invalidAccommodation = false;
           this.accommodation = data;
 
-          this.userId = localStorage.getItem("userId") ? Number(localStorage.getItem("userId")) : undefined;
+          console.log("STAMPO ACC trovata -> ", this.accommodation);
+
+          this.userId = localStorage.getItem("id") ? Number(localStorage.getItem("id")) : undefined;
+          //this.userId = 1;
 
           if(!this.userId) {
             this.userNotLogged = true;
@@ -171,6 +185,79 @@ export class AccommodationDetailsComponent implements OnInit {
 
   toggleEditCityProvCountry() {
     this.showEditCityProvCountry = !this.showEditCityProvCountry;
+  }
+
+  confirmFormCityCountryProv() {
+    if(!this.countryInputField) {
+      this.toggleEditCityProvCountry();
+      this.message = "Country is REQUIRED";
+      return;
+    }
+
+    if(!this.CAPInputField) {
+      this.toggleEditCityProvCountry();
+      this.message = "CAP is REQUIRED";
+      return;
+    }
+
+    this.accommodation.streetNumber = this.strNumInputField?.trim();
+    this.accommodation.street = this.streetInputField?.trim();
+    this.accommodation.province = this.provinceInputField?.trim();
+    this.accommodation.country = this.countryInputField.trim();
+    this.accommodation.city = this.cityInputField?.trim();
+    this.accommodation.cap = this.CAPInputField.trim();
+
+    if(!this.userId) {
+      this.userNotLogged = true;
+      return;
+    }
+
+    this.accommodationService.updateAccommodationAddress(this.userId, this.accommodation).subscribe(
+      result => {
+        if(!result) this.message = "An error occurred";
+        else if("message" in result) this.message = result.message;
+        else this.message = "updated Accommodation -> " + result;
+
+        this.toggleEditCityProvCountry();
+      }
+    );
+
+  }
+
+  //Need to create the perspective itself
+  toggleViewMorePhotosPerspective() {
+    this.showViewMorePhotosPerspective = !this.showViewMorePhotosPerspective;
+  }
+
+  //Need to create the perspective itself
+  toggleEditPhotosPerspective() {
+    this.showViewEditPhotosPerspective = !this.showViewEditPhotosPerspective;
+  }
+
+  toggleEditRoomsBeds() {
+    this.showViewEditRoomsBedsPerspective = !this.showViewEditRoomsBedsPerspective;
+  }
+
+  confirmFormRoomsBeds() {
+    if(!this.bedsNum || !this.roomsNum) {
+      this.message = "Rooms number and Beds number are both required";
+      return;
+    }
+
+    this.accommodation.beds = Number(this.bedsNum);
+    this.accommodation.rooms = Number(this.roomsNum);
+
+    console.log("STAMPO PRIMA DEL METODO -> ", this.accommodation);
+
+    this.accommodationService.updateAccommodationInfo(this.accommodation).subscribe(
+      result => {
+        if(!result) this.message = "An error occurred";
+        else if("message" in result) this.message = result.message;
+        else this.message = "Updated Accommodation -> " + result;
+
+        this.toggleEditRoomsBeds();
+      }
+    );
   }
 
   clearMessage() {

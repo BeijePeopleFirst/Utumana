@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AccommodationCardComponent } from './components/accommodation-card/accommodation-card.component';
-import {HttpClientModule,HttpClient} from '@angular/common/http';
+import {HttpClientModule,HttpClient, HTTP_INTERCEPTORS} from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LoginComponent } from './components/login/login.component';
@@ -30,6 +30,7 @@ import { CreateAccommodationAvailabilityComponent } from './components/create-ac
 import { CreateAccommodationRecapComponent } from './components/create-accommodation-recap/create-accommodation-recap.component';
 import { AccommodationCardsComponent } from './components/accommodation-cards/accommodation-cards.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AuthInterceptor } from './interceptors/auth.service';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -76,7 +77,9 @@ export function HttpLoaderFactory(http: HttpClient) {
       }
     })
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
