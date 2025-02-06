@@ -47,20 +47,20 @@ export class AccommodationService {
   }
 
   deleteAccommodation(id: number): Observable<Accommodation | {message: string, status: string, time: string} | null> {
-    let headers = this.getAuth();
+    //let headers = this.getAuth();
 
     console.log("SONO IN DELETE");
 
-    return this.http.patch<Accommodation | {message: string, status: string, time: string} | null>(BACKEND_URL_PREFIX + "/api/delete_accommodation/" + id, {headers})
+    return this.http.patch<Accommodation | {message: string, status: string, time: string} | null>(BACKEND_URL_PREFIX + "/api/delete_accommodation/" + id, {})
     .pipe(catchError(err => {console.error(err); return of()}))
 
   }
 
   ///remove-favourite/{user_id}/{accommodation_id}
   removeFavourite(userId: number, id: number) {
-    let headers = this.getAuth();
+    //let headers = this.getAuth();
 
-    return this.http.patch<Accommodation | null | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/remove-favourite/" + userId + "/" + id, {headers})
+    return this.http.patch<Accommodation | null | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/remove-favourite/" + userId + "/" + id, {})
                       .pipe(
                         catchError(
                           error => {
@@ -74,9 +74,9 @@ export class AccommodationService {
 
   ///add-favourite/{user_id}/{accommodation_id}
   addFavourite(userId: number, id: number): Observable<Accommodation | null | {message: string, status: string, time: string}> {
-    let headers = this.getAuth();
+    //let headers = this.getAuth();
 
-    return this.http.patch<Accommodation | null | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/add-favourite/" + userId + "/" + id, {headers})
+    return this.http.patch<Accommodation | null | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/add-favourite/" + userId + "/" + id, {})
                       .pipe(
                         catchError(
                           error => {
@@ -88,11 +88,11 @@ export class AccommodationService {
   }
 
   updateAccommodationAddress(userId: number, accommodation: Accommodation): Observable<Accommodation | null | {message: string, status: string, time: string}> {
-    let headers = this.getAuth();
+    //let headers = this.getAuth();
     accommodation = Object.assign(new Accommodation(), accommodation);
 
     return this.http.patch<Accommodation | null | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/accommodation/" + accommodation.id + "/address",
-                        accommodation.toJSON(), {headers})
+                        accommodation.toJSON(), {})
                       .pipe(
                         catchError(error => {
                           console.error(error);
@@ -102,12 +102,12 @@ export class AccommodationService {
   }
 
   updateAccommodationInfo(accommodation: Accommodation): Observable<Accommodation | null | {message: string, status: string, time: string}> {
-    let headers = this.getAuth();
+    //let headers = this.getAuth();
     console.log("input ->", accommodation, accommodation.id);
 
     accommodation = Object.assign(new Accommodation(), accommodation);
 
-    return this.http.patch<Accommodation | null | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/accommodation/" + accommodation.id, accommodation.toJSON(), {headers})
+    return this.http.patch<Accommodation | null | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/accommodation/" + accommodation.id, accommodation.toJSON(), {})
                       .pipe(
                         catchError(error => {
                           console.error("Errore in Service Accommodation", error);
@@ -116,8 +116,8 @@ export class AccommodationService {
                       )
   }
 
-  private getAuth(): HttpHeaders {
+  /*private getAuth(): HttpHeaders {
     let headers = new HttpHeaders();
     return headers;
-  }
+  }*/
 }

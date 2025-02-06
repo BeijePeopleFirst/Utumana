@@ -62,13 +62,36 @@
           <img class="cursor-pointer w-7" src="/assets/icons/pencil.png" (click)="toggleEditRoomsBeds()" />
         </div>
       </div>
+      <p class="mt-10 text-3xl" *ngIf="isAdminOrMe && accommodation.approval_timestamp">{{("accommodation-card-details.approval-timestamp-text" | translate)}}: {{accommodation.approval_timestamp}}</p>
+      
+      <!-- HOST INFO SECTION -->
+      <!-------------------------------------------------------------------------------------------------------------------------------------------------->
+      <div id="host-info-div" class="mt-10 text-4xl">
+        <div id="horizontal-flex" class="flex flex-row">
+          <div class="m-auto" id="profile-picture-and-badge">
+            <!--<img id="profile-picture" class="w-12" [src]="'http://localhost:8080' + accommodationOwner.profilePictureUrl" />-->
+            <!-- <img id="badge-picture" /> --> <!-- TODO -->
+             <p>gatto</p>
+          </div>
+          <div id="host-details" class="flex flex-col items-center content-center">
+            <p>{{accommodationOwner.name}} {{accommodationOwner.surname}}</p>
+            <div>
+              <p class="relative mt-1 left-1">Bio:</p>
+              <p class="relative left-1 justify-normal">{{accommodationOwner.bio}}</p>
+            </div>
+            <br><br>
+            <button class="btn-primary">{{("accommodation-card-details.contact-word" | translate)}}</button>
+          </div>
+        </div>
+      </div>
+      <!-------------------------------------------------------------------------------------------------------------------------------------------------->
     </div>
   </ng-container>
   
   <ng-container *ngIf="message">
     <button type="button" (click)="clearMessage()">clear</button>
     <br>
-    <h1 class="text-blue-800">{{message}}</h1>
+    <h1 class="text-xl text-blue-800">{{message}}</h1>
   </ng-container>
   
   <ng-template #editCityProvCountryTemplate>

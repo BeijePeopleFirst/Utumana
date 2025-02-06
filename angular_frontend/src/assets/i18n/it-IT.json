@@ -50,7 +50,9 @@
 	"beds-word": "Letti",
 	"beds-input-field-error": "Valido numero di Letti richiesto",
 	"rooms-input-field-error": "Valido numero di Stanze richiesto",
-	"country-input-field-error": "Valido campo 'Paese' richiesto (solo lettere)"
+	"country-input-field-error": "Valido campo 'Paese' richiesto (solo lettere)",
+	"approval-timestamp-text": "Momento di Approvazione",
+	"contact-word": "Contatta"
 },
 
 "home":{

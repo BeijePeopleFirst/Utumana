@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Accommodation } from 'src/app/models/accommodation';
+import { User } from 'src/app/models/user';
 import { AccommodationService } from 'src/app/services/accommodation.service';
 import { UserService } from 'src/app/services/user.service';
 
@@ -23,6 +24,8 @@ export class AccommodationDetailsComponent implements OnInit {
   invalidAccommodation: boolean = false;
   isFavourite: boolean = false;
   isAdminOrMe: boolean = false;
+
+  accommodationOwner!: User;
 
   showEditCityProvCountry: boolean = false;
   cityInputField?: string;
@@ -84,6 +87,7 @@ export class AccommodationDetailsComponent implements OnInit {
               user => {
                 if(!user || "message" in user) {
                   this.invalidUserId = true;
+                  if(user && "message" in user) this.message = user.message;
                   return;
                 }
                 else {
@@ -95,6 +99,31 @@ export class AccommodationDetailsComponent implements OnInit {
                     else this.isAdminOrMe = false;
                   }
                 }
+
+                //Now lets retrieve the Accommodation Owner:
+                if(!this.accommodation.id) {
+                  this.message = "Error inside Accommodation Entity: ABORT";
+                  this.invalidAccommodation = true;
+                  return;
+                }
+                this.userService.getUserById(this.accommodation.owner_id).subscribe(
+                  foundUser => {
+                    if(!foundUser) {
+                      this.message = "Error inside Accommodation Entity: ABORT";
+                      this.invalidAccommodation = true;
+                      return;
+                    }
+                    else if("message" in foundUser) {
+                      this.message = "Error inside Accommodation Entity: ABORT\n";
+                      this.message += foundUser.message;
+                      this.invalidAccommodation = true;
+                      return;
+                    }
+                    else {
+                      this.accommodationOwner = foundUser;
+                    }
+                  }
+                )
               }
             );
 
