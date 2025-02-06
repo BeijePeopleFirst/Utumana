@@ -60,5 +60,12 @@
 
 "profile": {
 	"reviews_title": "Reviews received"
+},
+"review": {
+	"comfort": "Comfort",
+	"convenience": "Price",
+	"position": "Position",
+	"see_more": "See more",
+	"see_less": "See less"
 }
 }

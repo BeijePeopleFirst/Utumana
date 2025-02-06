@@ -123,7 +123,7 @@ public class ReviewController {
 	
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping("/review/user/{userId}")
-	public List<ReviewDTO> getAllUserReview(@PathVariable Long userId, Authentication auth) {
+	public List<Review> getAllUserReview(@PathVariable Long userId, Authentication auth) {
 		log.debug("GET /review/user/" + userId);
 		return reviewService.getUserReview(userId);
 	}
