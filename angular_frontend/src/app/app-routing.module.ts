@@ -13,13 +13,13 @@ import { HostDashboardComponent } from './components/host-dashboard/host-dashboa
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
-  {path: '', component: HomeComponent, canActivate: [authGuard]},
-  {path: 'review/:id', component: ReviewCardComponent, canActivate: [authGuard]},
+  {path: '', component: HomeComponent},
+  {path: 'review/:id', component: ReviewCardComponent},
   {path: 'profile', component: ProfileComponent, canActivate: [authGuard]},
   {path: 'create', component: CreateAccommodationAddressComponent, canActivate: [authGuard]},
   {path: 'my_bookings', component: MyBookingsComponent, canActivate: [authGuard]},
   {path: 'host_dashboard', component: HostDashboardComponent, canActivate: [authGuard]},
-  { path: 'accommodation/:id', component: AccommodationDetailsComponent, canActivate: [authGuard] },
+  { path: 'accommodation/:id', component: AccommodationDetailsComponent},
   // { path: '**', component: PageNotFoundComponent }
 ];
 

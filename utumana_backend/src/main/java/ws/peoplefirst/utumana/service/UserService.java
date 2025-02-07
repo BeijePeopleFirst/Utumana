@@ -143,7 +143,7 @@ public class UserService implements UserDetailsService {
 
 	public List<ReviewDTO> getUserReviews(Long id)  {
 		log.trace("Getting reviews of user with id " + id);
-		return userRepository.findUserReviews(id);
+		return userRepository.findUserReviewsDTO(id);
 	}
 	
 	public List<UserDTO> getUsersDTO() {

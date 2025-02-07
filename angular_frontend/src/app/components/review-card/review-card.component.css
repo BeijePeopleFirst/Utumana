@@ -1,0 +1,9 @@
+.rating-label { @apply self-center w-16 text-sm leading-normal; }
+
+.stars-container { @apply flex flex-row justify-start gap-0 align-middle; }
+.star-container { @apply leading-5 text-center align-middle fill-current; }
+.star-half-container { @apply bg-gradient-to-r from-yellow-500 to-gray-300 from-50% to-50% bg-clip-text text-transparent; }
+.star-full { @apply text-yellow-500; }
+.star-empty { @apply text-gray-300; }
+
+.preview { @apply overflow-hidden h-36; }

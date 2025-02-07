@@ -65,5 +65,12 @@
 },
 "profile": {
 	"reviews_title": "Recensioni ricevute"
+},
+"review": {
+	"comfort": "Comfort",
+	"convenience": "Prezzo",
+	"position": "Posizione",
+	"see_more": "Scopri di più",
+	"see_less": "Mostra meno"
 }
 }

@@ -94,7 +94,7 @@ public class ReviewService {
 		return reviewRepository.findByBookingId(id);
 	}	
 		
-	public List<ReviewDTO> getUserReview(Long userId) {
+	public List<Review> getUserReview(Long userId) {
 		return userRepository.findUserReviews(userId);
 	}
 }

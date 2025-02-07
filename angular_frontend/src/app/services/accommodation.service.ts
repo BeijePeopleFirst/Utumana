@@ -19,11 +19,6 @@ export class AccommodationService {
       map(response => {
         if("message" in response) return null;
         else return response;
-      }),
-
-      catchError(error => {
-        console.error(error);
-        return of(null);
       })
     )
 }
