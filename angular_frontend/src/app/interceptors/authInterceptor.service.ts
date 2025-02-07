@@ -40,7 +40,8 @@ export class AuthInterceptor implements HttpInterceptor {
           if ( error.status === 401) {
             this.authService.logout( this.router.routerState.snapshot.url );
           }
-          return throwError(() => error);
+          return  of(new HttpResponse({status: 400, statusText: "Error trying to refresh token: invalid refresh_token"}));
+          //return throwError(() => error);
         })
       );
     }else{
@@ -65,14 +66,14 @@ export class AuthInterceptor implements HttpInterceptor {
 
       let refresh = new RefreshToken(0,0,getCookie('refresh_token'),"");
       console.log(refresh);
-/*
+
       if(!refresh.refresh_token){
         this.isRefreshing = false;
         this.authService.logout( this.router.routerState.snapshot.url );
         console.log("In if !refresh token");
         return of(new HttpResponse({status: 400, statusText: "Invalid refresh token"}));
       }
-        */
+        
 
       return this.authService.refreshToken(refresh).pipe(
         switchMap((tokenData: any) => {
@@ -84,8 +85,8 @@ export class AuthInterceptor implements HttpInterceptor {
           this.isRefreshing = false;
           this.authService.logout();
           console.log("In catch error");
-          //return  of(new HttpResponse({status: 400, statusText: "Invalid refresh token"}));
-          return throwError(() => error);
+          return  of(new HttpResponse({status: 400, statusText: "Error trying to refresh token"}));
+          //return throwError(() => error);
         })
       );
     } else {

@@ -57,7 +57,7 @@ export class AuthService {
     localStorage.clear();
     sessionStorage.clear();
     this.deleteCookies();
-    if(returnUrl){
+    if(returnUrl && returnUrl.indexOf("login") < 0){
       this.router.navigate(['/login'], { queryParams: { returnUrl: returnUrl }})
     }else{
       this.router.navigate(['login']);

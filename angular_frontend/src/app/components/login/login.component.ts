@@ -32,6 +32,9 @@ export class LoginComponent implements OnInit {
       this.router.navigate(['']);
     }
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+    if(this.returnUrl.indexOf("login") >= 0){
+      this.returnUrl = '/';
+    }
   }
 
   login(): void {
