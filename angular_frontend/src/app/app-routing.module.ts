@@ -11,6 +11,7 @@ import { CreateAccommodationAddressComponent } from './components/create-accommo
 import { MyBookingsComponent } from './components/my-bookings/my-bookings.component';
 import { HostDashboardComponent } from './components/host-dashboard/host-dashboard.component';
 import { SearchPageComponent } from './components/search-page/search-page.component';
+import { BookConfirmComponent } from './components/book-confirm/book-confirm.component';
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
@@ -21,7 +22,8 @@ const routes: Routes = [
   {path: 'my_bookings', component: MyBookingsComponent},
   {path: 'host_dashboard', component: HostDashboardComponent},
   {path: 'accommodation/:id', component: AccommodationDetailsComponent},
-  {path: 'search_page', component: SearchPageComponent}
+  {path: 'search_page', component: SearchPageComponent},
+  {path: 'book/:id', component: BookConfirmComponent}
   // { path: '**', component: PageNotFoundComponent }
 ];
 

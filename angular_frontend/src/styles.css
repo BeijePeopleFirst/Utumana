@@ -39,15 +39,15 @@
   }
 
   h1, h2, h3, h4 {
-    @apply mb-5 font-bold text-primary;
+    @apply font-bold text-primary;
   }
   h5, h6 {
-    @apply mb-3 font-bold text-secondary;
+    @apply mb-2 font-bold text-secondary;
   }
-  h1 { @apply text-5xl; }
-  h2 { @apply text-4xl; }
-  h3 { @apply text-3xl; }
-  h4 { @apply text-2xl; }
+  h1 { @apply mb-5 text-5xl; }
+  h2 { @apply mb-4 text-4xl; }
+  h3 { @apply mb-3 text-3xl; }
+  h4 { @apply mb-2 text-2xl; }
   h5 { @apply text-xl; }
   h6 { @apply text-lg; }
 
@@ -55,6 +55,7 @@
   a:hover { @apply cursor-pointer text-secondary-dark; }
   a:active { @apply text-secondary-light; }
   nav a {@apply no-underline; }
+  .clickable_card {@apply relative no-underline text-inherit; }
 
   .carousel-position {
     @apply w-3 h-3 transition bg-gray-300 rounded-full appearance-none cursor-pointer checked:bg-gray-400 focus:outline-none focus:bg-gray-400;
