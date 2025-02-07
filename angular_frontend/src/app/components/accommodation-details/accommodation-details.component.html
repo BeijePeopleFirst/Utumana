@@ -98,8 +98,22 @@
             </div>
           </div>
         </div>
-        <div *ngIf="accommodation.availabilities && accommodation.availabilities.length > 0" id="booknow-div-block-sticky">
-          <!--TODO-->
+        <div *ngIf="accommodation.availabilities && accommodation.availabilities.length > 0" id="booknow-div-block-sticky" class="flex flex-col items-center justify-center">
+          <div id="chk-in-chk-out" class="flex flex-row">
+            <div id="in" class="flex flex-col">
+              <p>Check-In</p>
+              <p>{{chosenAvailability?.start_date}}</p>
+            </div>
+            <div id="out" class="flex flex-col">
+              <p>Check-Out</p>
+              <p>{{chosenAvailability?.end_date}}</p>
+            </div>
+          </div>
+          <div class="relative left-0 mt-1 justify-normal">
+            <label class="label-primary" for="guests-number">{{("accommodation-card-details.guests-word" | translate)}}: </label>
+            <input id="guests-number" type="number" min="1" [max]="accommodation.beds" [(ngModel)]="guestsNumber" />
+          </div>
+          <p id="calculus">{{chosenAvailability?.price_per_night}}€ x {{ nightsNumber$ | async}} {{("accommodation-card-details.nights-word" | translate)}} = {{ postOperation$ | async}} €</p>
           <button (click)="bookNow()" class="m-0 btn-primary">{{("accommodation-card-details.book-now" | translate)}}</button>
         </div>
       </div>

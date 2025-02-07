@@ -6,11 +6,13 @@ import { BACKEND_URL_PREFIX } from 'src/costants';
 import { AccommodationDTO } from '../dtos/accommodationDTO';
 import { FormGroup } from '@angular/forms';
 import { params } from '../models/searchParams';
+import { Availability } from '../models/availability';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccommodationService {
+  
   private accommodationsSubject = new BehaviorSubject<AccommodationDTO[] | null>(null);
   public accommodations$ = this.accommodationsSubject.asObservable();
   private searchParamsSubject = new BehaviorSubject<any>(null);
@@ -158,6 +160,28 @@ getParams(form: any): params {
                           return of();
                         })
                       )
+  }
+
+  getAvailabilities(accommodation: Accommodation): Observable<Availability[] | {message: string, status: string, time: string}> {
+    return this.http.get<Availability[] | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/accommodation/" + accommodation.id + "/availabilities");
+  }
+
+  fetchDate(day: number, monthName: string, year: number): number {
+    switch (monthName) {
+      case "January": return Date.parse("" + year + "/01/" + (day < 10 ? "0" + day : day));
+      case "February": return Date.parse("" + year + "/02/" + (day < 10 ? "0" + day : day));
+      case "March": return Date.parse("" + year + "/03/" + (day < 10 ? "0" + day : day));
+      case "April": return Date.parse("" + year + "/04/" + (day < 10 ? "0" + day : day));
+      case "May": return Date.parse("" + year + "/05/" + (day < 10 ? "0" + day : day));
+      case "June": return Date.parse("" + year + "/06/" + (day < 10 ? "0" + day : day));
+      case "July": return Date.parse("" + year + "/07/" + (day < 10 ? "0" + day : day));
+      case "August": return Date.parse("" + year + "/08/" + (day < 10 ? "0" + day : day));
+      case "September": return Date.parse("" + year + "/09/" + (day < 10 ? "0" + day : day));
+      case "October": return Date.parse("" + year + "/10/" + (day < 10 ? "0" + day : day));
+      case "November": return Date.parse("" + year + "/11/" + (day < 10 ? "0" + day : day));
+      case "December": return Date.parse("" + year + "/12/" + (day < 10 ? "0" + day : day));
+      default: return -1;
+    }
   }
 
   /*private getAuth(): HttpHeaders {

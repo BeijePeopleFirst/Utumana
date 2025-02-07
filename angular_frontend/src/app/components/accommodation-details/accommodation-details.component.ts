@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { Accommodation } from 'src/app/models/accommodation';
 import { User } from 'src/app/models/user';
 import { AccommodationService } from 'src/app/services/accommodation.service';
@@ -42,6 +43,10 @@ export class AccommodationDetailsComponent implements OnInit {
   roomsNum?: string;
 
   showViewEditPhotosPerspective: boolean = false;
+
+  guestsNumber: number = 1;
+  nightsNumber$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+  postOperation$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
 
   message?: string;
 
@@ -137,8 +142,22 @@ export class AccommodationDetailsComponent implements OnInit {
     )
   }
 
-  receiveAvailabilityFromChild($event: { start_date: string; end_date: string; price_per_night: number; accommodation_id: number; } | undefined) {
-    this.chosenAvailability = $event;
+  receiveAvailabilityFromChild($event: { start_date: string; end_date: string; price_per_night: number; accommodation_id: number; } | undefined | {message: string}) {
+    if($event && !("message" in $event)) {
+      this.chosenAvailability = $event;
+
+      // Calcola il numero di notti
+      const startDate = new Date($event.start_date);
+      const endDate = new Date($event.end_date);
+      const nights = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+
+      // Aggiorna i BehaviorSubject
+      this.nightsNumber$.next(nights);
+      this.postOperation$.next(nights * $event.price_per_night);
+    }
+    else {
+      if($event) this.message = $event.message;
+    }
   }
 
   toggleIsFavourite() {

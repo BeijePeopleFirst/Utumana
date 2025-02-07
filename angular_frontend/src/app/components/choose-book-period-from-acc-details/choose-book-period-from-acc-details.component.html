@@ -5,7 +5,7 @@
         ⬅️
       </button>
       <h2 class="text-xl font-bold text-primary">
-        {{ currentMonth.name }} {{ currentMonth.year }}
+        {{ ("choose-book-period-from-acc-details." + currentMonth.name | translate) }} {{ currentMonth.year }}
       </h2>
       <button (click)="navigateMonths(1)" class="text-2xl text-primary-dark">
         ➡️
@@ -17,28 +17,35 @@
       <!-- Calendario del mese precedente -->
       <div class="w-64 p-4 border rounded-lg shadow-md bg-neutral-2 border-neutral-1">
         <h3 class="mb-3 text-lg font-bold text-center text-primary-dark">
-          {{ previousMonth.name }} {{ previousMonth.year }}
+          {{ ("choose-book-period-from-acc-details." + previousMonth.name | translate) }} {{ previousMonth.year }}
         </h3>
         <div class="grid grid-cols-7 gap-2">
-          <span *ngFor="let day of previousMonth.days"
-            class="p-2 font-medium text-center rounded-md bg-secondary-light text-neutral-1">
-            {{ day }}
-          </span>
+          <div *ngFor="let day of previousMonth.days"
+            class="p-2 font-medium text-center rounded-md cursor-pointer bg-secondary-light text-neutral-1">
+            <div *ngIf="!isAnAvailability(day, previousMonth.name, previousMonth.year)" class="text-center">{{day}}</div>
+            <div *ngIf="isAnAvailability(day, previousMonth.name, previousMonth.year)" class="text-center bg-green-400 cursor-pointer" (click)="selectDay(day, 'previousMonth', previousMonth.name, previousMonth.year)">{{day}}</div>
+            <div *ngIf="isSelectedOrBetween(day, previousMonth.name, previousMonth.year)" class="text-center cursor-pointer bg-green-950">{{day}}</div>
+          </div>
         </div>
       </div>
   
       <!-- Calendario del mese attuale -->
       <div class="w-64 p-4 border rounded-lg shadow-md bg-neutral-2 border-neutral-1">
-        <h3 class="mb-3 text-lg font-bold text-center text-primary-dark">
-          {{ currentMonth.name }} {{ currentMonth.year }}
+        <h3 class="mb-3 text-lg font-bold text-center cursor-pointer text-primary-dark">
+          {{ ("choose-book-period-from-acc-details." + currentMonth.name | translate) }} {{ currentMonth.year }}
         </h3>
         <div class="grid grid-cols-7 gap-2">
-          <span *ngFor="let day of currentMonth.days"
-            class="p-2 font-medium text-center rounded-md bg-primary-light text-neutral-1">
-            {{ day }}
-          </span>
+          <div *ngFor="let day of currentMonth.days"
+            class="p-2 font-medium text-center rounded-md bg-primary-light text-neutral-1" >
+            <div *ngIf="(isAnAvailability(day, currentMonth.name, currentMonth.year) | async) || !isAnAvailabilityCheck" class="text-center">{{day}}</div>
+            <div *ngIf="(isAnAvailability(day, currentMonth.name, currentMonth.year) | async) || isAnAvailabilityCheck" class="text-center bg-green-400 cursor-pointer" (click)="selectDay(day, 'previousMonth', currentMonth.name, currentMonth.year)">{{day}}</div>
+            <div *ngIf="isSelectedOrBetween(day, currentMonth.name, currentMonth.year)" class="text-center cursor-pointer bg-green-950">{{day}}</div>
+          </div>
         </div>
       </div>
+    </div>
+    <div id="clear-div-btn">
+        <button class="btn-primary" (click)="resetChoices()">{{("choose-book-period-from-acc-details.reset-btn") | translate}}</button>
     </div>
   </div>
   
