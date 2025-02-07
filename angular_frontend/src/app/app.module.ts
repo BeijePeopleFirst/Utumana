@@ -5,7 +5,7 @@ import { AppComponent } from './app.component';
 import { AccommodationCardComponent } from './components/accommodation-card/accommodation-card.component';
 import {HttpClientModule,HttpClient, HTTP_INTERCEPTORS} from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AuthInterceptor } from './interceptors/auth.service';
+import { AuthInterceptor } from './interceptors/authInterceptor.service';
 
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';

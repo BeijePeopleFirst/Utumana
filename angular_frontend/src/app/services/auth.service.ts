@@ -83,12 +83,12 @@ export class AuthService {
 
     return this.http.post<LoginResponse>(`${BACKEND_URL_PREFIX}/api/refresh_token`, refresh_token,this.httpOptions).pipe(
       map(json => {
-
         localStorage.setItem('id',json.id.toString());
         localStorage.setItem("token", json.token);
         document.cookie = "refresh_token=" + json.refresh_token;
+        console.log("Refreshed token. New token:", json.token);
 
-        this.refreshTokenSubject.next(json.refresh_token);
+        this.refreshTokenSubject.next(json.token);
         return json;
       }),
       tap(() => {

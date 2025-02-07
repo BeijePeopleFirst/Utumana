@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse } from '@angular/common/http';
-import { BehaviorSubject, catchError, filter, Observable, switchMap, take, throwError } from 'rxjs';
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpResponse } from '@angular/common/http';
+import { BehaviorSubject, catchError, filter, Observable, of, switchMap, take, throwError } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { RefreshToken } from '../models/refreshToken';
 import { getCookie } from '../utils/utils';
@@ -20,7 +20,8 @@ export class AuthInterceptor implements HttpInterceptor {
       let authReq = req.clone({
         setHeaders: {
           Authorization: `Bearer ${authToken}`,
-          ContentType: 'application/json'
+          ContentType: 'application/json',
+          AcceptType: 'application/json'
         }
       });
 
@@ -28,6 +29,16 @@ export class AuthInterceptor implements HttpInterceptor {
         catchError(error => {
           if ( error.status === 401) {
             return this.handle401Error(authReq, next);
+          }
+          return throwError(() => error);
+        })
+      ); 
+    }else if(req.url.includes('refresh_token')){
+      console.log("Asking for refresh of token");
+      return next.handle(req).pipe(
+        catchError(error => {
+          if ( error.status === 401) {
+            this.authService.logout( this.router.routerState.snapshot.url );
           }
           return throwError(() => error);
         })
@@ -46,25 +57,34 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   private handle401Error(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    console.log("401 error request", request);
 
     if (!this.isRefreshing) {
-
       this.isRefreshing = true;
       this.refreshTokenSubject.next(null);
 
-      let refresh = new RefreshToken(0,0,getCookie('refresh_token'),"")
-
+      let refresh = new RefreshToken(0,0,getCookie('refresh_token'),"");
       console.log(refresh);
+/*
+      if(!refresh.refresh_token){
+        this.isRefreshing = false;
+        this.authService.logout( this.router.routerState.snapshot.url );
+        console.log("In if !refresh token");
+        return of(new HttpResponse({status: 400, statusText: "Invalid refresh token"}));
+      }
+        */
 
       return this.authService.refreshToken(refresh).pipe(
         switchMap((tokenData: any) => {
           this.isRefreshing = false;
-          this.refreshTokenSubject.next(tokenData.refresh_token);
+          this.refreshTokenSubject.next(tokenData.token);
           return this.intercept(request,next);
         }),
         catchError(error => {
           this.isRefreshing = false;
-          this.authService.logout( this.router.routerState.snapshot.url );
+          this.authService.logout();
+          console.log("In catch error");
+          //return  of(new HttpResponse({status: 400, statusText: "Invalid refresh token"}));
           return throwError(() => error);
         })
       );
