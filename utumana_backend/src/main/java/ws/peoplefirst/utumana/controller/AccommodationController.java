@@ -320,7 +320,7 @@ public class AccommodationController {
 			@PathVariable Long id, Authentication auth) {
 		
 		if(newOne.getOwnerId() == null || newOne.getId() == null) {
-			System.out.println("Stampo Errore in questione" + newOne + ", " + newOne.getOwnerId());
+			System.out.println("Stampo Errore in questione" + newOne);
 			logger.error("Accommodation ID and Owner ID must be provided");
 			throw new IdNotFoundException("Accommodation ID and Owner ID must be provided");
 		}

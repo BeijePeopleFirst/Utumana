@@ -51,7 +51,12 @@
 	"beds-word": "Beds",
 	"beds-input-field-error": "Lecit Beds number required",
 	"rooms-input-field-error": "Lecit Rooms number required",
-	"country-input-field-error": "Lecit field 'Country' required (with only letters)"
+	"country-input-field-error": "Lecit field 'Country' required (with only letters)",
+	"approval-timestamp-text": "Approval Timestamp",
+	"contact-word": "Contact",
+	"book-now": "Book Now!",
+	"availabilities-word": "Availabilities",
+	"description-word": "Description"
 },
 
 "home":{

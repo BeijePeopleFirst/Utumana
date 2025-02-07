@@ -11,8 +11,12 @@ import { ReviewService } from 'src/app/services/review.service';
 })
 export class ProfileComponent implements OnInit {
   id: number | undefined = Number(localStorage.getItem("id"));
-  reviews: Review[] = [];
   user!: User;
+  reviews: Review[] = [];
+  reviewsOffset!: number;
+  reviewsPageSize!: number;
+
+  reviewsPage: Review[] = []; //  ONLY TEMPORARY: REMOVE WHEN GET REVIEWS IS PAGINATED
 
   constructor(
     private reviewService: ReviewService
@@ -23,12 +27,18 @@ export class ProfileComponent implements OnInit {
     this.user = new User();
     this.user.name = "Name";
     
+    this.reviewsOffset = 0;
+    this.reviewsPageSize = 3;
     this.loadUserReviews();
   }
 
   loadUserReviews(): void {
     if(this.id){
-      this.reviewService.getUserReviews(this.id).subscribe(reviews => this.reviews = reviews);
+      this.reviewService.getUserReviews(this.id, this.reviewsOffset, this.reviewsPageSize).subscribe(reviews => {
+        this.reviews = reviews;
+        this.reviewsPage = reviews.slice(this.reviewsOffset, this.reviewsOffset + this.reviewsPageSize);
+        console.log(reviews, this.reviewsPage);
+      });
     }
   }
 }

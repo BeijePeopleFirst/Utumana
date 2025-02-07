@@ -1,5 +1,5 @@
 <p>profile works!</p>
-<div id="reviews-container" class="bg-neutral-2 p-3">
+<div id="reviews-container" class="p-3 bg-neutral-2">
     <h3>{{'profile.reviews_title' | translate}}</h3>
-    <app-review-cards [reviews]="reviews" [userName]="user.name" class="flex flex-row flex-nowrap gap-x-10 justify-center align-center p-3"></app-review-cards>
+    <app-review-cards [reviews]="reviewsPage" [userName]="user.name" class="flex flex-row items-start justify-center p-3 align-top flex-nowrap gap-x-10"></app-review-cards>
 </div>

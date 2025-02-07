@@ -1,9 +1,9 @@
 <ng-container *ngIf="invalidAccommodation" id="invalid-accommodation-container">
-    <h1 class="text-orange-700 text-3xl">Error 404 Not Found: Invalid Accommodation ID Provided</h1>
+    <h1 class="text-3xl text-orange-700">Error 404 Not Found: Invalid Accommodation ID Provided</h1>
   </ng-container>
   
   <ng-container *ngIf="invalidUserId || userNotLogged">
-    <h1 class="text-orange-700 text-3xl">Error 401 Unauthorized: Need to be Logged-in with a lecit account</h1>
+    <h1 class="text-3xl text-orange-700">Error 401 Unauthorized: Need to be Logged-in with a lecit account</h1>
   </ng-container>
   
   <ng-container *ngIf="!invalidAccommodation && !invalidUserId && !userNotLogged" id="accommodation-details-container">
@@ -11,8 +11,8 @@
       <div class="flex flex-row">
         <div class="mx-2 text-5xl">{{accommodation.title}}</div>
         <div id="heart">
-          <img class="w-7 cursor-pointer" *ngIf="isFavourite" src="/assets/icons/heart-full.png" (click)="toggleIsFavourite()" />
-          <img class="w-7 cursor-pointer" *ngIf="!isFavourite" src="/assets/icons/heart-empty.png" (click)="toggleIsFavourite()" />      
+          <img class="cursor-pointer w-7" *ngIf="isFavourite" src="/assets/icons/heart-full.png" (click)="toggleIsFavourite()" />
+          <img class="cursor-pointer w-7" *ngIf="!isFavourite" src="/assets/icons/heart-empty.png" (click)="toggleIsFavourite()" />      
         </div>
         <div *ngIf="isAdminOrMe" id="bin-icon" class="absolute right-20">
           <img class="w-10 cursor-pointer" src="/assets/icons/bin.png" (click)="deleteAccommodation()" />
@@ -23,7 +23,7 @@
           {{accommodation.city}}, {{accommodation.province}}, {{accommodation.country}}
         </div>
         <div class="mx-3" *ngIf="isAdminOrMe">
-          <img class="w-7 cursor-pointer" src="/assets/icons/pencil.png" (click)="toggleEditCityProvCountry()" />
+          <img class="cursor-pointer w-7" src="/assets/icons/pencil.png" (click)="toggleEditCityProvCountry()" />
         </div>
       </div>
       <div id="images" class="flex flex-row mt-8">
@@ -32,15 +32,15 @@
         <!-- -------------------------------------------------------------------------------------- -->
         <img id="biggest-image" [src]="'http://localhost:8080/' + accommodation.photos[0].photo_url" />
 
-        <img src="/assets/icons/pencil.png" (click)="toggleEditPhotosPerspective()" class="w-7 absolute top-0 right-0 cursor-pointer" *ngIf="accommodation.photos.length === 1" id="pencil-one-image" />
+        <img src="/assets/icons/pencil.png" (click)="toggleEditPhotosPerspective()" class="relative top-0 right-0 cursor-pointer w-7" *ngIf="accommodation.photos.length === 1" id="pencil-one-image" />
         
         <div *ngIf="accommodation.photos.length > 1" id="other-images" class="flex flex-col">
           <div class="flex flex-row">
             <img id="image-oth1" [src]="accommodation.photos[1].photo_url" />
-            <img src="/assets/icons/pencil.png" (click)="toggleEditPhotosPerspective()" class="w-7 absolute top-0 right-0 cursor-pointer" *ngIf="accommodation.photos.length === 2" id="pencil-two-images" />
+            <img src="/assets/icons/pencil.png" (click)="toggleEditPhotosPerspective()" class="relative top-0 right-0 cursor-pointer w-7" *ngIf="accommodation.photos.length === 2" id="pencil-two-images" />
             <div>
               <img id="image-oth2" [src]="accommodation.photos[2].photo_url" *ngIf="accommodation.photos.length > 2" />
-              <img src="/assets/icons/pencil.png" (click)="toggleEditPhotosPerspective()" *ngIf="accommodation.photos.length >= 3" id="pencil-three-images" class="w-7 absolute top-0 right-0 cursor-pointer" />
+              <img src="/assets/icons/pencil.png" (click)="toggleEditPhotosPerspective()" *ngIf="accommodation.photos.length >= 3" id="pencil-three-images" class="relative top-0 right-0 cursor-pointer w-7" />
             </div>
           </div>
 
@@ -48,18 +48,58 @@
             <img id="image-oth3" [src]="accommodation.photos[3].photo_url" />
             <div>
               <img id="image-oth4" [src]="accommodation.photos[4].photo_url" *ngIf="accommodation.photos.length > 4" />
-              <div class="cursor-pointer absolute bottom-0 right-0" (click)="toggleViewMorePhotosPerspective()" *ngIf="accommodation.photos.length > 5">{{("accommodation-card-details.view-more-photos" | translate)}}</div>
+              <div class="absolute bottom-0 right-0 cursor-pointer" (click)="toggleViewMorePhotosPerspective()" *ngIf="accommodation.photos.length > 5">{{("accommodation-card-details.view-more-photos" | translate)}}</div>
             </div>
           </div>
         </div>
         <!-- -------------------------------------------------------------------------------------- -->
       </div>
-      <div class="flex flex-row mt-8">
+      <div class="flex flex-row mt-8 border-4 border-solid border-secondary">
         <div class="text-4xl">
           {{accommodation.rooms}} {{"accommodation-card-details.rooms-word" | translate}}, {{accommodation.beds}} {{"accommodation-card-details.beds-word" | translate}}
         </div>
         <div class="mx-3" *ngIf="isAdminOrMe">
-          <img class="w-7 cursor-pointer" src="/assets/icons/pencil.png" (click)="toggleEditRoomsBeds()" />
+          <img class="cursor-pointer w-7" src="/assets/icons/pencil.png" (click)="toggleEditRoomsBeds()" />
+        </div>
+      </div>
+      <p class="mt-10 text-3xl" *ngIf="isAdminOrMe && accommodation.approval_timestamp">{{("accommodation-card-details.approval-timestamp-text" | translate)}}: {{accommodation.approval_timestamp}}</p>
+      
+      <!-- HOST INFO SECTION -->
+      <!-------------------------------------------------------------------------------------------------------------------------------------------------->
+      <div id="host-info-div" class="mt-10 text-4xl">
+        <div id="horizontal-flex" class="flex flex-row border-4 border-solid border-secondary">
+          <div class="m-auto" id="profile-picture-and-badge">
+            <!--<img id="profile-picture" class="w-12" [src]="'http://localhost:8080' + accommodationOwner.profilePictureUrl" />-->
+            <!-- <img id="badge-picture" /> --> <!-- TODO -->
+             <p>gatto</p>
+          </div>
+          <div id="host-details" class="flex flex-col items-center content-center border-l-4 border-solid border-secondary">
+            <p>{{accommodationOwner.name}} {{accommodationOwner.surname}}</p>
+            <div>
+              <p class="relative mt-1 left-1">Bio:</p>
+              <p class="relative left-1 justify-normal">{{accommodationOwner.bio}}</p>
+            </div>
+            <br><br>
+            <button class="btn-primary">{{("accommodation-card-details.contact-word" | translate)}}</button>
+          </div>
+        </div>
+      </div>
+      <!-------------------------------------------------------------------------------------------------------------------------------------------------->
+      <div id="desc-availabilities-booknow-div" class="flex flex-row">
+        <div class="flex flex-col items-center justify-center align-middle">
+          <div id="description-acc" class="flex flex-col items-start">
+            <p>{{("accommodation-card-details.description-word" | translate)}}:</p>
+            <p>{{accommodation.description}}</p>
+          </div>
+          <div id="availabilities-acc">
+            <p>{{("accommodation-card-details.availabilities-word" | translate)}}:</p>
+            <div *ngFor="let a of accommodation.availabilities">
+              <!--TODO-->
+            </div>
+          </div>
+        </div>
+        <div>
+          <button (click)="bookNow()" class="m-0 btn-primary">{{("accommodation-card-details.book-now" | translate)}}</button>
         </div>
       </div>
     </div>
@@ -68,13 +108,16 @@
   <ng-container *ngIf="message">
     <button type="button" (click)="clearMessage()">clear</button>
     <br>
-    <h1 class="text-blue-800">{{message}}</h1>
+    <h1 class="text-xl text-blue-800">{{message}}</h1>
   </ng-container>
   
   <ng-template #editCityProvCountryTemplate>
-    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-      <form #cityProvCountryForm="ngForm">
+    <div class="absolute transform -translate-x-1/2 -translate-y-1/2 border-4 border-solid border-primary-dark bg-neutral-2 top-1/2 left-1/2">
+      <form #cityProvCountryForm="ngForm" class="m-5">
         <div class="flex flex-col items-center justify-center">
+
+          <h1 class="text-2xl">Edit Address</h1>
+
           <div class="flex flex-row">
             <label class="label-primary" for="city-input-popup">City: </label>
             <div>
@@ -91,7 +134,7 @@
             <label class="label-primary" for="cap-input-popup">CAP: </label>
             <div>
               <input name="cap-input-popup" class="input-primary" [(ngModel)]="CAPInputField" #CAPInPopup="ngModel" id="cap-input-popup" type="text" 
-              [value]="accommodation.cap" pattern="[0-9]{5}+" required />
+              [value]="accommodation.cap" pattern="[0-9]{5}" required />
               <div class="error-message" *ngIf="CAPInPopup.invalid && (!CAPInPopup.pristine && CAPInPopup.dirty) && (CAPInPopup.hasError('pattern') || CAPInPopup.hasError('required'))">
                 {{"accommodation-card-details.cap-input-field-error" | translate}}
               </div>
@@ -114,7 +157,7 @@
             <label class="label-primary" for="street-number-input-popup">Street Number: </label>
             <div>
               <input name="street-number-input-popup" class="input-primary" [(ngModel)]="strNumInputField" #streetNumInPopup="ngModel" id="street-number-input-popup" type="text" 
-              [value]="accommodation.streetNumber ? accommodation.streetNumber : ('accommodation-card-details.street-number-placeholder-input-field' | translate)"
+              [value]="accommodation.street_number ? accommodation.street_number : ('accommodation-card-details.street-number-placeholder-input-field' | translate)"
               pattern="[0-9]+[/]?[a-zA-Z]?" />
               <div class="error-message" *ngIf="streetNumInPopup.invalid && (!streetNumInPopup.pristine && streetNumInPopup.dirty) && streetNumInPopup.hasError('pattern')">
                 {{"accommodation-card-details.street-number-input-field-error" | translate}}
@@ -144,8 +187,8 @@
             </div>
           </div>
   
-          <div class="flex flex-row mt-6 items-center">
-            <button class="btn-primary mr-2" type="button" (click)="toggleEditCityProvCountry()" >{{("accommodation-card-details.close-btn-city-prov-country-form" | translate)}}</button>
+          <div class="flex flex-row items-center mt-6">
+            <button class="mr-2 btn-primary" type="button" (click)="toggleEditCityProvCountry()" >{{("accommodation-card-details.close-btn-city-prov-country-form" | translate)}}</button>
             <button [disabled]="cityProvCountryForm.invalid" class="btn-primary" type="button" (click)="confirmFormCityCountryProv()" >{{("accommodation-card-details.submit-btn-city-prov-country-form" | translate)}}</button>
           </div>
         </div>
@@ -167,9 +210,11 @@
   </ng-container>
 
   <ng-template #editRoomsBedsPerspective>
-    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-      <form #roomsBedsForm="ngForm">
+    <div class="absolute transform -translate-x-1/2 -translate-y-1/2 border-4 border-solid border-primary-dark bg-neutral-2 top-1/2 left-1/2">
+      <form #roomsBedsForm="ngForm" class="m-5">
         <div class="flex flex-col items-center justify-center">
+
+          <h1 class="text-2xl">Edit Rooms and Beds</h1>
 
           <div class="flex flex-row">
             <label class="label-primary" for="rooms-input-popup">Rooms: </label>
@@ -191,8 +236,8 @@
             </div>
           </div>
 
-          <div class="flex flex-row mt-6 items-center">
-            <button class="btn-primary mr-2" type="button" (click)="toggleEditRoomsBeds()" >{{("accommodation-card-details.close-btn-city-prov-country-form" | translate)}}</button>
+          <div class="flex flex-row items-center mt-6">
+            <button class="mr-2 btn-primary" type="button" (click)="toggleEditRoomsBeds()" >{{("accommodation-card-details.close-btn-city-prov-country-form" | translate)}}</button>
             <button [disabled]="roomsBedsForm.invalid" class="btn-primary" type="button" (click)="confirmFormRoomsBeds()" >{{("accommodation-card-details.submit-btn-city-prov-country-form" | translate)}}</button>
           </div>
 

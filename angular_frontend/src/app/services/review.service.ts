@@ -20,7 +20,8 @@ export class ReviewService {
     private http: HttpClient
   ) { }
 
-  getUserReviews(userId: number): Observable<Review[]> {
+  getUserReviews(userId: number, offset: number, pageSize: number): Observable<Review[]> {
+    // TODO ask for a page of reviews
     return this.http.get<Review[]>(`${BACKEND_URL_PREFIX}/api/review/user/${userId}`, this.httpOptions);
   }
 }

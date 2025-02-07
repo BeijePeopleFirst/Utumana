@@ -29,12 +29,37 @@ export class Accommodation {
     constructor() 
     {}
 
+    public toJSON() {
+        return {
+            id: this._id,
+            owner_id: this._ownerId,
+            title: this._title,
+            description: this._description,
+            approval_timestamp: this._approvalTimestamp,
+            hiding_timestamp: this._hidingTimestamp,
+            beds: this._beds,
+            rooms: this._rooms,
+            street: this._street,
+            street_number: this._streetNumber,
+            address_notes: this._addressNotes,
+            city: this._city,
+            cap: this._cap,
+            province: this._province,
+            country: this._country,
+            coordinates: this._coordinates,
+            main_photo_url: this._mainPhotoUrl,
+            services: this._services,
+            photos: this._photos,
+            availabilities: this._availabilities
+        }
+    }
+
     public toString(): string {
-        return "Accommodation [id=" + this.id + ", ownerId=" + this.ownerId + ", title=" + this.title + ", description=" + this.description
-        + ", approvalTimestamp=" + this.approvalTimestamp + ", hidingTimestamp=" + this.hidingTimestamp + ", beds=" + this.beds
-        + ", rooms=" + this.rooms + ", street=" + this.street + ", streetNumber=" + this.streetNumber + ", addressNotes="
-        + this.addressNotes + ", city=" + this.city + ", cap=" + this.cap + ", province=" + this.province + ", country=" + this.country
-        + ", coordinates=" + this.coordinates + ", mainPhotoUrl=" + this.mainPhotoUrl + ", services=" + this.services
+        return "Accommodation [id=" + this.id + ", ownerId=" + this._ownerId + ", title=" + this.title + ", description=" + this.description
+        + ", approvalTimestamp=" + this._approvalTimestamp + ", hidingTimestamp=" + this._hidingTimestamp + ", beds=" + this.beds
+        + ", rooms=" + this.rooms + ", street=" + this.street + ", streetNumber=" + this._streetNumber + ", addressNotes="
+        + this._addressNotes + ", city=" + this.city + ", cap=" + this.cap + ", province=" + this.province + ", country=" + this.country
+        + ", coordinates=" + this.coordinates + ", mainPhotoUrl=" + this._mainPhotoUrl + ", services=" + this.services
         + ", photos=" + this.photos + ", availabilities=" + this.availabilities + "]";
     }
 
@@ -45,10 +70,10 @@ export class Accommodation {
         this._id = value;
     }
 
-    public get ownerId(): number {
+    public get owner_id(): number {
         return this._ownerId;
     }
-    public set ownerId(value: number) {
+    public set owner_id(value: number) {
         this._ownerId = value;
     }
 
@@ -66,17 +91,17 @@ export class Accommodation {
         this._description = value;
     }
 
-    public get approvalTimestamp(): (Date | undefined) {
+    public get approval_timestamp(): (Date | undefined) {
         return this._approvalTimestamp;
     }
-    public set approvalTimestamp(value: (Date | undefined)) {
+    public set approval_timestamp(value: (Date | undefined)) {
         this._approvalTimestamp = value;
     }
 
-    public get hidingTimestamp(): (Date | undefined) {
+    public get hiding_timestamp(): (Date | undefined) {
         return this._hidingTimestamp;
     }
-    public set hidingTimestamp(value: (Date | undefined)) {
+    public set hiding_timestamp(value: (Date | undefined)) {
         this._hidingTimestamp = value;
     }
 
@@ -101,17 +126,17 @@ export class Accommodation {
         this._street = value;
     }
 
-    public get streetNumber(): (string | undefined) {
+    public get street_number(): (string | undefined) {
         return this._streetNumber;
     }
-    public set streetNumber(value: (string | undefined)) {
+    public set street_number(value: (string | undefined)) {
         this._streetNumber = value;
     }
 
-    public get addressNotes(): (string | undefined) {
+    public get address_notes(): (string | undefined) {
         return this._addressNotes;
     }
-    public set addressNotes(value: (string | undefined)) {
+    public set address_notes(value: (string | undefined)) {
         this._addressNotes = value;
     }
 
@@ -150,10 +175,10 @@ export class Accommodation {
         this._coordinates = value;
     }
 
-    public get mainPhotoUrl(): string {
+    public get main_photo_url(): string {
         return this._mainPhotoUrl;
     }
-    public set mainPhotoUrl(value: string) {
+    public set main_photo_url(value: string) {
         this._mainPhotoUrl = value;
     }
 

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Accommodation } from 'src/app/models/accommodation';
+import { User } from 'src/app/models/user';
 import { AccommodationService } from 'src/app/services/accommodation.service';
 import { UserService } from 'src/app/services/user.service';
 
@@ -23,6 +24,8 @@ export class AccommodationDetailsComponent implements OnInit {
   invalidAccommodation: boolean = false;
   isFavourite: boolean = false;
   isAdminOrMe: boolean = false;
+
+  accommodationOwner!: User;
 
   showEditCityProvCountry: boolean = false;
   cityInputField?: string;
@@ -52,7 +55,7 @@ export class AccommodationDetailsComponent implements OnInit {
 
   ngOnInit(): void {
 
-    let id: (string | undefined | null) = this.route.snapshot.params["accommodation_id"];
+    let id: (string | undefined | null) = this.route.snapshot.params["id"];
 
     if(!id || id == "") {
       this.invalidAccommodation = true;
@@ -84,6 +87,7 @@ export class AccommodationDetailsComponent implements OnInit {
               user => {
                 if(!user || "message" in user) {
                   this.invalidUserId = true;
+                  if(user && "message" in user) this.message = user.message;
                   return;
                 }
                 else {
@@ -91,10 +95,35 @@ export class AccommodationDetailsComponent implements OnInit {
 
                   if(user.isAdmin) this.isAdminOrMe = true;
                   else {
-                    if(user.id == this.accommodation.ownerId) this.isAdminOrMe = true;
+                    if(user.id == this.accommodation.owner_id) this.isAdminOrMe = true;
                     else this.isAdminOrMe = false;
                   }
                 }
+
+                //Now lets retrieve the Accommodation Owner:
+                if(!this.accommodation.id) {
+                  this.message = "Error inside Accommodation Entity: ABORT";
+                  this.invalidAccommodation = true;
+                  return;
+                }
+                this.userService.getUserById(this.accommodation.owner_id).subscribe(
+                  foundUser => {
+                    if(!foundUser) {
+                      this.message = "Error inside Accommodation Entity: ABORT";
+                      this.invalidAccommodation = true;
+                      return;
+                    }
+                    else if("message" in foundUser) {
+                      this.message = "Error inside Accommodation Entity: ABORT\n";
+                      this.message += foundUser.message;
+                      this.invalidAccommodation = true;
+                      return;
+                    }
+                    else {
+                      this.accommodationOwner = foundUser;
+                    }
+                  }
+                )
               }
             );
 
@@ -129,7 +158,7 @@ export class AccommodationDetailsComponent implements OnInit {
             return;
           }
           else {
-            this.message = "Added to favourites -> " + result;
+            this.message = "Added to favourites -> " + result.toString();
             return;
           }
         }
@@ -146,7 +175,7 @@ export class AccommodationDetailsComponent implements OnInit {
             return;
           }
           else {
-            this.message = "Removed from favourites -> " + result;
+            this.message = "Removed from favourites -> " + result.toString();
             return;
           }
         }
@@ -171,7 +200,7 @@ export class AccommodationDetailsComponent implements OnInit {
           }
           else {
             console.log("Deleted Accommodation -> ", result);
-            this.message = "Deleted Accommodation -> " + result;
+            this.message = "Deleted Accommodation -> " + result.toString();
             return;
           }
         }
@@ -200,7 +229,7 @@ export class AccommodationDetailsComponent implements OnInit {
       return;
     }
 
-    this.accommodation.streetNumber = this.strNumInputField?.trim();
+    this.accommodation.street_number = this.strNumInputField?.trim();
     this.accommodation.street = this.streetInputField?.trim();
     this.accommodation.province = this.provinceInputField?.trim();
     this.accommodation.country = this.countryInputField.trim();
@@ -216,7 +245,7 @@ export class AccommodationDetailsComponent implements OnInit {
       result => {
         if(!result) this.message = "An error occurred";
         else if("message" in result) this.message = result.message;
-        else this.message = "updated Accommodation -> " + result;
+        else this.message = "updated Accommodation -> " + result.toString();
 
         this.toggleEditCityProvCountry();
       }
@@ -253,11 +282,16 @@ export class AccommodationDetailsComponent implements OnInit {
       result => {
         if(!result) this.message = "An error occurred";
         else if("message" in result) this.message = result.message;
-        else this.message = "Updated Accommodation -> " + result;
+        else this.message = "Updated Accommodation -> " + result.toString();
 
         this.toggleEditRoomsBeds();
       }
     );
+  }
+
+  //TODO
+  bookNow() {
+
   }
 
   clearMessage() {
