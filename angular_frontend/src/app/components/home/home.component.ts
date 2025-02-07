@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 import { AccommodationDTO } from 'src/app/dtos/accommodationDTO';
 import { AccommodationService } from 'src/app/services/accommodation.service';
 import { iconURL } from 'src/costants';
@@ -12,7 +13,7 @@ import { iconURL } from 'src/costants';
 export class HomeComponent implements OnInit {
   iconUrl = iconURL;
 
-  latestUploads: AccommodationDTO[] | null=null;
+  latestUploads$!: Observable<AccommodationDTO[] | null> ;
   mostLiked:  AccommodationDTO[] | null=null;
 
   constructor(
@@ -22,8 +23,6 @@ export class HomeComponent implements OnInit {
   
   ngOnInit(): void {
     this.accommodationService.getLatestUploads();
-    this.accommodationService.accommodations$.subscribe(data => {
-      this.latestUploads = data;
-    });
+    this.latestUploads$ = this.accommodationService.accommodations$
   }
 }

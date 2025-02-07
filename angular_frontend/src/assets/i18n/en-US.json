@@ -29,8 +29,9 @@
 	"min-person": "min: 1 person",
 	"people": "People",
 	"search": "Search",
-	"checkInError": "checkIn date invalid",
-	"checkoutInconcistency": "checkIn not before checkOut"
+	"check_inError": "checkIn date invalid",
+	"check_outInconcistency": "checkIn not before checkOut",
+	"resFound": "Found Result"
 },
 
 "accommodation-card-details": {
@@ -74,5 +75,8 @@
 	"position": "Position",
 	"see_more": "See more",
 	"see_less": "See less"
+},
+"accommodations_cards": {
+	"notFound": "No accommodation found"
 }
 }
