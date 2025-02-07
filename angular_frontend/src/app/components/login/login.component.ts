@@ -32,6 +32,9 @@ export class LoginComponent implements OnInit {
       this.router.navigate(['']);
     }
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+    if(this.returnUrl.indexOf("login") >= 0){
+      this.returnUrl = '/';
+    }
   }
 
   login(): void {
@@ -43,7 +46,8 @@ export class LoginComponent implements OnInit {
     this.authService.login(this.user).subscribe(res => {
       console.log("AuthService: login response", res);
       if(res.ok === true){
-        this.router.navigateByUrl(this.returnUrl);
+        console.log("Return url:", this.returnUrl);
+        this.router.navigate([this.returnUrl]);
       }else{
         if(res.status == 401){
           if(res.message.includes("password")){

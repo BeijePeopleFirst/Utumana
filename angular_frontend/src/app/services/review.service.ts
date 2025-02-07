@@ -13,7 +13,7 @@ export class ReviewService {
       headers: new HttpHeaders({ 
         'Content-Type': 'application/json; charset=UTF-8', 
         'Accept-Type': 'application/json; charset=UTF-8',
-        'Authorization': `Bearer ${this.token}` })
+        })
     };
 
   constructor(

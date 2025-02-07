@@ -1,5 +1,5 @@
 export interface params {
-    "city": string,
+    "destination": string,
     "check-in": Date,
     "check-out": Date,
     "number_of_guests": number,

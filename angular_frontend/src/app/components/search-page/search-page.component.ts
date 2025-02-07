@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs';
 import { AccommodationDTO } from 'src/app/dtos/accommodationDTO';
 import { AccommodationService } from 'src/app/services/accommodation.service';
 import iconURL from 'src/costants';
@@ -11,7 +12,7 @@ import iconURL from 'src/costants';
 })
 export class SearchPageComponent implements OnInit{
   iconUrl = iconURL
-  foundAccommodations: AccommodationDTO[] | null = null;
+  foundAccommodations$!: Observable<AccommodationDTO[] | null>;
   constructor(private accommodationService: AccommodationService, private route: ActivatedRoute) {}
 
   ngOnInit() {
@@ -19,12 +20,12 @@ export class SearchPageComponent implements OnInit{
       console.log('Query Params cambiati:', queryParams);
   
       this.accommodationService.searchAccommodations(queryParams);
-      this.accommodationService.getSearchResults();
+      this.foundAccommodations$ = this.accommodationService.getSearchResults();
     });
   
-    this.accommodationService.accommodations$.subscribe(data => {
+/*     this.accommodationService.accommodations$.subscribe(data => {
       this.foundAccommodations = data;
-    });
+    }); */
   }
 }
 

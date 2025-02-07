@@ -1,3 +1,31 @@
-<div *ngFor="let review of reviews" class="flex max-w-sm p-4 m-auto rounded-lg shadow-md text-start bg-neutral-1 lg:max-w-4xl">
-    <app-review-card [review]="review" [userName]="userName"></app-review-card>
+<ng-container *ngIf="reviews && reviews.length > 0">
+    <div class="flex items-start self-center justify-center p-3 align-top w-fit flex-nowrap gap-x-10">
+        <button type="button" class="carousel-arrow" (click)="prevPage()" [disabled]="pageNumber === 0">
+            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+        </button>
+        
+        <div *ngFor="let review of reviews" class="flex max-w-sm p-4 rounded-lg shadow-md text-start bg-neutral-1 lg:max-w-4xl">
+            <app-review-card [review]="review"></app-review-card>
+        </div>
+
+        <!-- class="z-40 flex items-center self-center justify-center w-10 h-10 transition rounded-full bg-gray-200/50 hover:bg-gray-300 focus:outline-none"-->
+        <button type="button" class="carousel-arrow" (click)="nextPage()" [disabled]="pageNumber === pageNumbers - 1">
+            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+        </button>
+    </div>
+
+    <div class="flex items-center justify-center space-x-2 lg:px-2"> 
+        <div class="carousel-positions-container">
+            <input type="radio" name="pagePosition" class="carousel-position" *ngFor="let _ of [].constructor(pageNumbers); let n = index" [checked]="n == pageNumber" value="{{n}}" (click)="getPage(n)">
+        </div>
+    </div>
+</ng-container>
+<div *ngIf="!reviews || reviews.length === 0" class="text-center">
+    <span>{{'review.no_reviews' | translate}}</span>
 </div>

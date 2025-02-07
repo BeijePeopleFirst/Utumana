@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AccommodationService } from 'src/app/services/accommodation.service';
+import { SearchService } from 'src/app/services/search.service';
 import { DateValidators } from 'src/app/validators/custom_date_validator';
 
 
@@ -13,28 +14,33 @@ import { DateValidators } from 'src/app/validators/custom_date_validator';
 })
 export class SearchBarComponent {
   searchForm: FormGroup;
+  cityValue: string = '';
+  check_inValue: Date | null = null;
+  check_outValue: Date | null = null;
+  peopleValue: number = 1;
 
-  constructor(private fb: FormBuilder, private router: Router, private accommodationService: AccommodationService) {
+  constructor(private fb: FormBuilder, private router: Router, private accommodationService: AccommodationService, private searchService: SearchService) {
+    const savedData = this.searchService.getSearchData();
     this.searchForm = this.fb.group({
-      city: [''],
-      check_in: [null, Validators.required],
-      check_out: [null, Validators.required],
-      people: [1, [Validators.required, Validators.min(1)]]
+      city: [savedData?.city || this.cityValue],
+      check_in: [savedData?.check_in || this.check_inValue, Validators.required],
+      check_out: [savedData?.check_out || this.check_outValue, Validators.required],
+      people: [savedData?.people || this.peopleValue, [Validators.required, Validators.min(1)]]
     }, 
     {
-/*       validators: [(formGroup: AbstractControl): ValidationErrors | null => {
+      validators: [(formGroup: AbstractControl): ValidationErrors | null => {
         return DateValidators.dateRange(
-          formGroup.get('check-in')!,
-          formGroup.get('check-out')!
+          formGroup.get('check_in')!,
+          formGroup.get('check_out')!
         );
-      }] */
+      }] 
     });
   }
 
   search() {
     if (this.searchForm.valid) {
       const params = this.accommodationService.getParams(this.searchForm.value)
-      console.log(params)
+      this.searchService.setSearchData(this.searchForm.value);
       this.router.navigate(['/search_page/'], { queryParams: params });
     } else {
       console.log('Il form non è valido!');

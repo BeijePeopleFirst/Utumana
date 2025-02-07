@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Review } from 'src/app/models/review';
 
 @Component({
@@ -6,25 +6,23 @@ import { Review } from 'src/app/models/review';
   templateUrl: './review-cards.component.html',
   styleUrls: ['./review-cards.component.css']
 })
-export class ReviewCardsComponent implements OnInit {
+export class ReviewCardsComponent {
   @Input() reviews!: Review[];  // one page of reviews
-  reviewsSlice!: Review[];
-  @Input() userName!: string;
-  @Input() pageSize!: number;
-  @Input() offset!: number;
-  endIndex!: number;
+  @Input() pageNumber!: number;
+  @Input() pageNumbers!: number;
+  @Output() askForPage = new EventEmitter<number>();
 
-  ngOnInit(): void {
-      /*if(!this.pageSize){
-        this.pageSize = 3;
-      }
-      if(!this.offset){
-        this.offset = 0;
-      }
-      this.endIndex = this.offset + this.pageSize;
-      if(this.endIndex > this.reviews.length){
-        this.endIndex = this.reviews.length;
-      }
-      console.log(this.offset, this.endIndex); */
+  prevPage(): void {
+    this.getPage(this.pageNumber - 1);
+  }
+
+  nextPage(): void {
+    this.getPage(this.pageNumber + 1);
+  }
+
+  getPage(n: number) {
+    if(this.pageNumber != n){
+      this.askForPage.emit(n);
+    }
   }
 }

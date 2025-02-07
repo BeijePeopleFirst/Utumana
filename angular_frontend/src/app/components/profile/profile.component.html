@@ -1,5 +1,6 @@
 <p>profile works!</p>
-<div id="reviews-container" class="p-3 bg-neutral-2">
-    <h3>{{'profile.reviews_title' | translate}}</h3>
-    <app-review-cards [reviews]="reviewsPage" [userName]="user.name" class="flex flex-row items-start justify-center p-3 align-top flex-nowrap gap-x-10"></app-review-cards>
+<div id="reviews-container" class="p-5 text-center bg-neutral-2">
+    <h2>{{'profile.reviews_title' | translate}}</h2>
+    <app-review-cards class="flex flex-col" [reviews]="reviews" [pageNumber]="reviewsPageNumber" [pageNumbers]="reviewsTotalPages" 
+    (askForPage)="loadUserReviewsPage($event)"></app-review-cards>
 </div>

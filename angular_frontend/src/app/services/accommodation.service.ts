@@ -43,8 +43,8 @@ public searchAccommodations(params: any) {
 public updateAccommodations(accommodationDTO: AccommodationDTO[]) {
   this.accommodationsSubject.next(accommodationDTO);
 }
-public getSearchResults(): void{
-  this.searchParamsSubject.pipe(
+public getSearchResults(): Observable<AccommodationDTO[] | null>{
+  return this.searchParamsSubject.pipe(
     debounceTime(300),
     switchMap(params => {
       if (!params) return this.accommodations$;
@@ -59,19 +59,20 @@ public getSearchResults(): void{
           })
         );
     })
-  ).subscribe(data => this.accommodationsSubject.next(data));
+  //).subscribe(data => this.accommodationsSubject.next(data));
+  )
 }
 
 getParams(form: any): params {
   console.log(form)
   const params: params = {
-    "city": form.city,
+    "destination": form.city,
     "check-in": form.check_in,
     "check-out": form.check_out,
     "number_of_guests": form.people,
     "free_only": false,
     "services": [""],
-    "order_by": "price"
+    "order_by": "minPrice-desc"
   }
   return params;
 }
