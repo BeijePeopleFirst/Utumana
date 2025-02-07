@@ -294,6 +294,11 @@ export class AccommodationDetailsComponent implements OnInit {
 
   }
 
+  //TODO + perspective itself
+  toggleEditServicesPerspective() {
+
+  }
+
   clearMessage() {
     this.message = undefined;
   }

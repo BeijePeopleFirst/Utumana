@@ -69,9 +69,9 @@
       <div id="host-info-div" class="mt-10 text-4xl">
         <div id="horizontal-flex" class="flex flex-row border-4 border-solid border-secondary">
           <div class="m-auto" id="profile-picture-and-badge">
-            <!--<img id="profile-picture" class="w-12" [src]="'http://localhost:8080' + accommodationOwner.profilePictureUrl" />-->
+            <img id="profile-picture" class="w-12" [src]="'http://localhost:8080' + accommodationOwner.profilePictureUrl" />
             <!-- <img id="badge-picture" /> --> <!-- TODO -->
-             <p>gatto</p>
+             
           </div>
           <div id="host-details" class="flex flex-col items-center content-center border-l-4 border-solid border-secondary">
             <p>{{accommodationOwner.name}} {{accommodationOwner.surname}}</p>
@@ -86,22 +86,39 @@
       </div>
       <!-------------------------------------------------------------------------------------------------------------------------------------------------->
       <div id="desc-availabilities-booknow-div" class="flex flex-row">
-        <div class="flex flex-col items-center justify-center align-middle">
+        <div id="description-and-availabilities-block" class="flex flex-col items-center justify-center align-middle">
           <div id="description-acc" class="flex flex-col items-start">
             <p>{{("accommodation-card-details.description-word" | translate)}}:</p>
             <p>{{accommodation.description}}</p>
           </div>
-          <div id="availabilities-acc">
+          <div *ngIf="accommodation.availabilities && accommodation.availabilities.length > 0" id="availabilities-acc" class="mt-3">
             <p>{{("accommodation-card-details.availabilities-word" | translate)}}:</p>
             <div *ngFor="let a of accommodation.availabilities">
               <!--TODO-->
             </div>
           </div>
         </div>
-        <div>
+        <div *ngIf="accommodation.availabilities && accommodation.availabilities.length > 0" id="booknow-div-block-sticky">
+          <!--TODO-->
           <button (click)="bookNow()" class="m-0 btn-primary">{{("accommodation-card-details.book-now" | translate)}}</button>
         </div>
       </div>
+
+      <!-- SERVICES SECTION -->
+      <!-------------------------------------------------------------------------------------------------------------------------------------------------->
+      <div *ngIf="accommodation.services && accommodation.services.length > 0" class="mt-3">
+        <img src="/assets/icons/pencil.png" (click)="toggleEditServicesPerspective()" class="relative top-0 right-0 cursor-pointer w-7"/>
+        <div class="flex flex-row justify-normal" *ngFor="let s of accommodation.services">
+
+          <div id="single-service-block" class="mr-3">
+            <img [src]="'http://localhost:8080/' + s.icon_url" class="w-1" />
+            <p class="ml-1">{{s.title}}</p>
+          </div>
+
+        </div>
+      </div>
+      <!-------------------------------------------------------------------------------------------------------------------------------------------------->
+      <app-review-cards></app-review-cards>
     </div>
   </ng-container>
   
