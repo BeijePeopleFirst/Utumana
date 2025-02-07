@@ -63,13 +63,13 @@ public getSearchResults(): void{
 getParams(form: any): params {
   console.log(form)
   const params: params = {
-    "city": form.city,
+    "destination": form.city,
     "check-in": form.check_in,
     "check-out": form.check_out,
     "number_of_guests": form.people,
     "free_only": false,
     "services": [""],
-    "order_by": "price"
+    "order_by": "minPrice-desc"
   }
   return params;
 }
