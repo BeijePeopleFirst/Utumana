@@ -30,8 +30,9 @@
 	"min-person": "min: 1 persona",
 	"people": "Persone",
 	"search": "Cerca",
-	"checkInError": "Data di checkIn non valida",
-	"checkoutInconcistency": "Data di checkOut prima di checkIn"
+	"check_inError": "Data di checkIn non valida",
+	"check_outInconcistency": "Data di checkOut prima di checkIn",
+	"resFound": "Risultati ricerca"
 },
 
 "accommodation-card-details": {
@@ -75,5 +76,8 @@
 	"see_more": "Scopri di più",
 	"see_less": "Mostra meno",
 	"no_reviews": "Nessuna recensione"
+},
+"accommodations_cards": {
+	"notFound": "Nessuna offerta disponibile"
 }
 }

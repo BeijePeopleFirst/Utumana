@@ -41,8 +41,8 @@ public searchAccommodations(params: any) {
 public updateAccommodations(accommodationDTO: AccommodationDTO[]) {
   this.accommodationsSubject.next(accommodationDTO);
 }
-public getSearchResults(): void{
-  this.searchParamsSubject.pipe(
+public getSearchResults(): Observable<AccommodationDTO[] | null>{
+  return this.searchParamsSubject.pipe(
     debounceTime(300),
     switchMap(params => {
       if (!params) return this.accommodations$;
@@ -57,7 +57,8 @@ public getSearchResults(): void{
           })
         );
     })
-  ).subscribe(data => this.accommodationsSubject.next(data));
+  //).subscribe(data => this.accommodationsSubject.next(data));
+  )
 }
 
 getParams(form: any): params {

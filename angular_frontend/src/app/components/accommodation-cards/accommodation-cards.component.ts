@@ -9,7 +9,7 @@ import { AccommodationService } from 'src/app/services/accommodation.service';
   styleUrls: ['./accommodation-cards.component.css']
 })
 export class AccommodationCardsComponent{
-  @Input() accommodations:AccommodationDTO[] | null=null;
+  @Input() accommodations$!: Observable<AccommodationDTO[] | null>;
   
   constructor(
       private accommodationService:AccommodationService

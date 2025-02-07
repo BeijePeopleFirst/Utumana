@@ -26,13 +26,15 @@ export class SearchBarComponent {
       check_in: [savedData?.check_in || this.check_inValue, Validators.required],
       check_out: [savedData?.check_out || this.check_outValue, Validators.required],
       people: [savedData?.people || this.peopleValue, [Validators.required, Validators.min(1)]]
-    }/*       validators: [(formGroup: AbstractControl): ValidationErrors | null => {
+    }, 
+    {
+      validators: [(formGroup: AbstractControl): ValidationErrors | null => {
         return DateValidators.dateRange(
-          formGroup.get('check-in')!,
-          formGroup.get('check-out')!
+          formGroup.get('check_in')!,
+          formGroup.get('check_out')!
         );
-      }] */);
-
+      }] 
+    });
   }
 
   search() {
