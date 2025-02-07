@@ -1,0 +1,44 @@
+<div class="flex flex-col items-center mt-10">
+    <!-- Controlli di navigazione -->
+    <div class="flex justify-between mb-4 w-80">
+      <button (click)="navigateMonths(-1)" class="text-2xl text-primary-dark">
+        ⬅️
+      </button>
+      <h2 class="text-xl font-bold text-primary">
+        {{ currentMonth.name }} {{ currentMonth.year }}
+      </h2>
+      <button (click)="navigateMonths(1)" class="text-2xl text-primary-dark">
+        ➡️
+      </button>
+    </div>
+  
+    <!-- Contenitore dei calendari -->
+    <div class="flex justify-center gap-8">
+      <!-- Calendario del mese precedente -->
+      <div class="w-64 p-4 border rounded-lg shadow-md bg-neutral-2 border-neutral-1">
+        <h3 class="mb-3 text-lg font-bold text-center text-primary-dark">
+          {{ previousMonth.name }} {{ previousMonth.year }}
+        </h3>
+        <div class="grid grid-cols-7 gap-2">
+          <span *ngFor="let day of previousMonth.days"
+            class="p-2 font-medium text-center rounded-md bg-secondary-light text-neutral-1">
+            {{ day }}
+          </span>
+        </div>
+      </div>
+  
+      <!-- Calendario del mese attuale -->
+      <div class="w-64 p-4 border rounded-lg shadow-md bg-neutral-2 border-neutral-1">
+        <h3 class="mb-3 text-lg font-bold text-center text-primary-dark">
+          {{ currentMonth.name }} {{ currentMonth.year }}
+        </h3>
+        <div class="grid grid-cols-7 gap-2">
+          <span *ngFor="let day of currentMonth.days"
+            class="p-2 font-medium text-center rounded-md bg-primary-light text-neutral-1">
+            {{ day }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  

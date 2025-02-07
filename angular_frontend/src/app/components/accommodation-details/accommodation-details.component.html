@@ -93,8 +93,8 @@
           </div>
           <div *ngIf="accommodation.availabilities && accommodation.availabilities.length > 0" id="availabilities-acc" class="mt-3">
             <p>{{("accommodation-card-details.availabilities-word" | translate)}}:</p>
-            <div *ngFor="let a of accommodation.availabilities">
-              <!--TODO-->
+            <div>
+              <app-choose-book-period-from-acc-details [accommodation]="accommodation" (sendChosenAvailability)="receiveAvailabilityFromChild($event)"></app-choose-book-period-from-acc-details>
             </div>
           </div>
         </div>

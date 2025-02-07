@@ -45,6 +45,9 @@ export class AccommodationDetailsComponent implements OnInit {
 
   message?: string;
 
+  //Child Communication:
+  chosenAvailability?: {start_date: string, end_date: string, price_per_night: number, accommodation_id: number};
+
 
   constructor(
     private accommodationService: AccommodationService,
@@ -132,6 +135,10 @@ export class AccommodationDetailsComponent implements OnInit {
         }
       }
     )
+  }
+
+  receiveAvailabilityFromChild($event: { start_date: string; end_date: string; price_per_night: number; accommodation_id: number; } | undefined) {
+    this.chosenAvailability = $event;
   }
 
   toggleIsFavourite() {
