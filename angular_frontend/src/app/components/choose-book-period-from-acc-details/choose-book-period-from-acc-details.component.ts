@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 import { Accommodation } from 'src/app/models/accommodation';
 import { Availability } from 'src/app/models/availability';
 import { AccommodationService } from 'src/app/services/accommodation.service';
@@ -116,35 +116,186 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
     
   }
 
-  isAnAvailability(day: number, month: string, year: number): Observable<boolean> {
+  //TESTARE!!!!!
+  //------------------------------------------------------------------------------------------------------------------
+  //------------------------------------------------------------------------------------------------------------------
+  //------------------------------------------------------------------------------------------------------------------
+
+  //this.isAnAvailabilityCheck DA TOGLIERE SE POSSIBILE!!!!!!!!!!!
+
+
+  //Template da correggere e provare:
+  /*
+
+<div *ngFor="let day of previousMonth.days"
+     class="p-2 font-medium text-center rounded-md cursor-pointer w-9 bg-secondary-light text-neutral-1">
+  
+  <ng-container *ngIf="isAnAvailability(day, previousMonth.name, previousMonth.year) | async as available">
+    
+    <div *ngIf="!available" class="text-center">{{ day }}</div>
+    
+    <div *ngIf="!isSelectedOrBetween(day, previousMonth.name, previousMonth.year) && available"
+         class="text-center bg-green-400 cursor-pointer"
+         (click)="selectDay(day, 'previousMonth', previousMonth.name, previousMonth.year)">
+      {{ day }}
+    </div>
+
+    <div *ngIf="isSelectedOrBetween(day, previousMonth.name, previousMonth.year)" 
+         class="text-center cursor-pointer bg-green-950">
+      {{ day }}
+    </div>
+
+  </ng-container>
+
+</div>
+
+
+
+
+ALTRI DUE TEMPLATE DA TESTARE:
+PREVIOUS:
+
+<div class="grid grid-cols-7 gap-2">
+  <div *ngFor="let day of previousMonth.days" class="p-2 font-medium text-center rounded-md cursor-pointer w-9 bg-secondary-light text-neutral-1">
+    
+    <ng-container *ngIf="isAnAvailability(day, previousMonth.name, previousMonth.year) | async as available">
+      
+      <div *ngIf="!available" class="text-center">{{ day }}</div>
+      
+      <div *ngIf="!isSelectedOrBetween(day, previousMonth.name, previousMonth.year) && available"
+           class="text-center bg-green-400 cursor-pointer"
+           (click)="selectDay(day, 'previousMonth', previousMonth.name, previousMonth.year)">
+        {{ day }}
+      </div>
+
+      <div *ngIf="isSelectedOrBetween(day, previousMonth.name, previousMonth.year)" 
+           class="text-center cursor-pointer bg-green-950">
+        {{ day }}
+      </div>
+
+    </ng-container>
+
+  </div>
+</div>
+
+
+
+CURRENT MONTH:
+
+<div class="w-64 p-4 border rounded-lg shadow-md bg-neutral-2 border-neutral-1">
+  <h3 class="mb-3 text-lg font-bold text-center cursor-pointer text-primary-dark">
+    {{ ("choose-book-period-from-acc-details." + currentMonth.name | translate) }} {{ currentMonth.year }}
+  </h3>
+  
+  <div class="grid grid-cols-7 gap-2">
+    <div *ngFor="let day of currentMonth.days" class="p-2 font-medium text-center rounded-md w-9 bg-primary-light text-neutral-1">
+      
+      <ng-container *ngIf="isAnAvailability(day, currentMonth.name, currentMonth.year) | async as available">
+        
+        <div *ngIf="!available" class="text-center">{{ day }}</div>
+        
+        <div *ngIf="!isSelectedOrBetween(day, currentMonth.name, currentMonth.year) && available"
+             class="text-center bg-green-400 cursor-pointer"
+             (click)="selectDay(day, 'currentMonth', currentMonth.name, currentMonth.year)">
+          {{ day }}
+        </div>
+
+        <div *ngIf="isSelectedOrBetween(day, currentMonth.name, currentMonth.year)" 
+             class="text-center cursor-pointer bg-green-950">
+          {{ day }}
+        </div>
+
+      </ng-container>
+
+    </div>
+  </div>
+
+</div>
+
+
+  */
+
+
+  private availabilityCache = new Map<string, BehaviorSubject<boolean>>();
+
+isAnAvailability(day: number, month: string, year: number): Observable<boolean> {
+    let key = `${day}-${month}-${year}`;
+
+    // Se il valore è già in cache, restituiscilo subito
+    if (this.availabilityCache.has(key)) {
+        return this.availabilityCache.get(key)!.asObservable();
+    }
+
+    // Altrimenti, crea un nuovo BehaviorSubject con valore predefinito false
+    const subject = new BehaviorSubject<boolean>(false);
+    this.availabilityCache.set(key, subject);
+
+    let toCompare = this.accommodationService.fetchDate(day, month, year);
+
+    this.accommodationService.getAvailabilities(this.accommodation).pipe(
+        map(data => {
+            if ("message" in data) {
+                this.sendChosenAvailability.emit({ message: data.message });
+                return false;
+            }
+
+            for (let a of data) {
+                let startDate = Date.parse(a.start_date);
+                let endDate = Date.parse(a.end_date);
+
+                if (toCompare === startDate || toCompare === endDate || (toCompare > startDate && toCompare < endDate)) {
+                    return true;
+                }
+            }
+            return false;
+        }),
+        tap(result => {
+            subject.next(result); // Aggiorna il valore nel BehaviorSubject
+        })
+    ).subscribe();
+
+    return subject.asObservable();
+}
+
+  /*isAnAvailability(day: number, month: string, year: number): Observable<boolean> {
     let toCompare = this.accommodationService.fetchDate(day, month, year);
 
     return this.accommodationService.getAvailabilities(this.accommodation).pipe(
       map(data => {
         if("message" in data) {
           this.sendChosenAvailability.emit({message: data.message});
+          this.isAnAvailabilityCheck = false;
           return false;
         }
         else {
           for(let a of data) {
-            if(this.accommodationService.fetchDate(day, month, year) === Date.parse(a.start_date)
-              || this.accommodationService.fetchDate(day, month, year) === Date.parse(a.end_date)) {
+            if(toCompare === Date.parse(a.start_date)
+              || toCompare === Date.parse(a.end_date)) {
             
+                this.isAnAvailabilityCheck = true;
                 return true;
             }
-            else if(this.accommodationService.fetchDate(day, month, year) > Date.parse(a.start_date)
-                    && this.accommodationService.fetchDate(day, month, year) < Date.parse(a.end_date)) {
+            else if(toCompare > Date.parse(a.start_date)
+                    && toCompare < Date.parse(a.end_date)) {
                   
+                
+                this.isAnAvailabilityCheck = true;
                 return true;
             }
-            else return false;
+            else {
+              this.isAnAvailabilityCheck = false;
+              return false;
+            }
           }
-
+          this.isAnAvailabilityCheck = false;
           return false;
         }
       })
     )
-  }
+  }*/
+ //------------------------------------------------------------------------------------------------------------------
+ //------------------------------------------------------------------------------------------------------------------
+ //------------------------------------------------------------------------------------------------------------------
 
   isSelectedOrBetween(day: number, monthName: string, year: number): boolean {
     if(this.accommodationService.fetchDate(day, monthName, year) === Date.parse(this.chosenOne.start_date)
