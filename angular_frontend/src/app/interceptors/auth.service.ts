@@ -4,13 +4,14 @@ import { BehaviorSubject, catchError, filter, Observable, switchMap, take, throw
 import { AuthService } from '../services/auth.service';
 import { RefreshToken } from '../models/refreshToken';
 import { getCookie } from '../utils/utils';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   private isRefreshing = false;
   private refreshTokenSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
@@ -63,7 +64,7 @@ export class AuthInterceptor implements HttpInterceptor {
         }),
         catchError(error => {
           this.isRefreshing = false;
-          this.authService.logout();
+          this.authService.logout( this.router.routerState.snapshot.url );
           return throwError(() => error);
         })
       );

@@ -52,12 +52,16 @@ export class AuthService {
     );
   }
 
-  logout(): void {
+  logout(returnUrl?:string): void {
     this.isLoggedIn = false;
     localStorage.clear();
     sessionStorage.clear();
     this.deleteCookies();
-    this.router.navigate(['login']);
+    if(returnUrl){
+      this.router.navigate(['/login'], { queryParams: { returnUrl: returnUrl }})
+    }else{
+      this.router.navigate(['login']);
+    }
   }
 
   private deleteCookies(): void {
@@ -67,33 +71,33 @@ export class AuthService {
     // Set to "Thu, 01 Jan 1970 00:00:00 GMT"
     for (let i = 0; i < allCookies.length; i++)
       document.cookie = allCookies[i] + "=;expires=" + new Date(0).toUTCString();
-    }
+  }
 
-    public refreshToken(refresh_token:RefreshToken | null): Observable<any>{
-      if (this.refreshInProgress) {
-        return this.refreshTokenSubject.pipe(
-          filter(token => token !== null),
-          switchMap(() => throwError(() => new Error('Token refresh already in progress')))
-        );
-      }
-
-      return this.http.post<LoginResponse>(`${BACKEND_URL_PREFIX}/api/refresh_token`, refresh_token,this.httpOptions).pipe(
-        map(json => {
-
-          localStorage.setItem('id',json.id.toString());
-          localStorage.setItem("token", json.token);
-          document.cookie = "refresh_token=" + json.refresh_token;
-
-          this.refreshTokenSubject.next(json.refresh_token);
-          return json;
-        }),
-        tap(() => {
-          this.isLoggedIn = true;
-        }),
-        catchError((err) => {
-          this.logout();
-          return of(err);
-        })
+  public refreshToken(refresh_token:RefreshToken | null): Observable<any>{
+    if (this.refreshInProgress) {
+      return this.refreshTokenSubject.pipe(
+        filter(token => token !== null),
+        switchMap(() => throwError(() => new Error('Token refresh already in progress')))
       );
     }
+
+    return this.http.post<LoginResponse>(`${BACKEND_URL_PREFIX}/api/refresh_token`, refresh_token,this.httpOptions).pipe(
+      map(json => {
+
+        localStorage.setItem('id',json.id.toString());
+        localStorage.setItem("token", json.token);
+        document.cookie = "refresh_token=" + json.refresh_token;
+
+        this.refreshTokenSubject.next(json.refresh_token);
+        return json;
+      }),
+      tap(() => {
+        this.isLoggedIn = true;
+      }),
+      catchError((err) => {
+        this.logout();
+        return of(err);
+      })
+    );
+  }
 }
