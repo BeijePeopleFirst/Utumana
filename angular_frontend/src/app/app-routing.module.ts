@@ -10,16 +10,18 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { CreateAccommodationAddressComponent } from './components/create-accommodation-address/create-accommodation-address.component';
 import { MyBookingsComponent } from './components/my-bookings/my-bookings.component';
 import { HostDashboardComponent } from './components/host-dashboard/host-dashboard.component';
+import { SearchPageComponent } from './components/search-page/search-page.component';
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: '', component: HomeComponent},
   {path: 'review/:id', component: ReviewCardComponent},
-  {path: 'profile', component: ProfileComponent, canActivate: [authGuard]},
-  {path: 'create', component: CreateAccommodationAddressComponent, canActivate: [authGuard]},
-  {path: 'my_bookings', component: MyBookingsComponent, canActivate: [authGuard]},
-  {path: 'host_dashboard', component: HostDashboardComponent, canActivate: [authGuard]},
-  { path: 'accommodation/:id', component: AccommodationDetailsComponent},
+  {path: 'profile', component: ProfileComponent},
+  {path: 'create', component: CreateAccommodationAddressComponent},
+  {path: 'my_bookings', component: MyBookingsComponent},
+  {path: 'host_dashboard', component: HostDashboardComponent},
+  {path: 'accommodation/:id', component: AccommodationDetailsComponent},
+  {path: 'search_page', component: SearchPageComponent}
   // { path: '**', component: PageNotFoundComponent }
 ];
 

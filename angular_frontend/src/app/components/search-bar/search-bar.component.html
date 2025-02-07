@@ -1,33 +1,31 @@
-<form [formGroup]="searchForm" (ngSubmit)="search()" class="flex flex-wrap items-center gap-4 bg-gray-100 p-6 rounded-lg shadow-md">
+<form [formGroup]="searchForm" (ngSubmit)="search()" class="flex flex-wrap items-center gap-4 px-6 py-3 rounded-lg shadow-md bg-neutral-2">
     <div class="flex flex-col">
       <label for="city" class="text-sm font-medium">{{'search.city' | translate}}</label>
-      <input id="city" type="text" formControlName="city"
-        class="border border-gray-300 rounded-lg p-2 w-48 focus:ring focus:ring-blue-300">
+      <input id="city" type="text" formControlName="city" class="input-primary">
     </div>
   
     <div class="flex flex-col">
-      <label for="checkIn" class="text-sm font-medium">Check-in</label>
-      <input id="checkIn" type="date" formControlName="checkIn"
-        class="border border-gray-300 rounded-lg p-2 w-48 focus:ring focus:ring-blue-300">
-      <span *ngIf="searchForm.get('checkIn')?.invalid && searchForm.get('checkIn')?.touched" class="text-red-500 text-sm">{{'search.date-error' | translate}}</span>
+      <label for="check_in" class="text-sm font-medium">check_in</label>
+      <input id="check_in" type="date" formControlName="check_in" class="input-primary">
+        <span *ngIf="searchForm.get('check_in')?.invalid && searchForm.get('check_in')?.touched" class="error-message">{{'search.date-error' | translate}}</span>
+        <span *ngIf="searchForm.errors?.['pastDate']" class="error-message">{{'search.check_inError' | translate}}</span>
     </div>
-  
+
     <div class="flex flex-col">
-      <label for="checkOut" class="text-sm font-medium">Check-out</label>
-      <input id="checkOut" type="date" formControlName="checkOut"
-        class="border border-gray-300 rounded-lg p-2 w-48 focus:ring focus:ring-blue-300">
-      <span *ngIf="searchForm.get('checkOut')?.invalid && searchForm.get('checkOut')?.touched" class="text-red-500 text-sm">{{'search.date-error' | translate}}</span>
+      <label for="check_out" class="text-sm font-medium">check_out</label>
+      <input id="check_out" type="date" formControlName="check_out" class="input-primary">
+      <span *ngIf="searchForm.get('check_out')?.invalid && searchForm.get('check_out')?.touched" class="error-message">{{'search.date-error' | translate}}</span>
+      <span *ngIf="searchForm.errors?.['invalidRange']" class="error-message">{{'search.check_outInconcistency' | translate}}</span>
     </div>
-  
+
     <div class="flex flex-col">
       <label for="people" class="text-sm font-medium">{{'search.people' | translate}}</label>
-      <input id="people" type="number" min="1" formControlName="people"
-        class="border border-gray-300 rounded-lg p-2 w-20 focus:ring focus:ring-blue-300">
-      <span *ngIf="searchForm.get('people')?.invalid && searchForm.get('people')?.touched" class="text-red-500 text-sm">{{'search.min-person' | translate}}</span>
+      <input id="people" type="number" min="1" formControlName="people" class="input-primary">
+      <span *ngIf="searchForm.get('people')?.invalid && searchForm.get('people')?.touched" class="error-message">{{'search.min-person' | translate}}</span>
     </div>
   
     <button type="submit" [disabled]="searchForm.invalid"
-      class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition disabled:bg-gray-400">
+      class="w-auto btn-primary">
       {{'search.search'| translate}}
     </button>
   </form>

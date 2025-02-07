@@ -29,7 +29,9 @@
 	"date-error": "La data è obbligatoria",
 	"min-person": "min: 1 persona",
 	"people": "Persone",
-	"search": "Cerca"
+	"search": "Cerca",
+	"checkInError": "Data di checkIn non valida",
+	"checkoutInconcistency": "Data di checkOut prima di checkIn"
 },
 
 "accommodation-card-details": {
