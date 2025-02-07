@@ -8,6 +8,7 @@ export class Review{
         public overallRating: number,
         public comfort: number,
         public convenience: number,
-        public position:number
+        public position: number,
+        public author?: string
         ) {  }
 }
