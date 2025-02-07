@@ -1,3 +1,4 @@
+import { HttpParams } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -34,8 +35,7 @@ export class SearchBarComponent {
     if (this.searchForm.valid) {
       const params = this.accommodationService.getParams(this.searchForm.value)
       console.log(params)
-      this.accommodationService.searchAccommodations(params);
-      this.router.navigate(['/search_page']);
+      this.router.navigate(['/search_page/'], { queryParams: params });
     } else {
       console.log('Il form non è valido!');
     }
