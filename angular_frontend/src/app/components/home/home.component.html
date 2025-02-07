@@ -1,41 +1,41 @@
-<div class="relative h-screen flex justify-center items-center flex-col">
+<div class="relative flex flex-col items-center justify-center h-screen">
     <img class="absolute top-0 left-0 w-full h-full object-cover opacity-50 z-[-5]" [src]="iconUrl + '/couch.png'" alt="">
     <app-search-bar class="relative z-10"></app-search-bar>
   </div>
 
-  <section class="bg-neutral-1 border-b py-8">
-    <div class="container mx-auto flex flex-wrap pt-4 pb-12">
+  <section class="py-8 border-b bg-neutral-1">
+    <div class="container flex flex-wrap pt-4 pb-12 mx-auto">
       <h2 class="w-full my-2 text-5xl font-bold leading-tight text-center text-gray-800">
         {{'home.latest' | translate}}
       </h2>
       <div class="w-full mb-4">
-        <div class="h-1 mx-auto gradient w-64 opacity-25 my-0 py-0 rounded-t"></div>
+        <div class="w-64 h-1 py-0 mx-auto my-0 rounded-t opacity-25 gradient"></div>
       </div>
 
       <app-accommodation-cards [accommodations]="latestUploads"></app-accommodation-cards>
 
     </div>
   </section>
-  <section class="bg-neutral-2 py-8">
-    <div class="container mx-auto px-2 pt-4 pb-12 text-gray-800">
+  <section class="py-8 bg-neutral-2">
+    <div class="container px-2 pt-4 pb-12 mx-auto text-gray-800">
       <h2 class="w-full my-2 text-5xl font-bold leading-tight text-center text-gray-800">
         {{'home.liked' | translate}}
       </h2>
       <div class="w-full mb-4">
-        <div class="h-1 mx-auto gradient w-64 opacity-25 my-0 py-0 rounded-t"></div>
+        <div class="w-64 h-1 py-0 mx-auto my-0 rounded-t opacity-25 gradient"></div>
       </div>
 
-      <app-accommodation-cards [accommodations]="mostLiked"></app-accommodation-cards>
+      <app-accommodation-cards [accommodations]="latestUploads"></app-accommodation-cards>
 
     </div>
   </section>
-  <section class="bg-neutral-1 py-8">
-    <div class="container mx-auto px-2 pt-4 pb-12 text-gray-800">
+  <section class="py-8 bg-neutral-1">
+    <div class="container px-2 pt-4 pb-12 mx-auto text-gray-800">
       <h2 class="w-full my-2 text-5xl font-bold leading-tight text-center text-gray-800">
         {{'home.review' | translate}}
       </h2>
       <div class="w-full mb-4">
-        <div class="h-1 mx-auto gradient w-64 opacity-25 my-0 py-0 rounded-t"></div>
+        <div class="w-64 h-1 py-0 mx-auto my-0 rounded-t opacity-25 gradient"></div>
       </div>
 
       <app-review-cards></app-review-cards>

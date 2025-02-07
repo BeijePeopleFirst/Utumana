@@ -8,15 +8,18 @@ import { AccommodationService } from 'src/app/services/accommodation.service';
   templateUrl: './accommodation-cards.component.html',
   styleUrls: ['./accommodation-cards.component.css']
 })
-export class AccommodationCardsComponent implements OnInit {
+export class AccommodationCardsComponent{
   @Input() accommodations:AccommodationDTO[] | null=null;
-  accommodations$!: Observable<AccommodationDTO[] | null>;
   
   constructor(
       private accommodationService:AccommodationService
     ){ }
 
-   ngOnInit(){
-    this.accommodations$ = this.accommodationService.getSearchResults();  
-  }
+/*    ngOnInit(){
+    this.accommodationService.accommodations$.subscribe({
+      next: (accommodations: AccommodationDTO[] | null) => {this.accommodations$ = accommodations || []},
+      error: (error) => {console.error(error) }
+    })
+  } */
+
 }

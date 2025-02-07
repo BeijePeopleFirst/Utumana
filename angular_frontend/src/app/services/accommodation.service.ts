@@ -18,9 +18,7 @@ export class AccommodationService {
   constructor(private http: HttpClient) { }
 
   public getLatestUploads(): void{
-    let token: (string | null) = localStorage.getItem("token");
-    let headers = new HttpHeaders(token ? { Authorization: `Bearer ${token}` } : {});
-    this.http.get<(AccommodationDTO[] | {time: string, status: string, message: string})>(BACKEND_URL_PREFIX + "/api/get_latest_uploads" , {headers})
+    this.http.get<(AccommodationDTO[] | {time: string, status: string, message: string})>(BACKEND_URL_PREFIX + "/api/get_latest_uploads")
     .pipe(
       map(response => {
         if("message" in response) return null;
@@ -31,32 +29,35 @@ export class AccommodationService {
         console.error(error);
         return of(null);
       })
-    ).subscribe(data => this.accommodationsSubject.next(data))
+    ).subscribe(data => {
+      console.log(data);
+      this.accommodationsSubject.next(data)
+    })
 }
 
 public searchAccommodations(params: any) {
   this.searchParamsSubject.next(params)
 }
-
-public getSearchResults(): Observable<AccommodationDTO[] | null> {
-  return this.searchParamsSubject.pipe(
+public updateAccommodations(accommodationDTO: AccommodationDTO[]) {
+  this.accommodationsSubject.next(accommodationDTO);
+}
+public getSearchResults(): void{
+  this.searchParamsSubject.pipe(
     debounceTime(300),
     switchMap(params => {
       if (!params) return this.accommodations$;
       console.log('params: ', params);
-      return this.http.get<AccommodationDTO[] | { message: string }>(
-        `${BACKEND_URL_PREFIX}/api/search`, { 
-          params
-        }
-      ).pipe(
-        map(response => "message" in response ? null : response),
-        catchError(error => {
-          console.error(error);
-          return of(null);
-        })
-      );
+      const url = `${BACKEND_URL_PREFIX}/api/search`;
+      return this.http.get<AccommodationDTO[] | { message: string }>(url, { params })
+        .pipe(
+          map(response => "message" in response ? null : response),
+          catchError(error => {
+            console.error(error);
+            return of(null);
+          })
+        );
     })
-  );
+  ).subscribe(data => this.accommodationsSubject.next(data));
 }
 
 getParams(form: any): params {
