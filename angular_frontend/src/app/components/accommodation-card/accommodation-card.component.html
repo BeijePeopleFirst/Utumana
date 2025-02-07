@@ -1,13 +1,28 @@
-    <a routerLink="/accommodation/{{accommodation?.id}}">
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden flex-1 flex flex-col" >
-            <img [src]="'http://localhost:8080/'+accommodation?.main_photo_url" [alt]="accommodation?.main_photo_url">
-          <div class="p-4 flex-1 flex flex-col">
-            <h3 class="mb-4 text-2xl">{{accommodation?.title}}</h3>
-            <div class="mb-4 text-grey-darker text-sm flex-1">
-              <p> {{accommodation?.city}} - {{accommodation?.province}} - {{accommodation?.country}}</p>
-            </div>
-            <p class="border-t border-grey-light pt-2 text-xs text-grey hover:text-red uppercase no-underline tracking-wide">{{accommodation?.min_price | currency:'EUR':'symbol-narrow':'1.2-2':'it-IT'}} - {{accommodation?.max_price | currency:'EUR':'symbol-narrow':'1.2-2':'it-IT'}}</p>
-            <button type="submit" class="btn-primary">Book now</button>
-          </div>
-        </div>  
-    </a>
+<div *ngIf="accommodation" class="w-72">
+  <a class="clickable_card" (click)="onClick($event)">
+    <div class="flex flex-col flex-1 overflow-hidden bg-white rounded-lg shadow-lg" >
+        <img [src]="'http://localhost:4200/assets/'+accommodation.main_photo_url" [alt]="accommodation.main_photo_url">
+      <div class="flex flex-col items-center flex-1 p-4 text-center">
+        <h4>{{accommodation.title}}</h4>
+
+        <p> 
+          <span *ngIf="accommodation.city">{{accommodation.city}}</span>
+          <span *ngIf="accommodation.city && accommodation.province">, </span>
+          <span *ngIf="accommodation.province">{{accommodation.province}}</span>
+          <span *ngIf="(accommodation.city || accommodation.province) && accommodation.country"> - </span> 
+          <span *ngIf="accommodation.country">{{accommodation.country}}</span>
+        </p>
+
+        <!--pt-2 border-t border-grey-light-->
+        <p class="my-1 text-sm tracking-wide uppercase text-grey hover:text-red">
+          <span *ngIf="free" class="px-3 font-semibold text-green-600 bg-green-200 rounded-full">free</span>
+          <span *ngIf="!free">
+            {{accommodation.min_price | currency:'EUR':'symbol-narrow':'1.2-2':'it-IT'}}
+            <span *ngIf="priceRange"> - {{accommodation.max_price | currency:'EUR':'symbol-narrow':'1.2-2':'it-IT'}} </span>
+          </span>
+        </p>
+        <button type="button" (click)="book = true" class="mt-2 btn-primary">Book now</button>
+      </div>
+    </div>  
+  </a>
+</div>

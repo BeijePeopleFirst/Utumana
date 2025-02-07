@@ -6,6 +6,7 @@ import { BACKEND_URL_PREFIX } from 'src/costants';
 import { AccommodationDTO } from '../dtos/accommodationDTO';
 import { FormGroup } from '@angular/forms';
 import { params } from '../models/searchParams';
+import { PriceDTO } from '../dtos/priceDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -18,21 +19,35 @@ export class AccommodationService {
   constructor(private http: HttpClient) { }
 
   public getLatestUploads(): void{
-    this.http.get<(AccommodationDTO[] | {time: string, status: string, message: string})>(BACKEND_URL_PREFIX + "/api/get_latest_uploads")
-    .pipe(
-      map(response => {
-        if("message" in response) return null;
-        else return response;
-      }),
-
+    this.http.get<AccommodationDTO[]>(`${BACKEND_URL_PREFIX}/api/get_latest_uploads`).pipe(
       catchError(error => {
         console.error(error);
-        return of(null);
+        return of([]);
       })
     ).subscribe(data => {
       console.log(data);
-      this.accommodationsSubject.next(data)
+      if(data.length == 0){
+        this.accommodationsSubject.next(data);
+      }else{
+        this.getPrices(data);
+      }
+    });
+}
+
+getPrices(accommodations: AccommodationDTO[]): void {
+  let ids = accommodations.map(a => a.id);
+  this.http.get<PriceDTO[]>(`${BACKEND_URL_PREFIX}/api/prices?ids=${ids}`).pipe(
+    catchError(error => {
+      console.error(error);
+      return of([]);
     })
+  ).subscribe(prices => {
+    for(let i: number = 0; i < prices.length; i++){
+      accommodations[i].min_price = prices[i].min_price;
+      accommodations[i].max_price = prices[i].max_price;
+    }
+    this.accommodationsSubject.next(accommodations);
+  })
 }
 
 public searchAccommodations(params: any) {
