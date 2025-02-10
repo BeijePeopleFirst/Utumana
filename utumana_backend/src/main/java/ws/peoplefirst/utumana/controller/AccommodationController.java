@@ -396,7 +396,7 @@ public class AccommodationController {
 			Authentication auth) {
 		
 		Long userId = AuthorizationUtility.getUserFromAuthentication(auth).getId();
-		List<AccommodationDTO> latestAccommodations = accommodationService.getLatestUploadsDTO(Constants.ACCOMMODATIONS_PAGE_SIZE, userId);
+		List<AccommodationDTO> latestAccommodations = accommodationService.getLatestUploadsDTO(0, Constants.ACCOMMODATIONS_PAGE_SIZE, userId);
 		
 		LocalDate checkInDate = null;
 		LocalDate checkOutDate = null;
@@ -408,6 +408,14 @@ public class AccommodationController {
 		
 		//latestAccommodations = accommodationService.configurePriceRanges(latestAccommodations, checkInDate, checkOutDate);
 		return latestAccommodations;
+	}
+	
+	@PreAuthorize("hasAuthority('USER')")
+	@GetMapping(value="/most_liked")
+	public List<AccommodationDTO> getMostLikedAccommodationsDTO(Authentication auth) {
+		logger.debug("GET /accommodation/most_liked");
+		Long userId = AuthorizationUtility.getUserFromAuthentication(auth).getId();
+		return accommodationService.getMostLikedAccommodationsDTO(0, Constants.ACCOMMODATIONS_PAGE_SIZE, userId);
 	}
 	
 	@PreAuthorize("hasAuthority('USER')")
