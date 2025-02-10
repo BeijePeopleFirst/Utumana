@@ -80,7 +80,8 @@
 },
 
 "confirm-booking-booknow": {
-	"go_back": "Torna Indietro"
+	"go_back": "Torna Indietro",
+	"clear-messages-sentence": "Cancella Messaggi"
 },
 
 "home":{

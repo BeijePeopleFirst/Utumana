@@ -29,3 +29,8 @@
           
     </div>
 </div>
+
+<div id="messages" *ngIf="messages && messages.length > 0" class="mt-48">
+    <button class="mb-4 btn-primary" (click)="clearMessages()">{{("confirm-booking-booknow.clear-messages-sentence" | translate)}}</button>
+    <p *ngFor="let m of messages">{{m}}</p>
+</div>

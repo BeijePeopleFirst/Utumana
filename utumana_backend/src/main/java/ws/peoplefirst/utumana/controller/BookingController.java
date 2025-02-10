@@ -143,6 +143,7 @@ public class BookingController {
 		UserDTO loggedUser=AuthorizationUtility.getUserFromAuthentication(auth);
 		Map<String,LocalDate> dateMap=bookingService.checkDate(checkInString, checkOutString);
 		
+		
 		LocalDate checkIn = dateMap.get("checkIn");
 		LocalDate checkOut = dateMap.get("checkOut");
 		

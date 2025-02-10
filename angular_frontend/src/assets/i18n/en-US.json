@@ -79,7 +79,8 @@
 },
 
 "confirm-booking-booknow": {
-	"go_back": "Go Back"
+	"go_back": "Go Back",
+	"clear-messages-sentence": "Clear Messages"
 },
 
 "home":{

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Booking } from 'src/app/models/booking';
+import { BookingService } from 'src/app/services/booking.service';
 
 @Component({
   selector: 'app-confirm-booking-booknow',
@@ -16,8 +17,11 @@ export class ConfirmBookingBooknowComponent implements OnInit {
   nightsNumber!:number;
   postOperation!:number;
 
+  messages: string[] = [];
+
 
   constructor(
+    private bookingService: BookingService,
     private router: Router
   ) {}
 
@@ -42,7 +46,31 @@ export class ConfirmBookingBooknowComponent implements OnInit {
 
   //TODO:
   bookNow() {
+    this.createdBooking.check_in = new Date(this.createdBooking.check_in).toISOString().split('T')[0];    //Possibile fonte di bug logici
+    this.createdBooking.check_out = new Date(this.createdBooking.check_out).toISOString().split('T')[0];  //Possibile fonte di bug logici
+    this.bookingService.newBooking(this.createdBooking).subscribe(
+      response => {
+        if("message" in response) {
+          this.messages.push(response.message);
+          console.log("ERRORE");
+          return;
+        }
+        else {
+          this.messages.push("Created Booking ID -> " + response.id);
+          this.messages.push("Redirect in few seconds...");
+          
+          setTimeout(() => this.goBack(), 3000);
+        }
+      }
+    );
+  }
 
+  clearMessages() {
+    this.messages = [];
+  }
+
+  addMessage(msg: string) {
+    this.messages.push(msg);
   }
 
 }
