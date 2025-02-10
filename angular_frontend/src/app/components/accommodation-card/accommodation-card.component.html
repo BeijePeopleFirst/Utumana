@@ -2,6 +2,10 @@
   <a class="clickable_card " (click)="onClick($event)">
     <div class="flex flex-col flex-1 overflow-hidden bg-white rounded-lg shadow-lg" >
         <img [src]="'http://localhost:4200/assets/'+accommodation.main_photo_url" [alt]="accommodation.main_photo_url">
+        <button class="heart" (click)="heartClick = true">
+          <img *ngIf="!accommodation.is_favourite" src="{{iconsUrl}}\\heart-empty.png" alt="add to favorites">
+          <img *ngIf="accommodation.is_favourite" src="{{iconsUrl}}\\heart-full.png" alt="remove from favorites">
+        </button>
       <div class="flex flex-col items-center flex-1 p-4 text-center">
         <h4 class="group-hover:text-primary-dark">{{accommodation.title}}</h4>
 

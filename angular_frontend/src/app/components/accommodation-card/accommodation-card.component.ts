@@ -1,9 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { AccommodationDTO } from 'src/app/dtos/accommodationDTO';
-import { Accommodation } from 'src/app/models/accommodation';
 import { AccommodationService } from 'src/app/services/accommodation.service';
-import { UserService } from 'src/app/services/user.service';
+import iconURL from 'src/costants';
 
 @Component({
   selector: 'app-accommodation-card',
@@ -15,8 +14,13 @@ export class AccommodationCardComponent implements OnInit {
   priceRange: boolean = true;
   free: boolean = true;
   book: boolean = false;
+  heartClick: boolean = false;
+  iconsUrl: string = iconURL;
 
-  constructor(private router: Router){}
+  constructor(
+    private router: Router,
+    private accommodationService: AccommodationService
+  ){}
 
   ngOnInit(): void {
     console.log(this.accommodation);
@@ -28,8 +32,28 @@ export class AccommodationCardComponent implements OnInit {
     event.stopImmediatePropagation();
     if(this.book){
       this.router.navigate(['book', this.accommodation.id]);
+    }else if(this.heartClick){
+      this.toggleFavourite();
     }else{
       this.router.navigate(['accommodation', this.accommodation.id]);
+    }
+  }
+
+  toggleFavourite(): void {
+    console.log("Updating favourites");
+    this.accommodation.is_favourite = !this.accommodation.is_favourite;
+    if(this.accommodation.is_favourite){
+      this.accommodationService.addFavouriteToCurrentUser(this.accommodation.id).subscribe(ok => {
+        if(!ok){
+          this.accommodation.is_favourite = !this.accommodation.is_favourite;
+        }
+      });
+    }else{
+      this.accommodationService.removeFavouriteFromCurrentUser(this.accommodation.id).subscribe(ok => {
+        if(!ok){
+          this.accommodation.is_favourite = !this.accommodation.is_favourite;
+        }
+      });
     }
   }
 }

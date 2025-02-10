@@ -160,6 +160,34 @@ export class AccommodationService {
                       )
   }
 
+  addFavouriteToCurrentUser(accommodationId: number): Observable<Boolean> {
+    const userId = localStorage.getItem("id");
+    if(!userId){
+      return of(false);
+    }
+    return this.http.patch<Accommodation>(`${BACKEND_URL_PREFIX}/api/add-favourite/${userId}/${accommodationId}`, {}).pipe(
+      map(_ =>  true),
+      catchError(err => {
+        console.log(err.error);
+        return of(false);
+      })
+    );
+  }
+
+  removeFavouriteFromCurrentUser(accommodationId: number): Observable<Boolean> {
+    const userId = localStorage.getItem("id");
+    if(!userId){
+      return of(false);
+    }
+    return this.http.patch<Accommodation>(`${BACKEND_URL_PREFIX}/api/remove-favourite/${userId}/${accommodationId}`, {}).pipe(
+      map(_ =>  true),
+      catchError(err => {
+        console.log(err.error);
+        return of(false);
+      })
+    );
+  }
+
   updateAccommodationAddress(userId: number, accommodation: Accommodation): Observable<Accommodation | null | {message: string, status: string, time: string}> {
     //let headers = this.getAuth();
     accommodation = Object.assign(new Accommodation(), accommodation);
