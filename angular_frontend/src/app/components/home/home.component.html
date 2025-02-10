@@ -6,34 +6,23 @@
 <section class="flex items-center justify-center py-8 bg-neutral-1">
   <div class="container p-5 text-center">
     <h1 class="text-gray-800">{{'home.latest' | translate}}</h1>
-      <app-accommodation-cards [accommodations$]="latestUploads$" [pageNumber]="latestUploadsPageNumber" [pageNumbers]="latestUploadsTotalPages" 
+    <app-accommodation-cards [accommodations$]="latestUploads$" [pageNumber]="latestUploadsPageNumber" [pageNumbers]="latestUploadsTotalPages" 
       (askForPage)="loadLatestAccommodationsPage($event)"></app-accommodation-cards>
   </div>
 </section>
-<section class="py-8 bg-neutral-2">
-  <div class="container px-2 pt-4 pb-12 mx-auto text-gray-800">
-    <h2 class="w-full my-2 text-5xl font-bold leading-tight text-center text-gray-800">
-      {{'home.liked' | translate}}
-    </h2>
-    <div class="w-full mb-4">
-      <div class="w-64 h-1 py-0 mx-auto my-0 rounded-t opacity-25 gradient"></div>
-    </div>
-
-    <app-accommodation-cards [accommodations$]="latestUploads$"></app-accommodation-cards>
-
+<section class="flex items-center justify-center py-8 bg-neutral-2">
+  <div class="container p-5 text-center">
+    <h1 class="text-gray-800">{{'home.liked' | translate}}</h1>
+    <app-accommodation-cards [accommodations$]="mostLiked$" [pageNumber]="mostLikedPageNumber" [pageNumbers]="mostLikedTotalPages" 
+      (askForPage)="loadMostLikedAccommodationsPage($event)"></app-accommodation-cards>
   </div>
 </section>
-<section class="py-8 bg-neutral-1">
-  <div class="container px-2 pt-4 pb-12 mx-auto text-gray-800">
-    <h2 class="w-full my-2 text-5xl font-bold leading-tight text-center text-gray-800">
-      {{'home.review' | translate}}
-    </h2>
-    <div class="w-full mb-4">
-      <div class="w-64 h-1 py-0 mx-auto my-0 rounded-t opacity-25 gradient"></div>
-    </div>
-
-    <app-review-cards></app-review-cards>
-
+<section class="flex items-center justify-center py-8 bg-neutral-1">
+  <div class="container p-5 text-center">
+    <h1 class="text-gray-800 ">{{'home.review' | translate}}</h1>
+    <app-review-cards class="flex flex-col"></app-review-cards>
+    <!--app-review-cards class="flex flex-col" [reviews]="reviews" [pageNumber]="reviewsPageNumber" [pageNumbers]="reviewsTotalPages" 
+    (askForPage)="loadUserReviewsPage($event)"></app-review-cards-->
   </div>
 </section>
   

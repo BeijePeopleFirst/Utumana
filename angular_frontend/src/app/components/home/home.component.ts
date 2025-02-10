@@ -14,34 +14,40 @@ export class HomeComponent implements OnInit {
   iconUrl = iconURL;
 
   latestUploads$!: Observable<AccommodationDTO[]> ;
-  latestUploads!: AccommodationDTO[];
   latestUploadsPageSize!: number;
   latestUploadsPageNumber!: number;
   latestUploadsTotalPages!: number;
-  allLatestUploads$!: Observable<AccommodationDTO[]>;  //  ONLY TEMPORARY: REMOVE WHEN GET LATEST UPLOADS IS PAGINATED
-  getLatestUploadsPage!: Subscription;
 
-  mostLiked:  AccommodationDTO[] | null=null;
+  mostLiked$!: Observable<AccommodationDTO[]> ;
+  mostLikedPageSize!: number;
+  mostLikedPageNumber!: number;
+  mostLikedTotalPages!: number;
 
   constructor(
-    private router: Router,
     private accommodationService:AccommodationService
   ){ }
   
   ngOnInit(): void {
-    this.latestUploads$ = this.accommodationService.accommodations$;
+    this.latestUploads$ = this.accommodationService.latestAccommodations$;
     this.latestUploadsPageSize = 4;
     this.latestUploadsPageNumber = 0;
     this.latestUploadsTotalPages = 2; // latest accommodation pages that the user can look at
-    this.accommodationService.accommodations$.subscribe(accommodations => {
-        console.log("Accommodations", accommodations);
-        console.log("Total pages", this.latestUploadsTotalPages);
-    });
     this.loadLatestAccommodationsPage(0);
+
+    this.mostLiked$ = this.accommodationService.mostLikedAccommodations$;
+    this.mostLikedPageSize = 4;
+    this.mostLikedPageNumber = 0;
+    this.mostLikedTotalPages = 2; // most liked accommodation pages that the user can look at
+    this.loadMostLikedAccommodationsPage(0);
   }
 
   loadLatestAccommodationsPage(pageNumber: number): void {
     this.latestUploadsPageNumber = pageNumber;
     this.accommodationService.getLatestUploads(this.latestUploadsPageNumber * this.latestUploadsPageSize, this.latestUploadsPageSize);
+  }
+
+  loadMostLikedAccommodationsPage(pageNumber: number): void {
+    this.mostLikedPageNumber = pageNumber;
+    this.accommodationService.getMostLikedAccommodations(this.mostLikedPageNumber * this.mostLikedPageSize, this.mostLikedPageSize);
   }
 }
