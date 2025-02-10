@@ -1,6 +1,6 @@
 <div class="relative flex flex-col items-center justify-center h-screen">
     <img class="absolute top-0 left-0 w-full h-full object-cover opacity-50 z-[-5]" [src]="iconUrl + '/couch.png'" alt="">
-    <app-search-bar class="relative z-10"></app-search-bar>
+    <app-search-bar (searchSubmitted)="search($event)" class="relative z-10" ></app-search-bar>
   </div>
 
   <section class="py-8 border-b bg-neutral-1">

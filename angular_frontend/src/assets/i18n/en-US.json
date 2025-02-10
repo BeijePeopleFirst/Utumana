@@ -97,5 +97,11 @@
 },
 "accommodations_cards": {
 	"notFound": "No accommodation found"
+},
+"filters": {
+	"title": "Filters",
+	"cancel": "Cancel",
+	"apply": "Apply",
+	"services": "Services"
 }
 }

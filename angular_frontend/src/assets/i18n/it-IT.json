@@ -97,5 +97,11 @@
 },
 "accommodations_cards": {
 	"notFound": "Nessuna offerta disponibile"
+},
+"filters": {
+	"title": "Filtri",
+	"cancel": "Cancella",
+	"apply": "Applica",
+	"services": "Servizi"
 }
 }
