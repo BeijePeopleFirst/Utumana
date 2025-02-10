@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { Accommodation } from 'src/app/models/accommodation';
+import { Booking } from 'src/app/models/booking';
 import { User } from 'src/app/models/user';
 import { AccommodationService } from 'src/app/services/accommodation.service';
 import { UserService } from 'src/app/services/user.service';
+import { BookingStatus } from 'src/app/utils/enums';
 
 @Component({
   selector: 'app-accommodation-details',
@@ -57,7 +59,8 @@ export class AccommodationDetailsComponent implements OnInit {
   constructor(
     private accommodationService: AccommodationService,
     private userService: UserService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) 
   {}
 
@@ -69,6 +72,18 @@ export class AccommodationDetailsComponent implements OnInit {
       this.invalidAccommodation = true;
       return;
     }
+
+    let tmp: any;
+    if(tmp = sessionStorage.getItem("chosen_availability_data")) {
+      let dataSession = JSON.parse(tmp!);
+      this.chosenAvailability = dataSession.chosen_availability;
+      this.postOperation$.next(dataSession.postOperation);
+      this.nightsNumber$.next(dataSession.nightsNumber);
+
+      sessionStorage.removeItem("chosen_availability_data");
+    }
+
+    if(sessionStorage.getItem("created_booking")) sessionStorage.removeItem("created_booking");
 
     this.accommodationService.getAccommodationById(Number(id)).subscribe(
       data => {
@@ -319,9 +334,26 @@ export class AccommodationDetailsComponent implements OnInit {
     );
   }
 
-  //TODO
   bookNow() {
 
+    if(!this.chosenAvailability || !this.chosenAvailability.start_date || !this.chosenAvailability.end_date || !this.userId || !this.accommodation) {
+      this.message = "Some values for Booking are Missing!";
+      return;
+    }
+
+    let booking: Booking = new Booking(this.accommodation, (new Date()).toLocaleDateString(), this.postOperation$.value, BookingStatus.PENDING, this.chosenAvailability?.start_date!, 
+                                          this.chosenAvailability?.end_date!, false, this.userId!);
+
+    let container: {chosen_availability: {start_date: string, end_date: string, price_per_night: number, accommodation_id: number},
+                    nightsNumber: number, postOperation: number
+                   }
+
+                   = {chosen_availability: this.chosenAvailability!, nightsNumber: this.nightsNumber$.value, postOperation: this.postOperation$.value};
+
+    sessionStorage.setItem("created_booking", JSON.stringify(booking));
+    sessionStorage.setItem("chosen_availability_data", JSON.stringify(container));
+    this.router.navigate(["/confirm_booking_on_creation"]);
+    return;
   }
 
   //TODO + perspective itself
