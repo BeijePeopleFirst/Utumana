@@ -10,31 +10,27 @@ import { AccommodationService } from 'src/app/services/accommodation.service';
 })
 export class AccommodationCardsComponent{
   @Input() accommodations$!: Observable<AccommodationDTO[] | null>; 
-  //@Input() accommodations!: AccommodationDTO[]; // one page of accommodations
   @Input() pageNumber!: number;
-  @Input() pageNumbers!: number;
+  @Input() totalPages!: number;
   @Output() askForPage = new EventEmitter<number>();
 
   constructor( ){ }
 
-/*    ngOnInit(){
-    this.accommodationService.accommodations$.subscribe({
-      next: (accommodations: AccommodationDTO[] | null) => {this.accommodations$ = accommodations || []},
-      error: (error) => {console.error(error) }
-    })
-  } */
+  ngOnInit(){
+    console.log("Page number: ", this.pageNumber, " of ", this.totalPages);
+  } 
 
-    prevPage(): void {
-      this.getPage(this.pageNumber - 1);
+  prevPage(): void {
+    this.getPage(this.pageNumber - 1);
+  }
+
+  nextPage(): void {
+    this.getPage(this.pageNumber + 1);
+  }
+
+  getPage(n: number) {
+    if(this.pageNumber != n){
+      this.askForPage.emit(n);
     }
-  
-    nextPage(): void {
-      this.getPage(this.pageNumber + 1);
-    }
-  
-    getPage(n: number) {
-      if(this.pageNumber != n){
-        this.askForPage.emit(n);
-      }
-    }
+  }
 }

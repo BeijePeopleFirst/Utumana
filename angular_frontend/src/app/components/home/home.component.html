@@ -3,25 +3,25 @@
   <app-search-bar class="relative z-10"></app-search-bar>
 </div>
 
-<section class="flex items-center justify-center py-8 bg-neutral-1">
+<section class="flex items-center justify-center pt-8 bg-neutral-1">
   <div class="container p-5 text-center">
     <h1 class="text-gray-800">{{'home.latest' | translate}}</h1>
-    <app-accommodation-cards [accommodations$]="latestUploads$" [pageNumber]="latestUploadsPageNumber" [pageNumbers]="latestUploadsTotalPages" 
+    <app-accommodation-cards [accommodations$]="latestUploads$" [pageNumber]="latestUploadsPageNumber" [totalPages]="latestUploadsTotalPages" 
       (askForPage)="loadLatestAccommodationsPage($event)"></app-accommodation-cards>
   </div>
 </section>
-<section class="flex items-center justify-center py-8 bg-neutral-2">
+<section class="flex items-center justify-center pt-8 bg-neutral-2">
   <div class="container p-5 text-center">
     <h1 class="text-gray-800">{{'home.liked' | translate}}</h1>
-    <app-accommodation-cards [accommodations$]="mostLiked$" [pageNumber]="mostLikedPageNumber" [pageNumbers]="mostLikedTotalPages" 
+    <app-accommodation-cards [accommodations$]="mostLiked$" [pageNumber]="mostLikedPageNumber" [totalPages]="mostLikedTotalPages" 
       (askForPage)="loadMostLikedAccommodationsPage($event)"></app-accommodation-cards>
   </div>
 </section>
-<section class="flex items-center justify-center py-8 bg-neutral-1">
+<section class="flex items-center justify-center pt-8 bg-neutral-1">
   <div class="container p-5 text-center">
     <h1 class="text-gray-800 ">{{'home.review' | translate}}</h1>
     <app-review-cards class="flex flex-col"></app-review-cards>
-    <!--app-review-cards class="flex flex-col" [reviews]="reviews" [pageNumber]="reviewsPageNumber" [pageNumbers]="reviewsTotalPages" 
+    <!--app-review-cards class="flex flex-col" [reviews]="reviews" [pageNumber]="reviewsPageNumber" [totalPages]="reviewsTotalPages" 
     (askForPage)="loadUserReviewsPage($event)"></app-review-cards-->
   </div>
 </section>
