@@ -14,13 +14,14 @@ import { PriceDTO } from '../dtos/priceDTO';
 })
 export class AccommodationService {
   
-  private accommodationsSubject = new BehaviorSubject<AccommodationDTO[] | null>(null);
+  private accommodationsSubject = new BehaviorSubject<AccommodationDTO[]>([]);
   public accommodations$ = this.accommodationsSubject.asObservable();
   private searchParamsSubject = new BehaviorSubject<any>(null);
 
   constructor(private http: HttpClient) { }
 
-  public getLatestUploads(): void{
+  public getLatestUploads(offset: number, pageSize: number): void{
+    // TODO get page of results
     this.http.get<AccommodationDTO[]>(`${BACKEND_URL_PREFIX}/api/get_latest_uploads`).pipe(
       catchError(error => {
         console.error(error);
@@ -31,7 +32,7 @@ export class AccommodationService {
       if(data.length == 0){
         this.accommodationsSubject.next(data);
       }else{
-        this.getPrices(data);
+        this.getPrices(data.slice(offset, offset + pageSize)); // remove slice when result will be paginated by backend
       }
     });
 }

@@ -7,7 +7,7 @@
             </svg>
         </button>
         
-        <div *ngFor="let review of reviews" class="flex max-w-sm p-4 rounded-lg shadow-md text-start bg-neutral-1 lg:max-w-4xl">
+        <div *ngFor="let review of reviews" class="flex flex-wrap max-w-sm p-4 rounded-lg shadow-md text-start bg-neutral-1 lg:max-w-4xl">
             <app-review-card [review]="review"></app-review-card>
         </div>
 
