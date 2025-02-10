@@ -74,16 +74,21 @@ export class AccommodationDetailsComponent implements OnInit {
     }
 
     let tmp: any;
-    if(tmp = sessionStorage.getItem("chosen_availability_data")) {
-      let dataSession = JSON.parse(tmp!);
-      this.chosenAvailability = dataSession.chosen_availability;
-      this.postOperation$.next(dataSession.postOperation);
-      this.nightsNumber$.next(dataSession.nightsNumber);
+    if(tmp = localStorage.getItem("chosen_availability_data")) {
+      let dataSession = JSON.parse(tmp!);console.log(dataSession);
+      this.chosenAvailability = {start_date: dataSession.chosen_availability.start_date, end_date: dataSession.chosen_availability.end_date, price_per_night: dataSession.chosen_availability.price_per_night, accommodation_id: dataSession.chosen_availability.accommodation_id};
+      this.postOperation$.next(dataSession.post_operation);
+      this.nightsNumber$.next(dataSession.nights_number);
 
-      sessionStorage.removeItem("chosen_availability_data");
+      localStorage.removeItem("chosen_availability_data");
     }
 
-    if(sessionStorage.getItem("created_booking")) sessionStorage.removeItem("created_booking");
+    if(localStorage.getItem("num_guests")) {
+      this.guestsNumber = JSON.parse(localStorage.getItem("num_guests")!);
+      localStorage.removeItem("num_guests");
+    }
+
+    if(localStorage.getItem("created_booking")) localStorage.removeItem("created_booking");
 
     this.accommodationService.getAccommodationById(Number(id)).subscribe(
       data => {
@@ -345,13 +350,14 @@ export class AccommodationDetailsComponent implements OnInit {
                                           this.chosenAvailability?.end_date!, false, this.userId!);
 
     let container: {chosen_availability: {start_date: string, end_date: string, price_per_night: number, accommodation_id: number},
-                    nightsNumber: number, postOperation: number
+                    nights_number: number, post_operation: number
                    }
 
-                   = {chosen_availability: this.chosenAvailability!, nightsNumber: this.nightsNumber$.value, postOperation: this.postOperation$.value};
+                   = {chosen_availability: this.chosenAvailability!, nights_number: this.nightsNumber$.value, post_operation: this.postOperation$.value};
 
-    sessionStorage.setItem("created_booking", JSON.stringify(booking));
-    sessionStorage.setItem("chosen_availability_data", JSON.stringify(container));
+    localStorage.setItem("created_booking", JSON.stringify(booking));
+    localStorage.setItem("num_guests", JSON.stringify(this.guestsNumber));
+    localStorage.setItem("chosen_availability_data", JSON.stringify(container));
     this.router.navigate(["/confirm_booking_on_creation"]);
     return;
   }

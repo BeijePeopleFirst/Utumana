@@ -78,6 +78,10 @@
 	"December": "December"
 },
 
+"confirm-booking-booknow": {
+	"go_back": "Go Back"
+},
+
 "home":{
 	"latest":"Latest uploads",
 	"liked":"Most liked accommodation",

@@ -39,6 +39,7 @@ import { CreateAccommodationRecapComponent } from './components/create-accommoda
 import { AccommodationCardsComponent } from './components/accommodation-cards/accommodation-cards.component';
 import { ChooseBookPeriodFromAccDetailsComponent } from './components/choose-book-period-from-acc-details/choose-book-period-from-acc-details.component';
 import { SearchPageComponent } from './components/search-page/search-page.component';
+import { ConfirmBookingBooknowComponent } from './components/confirm-booking-booknow/confirm-booking-booknow.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -71,7 +72,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     CreateAccommodationRecapComponent,
     AccommodationCardsComponent,
     ChooseBookPeriodFromAccDetailsComponent,
-    SearchPageComponent
+    SearchPageComponent,
+    ConfirmBookingBooknowComponent
   ],
   imports: [
     BrowserModule,

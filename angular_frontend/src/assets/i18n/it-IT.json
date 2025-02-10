@@ -79,6 +79,10 @@
 	"December": "Dicembre"
 },
 
+"confirm-booking-booknow": {
+	"go_back": "Torna Indietro"
+},
+
 "home":{
 	"latest":"Caricamenti recenti",
 	"liked":"Le piu consigliate",

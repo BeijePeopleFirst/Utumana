@@ -3,7 +3,7 @@ import { Accommodation } from "./accommodation";
 import { Review } from "./review";
 
 export class Booking {
-  private _accommodation!: Accommodation;
+  private _accommodation: Accommodation;
   private _timestamp!: string;
   private _price!: number;
   private _status!: BookingStatus;
