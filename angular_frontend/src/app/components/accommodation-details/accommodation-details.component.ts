@@ -151,6 +151,9 @@ export class AccommodationDetailsComponent implements OnInit {
       const endDate = new Date($event.end_date);
       const nights = Math.floor((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
 
+      this.chosenAvailability.start_date = new Date(this.chosenAvailability.start_date).toLocaleDateString();
+      this.chosenAvailability.end_date = new Date(this.chosenAvailability.end_date).toLocaleDateString();
+
       // Aggiorna i BehaviorSubject
       this.nightsNumber$.next(nights);
       console.log("Stampo price per night -> ", $event.price_per_night);

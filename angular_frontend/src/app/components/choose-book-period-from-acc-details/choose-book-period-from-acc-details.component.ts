@@ -120,9 +120,6 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
         }
       )
     }
-
-    //AL RESET AZZERO CAMPI NEL PADRE
-    
     
   }
 
