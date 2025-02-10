@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { BookingDTO } from 'src/app/dtos/bookingDTO';
 
 @Component({
   selector: 'app-booking-cards',
@@ -6,5 +7,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./booking-cards.component.css']
 })
 export class BookingCardsComponent {
+  @Input() bookings:BookingDTO[] | null=null;
 
+  
 }

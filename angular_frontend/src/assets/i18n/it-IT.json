@@ -97,5 +97,12 @@
 },
 "accommodations_cards": {
 	"notFound": "Nessuna offerta disponibile"
+},
+
+"bookings":{
+	"checkIn":"Check-in",
+	"checkOut":"Check-out",
+	"price":"prezzo",
+	"review": "lascia una recensione"
 }
 }
