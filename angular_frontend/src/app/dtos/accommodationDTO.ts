@@ -8,6 +8,7 @@ export class AccommodationDTO{
         public province: string,
         public min_price: number,
         public max_price: number,
-        public is_favourite:boolean
+        public is_favourite:boolean,
+        public rating: number
         ) {  }
 }
