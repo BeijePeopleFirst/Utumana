@@ -1,1 +1,46 @@
-<p>my-bookings works!</p>
+
+
+<div *ngIf="doingBookings$?.length!=0">
+    <section class="flex items-center justify-center pt-8 bg-neutral-2">
+        <div class="container p-5 text-center">
+            <h1 class="text-gray-800">{{'bookings.doing' | translate}}</h1>
+            <app-booking-cards [bookings]="doingBookings$"></app-booking-cards>
+        </div>
+    </section>
+</div>
+
+<div *ngIf="pendingBookings$?.length!=0">
+    <section class="flex items-center justify-center pt-8 bg-neutral-1">
+        <div class="container p-5 text-center">
+            <h1 class="text-gray-800">{{'bookings.pending' | translate}}</h1>
+            <app-booking-cards [bookings]="pendingBookings$"></app-booking-cards>
+        </div>
+    </section>
+</div>
+
+<div *ngIf="doneBookings$?.length!=0">
+    <section class="flex items-center justify-center pt-8 bg-neutral-2">
+        <div class="container p-5 text-center">
+            <h1 class="text-gray-800">{{'bookings.done' | translate}}</h1>
+            <app-booking-cards [bookings]="doneBookings$"></app-booking-cards>
+        </div>
+    </section>
+</div>
+
+<div *ngIf="acceptedBookings$?.length!=0">
+    <section class="flex items-center justify-center pt-8 bg-neutral-1">
+        <div class="container p-5 text-center">
+            <h1 class="text-gray-800">{{'bookings.accepted' | translate}}</h1>
+            <app-booking-cards [bookings]="acceptedBookings$"></app-booking-cards>
+        </div>
+    </section>
+</div>
+
+<div *ngIf="rejectedBookings$?.length!=0">
+    <section class="flex items-center justify-center pt-8 bg-neutral-2">
+        <div class="container p-5 text-center">
+            <h1 class="text-gray-800">{{'bookings.rejected' | translate}}</h1>
+            <app-booking-cards [bookings]="rejectedBookings$"></app-booking-cards>
+        </div>
+    </section>
+</div>

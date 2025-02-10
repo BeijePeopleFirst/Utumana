@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, map } from 'rxjs';
 import { AccommodationDTO } from 'src/app/dtos/accommodationDTO';
 import { params } from 'src/app/models/searchParams';
 import { AccommodationService } from 'src/app/services/accommodation.service';
@@ -15,8 +15,15 @@ import { iconURL } from 'src/costants';
 export class HomeComponent implements OnInit {
   iconUrl = iconURL;
 
-  latestUploads$!: Observable<AccommodationDTO[] | null> ;
-  mostLiked:  AccommodationDTO[] | null=null;
+  latestUploads$!: Observable<AccommodationDTO[]> ;
+  latestUploadsPageSize!: number;
+  latestUploadsPageNumber!: number;
+  latestUploadsTotalPages!: number;
+
+  mostLiked$!: Observable<AccommodationDTO[]> ;
+  mostLikedPageSize!: number;
+  mostLikedPageNumber!: number;
+  mostLikedTotalPages!: number;
 
   constructor(
     private router: Router,
@@ -25,8 +32,27 @@ export class HomeComponent implements OnInit {
   ){ }
   
   ngOnInit(): void {
-    this.accommodationService.getLatestUploads();
-    this.latestUploads$ = this.accommodationService.accommodations$
+    this.latestUploads$ = this.accommodationService.latestAccommodations$;
+    this.latestUploadsPageSize = 4;
+    this.latestUploadsPageNumber = 0;
+    this.latestUploadsTotalPages = 2; // latest accommodation pages that the user can look at
+    this.loadLatestAccommodationsPage(0);
+
+    this.mostLiked$ = this.accommodationService.mostLikedAccommodations$;
+    this.mostLikedPageSize = 4;
+    this.mostLikedPageNumber = 0;
+    this.mostLikedTotalPages = 2; // most liked accommodation pages that the user can look at
+    this.loadMostLikedAccommodationsPage(0);
+  }
+
+  loadLatestAccommodationsPage(pageNumber: number): void {
+    this.latestUploadsPageNumber = pageNumber;
+    this.accommodationService.getLatestUploads(this.latestUploadsPageNumber * this.latestUploadsPageSize, this.latestUploadsPageSize);
+  }
+
+  loadMostLikedAccommodationsPage(pageNumber: number): void {
+    this.mostLikedPageNumber = pageNumber;
+    this.accommodationService.getMostLikedAccommodations(this.mostLikedPageNumber * this.mostLikedPageSize, this.mostLikedPageSize);
   }
 
   search(params: params) {

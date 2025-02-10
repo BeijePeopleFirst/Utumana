@@ -1,9 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute, Route } from '@angular/router';
+import { Component, Input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { Review } from 'src/app/models/review';
-import { ReviewService } from 'src/app/services/review.service';
 import iconURL from 'src/costants';
 
 @Component({

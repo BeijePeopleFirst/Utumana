@@ -22,9 +22,14 @@ public interface AccommodationRepository extends JpaRepository<Accommodation,Lon
 	@Query(value = "SELECT a FROM Accommodation AS a WHERE a.approvalTimestamp IS NOT NULL AND a.hidingTimestamp IS NULL ORDER BY a.approvalTimestamp DESC")
 	public List<Accommodation> getLatestUploads(Pageable pageable);
 	
-	@Query(value = "SELECT new ws.peoplefirst.utumana.dto.AccommodationDTO(a.id, a.title, a.city, a.mainPhotoUrl, a.country) "
-			+ "FROM Accommodation as a WHERE a.approvalTimestamp IS NOT NULL AND a.hidingTimestamp IS NULL ORDER BY a.approvalTimestamp DESC")
+	@Query(value = "SELECT new ws.peoplefirst.utumana.dto.AccommodationDTO(a.id, a.title, a.city, a.province, a.country, a.mainPhotoUrl, r.rating) "
+			+ "FROM Accommodation a JOIN a.rating r WHERE a.approvalTimestamp IS NOT NULL AND a.hidingTimestamp IS NULL ORDER BY a.approvalTimestamp DESC")
 	public List<AccommodationDTO> getLatestUploadsDTO(Pageable pageable);
+	
+	
+	@Query(value = "SELECT new ws.peoplefirst.utumana.dto.AccommodationDTO(a.id, a.title, a.city, a.province, a.country, a.mainPhotoUrl, r.rating) "
+			+ "FROM Accommodation a JOIN a.rating r WHERE a.approvalTimestamp IS NOT NULL AND a.hidingTimestamp IS NULL ORDER BY r.rating DESC")
+	public List<AccommodationDTO> getMostLikedAccommodationsDTO(Pageable pageable);
 	
 
 	@Query(value = "SELECT EXISTS (SELECT * FROM couch_surfing.favourite WHERE accommodation_id = :accommodationId AND user_id = :userId)", nativeQuery = true)
