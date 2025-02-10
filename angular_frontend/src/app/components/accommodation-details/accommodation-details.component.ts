@@ -149,10 +149,11 @@ export class AccommodationDetailsComponent implements OnInit {
       // Calcola il numero di notti
       const startDate = new Date($event.start_date);
       const endDate = new Date($event.end_date);
-      const nights = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+      const nights = Math.floor((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
 
       // Aggiorna i BehaviorSubject
       this.nightsNumber$.next(nights);
+      console.log("Stampo price per night -> ", $event.price_per_night);
       this.postOperation$.next(nights * $event.price_per_night);
     }
     else {

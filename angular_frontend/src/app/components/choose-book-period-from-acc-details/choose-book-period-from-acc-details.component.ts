@@ -21,7 +21,8 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
 
   alreadySelectedStart: boolean = false;
 
-  isAnAvailabilityCheck: boolean = false;
+  availabilityCacheImproved: Map<string, boolean> = new Map<string, boolean>();
+  selectedDays: Map<string, boolean> = new Map<string, boolean>();
 
 
   constructor(
@@ -31,11 +32,13 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
 
   sendAvailability() {
     if(!this.chosenOne) return;
+    console.log("Stampo valore inviato -> ", this.chosenOne.price_per_night);
     this.sendChosenAvailability.emit({start_date: this.chosenOne.start_date, end_date: this.chosenOne.end_date, price_per_night: this.chosenOne.price_per_night, accommodation_id: this.chosenOne.accommodation_id});
   }
 
   ngOnInit() {
     this.initializeCalendars(new Date().getFullYear(), new Date().getMonth());
+    this.initializeAvailabilityCache();
   }
 
   initializeCalendars(year: number, month: number) {
@@ -77,225 +80,164 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
   selectDay(day: number, month: string, monthName: string, year: number) {
     this.chosenOne.accommodation_id = this.accommodation.id!;
 
-    this.accommodationService.getAvailabilities(this.accommodation).subscribe(
-      response1 => {
-        if("message" in response1) {
-          this.sendChosenAvailability.emit({message: response1.message});
-          return;
-        }
-        else {
-          let date = this.accommodationService.fetchDate(day, monthName, year);
+    if(!this.alreadySelectedStart) {
+      this.chosenOne.start_date = new Date(this.accommodationService.fetchDate(day, monthName, year)) + "";
+      //this.selectedDays.set(day + '-' + month + '-' + year, true);
+      console.log(this.chosenOne.start_date);
+    }
+    else {
+      if(Date.parse(this.chosenOne.start_date) >= this.accommodationService.fetchDate(day, monthName, year)) {
+        this.sendChosenAvailability.emit({message: "Start Date must be AFTER End Date"});
+        return;
+      }
+      this.chosenOne.end_date = new Date(this.accommodationService.fetchDate(day, monthName, year)) + "";
+      console.log(this.chosenOne.end_date);
+      this.sendAvailability();
+    }
 
-          for(let a of response1) {
-            if(date >= Date.parse(a.start_date) && date <= Date.parse(a.end_date)) {
-              this.chosenOne.price_per_night = a.price_per_night;
-              break;
-            }
-          }
-
-          if(!this.alreadySelectedStart) {
-            this.alreadySelectedStart = true;
-            this.chosenOne.start_date = new Date(this.accommodationService.fetchDate(day, monthName, year)) + "";
-            console.log(this.chosenOne.start_date);
+    if(!this.alreadySelectedStart) {
+      this.alreadySelectedStart = true;
+      
+      this.accommodationService.getAvailabilities(this.accommodation).subscribe(
+        response1 => {
+          if("message" in response1) {
+            this.sendChosenAvailability.emit({message: response1.message});
+            return;
           }
           else {
-            if(Date.parse(this.chosenOne.start_date) >= this.accommodationService.fetchDate(day, monthName, year)) {
-              this.sendChosenAvailability.emit({message: "Start Date must be AFTER End Date"});
-              return;
+            let date = this.accommodationService.fetchDate(day, monthName, year);
+            
+            for(let a of response1) {
+              if(date >= (new Date(a.start_date).setHours(0, 0, 0, 0)) && date <= (new Date(a.end_date).setHours(0, 0, 0, 0))) {
+                console.log("Entro in IF");
+                this.chosenOne.price_per_night = a.price_per_night;
+                console.log("Stampo valore impostato -> ", this.chosenOne.price_per_night);
+                break;
+              }
             }
-            this.chosenOne.end_date = new Date(this.accommodationService.fetchDate(day, monthName, year)) + "";
-            console.log(this.chosenOne.end_date);
-            this.sendAvailability();
+
           }
         }
-      }
-    )
+      )
+    }
 
     //AL RESET AZZERO CAMPI NEL PADRE
     
     
   }
 
-  //TESTARE!!!!!
-  //------------------------------------------------------------------------------------------------------------------
-  //------------------------------------------------------------------------------------------------------------------
-  //------------------------------------------------------------------------------------------------------------------
-
-  //this.isAnAvailabilityCheck DA TOGLIERE SE POSSIBILE!!!!!!!!!!!
-
-
-  //Template da correggere e provare:
-  /*
-
-<div *ngFor="let day of previousMonth.days"
-     class="p-2 font-medium text-center rounded-md cursor-pointer w-9 bg-secondary-light text-neutral-1">
-  
-  <ng-container *ngIf="isAnAvailability(day, previousMonth.name, previousMonth.year) | async as available">
-    
-    <div *ngIf="!available" class="text-center">{{ day }}</div>
-    
-    <div *ngIf="!isSelectedOrBetween(day, previousMonth.name, previousMonth.year) && available"
-         class="text-center bg-green-400 cursor-pointer"
-         (click)="selectDay(day, 'previousMonth', previousMonth.name, previousMonth.year)">
-      {{ day }}
-    </div>
-
-    <div *ngIf="isSelectedOrBetween(day, previousMonth.name, previousMonth.year)" 
-         class="text-center cursor-pointer bg-green-950">
-      {{ day }}
-    </div>
-
-  </ng-container>
-
-</div>
-
-
-
-
-ALTRI DUE TEMPLATE DA TESTARE:
-PREVIOUS:
-
-<div class="grid grid-cols-7 gap-2">
-  <div *ngFor="let day of previousMonth.days" class="p-2 font-medium text-center rounded-md cursor-pointer w-9 bg-secondary-light text-neutral-1">
-    
-    <ng-container *ngIf="isAnAvailability(day, previousMonth.name, previousMonth.year) | async as available">
-      
-      <div *ngIf="!available" class="text-center">{{ day }}</div>
-      
-      <div *ngIf="!isSelectedOrBetween(day, previousMonth.name, previousMonth.year) && available"
-           class="text-center bg-green-400 cursor-pointer"
-           (click)="selectDay(day, 'previousMonth', previousMonth.name, previousMonth.year)">
-        {{ day }}
-      </div>
-
-      <div *ngIf="isSelectedOrBetween(day, previousMonth.name, previousMonth.year)" 
-           class="text-center cursor-pointer bg-green-950">
-        {{ day }}
-      </div>
-
-    </ng-container>
-
-  </div>
-</div>
-
-
-
-CURRENT MONTH:
-
-<div class="w-64 p-4 border rounded-lg shadow-md bg-neutral-2 border-neutral-1">
-  <h3 class="mb-3 text-lg font-bold text-center cursor-pointer text-primary-dark">
-    {{ ("choose-book-period-from-acc-details." + currentMonth.name | translate) }} {{ currentMonth.year }}
-  </h3>
-  
-  <div class="grid grid-cols-7 gap-2">
-    <div *ngFor="let day of currentMonth.days" class="p-2 font-medium text-center rounded-md w-9 bg-primary-light text-neutral-1">
-      
-      <ng-container *ngIf="isAnAvailability(day, currentMonth.name, currentMonth.year) | async as available">
-        
-        <div *ngIf="!available" class="text-center">{{ day }}</div>
-        
-        <div *ngIf="!isSelectedOrBetween(day, currentMonth.name, currentMonth.year) && available"
-             class="text-center bg-green-400 cursor-pointer"
-             (click)="selectDay(day, 'currentMonth', currentMonth.name, currentMonth.year)">
-          {{ day }}
-        </div>
-
-        <div *ngIf="isSelectedOrBetween(day, currentMonth.name, currentMonth.year)" 
-             class="text-center cursor-pointer bg-green-950">
-          {{ day }}
-        </div>
-
-      </ng-container>
-
-    </div>
-  </div>
-
-</div>
-
-
-  */
-
-
-  private availabilityCache = new Map<string, BehaviorSubject<boolean>>();
-
-isAnAvailability(day: number, month: string, year: number): Observable<boolean> {
-    let key = `${day}-${month}-${year}`;
-
-    // Se il valore è già in cache, restituiscilo subito
-    if (this.availabilityCache.has(key)) {
-        return this.availabilityCache.get(key)!.asObservable();
-    }
-
-    // Altrimenti, crea un nuovo BehaviorSubject con valore predefinito false
-    const subject = new BehaviorSubject<boolean>(false);
-    this.availabilityCache.set(key, subject);
-
-    let toCompare = this.accommodationService.fetchDate(day, month, year);
-
-    this.accommodationService.getAvailabilities(this.accommodation).pipe(
-        map(data => {
-            if ("message" in data) {
-                this.sendChosenAvailability.emit({ message: data.message });
-                return false;
-            }
-
-            for (let a of data) {
-                let startDate = Date.parse(a.start_date);
-                let endDate = Date.parse(a.end_date);
-
-                if (toCompare === startDate || toCompare === endDate || (toCompare > startDate && toCompare < endDate)) {
-                    return true;
-                }
-            }
-            return false;
-        }),
-        tap(result => {
-            subject.next(result); // Aggiorna il valore nel BehaviorSubject
-        })
-    ).subscribe();
-
-    return subject.asObservable();
-}
-
-  /*isAnAvailability(day: number, month: string, year: number): Observable<boolean> {
-    let toCompare = this.accommodationService.fetchDate(day, month, year);
-
-    return this.accommodationService.getAvailabilities(this.accommodation).pipe(
-      map(data => {
-        if("message" in data) {
-          this.sendChosenAvailability.emit({message: data.message});
-          this.isAnAvailabilityCheck = false;
-          return false;
+  initializeAvailabilityCache(): void {
+    this.accommodationService.getAvailabilities(this.accommodation).subscribe(
+      availabilities => {
+        if("message" in availabilities) {
+          this.sendChosenAvailability.emit({message: availabilities.message});
+          return;
         }
         else {
-          for(let a of data) {
-            if(toCompare === Date.parse(a.start_date)
-              || toCompare === Date.parse(a.end_date)) {
+
+          let start: number;
+          let end: number;
+
+          let s_day: number;        //From 1
+          let s_month: string;      //January, February...
+          let s_year: number;       //2025, 2026...
+
+          let e_day: number;        //From 1
+          let e_month: string;      //January, February...
+          let e_year: number;       //2025, 2026...
+
+
+
+          //1-January-2025          
+
+          for(let a of availabilities) {
+            start = Date.parse(a.start_date);
+            end = Date.parse(a.end_date);
+
+            s_month = this.getMonthName(new Date(start).getMonth());
+            s_day = new Date(start).getDate();
+            s_year = new Date(start).getFullYear();
+
+            //Now I have the start date:
+            this.availabilityCacheImproved.set(s_day + '-' + s_month + '-' + s_year, true);
+
+            e_month = this.getMonthName(new Date(end).getMonth());
+            e_day = new Date(end).getDate();
+            e_year = new Date(end).getFullYear();
+
+            //Now I have the end date:
+            this.availabilityCacheImproved.set(e_day + '-' + e_month + '-' + e_year, true);
             
-                this.isAnAvailabilityCheck = true;
-                return true;
-            }
-            else if(toCompare > Date.parse(a.start_date)
-                    && toCompare < Date.parse(a.end_date)) {
-                  
-                
-                this.isAnAvailabilityCheck = true;
-                return true;
-            }
-            else {
-              this.isAnAvailabilityCheck = false;
-              return false;
+            let tmp = new Date(s_year, new Date(start).getMonth(), s_day + 1);
+
+            while(tmp.getTime() < new Date(end).getTime()) {
+              //Aggiungo alla mappa:
+              this.availabilityCacheImproved.set(tmp.getDate() + '-' + this.getMonthName(tmp.getMonth()) + '-' + tmp.getFullYear(), true);
+
+              //Incremento di un Giorno:
+              tmp = new Date(tmp.getFullYear(), new Date(tmp).getMonth(), tmp.getDate() + 1);
             }
           }
-          this.isAnAvailabilityCheck = false;
-          return false;
         }
-      })
+      }
     )
-  }*/
- //------------------------------------------------------------------------------------------------------------------
- //------------------------------------------------------------------------------------------------------------------
- //------------------------------------------------------------------------------------------------------------------
+  }
+
+  private getMonthName(m: number): string {
+    let month = "";
+
+    switch (m) {
+      case 0:
+        month = "January";
+        break;
+
+      case 1:
+        month = "February";
+        break;
+
+      case 2:
+        month = "March";
+        break;
+
+      case 3:
+        month = "April";
+        break;
+
+      case 4:
+        month = "May";
+        break;
+
+      case 5:
+        month = "June";
+        break;
+
+      case 6:
+        month = "July";
+        break;
+
+      case 7:
+        month = "August";
+        break;
+
+      case 8:
+        month = "September";
+        break;
+
+      case 9:
+        month = "October";
+        break;
+
+      case 10:
+        month = "November";
+        break;
+
+      case 11:
+        month = "December";
+        break;
+    }
+
+    return month;
+  }
 
   isSelectedOrBetween(day: number, monthName: string, year: number): boolean {
     if(this.accommodationService.fetchDate(day, monthName, year) === Date.parse(this.chosenOne.start_date)

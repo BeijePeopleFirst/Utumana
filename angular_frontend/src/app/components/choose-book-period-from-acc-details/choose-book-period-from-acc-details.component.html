@@ -21,10 +21,10 @@
         </h3>
         <div class="grid grid-cols-7 gap-2">
           <div *ngFor="let day of previousMonth.days"
-            class="p-2 font-medium text-center rounded-md cursor-pointer w-9 bg-secondary-light text-neutral-1">
-            <div *ngIf="!isAnAvailability(day, previousMonth.name, previousMonth.year)" class="text-center">{{day}}</div>
-            <div *ngIf="!isSelectedOrBetween(day, previousMonth.name, previousMonth.year) && (isAnAvailability(day, previousMonth.name, previousMonth.year))" class="text-center bg-green-400 cursor-pointer" (click)="selectDay(day, 'previousMonth', previousMonth.name, previousMonth.year)">{{day}}</div>
-            <div *ngIf="isSelectedOrBetween(day, previousMonth.name, previousMonth.year)" class="text-center cursor-pointer bg-green-950">{{day}}</div>
+            class="p-2 font-medium text-center rounded-md w-9 bg-secondary-light text-neutral-1">
+            <div *ngIf="!availabilityCacheImproved.has(day + '-' + previousMonth.name + '-' + previousMonth.year)" class="text-center">{{day}}</div>
+            <div *ngIf="!isSelectedOrBetween(day, previousMonth.name, previousMonth.year) && availabilityCacheImproved.has(day + '-' + previousMonth.name + '-' + previousMonth.year)" class="text-center bg-green-400 cursor-pointer" (click)="selectDay(day, 'previousMonth', previousMonth.name, previousMonth.year)">{{day}}</div>
+            <div *ngIf="isSelectedOrBetween(day, previousMonth.name, previousMonth.year)" class="text-center bg-green-950">{{day}}</div>
           </div>
         </div>
       </div>
@@ -36,10 +36,10 @@
         </h3>
         <div class="grid grid-cols-7 gap-2">
           <div *ngFor="let day of currentMonth.days"
-            class="p-2 font-medium text-center rounded-md w-9 bg-primary-light text-neutral-1" >
-            <div *ngIf="(isAnAvailability(day, currentMonth.name, currentMonth.year) | async) || !isAnAvailabilityCheck" class="text-center">{{day}}</div>
-            <div *ngIf="(!isSelectedOrBetween(day, currentMonth.name, currentMonth.year) && (isAnAvailability(day, currentMonth.name, currentMonth.year) | async) || isAnAvailabilityCheck)" class="text-center bg-green-400 cursor-pointer" (click)="selectDay(day, 'previousMonth', currentMonth.name, currentMonth.year)">{{day}}</div>
-            <div *ngIf="isSelectedOrBetween(day, currentMonth.name, currentMonth.year)" class="text-center cursor-pointer bg-green-950">{{day}}</div>
+          class="p-2 font-medium text-center rounded-md w-9 bg-secondary-light text-neutral-1" >
+            <div *ngIf="!availabilityCacheImproved.has(day + '-' + currentMonth.name + '-' + currentMonth.year)" class="text-center">{{day}}</div>
+            <div *ngIf="!isSelectedOrBetween(day, currentMonth.name, currentMonth.year) && availabilityCacheImproved.has(day + '-' + currentMonth.name + '-' + currentMonth.year)" class="text-center bg-green-400 cursor-pointer" (click)="selectDay(day, 'currentMonth', currentMonth.name, currentMonth.year)">{{day}}</div>
+            <div *ngIf="isSelectedOrBetween(day, currentMonth.name, currentMonth.year)" class="text-center bg-green-950">{{day}}</div>
           </div>
         </div>
       </div>
