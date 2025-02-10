@@ -93,10 +93,6 @@ export class AuthService {
       }),
       tap(() => {
         this.isLoggedIn = true;
-      }),
-      catchError((err) => {
-        this.logout();
-        return of(err);
       })
     );
   }
