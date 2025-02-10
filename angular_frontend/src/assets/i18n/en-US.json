@@ -105,6 +105,12 @@
 	"checkIn":"Check-in",
 	"checkOut":"Check-out",
 	"price":"price",
-	"review": "write review"
+	"review": "write review",
+	"latest":"My latest bookings",
+	"doing":"Current booking",
+	"pending":"Pending bookings",
+	"done":"Done bookings",
+	"accepted":"Accepted bookings",
+	"rejected":"Rejected bookings"
 }
 }

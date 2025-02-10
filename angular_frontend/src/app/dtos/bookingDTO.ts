@@ -7,7 +7,7 @@ export class BookingDTO{
         public checkIn: string,
         public checkOut: string,
         public price: number,
-        public status: BookingStatus,
+        public status: string,
         public reviewId: number,
         public accommodation:AccommodationDTO
         ) {  }
