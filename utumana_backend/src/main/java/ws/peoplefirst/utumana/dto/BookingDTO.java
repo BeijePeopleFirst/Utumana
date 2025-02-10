@@ -8,10 +8,8 @@ import ws.peoplefirst.utumana.utility.JsonFormatter;
 public class BookingDTO {
 	
 	private Long id;
-
-	private String accommodationMainPhotoURL;
 	
-	private String accommodationName;
+	private AccommodationDTO accommodation;
 	
 	private String checkIn;
 	
@@ -21,44 +19,28 @@ public class BookingDTO {
 	
 	private BookingStatus status;
 	
-	private Long accommodationId;
-	
 	private Long reviewId;
 	
-	public BookingDTO(String accommodationMainPhotoURL,String accommodationName,Double price,BookingStatus status,
-			Long accommodationId,LocalDateTime checkIn,LocalDateTime checkOut) {
-		this.accommodationMainPhotoURL=accommodationMainPhotoURL;
-		this.accommodationName=accommodationName;
+	public BookingDTO(Double price,BookingStatus status,LocalDateTime checkIn,LocalDateTime checkOut,
+			AccommodationDTO accommodation) {
+		this.accommodation = accommodation;
 		this.price=price;
 		this.status=status;
-		this.accommodationId=accommodationId;
 		this.checkIn=JsonFormatter.parseDateTime(checkIn);
 		this.checkOut=JsonFormatter.parseDateTime(checkOut);
 	}
 	
-	public BookingDTO(Long id, String accommodationMainPhotoURL,String accommodationName,Double price,BookingStatus status,
-			Long accommodationId,LocalDateTime checkIn,LocalDateTime checkOut, Long reviewId) {
-		this.accommodationMainPhotoURL=accommodationMainPhotoURL;
-		this.accommodationName=accommodationName;
+	public BookingDTO(Long id,Double price,BookingStatus status,LocalDateTime checkIn,LocalDateTime checkOut,
+			Long reviewId,AccommodationDTO accommodation) {
+		this.accommodation = accommodation;
 		this.price=price;
 		this.status=status;
-		this.accommodationId=accommodationId;
 		this.checkIn=JsonFormatter.parseDateTime(checkIn);
 		this.checkOut=JsonFormatter.parseDateTime(checkOut);
 		this.id = id;
 		this.reviewId = reviewId;
 	}
 	
-	
-	
-	public String getAccommodationMainPhotoURL() {
-		return accommodationMainPhotoURL;
-	}
-
-	public String getAccommodationName() {
-		return accommodationName;
-	}
-
 	public String getCheckIn() {
 		return checkIn;
 	}
@@ -76,10 +58,6 @@ public class BookingDTO {
 	}
 
 
-	public Long getAccommodationId() {
-		return accommodationId;
-	}
-
 	public Long getId() {
 		return id;
 	}
@@ -87,12 +65,15 @@ public class BookingDTO {
 	public Long getReviewId() {
 		return reviewId;
 	}
+	
+	public AccommodationDTO getAccommodation() {
+		return accommodation;
+	}
 
 	@Override
 	public String toString() {
-		return "BookingDTO [id=" + id + ", accommodationMainPhotoURL=" + accommodationMainPhotoURL
-				+ ", accommodationName=" + accommodationName + ", checkIn=" + checkIn + ", checkOut=" + checkOut
-				+ ", price=" + price + ", status=" + status + ", accommodationId=" + accommodationId + ", reviewId="
-				+ reviewId + "]";
+		return "BookingDTO [id=" + id+ ", accommodation=" + accommodation.toString() + ", checkIn=" + checkIn + ", checkOut=" + checkOut
+				+ ", price=" + price + ", status=" + status + ", reviewId="+ reviewId + "]";
 	}
+
 }

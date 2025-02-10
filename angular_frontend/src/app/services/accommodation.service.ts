@@ -14,83 +14,93 @@ import { PriceDTO } from '../dtos/priceDTO';
 })
 export class AccommodationService {
   
-  private accommodationsSubject = new BehaviorSubject<AccommodationDTO[] | null>(null);
-  public accommodations$ = this.accommodationsSubject.asObservable();
+  private latestAccommodationsSubject = new BehaviorSubject<AccommodationDTO[]>([]);
+  public latestAccommodations$ = this.latestAccommodationsSubject.asObservable();
+  private mostLikedAccommodationsSubject = new BehaviorSubject<AccommodationDTO[]>([]);
+  public mostLikedAccommodations$ = this.mostLikedAccommodationsSubject.asObservable();
+
   private searchParamsSubject = new BehaviorSubject<any>(null);
 
   constructor(private http: HttpClient) { }
 
-  public getLatestUploads(): void{
-    this.http.get<AccommodationDTO[]>(`${BACKEND_URL_PREFIX}/api/get_latest_uploads`).pipe(
+  public getLatestUploads(offset: number, pageSize: number): void {
+    this.getAccommodationsDTO(`${BACKEND_URL_PREFIX}/api/accommodation/latest_uploads`, offset, pageSize, this.latestAccommodationsSubject);
+  }
+
+  getMostLikedAccommodations(offset: number, pageSize: number): void {
+    this.getAccommodationsDTO(`${BACKEND_URL_PREFIX}/api/accommodation/most_liked`, offset, pageSize, this.mostLikedAccommodationsSubject);
+  }
+
+  getAccommodationsDTO(url: string, offset: number, pageSize: number, subject: Subject<AccommodationDTO[]>): void {
+    // TODO get page of results
+    this.http.get<AccommodationDTO[]>(url).pipe(
       catchError(error => {
         console.error(error);
         return of([]);
       })
     ).subscribe(data => {
-      console.log(data);
+      console.log("Accommodation Service - Fetched accommodations DTO:", data);
       if(data.length == 0){
-        this.accommodationsSubject.next(data);
+        subject.next(data);
       }else{
-        this.getPrices(data);
+        this.getPrices(data.slice(offset, offset + pageSize), subject); // remove slice when result will be paginated by backend
       }
     });
-}
-
-getPrices(accommodations: AccommodationDTO[]): void {
-  let ids = accommodations.map(a => a.id);
-  this.http.get<PriceDTO[]>(`${BACKEND_URL_PREFIX}/api/prices?ids=${ids}`).pipe(
-    catchError(error => {
-      console.error(error);
-      return of([]);
-    })
-  ).subscribe(prices => {
-    for(let i: number = 0; i < prices.length; i++){
-      accommodations[i].min_price = prices[i].min_price;
-      accommodations[i].max_price = prices[i].max_price;
-    }
-    this.accommodationsSubject.next(accommodations);
-  })
-}
-
-public searchAccommodations(params: any) {
-  this.searchParamsSubject.next(params)
-}
-public updateAccommodations(accommodationDTO: AccommodationDTO[]) {
-  this.accommodationsSubject.next(accommodationDTO);
-}
-public getSearchResults(): Observable<AccommodationDTO[] | null>{
-  return this.searchParamsSubject.pipe(
-    debounceTime(300),
-    switchMap(params => {
-      if (!params) return this.accommodations$;
-      console.log('params: ', params);
-      const url = `${BACKEND_URL_PREFIX}/api/search`;
-      return this.http.get<AccommodationDTO[] | { message: string }>(url, { params })
-        .pipe(
-          map(response => "message" in response ? null : response),
-          catchError(error => {
-            console.error(error);
-            return of(null);
-          })
-        );
-    })
-  //).subscribe(data => this.accommodationsSubject.next(data));
-  )
-}
-
-getParams(form: any): params {
-  console.log(form)
-  const params: params = {
-    "destination": form.city,
-    "check-in": form.check_in,
-    "check-out": form.check_out,
-    "number_of_guests": form.people,
-    "free_only": false,
-    "services": [""],
-    "order_by": "minPrice-desc"
   }
-  return params;
-}
+
+  getPrices(accommodations: AccommodationDTO[], subject: Subject<AccommodationDTO[]>): void {
+    let ids = accommodations.map(a => a.id);
+    this.http.get<PriceDTO[]>(`${BACKEND_URL_PREFIX}/api/accommodation/prices?ids=${ids}`).pipe(
+      catchError(error => {
+        console.error(error);
+        return of([]);
+      })
+    ).subscribe(prices => {
+      for(let i: number = 0; i < prices.length; i++){
+        accommodations[i].min_price = prices[i].min_price;
+        accommodations[i].max_price = prices[i].max_price;
+      }
+      subject.next(accommodations);
+    })
+  }
+
+  public searchAccommodations(params: any) {
+    this.searchParamsSubject.next(params)
+  }
+
+  public getSearchResults(): Observable<AccommodationDTO[] | null>{
+    return this.searchParamsSubject.pipe(
+      debounceTime(300),
+      switchMap(params => {
+        if (!params) return this.latestAccommodations$;
+        console.log('params: ', params);
+        const url = `${BACKEND_URL_PREFIX}/api/search`;
+        return this.http.get<AccommodationDTO[] | { message: string }>(url, { params })
+          .pipe(
+            map(response => "message" in response ? null : response),
+            catchError(error => {
+              console.error(error);
+              return of(null);
+            })
+          );
+      })
+    //).subscribe(data => this.accommodationsSubject.next(data));
+    )
+  }
+
+  getParams(form: any): params {
+    console.log(form)
+    const params: params = {
+      "destination": form.city,
+      "check-in": form.check_in,
+      "check-out": form.check_out,
+      "number_of_guests": form.people,
+      "free_only": false,
+      "services": [""],
+      "order_by": "minPrice-desc"
+    }
+    return params;
+  }
 
   public getAccommodationById(id: number): Observable<(Accommodation | null)> {
     return this.http.get<(Accommodation | {time: string, status: string, message: string})>(BACKEND_URL_PREFIX + "/api/accommodation/" + id)
@@ -147,6 +157,34 @@ getParams(form: any): params {
                           }
                         )
                       )
+  }
+
+  addFavouriteToCurrentUser(accommodationId: number): Observable<Boolean> {
+    const userId = localStorage.getItem("id");
+    if(!userId){
+      return of(false);
+    }
+    return this.http.patch<Accommodation>(`${BACKEND_URL_PREFIX}/api/add-favourite/${userId}/${accommodationId}`, {}).pipe(
+      map(_ =>  true),
+      catchError(err => {
+        console.log(err.error);
+        return of(false);
+      })
+    );
+  }
+
+  removeFavouriteFromCurrentUser(accommodationId: number): Observable<Boolean> {
+    const userId = localStorage.getItem("id");
+    if(!userId){
+      return of(false);
+    }
+    return this.http.patch<Accommodation>(`${BACKEND_URL_PREFIX}/api/remove-favourite/${userId}/${accommodationId}`, {}).pipe(
+      map(_ =>  true),
+      catchError(err => {
+        console.log(err.error);
+        return of(false);
+      })
+    );
   }
 
   updateAccommodationAddress(userId: number, accommodation: Accommodation): Observable<Accommodation | null | {message: string, status: string, time: string}> {

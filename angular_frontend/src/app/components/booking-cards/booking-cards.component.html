@@ -1,1 +1,6 @@
-<p>booking-cards works!</p>
+
+<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <app-booking-card *ngFor="let booking of bookings" [booking]="booking" 
+        class="p-4 bg-white rounded-lg shadow-lg">
+    </app-booking-card>
+</div>

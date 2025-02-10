@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Booking } from '../models/booking';
 import { HttpClient } from '@angular/common/http';
-import { catchError, Observable, of } from 'rxjs';
+import { catchError, Observable, of, BehaviorSubject } from 'rxjs';
 import { BookingDTO } from '../dtos/bookingDTO';
 import { BACKEND_URL_PREFIX } from 'src/costants';
 
@@ -9,6 +9,9 @@ import { BACKEND_URL_PREFIX } from 'src/costants';
   providedIn: 'root'
 })
 export class BookingService {
+
+  private bookingsSubject = new BehaviorSubject<BookingDTO[] | null>(null);
+  public bookings$ = this.bookingsSubject.asObservable();
   
 
   constructor(private http: HttpClient) { }
@@ -23,4 +26,16 @@ export class BookingService {
       catchError(error => {console.log("ERRORE"); return of(error.error)})
     );
   }
+  
+  public getBookings(): void{
+    this.http.get<BookingDTO[]>(`${BACKEND_URL_PREFIX}/api/myBookingGuest`).pipe(
+      catchError(error => {
+        console.error(error);
+        return of([]);
+      })
+    ).subscribe(data => {
+      console.log(data);
+      this.bookingsSubject.next(data);
+    });
+}
 }

@@ -1,9 +1,16 @@
-<div *ngIf="accommodation" class="w-72">
-  <a class="clickable_card" (click)="onClick($event)">
+<div *ngIf="accommodation" class="w-72 group hover:-translate-y-2">
+  <a class="clickable_card " (click)="onClick($event)">
     <div class="flex flex-col flex-1 overflow-hidden bg-white rounded-lg shadow-lg" >
         <img [src]="'http://localhost:4200/assets/'+accommodation.main_photo_url" [alt]="accommodation.main_photo_url">
+        <button class="heart" (click)="heartClick = true">
+          <img *ngIf="!accommodation.is_favourite" src="{{iconsUrl}}\\heart-empty.png" alt="add to favorites">
+          <img *ngIf="accommodation.is_favourite" src="{{iconsUrl}}\\heart-full.png" alt="remove from favorites">
+        </button>
       <div class="flex flex-col items-center flex-1 p-4 text-center">
-        <h4>{{accommodation.title}}</h4>
+        <span class="flex items-baseline justify-between gap-x-2">
+          <h4 class="inline group-hover:text-primary-dark">{{accommodation.title}}</h4>
+          <span *ngIf="accommodation.rating" class="text-base"> &#x2605; {{accommodation.rating | number:'1.2-2'}}</span>
+        </span>
 
         <p> 
           <span *ngIf="accommodation.city">{{accommodation.city}}</span>
@@ -21,7 +28,7 @@
             <span *ngIf="priceRange"> - {{accommodation.max_price | currency:'EUR':'symbol-narrow':'1.2-2':'it-IT'}} </span>
           </span>
         </p>
-        <button type="button" (click)="book = true" class="mt-2 btn-primary">Book now</button>
+        <button type="button" (click)="book = true" class="mt-2 btn-primary">{{'accommodation-card.book' | translate}}</button>
       </div>
     </div>  
   </a>

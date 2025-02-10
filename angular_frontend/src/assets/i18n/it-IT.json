@@ -102,5 +102,26 @@
 },
 "accommodations_cards": {
 	"notFound": "Nessuna offerta disponibile"
+},
+"accommodation-card": {
+	"book": "Prenota ora"
+},
+"bookings":{
+	"checkIn":"Check-in",
+	"checkOut":"Check-out",
+	"price":"prezzo",
+	"review": "lascia una recensione",
+	"latest":"Le mie ultime prenotazioni",
+	"doing":"Prenotazione in corso",
+	"pending":"Prenotazioni non ancora accettate",
+	"done":"Prenotazioni concluse",
+	"accepted":"Prenotazioni accettate",
+	"rejected":"Prenotazioni rifiutate"
+},
+"filters": {
+	"title": "Filtri",
+	"cancel": "Cancella",
+	"apply": "Applica",
+	"services": "Servizi"
 }
 }

@@ -9,7 +9,7 @@ import { Review } from 'src/app/models/review';
 export class ReviewCardsComponent {
   @Input() reviews!: Review[];  // one page of reviews
   @Input() pageNumber!: number;
-  @Input() pageNumbers!: number;
+  @Input() totalPages!: number;
   @Output() askForPage = new EventEmitter<number>();
 
   prevPage(): void {

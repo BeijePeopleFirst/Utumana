@@ -5,8 +5,10 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 
+import ws.peoplefirst.utumana.dto.AccommodationDTO;
 import ws.peoplefirst.utumana.dto.BookingDTO;
 import ws.peoplefirst.utumana.exception.ForbiddenException;
+import ws.peoplefirst.utumana.model.Accommodation;
 import ws.peoplefirst.utumana.model.Booking;
 
 public class JsonFormatter {
@@ -67,8 +69,11 @@ public class JsonFormatter {
 	}
 	
 	public static BookingDTO fromBookingToBookingDTO(Booking booking) {
-		return new BookingDTO(booking.getAccommodation().getMainPhotoUrl(),booking.getAccommodation().getTitle(),
-				booking.getPrice(),booking.getStatus(),booking.getAccommodation().getId(),booking.getCheckIn(),booking.getCheckOut());
+		return new BookingDTO(booking.getPrice(),booking.getStatus(),booking.getCheckIn(),booking.getCheckOut(),fromAccommodationToAccommodationDTO(booking.getAccommodation()));
+	}
+	
+	public static AccommodationDTO fromAccommodationToAccommodationDTO(Accommodation acc) {
+		return new AccommodationDTO(acc.getId(),acc.getTitle(),acc.getCity(),acc.getMainPhotoUrl(),acc.getCountry());
 	}
 	
 }

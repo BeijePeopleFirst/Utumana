@@ -9,7 +9,7 @@
 	"password_required": "Password is required",
 	"password_short": "Password too short",
 	"password_wrong": "Wrong password",
-	"forget_password": "Forget password?",
+	"forget_password": "Forgot your password?",
 	"button_text": "Login",
 	"error": "Unexpected error. Please retry."
 	},
@@ -85,7 +85,7 @@
 
 "home":{
 	"latest":"Latest uploads",
-	"liked":"Most liked accommodation",
+	"liked":"Most liked accommodations",
 	"review":"Reviews"
 },
 
@@ -102,5 +102,26 @@
 },
 "accommodations_cards": {
 	"notFound": "No accommodation found"
+},
+"accommodation-card": {
+	"book": "Book now"
+},
+"bookings":{
+	"checkIn":"Check-in",
+	"checkOut":"Check-out",
+	"price":"price",
+	"review": "write review",
+	"latest":"My latest bookings",
+	"doing":"Current booking",
+	"pending":"Pending bookings",
+	"done":"Done bookings",
+	"accepted":"Accepted bookings",
+	"rejected":"Rejected bookings"
+},
+"filters": {
+	"title": "Filters",
+	"cancel": "Cancel",
+	"apply": "Apply",
+	"services": "Services"
 }
 }

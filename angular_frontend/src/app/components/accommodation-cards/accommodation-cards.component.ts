@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AccommodationDTO } from 'src/app/dtos/accommodationDTO';
 import { AccommodationService } from 'src/app/services/accommodation.service';
@@ -9,17 +9,28 @@ import { AccommodationService } from 'src/app/services/accommodation.service';
   styleUrls: ['./accommodation-cards.component.css']
 })
 export class AccommodationCardsComponent{
-  @Input() accommodations$!: Observable<AccommodationDTO[] | null>;
-  
-  constructor(
-      private accommodationService:AccommodationService
-    ){ }
+  @Input() accommodations$!: Observable<AccommodationDTO[] | null>; 
+  @Input() pageNumber!: number;
+  @Input() totalPages!: number;
+  @Output() askForPage = new EventEmitter<number>();
 
-/*    ngOnInit(){
-    this.accommodationService.accommodations$.subscribe({
-      next: (accommodations: AccommodationDTO[] | null) => {this.accommodations$ = accommodations || []},
-      error: (error) => {console.error(error) }
-    })
-  } */
+  constructor( ){ }
 
+  ngOnInit(){
+    console.log("Page number: ", this.pageNumber, " of ", this.totalPages);
+  } 
+
+  prevPage(): void {
+    this.getPage(this.pageNumber - 1);
+  }
+
+  nextPage(): void {
+    this.getPage(this.pageNumber + 1);
+  }
+
+  getPage(n: number) {
+    if(this.pageNumber != n){
+      this.askForPage.emit(n);
+    }
+  }
 }

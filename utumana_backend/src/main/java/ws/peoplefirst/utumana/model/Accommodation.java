@@ -21,8 +21,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.OrderColumn;
+import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 import ws.peoplefirst.utumana.utility.JsonFormatter;
 
@@ -107,6 +109,10 @@ public class Accommodation {
 	@OneToMany(mappedBy = "accommodation", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@OrderBy("startDate")
 	private List<Availability> availabilities;
+	
+	@OneToOne(mappedBy = "accommodation", fetch = FetchType.LAZY)
+	@PrimaryKeyJoinColumn
+	private AccommodationRating rating;
 	
 
 
@@ -303,6 +309,14 @@ public class Accommodation {
 	@JsonSetter(value = "hiding_timestamp")
 	public void setHidingTimestampJson(String date) {
 		this.hidingTimestamp = JsonFormatter.parseStringIntoDateTime(date);
+	}
+
+	public AccommodationRating getRating() {
+		return rating;
+	}
+
+	public void setRating(AccommodationRating rating) {
+		this.rating = rating;
 	}
 
 	@Override

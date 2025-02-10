@@ -1,6 +1,6 @@
 <p>profile works!</p>
 <div id="reviews-container" class="p-5 text-center bg-neutral-2">
     <h2>{{'profile.reviews_title' | translate}}</h2>
-    <app-review-cards class="flex flex-col" [reviews]="reviews" [pageNumber]="reviewsPageNumber" [pageNumbers]="reviewsTotalPages" 
+    <app-review-cards class="flex flex-col" [reviews]="reviews" [pageNumber]="reviewsPageNumber" [totalPages]="reviewsTotalPages" 
     (askForPage)="loadUserReviewsPage($event)"></app-review-cards>
 </div>

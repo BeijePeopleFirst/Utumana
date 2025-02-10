@@ -73,9 +73,20 @@ public class AccommodationService {
 
 	}
 
-	public List<AccommodationDTO> getLatestUploadsDTO(int limit, Long userId) {
-		Pageable pageable = PageRequest.of(0, limit);
+	public List<AccommodationDTO> getLatestUploadsDTO(int pageNumber, int pageSize, Long userId) {
+		Pageable pageable = PageRequest.of(pageNumber, pageSize);
 		List<AccommodationDTO> results = accommodationRepository.getLatestUploadsDTO(pageable);
+		
+		// set is favourite
+		for(AccommodationDTO accommodationDTO : results) {
+			accommodationDTO.setIsFavourite(isFavourite(accommodationDTO.getId(), userId));
+		}
+		return results;
+	}
+	
+	public List<AccommodationDTO> getMostLikedAccommodationsDTO(int pageNumber, int pageSize, Long userId) {
+		Pageable pageable = PageRequest.of(pageNumber, pageSize);
+		List<AccommodationDTO> results = accommodationRepository.getMostLikedAccommodationsDTO(pageable);
 		
 		// set is favourite
 		for(AccommodationDTO accommodationDTO : results) {
