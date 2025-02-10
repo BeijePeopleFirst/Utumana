@@ -98,6 +98,9 @@
 "accommodations_cards": {
 	"notFound": "No accommodation found"
 },
+"accommodation-card": {
+	"book": "Book now"
+},
 "bookings":{
 	"checkIn":"Check-in",
 	"checkOut":"Check-out",

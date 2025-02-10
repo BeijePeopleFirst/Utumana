@@ -21,7 +21,7 @@
             <span *ngIf="priceRange"> - {{accommodation.max_price | currency:'EUR':'symbol-narrow':'1.2-2':'it-IT'}} </span>
           </span>
         </p>
-        <button type="button" (click)="book = true" class="mt-2 btn-primary">Book now</button>
+        <button type="button" (click)="book = true" class="mt-2 btn-primary">{{'accommodation-card.book' | translate}}</button>
       </div>
     </div>  
   </a>

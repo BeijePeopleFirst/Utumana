@@ -98,7 +98,9 @@
 "accommodations_cards": {
 	"notFound": "Nessuna offerta disponibile"
 },
-
+"accommodation-card": {
+	"book": "Prenota ora"
+},
 "bookings":{
 	"checkIn":"Check-in",
 	"checkOut":"Check-out",
