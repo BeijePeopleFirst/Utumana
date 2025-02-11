@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import ws.peoplefirst.utumana.dto.BookingDTO;
 import ws.peoplefirst.utumana.dto.UnavailabilityDTO;
 import ws.peoplefirst.utumana.model.Accommodation;
@@ -27,6 +28,10 @@ public interface BookingRepository extends JpaRepository<Booking,Long>{
 	@Query("SELECT new ws.peoplefirst.utumana.dto.BookingDTO(b.id,b.price,b.status,b.checkIn,b.checkOut,b.review.id, new ws.peoplefirst.utumana.dto.AccommodationDTO(b.accommodation.id, b.accommodation.title, b.accommodation.city, b.accommodation.mainPhotoUrl, b.accommodation.country)) "
 			+ "FROM Booking as b WHERE b.user.id = :userId AND b.isUnavailability IS false ORDER BY b.checkIn DESC")
 	public List<BookingDTO> findAllDTOByUserId(@Param(value="userId")Long userId);
+	
+	@Query("SELECT new ws.peoplefirst.utumana.dto.BookingDTO(b.id,b.price,b.status,b.checkIn,b.checkOut,b.review.id, new ws.peoplefirst.utumana.dto.AccommodationDTO(b.accommodation.id, b.accommodation.title, b.accommodation.city, b.accommodation.mainPhotoUrl, b.accommodation.country)) "
+			+ "FROM Booking as b WHERE b.user.id = :userId AND b.isUnavailability IS false AND b.status = :status ORDER BY b.checkIn DESC")
+	public List<BookingDTO> findByUserIdAndStatusDTO(@Param(value="userId")Long userId, @Param(value = "status") BookingStatus status);
 	
 	@Query("SELECT b from Booking as b WHERE b.accommodation.ownerId = :ownerId AND b.isUnavailability IS false ORDER BY b.checkIn DESC")
 	public List<Booking> findAllByOwnerId(@Param(value="ownerId")Long ownerId);

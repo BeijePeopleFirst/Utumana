@@ -26,40 +26,36 @@ export class BookingService {
 
   constructor(private http: HttpClient) { }
 
-  public getBookings(): void{
-    this.http.get<BookingDTO[]>(`${BACKEND_URL_PREFIX}/api/myBookingGuest`).pipe(
+  public getBookings(url: string, offset: number, pageSize: number, subject: Subject<BookingDTO[]>): void{
+    // TODO get page of results from backend
+    this.http.get<BookingDTO[]>(url).pipe(
       catchError(error => {
         console.error(error);
         return of([]);
       })
     ).subscribe(bookings => {
-
-      this.doingBookingsSubject.next(bookings.filter(booking => booking.status === "ACCEPTED"));
-      this.rejectedBookingsSubject.next(bookings.filter(booking => booking.status === "REJECTED"));
-      this.doneBookingsSubject.next(bookings.filter(booking => booking.status === "DONE"));
-      this.pendingBookingsSubject.next(bookings.filter(booking => booking.status === "PENDING"));
-      this.doingBookingsSubject.next(bookings.filter(booking => booking.status === "DOING"));
+      console.log("Booking Service - Fetched bookings DTO:", bookings);
+      subject.next(bookings.slice(offset, offset + pageSize));  // remove slice when result will be paginated by backend
     });
-
   }
 
   public getDoneBookings(offset: number, pageSize: number):void{
-    
+    this.getBookings(`${BACKEND_URL_PREFIX}/api/myBookingGuest?status=DONE`, offset, pageSize, this.doneBookingsSubject);
   }
 
   public getPendingBookings(offset: number, pageSize: number):void{
-    
+    this.getBookings(`${BACKEND_URL_PREFIX}/api/myBookingGuest?status=PENDING`, offset, pageSize, this.pendingBookingsSubject);
   }
 
   public getRejectedBookings(offset: number, pageSize: number):void{
-    
+    this.getBookings(`${BACKEND_URL_PREFIX}/api/myBookingGuest?status=REJECTED`, offset, pageSize, this.rejectedBookingsSubject);
   }
 
   public getAcceptedBookings(offset: number, pageSize: number):void{
-    
+    this.getBookings(`${BACKEND_URL_PREFIX}/api/myBookingGuest?status=ACCEPTED`, offset, pageSize, this.acceptedBookingsSubject);
   }
 
   public getDoingBookings(offset: number, pageSize: number):void{
-    
+    this.getBookings(`${BACKEND_URL_PREFIX}/api/myBookingGuest?status=DOING`, offset, pageSize, this.doingBookingsSubject);
   }
 }

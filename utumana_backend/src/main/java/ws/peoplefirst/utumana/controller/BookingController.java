@@ -49,13 +49,14 @@ public class BookingController {
 	
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value="/myBookingGuest")
-	public List<BookingDTO> openBookingGuest(Authentication auth){
+	public List<BookingDTO> openBookingGuest(Authentication auth,
+			@RequestParam(name = "status", required = false) BookingStatus status){
 		
 		log.debug("GET /myBookingGuest");
 		
 		UserDTO userDTO=AuthorizationUtility.getUserFromAuthentication(auth);
 		
-		List<BookingDTO> allBookings=bookingService.findAllBookingsDTOById(userDTO.getId());
+		List<BookingDTO> allBookings=bookingService.findAllBookingsDTOById(userDTO.getId(), status);
 		Collections.sort(allBookings, Comparator.comparing(BookingDTO::getCheckIn));
 		return allBookings;
 	}

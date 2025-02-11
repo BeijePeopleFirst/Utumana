@@ -40,67 +40,65 @@ export class MyBookingsComponent {
 
     constructor(
       private router: Router,
-      private BookingService:BookingService
+      private bookingService:BookingService
     ){ }
 
   ngOnInit(): void {
-
-    this.BookingService.getBookings();
     
-    this.acceptedBookings$ = this.BookingService.acceptedBookings$;
+    this.acceptedBookings$ = this.bookingService.acceptedBookings$;
     this.acceptedBookingsPageSize = 4;
     this.acceptedBookingsPageNumber = 0;
-    this.acceptedBookingsTotalPages = 2; // latest accommodation pages that the user can look at
+    this.acceptedBookingsTotalPages = 2;
     this.loadAcceptedBookingsPage(0);
 
-    this.rejectedBookings$ = this.BookingService.rejectedBookings$;
-    this.rejectedBookingsPageSize = 4;
+    this.rejectedBookings$ = this.bookingService.rejectedBookings$;
+    this.rejectedBookingsPageSize = 2;
     this.rejectedBookingsPageNumber = 0;
-    this.rejectedBookingsTotalPages = 2; // latest accommodation pages that the user can look at
+    this.rejectedBookingsTotalPages = 2;
     this.loadRejectedBookingsPage(0);
 
-    this.doneBookings$ = this.BookingService.doneBookings$;
-    this.doneBookingsPageSize = 4;
+    this.doneBookings$ = this.bookingService.doneBookings$;
+    this.doneBookingsPageSize = 2;
     this.doneBookingsPageNumber = 0;
-    this.doneBookingsTotalPages = 2; // latest accommodation pages that the user can look at
+    this.doneBookingsTotalPages = 4;
     this.loadDoneBookingsPage(0);
 
-    this.pendingBookings$ = this.BookingService.pendingBookings$;
+    this.pendingBookings$ = this.bookingService.pendingBookings$;
     this.pendingBookingsPageSize = 4;
     this.pendingBookingsPageNumber = 0;
-    this.pendingBookingsTotalPages = 2; // latest accommodation pages that the user can look at
+    this.pendingBookingsTotalPages = 2;
     this.loadPendingBookingsPage(0);
 
-    this.doingBookings$ = this.BookingService.doingBookings$;
-    this.doingBookingsPageSize = 4;
+    this.doingBookings$ = this.bookingService.doingBookings$;
+    this.doingBookingsPageSize = 2;
     this.doingBookingsPageNumber = 0;
-    this.doingBookingsTotalPages = 2; // latest accommodation pages that the user can look at
+    this.doingBookingsTotalPages = 1; // only one page for the only possible ongoing booking
     this.loadDoingBookingsPage(0);
   }
 
   loadDoneBookingsPage(pageNumber: number): void {
     this.doneBookingsPageNumber = pageNumber;
-    this.BookingService.getDoneBookings(this.doneBookingsPageNumber * this.doneBookingsPageSize, this.doneBookingsPageSize);
+    this.bookingService.getDoneBookings(this.doneBookingsPageNumber * this.doneBookingsPageSize, this.doneBookingsPageSize);
   }
 
   loadPendingBookingsPage(pageNumber: number): void {
     this.pendingBookingsPageNumber = pageNumber;
-    this.BookingService.getPendingBookings(this.pendingBookingsPageNumber * this.pendingBookingsPageSize, this.pendingBookingsPageSize);
+    this.bookingService.getPendingBookings(this.pendingBookingsPageNumber * this.pendingBookingsPageSize, this.pendingBookingsPageSize);
   }
 
   loadRejectedBookingsPage(pageNumber: number): void {
     this.rejectedBookingsPageNumber = pageNumber;
-    this.BookingService.getRejectedBookings(this.rejectedBookingsPageNumber * this.rejectedBookingsPageSize, this.rejectedBookingsPageSize);
+    this.bookingService.getRejectedBookings(this.rejectedBookingsPageNumber * this.rejectedBookingsPageSize, this.rejectedBookingsPageSize);
   }
 
   loadAcceptedBookingsPage(pageNumber: number): void {
     this.acceptedBookingsPageNumber = pageNumber;
-    this.BookingService.getAcceptedBookings(this.acceptedBookingsPageNumber * this.acceptedBookingsPageSize, this.acceptedBookingsPageSize);
+    this.bookingService.getAcceptedBookings(this.acceptedBookingsPageNumber * this.acceptedBookingsPageSize, this.acceptedBookingsPageSize);
   }
 
   loadDoingBookingsPage(pageNumber: number): void {
     this.doingBookingsPageNumber = pageNumber;
-    this.BookingService.getDoingBookings(this.doingBookingsPageNumber * this.doingBookingsPageSize, this.doingBookingsPageSize);
+    this.bookingService.getDoingBookings(this.doingBookingsPageNumber * this.doingBookingsPageSize, this.doingBookingsPageSize);
   }
 
 }

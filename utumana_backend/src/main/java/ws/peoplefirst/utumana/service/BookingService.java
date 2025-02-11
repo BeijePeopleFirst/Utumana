@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.PersistenceException;
 import ws.peoplefirst.utumana.dto.BookingDTO;
 import ws.peoplefirst.utumana.dto.UnavailabilityDTO;
@@ -66,27 +67,29 @@ public class BookingService {
 		return bookingRepository.findAllByUserIdAndIsUnavailabilityIsFalseOrderByCheckInDesc(userId);
 	}
 	
-	public List<BookingDTO> findAllBookingsDTOById(Long userId) {
+	public List<BookingDTO> findAllBookingsDTOById(Long userId, @Nullable BookingStatus status) {
 		User user=userService.findById(userId);
-		if(user!=null) {			
-			return bookingRepository.findAllDTOByUserId(userId);
-		}
-		else {
+		if(user == null) {			
 			log.warn("findAllBookingsDTOById user not found with id "+userId);
-			throw new IdNotFoundException("user with given id does not exist");
+			throw new IdNotFoundException("User with id " + userId + " not found");
+		}
+		if(status == null) {
+			return bookingRepository.findAllDTOByUserId(userId);
+		} else {
+			return bookingRepository.findByUserIdAndStatusDTO(userId, status);
 		}
 	}
 	
-		public List<BookingDTO> findAllHostBookingsDTO(Long userId) {
-			User user=userService.findById(userId);
-			if(user!=null) {			
-				return bookingRepository.findAllDTOByOwnerId(userId);
-			}
-			else {
-				log.warn("findAllHostBookingsDTO user not found with id "+userId);
-				throw new IdNotFoundException("user with given id does not exist");
-			}
+	public List<BookingDTO> findAllHostBookingsDTO(Long userId) {
+		User user=userService.findById(userId);
+		if(user!=null) {			
+			return bookingRepository.findAllDTOByOwnerId(userId);
 		}
+		else {
+			log.warn("findAllHostBookingsDTO user not found with id "+userId);
+			throw new IdNotFoundException("user with given id does not exist");
+		}
+	}
 	
 	public Booking hostActionOnBooking(Long bookingId,BookingStatus newStatus) {
 		Optional<Booking> optionalBooking=bookingRepository.findById(bookingId);
