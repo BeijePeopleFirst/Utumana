@@ -110,13 +110,15 @@
 	"checkIn":"Check-in",
 	"checkOut":"Check-out",
 	"price":"prezzo",
-	"review": "lascia una recensione",
+	"free": "gratis",
+	"review": "Lascia una recensione",
 	"latest":"Le mie ultime prenotazioni",
 	"doing":"Prenotazione in corso",
 	"pending":"Prenotazioni non ancora accettate",
 	"done":"Prenotazioni concluse",
 	"accepted":"Prenotazioni accettate",
-	"rejected":"Prenotazioni rifiutate"
+	"rejected":"Prenotazioni rifiutate",
+	"no_bookings": "Nessuna prenotazione"
 },
 "filters": {
 	"title": "Filtri",

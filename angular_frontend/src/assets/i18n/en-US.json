@@ -110,13 +110,15 @@
 	"checkIn":"Check-in",
 	"checkOut":"Check-out",
 	"price":"price",
-	"review": "write review",
+	"free": "free",
+	"review": "Write review",
 	"latest":"My latest bookings",
-	"doing":"Current booking",
+	"doing":"Ongoing booking",
 	"pending":"Pending bookings",
-	"done":"Done bookings",
+	"done":"Past bookings",
 	"accepted":"Accepted bookings",
-	"rejected":"Rejected bookings"
+	"rejected":"Rejected bookings",
+	"no_bookings": "No bookings"
 },
 "filters": {
 	"title": "Filters",

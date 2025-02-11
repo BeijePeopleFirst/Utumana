@@ -28,6 +28,7 @@ export class AccommodationService {
   }
 
   getMostLikedAccommodations(offset: number, pageSize: number): void {
+    // TODO get most liked accommodations from backend
     this.getAccommodationsDTO(`${BACKEND_URL_PREFIX}/api/accommodation/most_liked`, offset, pageSize, this.mostLikedAccommodationsSubject);
   }
 
