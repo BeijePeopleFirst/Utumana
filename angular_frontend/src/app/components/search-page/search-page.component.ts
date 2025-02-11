@@ -16,9 +16,16 @@ import iconURL from 'src/costants';
 })
 export class SearchPageComponent implements OnInit {
   iconUrl = iconURL;
+
   foundAccommodations$!: Observable<AccommodationDTO[] | null>;
-  showFilters = false;
+  foundAccommodationsPageSize!: number;
+  foundAccommodationsPageNumber!: number;
+  foundAccommodationsTotalPages!: number;
+
   services$ = this.filterService.services$;
+  searchParams$ = this.searchService.searchData$;
+
+  showFilters = false;
 
   constructor(
     private accommodationService: AccommodationService,
@@ -29,6 +36,11 @@ export class SearchPageComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.foundAccommodationsPageSize = 8;
+    this.foundAccommodationsPageNumber = 0;
+    this.foundAccommodationsTotalPages = 2; 
+    this.foundAccommodations$ = this.accommodationService.foundAccommodations$;
+
     this.route.queryParams.subscribe(queryParams => {
       const searchParams: params = {
         destination: queryParams['destination'] || '',
@@ -41,11 +53,11 @@ export class SearchPageComponent implements OnInit {
         : [''],
         order_by: queryParams['order_by'] || ''
       };
+      this.searchService.setSearchData(searchParams);
       
-      this.performSearch(searchParams);
+      this.loadFoundResearchPage(0);
       this.filterService.getAllServices();
       this.filterService.setSelectedFilters(searchParams.services);
-      this.searchService.setSearchData(searchParams);
     });
   }
 
@@ -60,7 +72,6 @@ export class SearchPageComponent implements OnInit {
       services: params.services || [''],
       order_by: currentParams['order_by'] || ''
     };
-
     this.searchService.setSearchData(searchParams);
     this.router.navigate(['/search_page/'], { queryParams: searchParams});
   }
@@ -72,9 +83,10 @@ export class SearchPageComponent implements OnInit {
     this.search(curr);
   }
 
-  performSearch(searchParams: params) {
-    this.accommodationService.searchAccommodations(searchParams);
-    this.foundAccommodations$ = this.accommodationService.getSearchResults();
+  loadFoundResearchPage(pageNumber: number): void {
+    this.foundAccommodationsPageNumber = pageNumber;
+    this.accommodationService.searchAccommodations(this.searchService.getSearchData());
+    this.accommodationService.getSearchResults(this.foundAccommodationsPageNumber * this.foundAccommodationsPageSize, this.foundAccommodationsPageSize);
   }
 
 }

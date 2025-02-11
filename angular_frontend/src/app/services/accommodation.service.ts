@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, debounceTime, map, Observable, of, Subject, switchMap } from 'rxjs';
 import { Accommodation } from '../models/accommodation';
@@ -16,8 +16,12 @@ export class AccommodationService {
   
   private latestAccommodationsSubject = new BehaviorSubject<AccommodationDTO[]>([]);
   public latestAccommodations$ = this.latestAccommodationsSubject.asObservable();
+
   private mostLikedAccommodationsSubject = new BehaviorSubject<AccommodationDTO[]>([]);
   public mostLikedAccommodations$ = this.mostLikedAccommodationsSubject.asObservable();
+
+  private foundAccommodationsSubject = new BehaviorSubject<AccommodationDTO[]>([]);
+  public foundAccommodations$ = this.foundAccommodationsSubject.asObservable();
 
   private searchParamsSubject = new BehaviorSubject<any>(null);
 
@@ -69,13 +73,14 @@ export class AccommodationService {
     this.searchParamsSubject.next(params)
   }
 
-  public getSearchResults(): Observable<AccommodationDTO[] | null>{
+  /* public getSearchResults(offset: number, pageSize: number): Observable<AccommodationDTO[] | null>{
     return this.searchParamsSubject.pipe(
       debounceTime(300),
       switchMap(params => {
         if (!params) return this.latestAccommodations$;
         console.log('params: ', params);
         const url = `${BACKEND_URL_PREFIX}/api/search`;
+        return this.getAccommodationsDTO(url, offset, pageSize, this.searchResultsSubject);
         return this.http.get<AccommodationDTO[] | { message: string }>(url, { params })
           .pipe(
             map(response => "message" in response ? null : response),
@@ -86,6 +91,25 @@ export class AccommodationService {
           );
       })
     //).subscribe(data => this.accommodationsSubject.next(data));
+    )
+  }
+ */
+  public getSearchResults(offset: number, pageSize: number): void{
+    this.searchParamsSubject.subscribe({
+      next: params => {
+        if (!params) return;
+        let httpParams = new HttpParams();
+
+        Object.keys(params).forEach(key => {
+          if (params[key] != null) {
+            httpParams = httpParams.set(key, params[key]);
+          }
+        });
+
+        const url = `${BACKEND_URL_PREFIX}/api/search?${httpParams.toString()}`;
+        this.getAccommodationsDTO(url, offset, pageSize, this.foundAccommodationsSubject);
+      }
+    }
     )
   }
 
