@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BookingDTO } from '../dtos/bookingDTO';
-import { BehaviorSubject, catchError, of } from 'rxjs';
+import { BehaviorSubject, catchError, of, Subject } from 'rxjs';
 import { BACKEND_URL_PREFIX } from 'src/costants';
 import { HttpClient } from '@angular/common/http';
 
@@ -9,8 +9,20 @@ import { HttpClient } from '@angular/common/http';
 })
 export class BookingService {
 
-  private bookingsSubject = new BehaviorSubject<BookingDTO[] | null>(null);
-  public bookings$ = this.bookingsSubject.asObservable();
+  private acceptedBookingsSubject = new BehaviorSubject<BookingDTO[]>([]);
+  public acceptedBookings$ = this.acceptedBookingsSubject.asObservable();
+
+  private rejectedBookingsSubject = new BehaviorSubject<BookingDTO[]>([]);
+  public rejectedBookings$ = this.rejectedBookingsSubject.asObservable();
+
+  private doneBookingsSubject = new BehaviorSubject<BookingDTO[]>([]);
+  public doneBookings$ = this.doneBookingsSubject.asObservable();
+
+  private doingBookingsSubject = new BehaviorSubject<BookingDTO[]>([]);
+  public doingBookings$ = this.doingBookingsSubject.asObservable();
+
+  private pendingBookingsSubject = new BehaviorSubject<BookingDTO[]>([]);
+  public pendingBookings$ = this.pendingBookingsSubject.asObservable();
 
   constructor(private http: HttpClient) { }
 
@@ -20,9 +32,34 @@ export class BookingService {
         console.error(error);
         return of([]);
       })
-    ).subscribe(data => {
-      console.log(data);
-      this.bookingsSubject.next(data);
+    ).subscribe(bookings => {
+
+      this.doingBookingsSubject.next(bookings.filter(booking => booking.status === "ACCEPTED"));
+      this.rejectedBookingsSubject.next(bookings.filter(booking => booking.status === "REJECTED"));
+      this.doneBookingsSubject.next(bookings.filter(booking => booking.status === "DONE"));
+      this.pendingBookingsSubject.next(bookings.filter(booking => booking.status === "PENDING"));
+      this.doingBookingsSubject.next(bookings.filter(booking => booking.status === "DOING"));
     });
-}
+
+  }
+
+  public getDoneBookings(offset: number, pageSize: number):void{
+    
+  }
+
+  public getPendingBookings(offset: number, pageSize: number):void{
+    
+  }
+
+  public getRejectedBookings(offset: number, pageSize: number):void{
+    
+  }
+
+  public getAcceptedBookings(offset: number, pageSize: number):void{
+    
+  }
+
+  public getDoingBookings(offset: number, pageSize: number):void{
+    
+  }
 }

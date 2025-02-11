@@ -1,6 +1,32 @@
-
-<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-    <app-booking-card *ngFor="let booking of bookings" [booking]="booking" 
-        class="p-4 bg-white rounded-lg shadow-lg">
-    </app-booking-card>
-</div>
+<ng-container *ngIf="(bookings$ | async) as bookings">
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <button type="button" class="carousel-arrow" (click)="prevPage()" [disabled]="pageNumber === 0">
+            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+        </button>
+        
+        <div class="flex flex-wrap justify-center gap-3">
+            <div *ngFor="let booking of bookings" class="p-4 bg-white rounded-lg shadow-lg">
+                <app-booking-card  [booking]="booking"></app-booking-card>
+            </div>
+        </div>
+        <!--app-booking-card *ngFor="let booking of bookings" [booking]="booking" 
+            class="p-4 bg-white rounded-lg shadow-lg">
+        </app-booking-card-->
+    
+        <button type="button" class="carousel-arrow" (click)="nextPage()" [disabled]="pageNumber === totalPages - 1">
+            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+        </button>
+    </div>
+    
+    <div class="flex items-center justify-center space-x-2 lg:px-2"> 
+        <div class="carousel-positions-container">
+            <input type="radio" name="pagePosition" class="carousel-position" *ngFor="let _ of [].constructor(totalPages); let n = index" [checked]="n == pageNumber" value="{{n}}" (click)="getPage(n)">
+        </div>
+    </div>
+</ng-container>
