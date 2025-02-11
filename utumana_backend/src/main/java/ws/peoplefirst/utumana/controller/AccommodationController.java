@@ -390,7 +390,7 @@ public class AccommodationController {
 	}
 	
 	@PreAuthorize("hasAuthority('USER')")
-	@GetMapping(value="/get_latest_uploads")
+	@GetMapping(value="/accommodation/latest_uploads")
 	public List<AccommodationDTO> getLatestUploadsDTO(@RequestParam(value="check_in",required=false) String checkIn, 
 			@RequestParam(value="check_out",required=false) String checkOut, 
 			Authentication auth) {
@@ -411,7 +411,7 @@ public class AccommodationController {
 	}
 	
 	@PreAuthorize("hasAuthority('USER')")
-	@GetMapping(value="/most_liked")
+	@GetMapping(value="/accommodation/most_liked")
 	public List<AccommodationDTO> getMostLikedAccommodationsDTO(Authentication auth) {
 		logger.debug("GET /accommodation/most_liked");
 		Long userId = AuthorizationUtility.getUserFromAuthentication(auth).getId();
@@ -419,7 +419,7 @@ public class AccommodationController {
 	}
 	
 	@PreAuthorize("hasAuthority('USER')")
-	@GetMapping(value = "/prices")
+	@GetMapping(value = "/accommodation/prices")
 	public List<PriceDTO> configurePriceRanges(@RequestParam(value="ids") List<Long> ids, @RequestParam(value="check_in",required=false) String checkIn, 
 			@RequestParam(value="check_out",required=false) String checkOut){
 		
