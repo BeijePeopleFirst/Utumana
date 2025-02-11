@@ -21,7 +21,6 @@ export class AccommodationService {
   
   private allMostLikedAccommodations: boolean = false;
   private allMostLikedAccommodationsSubject = new BehaviorSubject<AccommodationDTO[]>([]);
-
   private mostLikedAccommodationsSubject = new BehaviorSubject<AccommodationDTO[]>([]);
   public mostLikedAccommodations$ = this.mostLikedAccommodationsSubject.asObservable();
   public mostLikedAccommodationsTotalNumber = new BehaviorSubject<number>(0);
@@ -64,6 +63,14 @@ export class AccommodationService {
       return of([]);
     }
     return this.getAccommodationsDTO(`${BACKEND_URL_PREFIX}/api/favorites/${userId}`); // backend is not paginated
+  }
+
+  getMyAccommodations(): Observable<AccommodationDTO[]> {
+    const userId = localStorage.getItem("id");
+    if(!userId){
+      return of([]);
+    }
+    return this.getAccommodationsDTO(`${BACKEND_URL_PREFIX}/api/my_accommodations/${userId}`); // backend is not paginated
   }
 
   /** @Param url - url of api request (should already include pagination params, if any) */

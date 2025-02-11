@@ -128,5 +128,8 @@
 },
 "favourites": {
 	"title": "Preferiti"
+},
+"my_accommodations": {
+	"title": "Le mie sistemazioni"
 }
 }

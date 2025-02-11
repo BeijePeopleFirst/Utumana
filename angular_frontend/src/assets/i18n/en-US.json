@@ -128,5 +128,8 @@
 },
 "favourites": {
 	"title": "Favourite accommodations"
+},
+"my_accommodations": {
+	"title": "My accommodations"
 }
 }

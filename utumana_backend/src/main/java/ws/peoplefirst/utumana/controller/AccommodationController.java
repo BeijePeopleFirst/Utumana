@@ -486,7 +486,7 @@ public class AccommodationController {
 	}
 	
 	@PreAuthorize("hasAuthority('USER')")
-	@GetMapping(value="/get_my_accommodations/{userId}")
+	@GetMapping(value="/my_accommodations/{userId}")
 	public List<AccommodationDTO> getMyAccommodationsDTO(@PathVariable Long userId, Authentication auth) {
 		
 		AuthorizationUtility.checkIsAdminOrMe(auth, userId);

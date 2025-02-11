@@ -1,1 +1,7 @@
-<p>my-accommodations works!</p>
+<section class="flex items-center justify-center pt-8 bg-neutral-1">
+    <div class="container p-5 text-center">
+      <h1 class="text-gray-800">{{'my_accommodations.title' | translate}}</h1>
+      <app-accommodation-cards [accommodations$]="accommodations$" [pageNumber]="accommodationsPageNumber" [totalPages]="accommodationsTotalPages" 
+        (askForPage)="loadAccommodationsPage($event)"></app-accommodation-cards>
+    </div>
+</section>
