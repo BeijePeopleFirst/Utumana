@@ -14,8 +14,8 @@
                 </p>
             </div>
 
-            <div *ngIf="!booking.reviewId" class="flex">
-                <button type="button" class="w-full btn-primary">
+            <div *ngIf="!booking.reviewId && booking.status == 'DONE'" class="flex">
+                <button type="button" class="w-full btn-primary" routerLink="/write_review/{{booking.id}}">
                     {{'bookings.review' | translate}}
                 </button>
             </div>
