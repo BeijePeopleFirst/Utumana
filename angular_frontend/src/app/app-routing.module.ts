@@ -14,6 +14,7 @@ import { SearchPageComponent } from './components/search-page/search-page.compon
 import { BookConfirmComponent } from './components/book-confirm/book-confirm.component';
 import { ConfirmBookingBooknowComponent } from './components/confirm-booking-booknow/confirm-booking-booknow.component';
 import { WriteReviewComponent } from './components/write-review/write-review.component';
+import { FavouritesComponent } from './components/favourites/favourites.component';
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
@@ -21,6 +22,7 @@ const routes: Routes = [
   {path: 'review/:id', component: ReviewCardComponent},
   {path: 'write_review/:bookingId', component: WriteReviewComponent},
   {path: 'profile', component: ProfileComponent},
+  {path: 'favourites', component: FavouritesComponent},
   {path: 'create', component: CreateAccommodationAddressComponent},
   {path: 'my_bookings', component: MyBookingsComponent},
   {path: 'host_dashboard', component: HostDashboardComponent},

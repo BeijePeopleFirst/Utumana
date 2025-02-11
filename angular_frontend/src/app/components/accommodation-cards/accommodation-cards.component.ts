@@ -16,10 +16,6 @@ export class AccommodationCardsComponent{
 
   constructor( ){ }
 
-  ngOnInit(){
-    console.log("Page number: ", this.pageNumber, " of ", this.totalPages);
-  } 
-
   prevPage(): void {
     this.getPage(this.pageNumber - 1);
   }
