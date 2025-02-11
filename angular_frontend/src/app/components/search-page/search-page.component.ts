@@ -45,16 +45,17 @@ export class SearchPageComponent implements OnInit {
       this.performSearch(searchParams);
       this.filterService.getAllServices();
       this.filterService.setSelectedFilters(searchParams.services);
+      this.searchService.setSearchData(searchParams);
     });
   }
 
   search(params: params): void {
     const currentParams = this.route.snapshot.queryParams;
     const searchParams: params = {
-      destination: params.destination ||  '',
+      destination: params.destination || '',
       ['check-in']: params['check-in']|| currentParams['check-in'] || '',
       ['check-out']: params['check-out']|| currentParams['check-out'] || '',
-      number_of_guests: params.number_of_guests|| currentParams['number_of_guests'] || 1,
+      number_of_guests: params.number_of_guests || currentParams['number_of_guests'] || 1,
       free_only: currentParams['free_only'] || false,
       services: params.services || [''],
       order_by: currentParams['order_by'] || ''
@@ -65,11 +66,9 @@ export class SearchPageComponent implements OnInit {
   }
 
   onApplyFilters(selectedServices: string[]): void {
-    console.log("filet", selectedServices)
     this.filterService.setSelectedFilters(selectedServices);
     const curr = this.searchService.getSearchData();
-    curr.services = this.filterService.getSelectedFilters().map(id => id.toString()) || [''];
-    console.log("curr: ", curr);
+    curr.services = selectedServices || [''];
     this.search(curr);
   }
 

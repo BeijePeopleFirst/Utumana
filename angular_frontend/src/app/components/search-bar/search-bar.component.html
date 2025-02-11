@@ -1,7 +1,7 @@
 <form [formGroup]="searchForm" (ngSubmit)="search()" class="flex flex-wrap items-center gap-4 px-6 py-3 rounded-lg shadow-md bg-neutral-2">
     <div class="flex flex-col">
       <label for="city" class="text-sm font-medium">{{'search.city' | translate}}</label>
-      <input id="city" type="text" formControlName="city" class="input-primary">
+      <input id="city" type="text" formControlName="city" class="input-primary" >
     </div>
   
     <div class="flex flex-col">
@@ -25,7 +25,8 @@
     </div>
   
     <button type="submit" [disabled]="searchForm.invalid"
-      class="w-auto btn-primary">
+      class="w-auto btn-primary"
+      [disabled]="!searchForm.valid">
       {{'search.search'| translate}}
     </button>
   </form>
