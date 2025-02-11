@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { params } from '../models/searchParams';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SearchService {
-
-  private searchData: params = {
+  
+  private searchDataSubject = new BehaviorSubject<params>({
     destination: '',
     'check-in': undefined,
     'check-out': undefined,
@@ -14,13 +15,15 @@ export class SearchService {
     free_only: false,
     services: [''],
     order_by: ''
-  };
+  });
+
+  public searchData$ = this.searchDataSubject.asObservable();
 
   setSearchData(data: params) {
-    this.searchData = data;
+    this.searchDataSubject.next(data);
   }
 
-  getSearchData() {
-    return this.searchData;
+  getSearchData(): params {
+    return this.searchDataSubject.value;
   }
 }

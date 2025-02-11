@@ -22,7 +22,6 @@ export class FilterModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.selectedServices = this.filtersService.getSelectedFilters();
-    console.log("iii", this.selectedServices);
   }
 
   toggleService(service: Service): void {
@@ -38,7 +37,7 @@ export class FilterModalComponent implements OnInit {
   }
 
   applyFilters(): void {
-    const selected = Array.from(this.selectedServices);
+    const selected = this.selectedServices.length > 0 ? Array.from(this.selectedServices) : [''];
     this.apply.emit(selected);
     this.close.emit();
   }

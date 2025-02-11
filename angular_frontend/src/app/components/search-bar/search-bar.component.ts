@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { SearchService } from 'src/app/services/search.service';
 import {AccommodationService} from 'src/app/services/accommodation.service';
@@ -12,7 +12,7 @@ import { params } from 'src/app/models/searchParams';
   templateUrl: './search-bar.component.html',
   styleUrls: ['./search-bar.component.css']
 })
-export class SearchBarComponent {
+export class SearchBarComponent implements OnInit{
   searchForm: FormGroup;
   @Output() searchSubmitted = new EventEmitter<params>();
 
@@ -39,6 +39,26 @@ export class SearchBarComponent {
     });
   }
 
+  ngOnInit(): void {
+    const savedData = this.searchService.getSearchData();
+    console.log("saved: ", savedData);
+    
+    this.searchForm = this.fb.group({
+      city: [savedData?.destination || ''],
+      check_in: [savedData?.['check-in'] || null, Validators.required],
+      check_out: [savedData?.['check-out'] || null, Validators.required],
+      people: [savedData?.number_of_guests || 1, [Validators.required, Validators.min(1)]]
+    }, {
+      validators: [(formGroup: AbstractControl): ValidationErrors | null => {
+        return DateValidators.dateRange(
+          formGroup.get('check_in')!,
+          formGroup.get('check_out')!
+        );
+      }]
+    });
+
+  }
+
   search() {
     if (this.searchForm.valid) {
       const params = this.accommodationService.getParams(this.searchForm.value);
@@ -48,7 +68,6 @@ export class SearchBarComponent {
       } else {
         params.services = ['']
       }
-      console.log("inal", params);
       this.searchService.setSearchData(params);
       this.searchSubmitted.emit(params);
     } else {
