@@ -24,12 +24,12 @@ export class AccommodationService {
   constructor(private http: HttpClient) { }
 
   public getLatestUploads(offset: number, pageSize: number): void {
-    this.getAccommodationsDTO(`${BACKEND_URL_PREFIX}/api/get_latest_uploads`, offset, pageSize, this.latestAccommodationsSubject);
+    this.getAccommodationsDTO(`${BACKEND_URL_PREFIX}/api/accommodation/latest_uploads`, offset, pageSize, this.latestAccommodationsSubject);
   }
 
   getMostLikedAccommodations(offset: number, pageSize: number): void {
     // TODO get most liked accommodations from backend
-    this.getAccommodationsDTO(`${BACKEND_URL_PREFIX}/api/get_latest_uploads`, offset, pageSize, this.mostLikedAccommodationsSubject);
+    this.getAccommodationsDTO(`${BACKEND_URL_PREFIX}/api/accommodation/most_liked`, offset, pageSize, this.mostLikedAccommodationsSubject);
   }
 
   getAccommodationsDTO(url: string, offset: number, pageSize: number, subject: Subject<AccommodationDTO[]>): void {
@@ -51,7 +51,7 @@ export class AccommodationService {
 
   getPrices(accommodations: AccommodationDTO[], subject: Subject<AccommodationDTO[]>): void {
     let ids = accommodations.map(a => a.id);
-    this.http.get<PriceDTO[]>(`${BACKEND_URL_PREFIX}/api/prices?ids=${ids}`).pipe(
+    this.http.get<PriceDTO[]>(`${BACKEND_URL_PREFIX}/api/accommodation/prices?ids=${ids}`).pipe(
       catchError(error => {
         console.error(error);
         return of([]);
