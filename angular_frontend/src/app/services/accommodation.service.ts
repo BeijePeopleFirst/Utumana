@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, debounceTime, map, Observable, of, Subject, switchMap } from 'rxjs';
 import { Accommodation } from '../models/accommodation';
-import { BACKEND_URL_PREFIX } from 'src/costants';
+import { BACKEND_URL_PREFIX, LATEST_UPLOADS_LIMIT } from 'src/costants';
 import { AccommodationDTO } from '../dtos/accommodationDTO';
 import { FormGroup } from '@angular/forms';
 import { params } from '../models/searchParams';
@@ -13,33 +13,65 @@ import { PriceDTO } from '../dtos/priceDTO';
   providedIn: 'root'
 })
 export class AccommodationService {
-  
+  private allLatestAccommodations: boolean = false;
+  private allLatestAccommodationsSubject = new BehaviorSubject<AccommodationDTO[]>([]);
   private latestAccommodationsSubject = new BehaviorSubject<AccommodationDTO[]>([]);
   public latestAccommodations$ = this.latestAccommodationsSubject.asObservable();
+  public latestAccommodationsTotalNumber = new BehaviorSubject<number>(0);
+  
+  private allMostLikedAccommodations: boolean = false;
+  private allMostLikedAccommodationsSubject = new BehaviorSubject<AccommodationDTO[]>([]);
   private mostLikedAccommodationsSubject = new BehaviorSubject<AccommodationDTO[]>([]);
   public mostLikedAccommodations$ = this.mostLikedAccommodationsSubject.asObservable();
+  public mostLikedAccommodationsTotalNumber = new BehaviorSubject<number>(0);
+
+  private allFavourites: boolean = false;
+  private allFavouritesSubject = new BehaviorSubject<AccommodationDTO[]>([]);
   private favouritesSubject = new BehaviorSubject<AccommodationDTO[]>([]);
   public favourites$ = this.favouritesSubject.asObservable();
+  public favouritesTotalNumber = new BehaviorSubject<number>(0);
 
   private searchParamsSubject = new BehaviorSubject<any>(null);
 
   constructor(private http: HttpClient) { }
 
   public getLatestUploads(offset: number, pageSize: number): void {
-    this.getAccommodationsDTO(`${BACKEND_URL_PREFIX}/api/accommodation/latest_uploads`, offset, pageSize, this.latestAccommodationsSubject);
+    if(!this.allLatestAccommodations){
+      this.getAccommodationsDTO(`${BACKEND_URL_PREFIX}/api/accommodation/latest_uploads`, 0, LATEST_UPLOADS_LIMIT, this.allLatestAccommodationsSubject);
+    }
+    this.allLatestAccommodationsSubject.asObservable().subscribe(accommodations =>{ 
+      this.latestAccommodationsSubject.next(accommodations.slice(offset, offset + pageSize));
+      this.latestAccommodationsTotalNumber.next(accommodations.length);
+      this.allLatestAccommodations = true;
+    });
   }
 
   getMostLikedAccommodations(offset: number, pageSize: number): void {
-    this.getAccommodationsDTO(`${BACKEND_URL_PREFIX}/api/accommodation/most_liked`, offset, pageSize, this.mostLikedAccommodationsSubject);
+    if(!this.allMostLikedAccommodations){
+      this.getAccommodationsDTO(`${BACKEND_URL_PREFIX}/api/accommodation/most_liked`, 0, LATEST_UPLOADS_LIMIT, this.allMostLikedAccommodationsSubject);
+    }
+    this.allMostLikedAccommodationsSubject.asObservable().subscribe(accommodations =>{ 
+      this.mostLikedAccommodationsSubject.next(accommodations.slice(offset, offset + pageSize));
+      this.mostLikedAccommodationsTotalNumber.next(accommodations.length);
+      this.allMostLikedAccommodations = true;
+    });
   }
 
   getFavourites(offset: number, pageSize: number): void {
     const userId = localStorage.getItem("id");
-    if(userId){
-      this.getAccommodationsDTO(`${BACKEND_URL_PREFIX}/api/favorites/${userId}`, offset, pageSize, this.favouritesSubject);
-    }else{
+    if(!userId){
       this.favouritesSubject.next([]);
+      return;
     }
+
+    if(!this.allFavourites){
+      this.getAccommodationsDTO(`${BACKEND_URL_PREFIX}/api/favorites/${userId}`, 0, 1000, this.allFavouritesSubject); // backend is not paginated
+    }
+    this.allFavouritesSubject.asObservable().subscribe(accommodations =>{ 
+      this.favouritesSubject.next(accommodations.slice(offset, offset + pageSize));
+      this.favouritesTotalNumber.next(accommodations.length);
+      this.allFavourites = true;
+    });
   }
 
   getAccommodationsDTO(url: string, offset: number, pageSize: number, subject: Subject<AccommodationDTO[]>): void {
