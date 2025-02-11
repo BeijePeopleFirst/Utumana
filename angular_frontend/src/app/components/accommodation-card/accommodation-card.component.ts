@@ -23,7 +23,6 @@ export class AccommodationCardComponent implements OnInit {
   ){}
 
   ngOnInit(): void {
-    console.log(this.accommodation);
     this.priceRange = this.accommodation.max_price - this.accommodation.min_price > 0;
     this.free = !this.priceRange && this.accommodation.max_price < 0.01;
   }

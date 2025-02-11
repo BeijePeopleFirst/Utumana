@@ -32,7 +32,8 @@
 	"search": "Cerca",
 	"check_inError": "Data di checkIn non valida",
 	"check_outInconcistency": "Data di checkOut prima di checkIn",
-	"resFound": "Risultati ricerca"
+	"resFound": "Risultati ricerca",
+	"is_free": "Solo sistemazioni gratuite"
 },
 
 "accommodation-card-details": {
@@ -111,18 +112,23 @@
 	"checkIn":"Check-in",
 	"checkOut":"Check-out",
 	"price":"prezzo",
-	"review": "lascia una recensione",
+	"free": "gratis",
+	"review": "Lascia una recensione",
 	"latest":"Le mie ultime prenotazioni",
 	"doing":"Prenotazione in corso",
 	"pending":"Prenotazioni non ancora accettate",
 	"done":"Prenotazioni concluse",
 	"accepted":"Prenotazioni accettate",
-	"rejected":"Prenotazioni rifiutate"
+	"rejected":"Prenotazioni rifiutate",
+	"no_bookings": "Nessuna prenotazione"
 },
 "filters": {
 	"title": "Filtri",
 	"cancel": "Cancella",
 	"apply": "Applica",
 	"services": "Servizi"
+},
+"favourites": {
+	"title": "Preferiti"
 }
 }

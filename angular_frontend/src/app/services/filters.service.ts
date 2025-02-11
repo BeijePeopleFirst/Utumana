@@ -17,6 +17,7 @@ export class FiltersService {
   
   services$ = this.servicesSubject.asObservable();
   selectedFilters$ = this.selectedFiltersSubject.asObservable();
+
   private filters: params = {
     destination: '',
     number_of_guests: 0,
@@ -37,19 +38,6 @@ export class FiltersService {
       console.log(data);
       this.servicesSubject.next(data);
     });
-  }
-
-  updateSelectedFilters(filters: string[]): Observable<AccommodationDTO[] | null> {
-    this.selectedFiltersSubject.next(filters);
-    this.filters = this.searchService.getSearchData(); 
-    if(filters.length != 0)
-      this.filters.services = filters.map(filter => filter.toString());
-    else
-      this.filters.services = [''];
-    this.searchService.setSearchData(this.filters);
-    console.log("filter:" ,this.filters)
-    this.accommodationService.searchAccommodations(this.filters);
-    return this.accommodationService.getSearchResults();
   }
 
   setSelectedFilters(selectedServices: string[]): void {

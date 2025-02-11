@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, Subscription, map } from 'rxjs';
 import { AccommodationDTO } from 'src/app/dtos/accommodationDTO';
@@ -12,7 +12,7 @@ import { iconURL } from 'src/costants';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   iconUrl = iconURL;
 
   latestUploads$!: Observable<AccommodationDTO[]> ;
@@ -25,6 +25,8 @@ export class HomeComponent implements OnInit {
   mostLikedPageNumber!: number;
   mostLikedTotalPages!: number;
 
+  subscriptions: Subscription = new Subscription();
+
   constructor(
     private router: Router,
     private accommodationService:AccommodationService,
@@ -35,14 +37,24 @@ export class HomeComponent implements OnInit {
     this.latestUploads$ = this.accommodationService.latestAccommodations$;
     this.latestUploadsPageSize = 4;
     this.latestUploadsPageNumber = 0;
-    this.latestUploadsTotalPages = 2; // latest accommodation pages that the user can look at
+    this.subscriptions.add(
+      this.accommodationService.latestAccommodationsTotalNumber.subscribe(
+        number => this.latestUploadsTotalPages = Math.ceil(number/this.latestUploadsPageSize))
+    );
     this.loadLatestAccommodationsPage(0);
 
     this.mostLiked$ = this.accommodationService.mostLikedAccommodations$;
     this.mostLikedPageSize = 4;
     this.mostLikedPageNumber = 0;
-    this.mostLikedTotalPages = 2; // most liked accommodation pages that the user can look at
+    this.subscriptions.add(
+      this.accommodationService.mostLikedAccommodationsTotalNumber.subscribe(
+        number => this.mostLikedTotalPages = Math.ceil(number/this.mostLikedPageSize))
+    );
     this.loadMostLikedAccommodationsPage(0);
+  }
+
+  ngOnDestroy(): void {
+      this.subscriptions.unsubscribe();
   }
 
   loadLatestAccommodationsPage(pageNumber: number): void {

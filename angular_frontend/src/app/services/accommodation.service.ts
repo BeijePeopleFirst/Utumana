@@ -1,8 +1,8 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, debounceTime, map, Observable, of, Subject, switchMap } from 'rxjs';
+import { BehaviorSubject, catchError, debounceTime, map, Observable, of, Subject, switchMap, tap } from 'rxjs';
 import { Accommodation } from '../models/accommodation';
-import { BACKEND_URL_PREFIX } from 'src/costants';
+import { BACKEND_URL_PREFIX, LATEST_UPLOADS_LIMIT } from 'src/costants';
 import { AccommodationDTO } from '../dtos/accommodationDTO';
 import { FormGroup } from '@angular/forms';
 import { params } from '../models/searchParams';
@@ -13,25 +13,90 @@ import { PriceDTO } from '../dtos/priceDTO';
   providedIn: 'root'
 })
 export class AccommodationService {
-  
+  private allLatestAccommodations: boolean = false;
+  private allLatestAccommodationsSubject = new BehaviorSubject<AccommodationDTO[]>([]);
   private latestAccommodationsSubject = new BehaviorSubject<AccommodationDTO[]>([]);
   public latestAccommodations$ = this.latestAccommodationsSubject.asObservable();
+  public latestAccommodationsTotalNumber = new BehaviorSubject<number>(0);
+  
+  private allMostLikedAccommodations: boolean = false;
+  private allMostLikedAccommodationsSubject = new BehaviorSubject<AccommodationDTO[]>([]);
+
   private mostLikedAccommodationsSubject = new BehaviorSubject<AccommodationDTO[]>([]);
   public mostLikedAccommodations$ = this.mostLikedAccommodationsSubject.asObservable();
+  public mostLikedAccommodationsTotalNumber = new BehaviorSubject<number>(0);
+
+  private favouritesSubject = new BehaviorSubject<AccommodationDTO[]>([]);
+  public favourites$ = this.favouritesSubject.asObservable();
+
+  private foundAccommodationsSubject = new BehaviorSubject<AccommodationDTO[]>([]);
+  public foundAccommodations$ = this.foundAccommodationsSubject.asObservable();
 
   private searchParamsSubject = new BehaviorSubject<any>(null);
 
   constructor(private http: HttpClient) { }
 
   public getLatestUploads(offset: number, pageSize: number): void {
-    this.getAccommodationsDTO(`${BACKEND_URL_PREFIX}/api/accommodation/latest_uploads`, offset, pageSize, this.latestAccommodationsSubject);
+    if(!this.allLatestAccommodations){
+      this.getAccommodationsDTOToSubject(`${BACKEND_URL_PREFIX}/api/accommodation/latest_uploads`, 0, LATEST_UPLOADS_LIMIT, this.allLatestAccommodationsSubject);
+    }
+    this.allLatestAccommodationsSubject.asObservable().subscribe(accommodations =>{ 
+      this.latestAccommodationsSubject.next(accommodations.slice(offset, offset + pageSize));
+      this.latestAccommodationsTotalNumber.next(accommodations.length);
+      this.allLatestAccommodations = true;
+    });
   }
 
   getMostLikedAccommodations(offset: number, pageSize: number): void {
-    this.getAccommodationsDTO(`${BACKEND_URL_PREFIX}/api/accommodation/most_liked`, offset, pageSize, this.mostLikedAccommodationsSubject);
+    if(!this.allMostLikedAccommodations){
+      this.getAccommodationsDTOToSubject(`${BACKEND_URL_PREFIX}/api/accommodation/most_liked`, 0, LATEST_UPLOADS_LIMIT, this.allMostLikedAccommodationsSubject);
+    }
+    this.allMostLikedAccommodationsSubject.asObservable().subscribe(accommodations =>{ 
+      this.mostLikedAccommodationsSubject.next(accommodations.slice(offset, offset + pageSize));
+      this.mostLikedAccommodationsTotalNumber.next(accommodations.length);
+      this.allMostLikedAccommodations = true;
+    });
   }
 
-  getAccommodationsDTO(url: string, offset: number, pageSize: number, subject: Subject<AccommodationDTO[]>): void {
+  getFavourites(): Observable<AccommodationDTO[]> {
+    const userId = localStorage.getItem("id");
+    if(!userId){
+      return of([]);
+    }
+    return this.getAccommodationsDTO(`${BACKEND_URL_PREFIX}/api/favorites/${userId}`); // backend is not paginated
+  }
+
+  /** @Param url - url of api request (should already include pagination params, if any) */
+  getAccommodationsDTO(url: string): Observable<AccommodationDTO[]> {
+    return this.http.get<AccommodationDTO[]>(url).pipe(
+      catchError(error => {
+        console.error(error);
+        return of([]);
+      }),
+      tap(data => {
+        console.log("Accommodation Service - Fetched accommodations DTO:", data);
+      })
+    );
+  }
+
+  getPrices(accommodations: AccommodationDTO[]): Observable<AccommodationDTO[]> {
+    let ids = accommodations.map(a => a.id);
+    return this.http.get<PriceDTO[]>(`${BACKEND_URL_PREFIX}/api/accommodation/prices?ids=${ids}`).pipe(
+      catchError(error => {
+        console.error(error);
+        return of([]);
+      }),
+      map(prices => {
+        for(let i: number = 0; i < prices.length; i++){
+          accommodations[i].min_price = prices[i].min_price;
+          accommodations[i].max_price = prices[i].max_price;
+        }
+        return accommodations;
+      })
+    );
+  }
+
+  getAccommodationsDTOToSubject(url: string, offset: number, pageSize: number, subject: Subject<AccommodationDTO[]>): void {
     // TODO get page of results
     this.http.get<AccommodationDTO[]>(url).pipe(
       catchError(error => {
@@ -43,12 +108,12 @@ export class AccommodationService {
       if(data.length == 0){
         subject.next(data);
       }else{
-        this.getPrices(data.slice(offset, offset + pageSize), subject); // remove slice when result will be paginated by backend
+        this.getPricesToSubject(data.slice(offset, offset + pageSize), subject); // remove slice when result will be paginated by backend
       }
     });
   }
 
-  getPrices(accommodations: AccommodationDTO[], subject: Subject<AccommodationDTO[]>): void {
+  getPricesToSubject(accommodations: AccommodationDTO[], subject: Subject<AccommodationDTO[]>): void {
     let ids = accommodations.map(a => a.id);
     this.http.get<PriceDTO[]>(`${BACKEND_URL_PREFIX}/api/accommodation/prices?ids=${ids}`).pipe(
       catchError(error => {
@@ -68,23 +133,22 @@ export class AccommodationService {
     this.searchParamsSubject.next(params)
   }
 
-  public getSearchResults(): Observable<AccommodationDTO[] | null>{
-    return this.searchParamsSubject.pipe(
-      debounceTime(300),
-      switchMap(params => {
-        if (!params) return this.latestAccommodations$;
-        console.log('params: ', params);
-        const url = `${BACKEND_URL_PREFIX}/api/search`;
-        return this.http.get<AccommodationDTO[] | { message: string }>(url, { params })
-          .pipe(
-            map(response => "message" in response ? null : response),
-            catchError(error => {
-              console.error(error);
-              return of(null);
-            })
-          );
-      })
-    //).subscribe(data => this.accommodationsSubject.next(data));
+  public getSearchResults(offset: number, pageSize: number): void{
+    this.searchParamsSubject.subscribe({
+      next: params => {
+        if (!params) return;
+        let httpParams = new HttpParams();
+
+        Object.keys(params).forEach(key => {
+          if (params[key] != null) {
+            httpParams = httpParams.set(key, params[key]);
+          }
+        });
+
+        const url = `${BACKEND_URL_PREFIX}/api/search?${httpParams.toString()}`;
+        this.getAccommodationsDTOToSubject(url, offset, pageSize, this.foundAccommodationsSubject);
+      }
+    }
     )
   }
 
@@ -95,7 +159,7 @@ export class AccommodationService {
       "check-in": form.check_in,
       "check-out": form.check_out,
       "number_of_guests": form.people,
-      "free_only": false,
+      "free_only": form.free_only,
       "services": [""],
       "order_by": "minPrice-desc"
     }
