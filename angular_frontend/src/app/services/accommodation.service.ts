@@ -18,6 +18,8 @@ export class AccommodationService {
   public latestAccommodations$ = this.latestAccommodationsSubject.asObservable();
   private mostLikedAccommodationsSubject = new BehaviorSubject<AccommodationDTO[]>([]);
   public mostLikedAccommodations$ = this.mostLikedAccommodationsSubject.asObservable();
+  private favouritesSubject = new BehaviorSubject<AccommodationDTO[]>([]);
+  public favourites$ = this.favouritesSubject.asObservable();
 
   private searchParamsSubject = new BehaviorSubject<any>(null);
 
@@ -28,8 +30,16 @@ export class AccommodationService {
   }
 
   getMostLikedAccommodations(offset: number, pageSize: number): void {
-    // TODO get most liked accommodations from backend
     this.getAccommodationsDTO(`${BACKEND_URL_PREFIX}/api/accommodation/most_liked`, offset, pageSize, this.mostLikedAccommodationsSubject);
+  }
+
+  getFavourites(offset: number, pageSize: number): void {
+    const userId = localStorage.getItem("id");
+    if(userId){
+      this.getAccommodationsDTO(`${BACKEND_URL_PREFIX}/api/favorites/${userId}`, offset, pageSize, this.favouritesSubject);
+    }else{
+      this.favouritesSubject.next([]);
+    }
   }
 
   getAccommodationsDTO(url: string, offset: number, pageSize: number, subject: Subject<AccommodationDTO[]>): void {

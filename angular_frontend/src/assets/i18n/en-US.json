@@ -125,5 +125,8 @@
 	"cancel": "Cancel",
 	"apply": "Apply",
 	"services": "Services"
+},
+"favourites": {
+	"title": "Favourite accommodations"
 }
 }

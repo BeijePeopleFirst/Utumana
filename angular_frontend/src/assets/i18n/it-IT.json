@@ -125,5 +125,8 @@
 	"cancel": "Cancella",
 	"apply": "Applica",
 	"services": "Servizi"
+},
+"favourites": {
+	"title": "Preferiti"
 }
 }
