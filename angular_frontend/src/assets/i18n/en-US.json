@@ -31,7 +31,8 @@
 	"search": "Search",
 	"check_inError": "checkIn date invalid",
 	"check_outInconcistency": "checkIn not before checkOut",
-	"resFound": "Found Result"
+	"resFound": "Found Result",
+	"is_free": "Only free accommodations"
 },
 
 "accommodation-card-details": {

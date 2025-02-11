@@ -28,7 +28,8 @@ export class SearchBarComponent implements OnInit{
       city: [savedData?.destination || ''],
       check_in: [savedData?.['check-in'] || null, Validators.required],
       check_out: [savedData?.['check-out'] || null, Validators.required],
-      people: [savedData?.number_of_guests || 1, [Validators.required, Validators.min(1)]]
+      people: [savedData?.number_of_guests || 1, [Validators.required, Validators.min(1)]],
+      free_only: [savedData?.free_only || false],
     }, {
       validators: [(formGroup: AbstractControl): ValidationErrors | null => {
         return DateValidators.dateRange(
@@ -47,7 +48,8 @@ export class SearchBarComponent implements OnInit{
       city: [savedData?.destination || ''],
       check_in: [savedData?.['check-in'] || null, Validators.required],
       check_out: [savedData?.['check-out'] || null, Validators.required],
-      people: [savedData?.number_of_guests || 1, [Validators.required, Validators.min(1)]]
+      people: [savedData?.number_of_guests || 1, [Validators.required, Validators.min(1)]],
+      free_only: [savedData?.free_only],
     }, {
       validators: [(formGroup: AbstractControl): ValidationErrors | null => {
         return DateValidators.dateRange(
@@ -68,10 +70,16 @@ export class SearchBarComponent implements OnInit{
       } else {
         params.services = ['']
       }
+      console.log("search bar params:", params);
       this.searchService.setSearchData(params);
       this.searchSubmitted.emit(params);
     } else {
       console.log('Il form non è valido!');
     }
+  }
+
+  toggleIsFree() {
+    const currentValue = this.searchForm.get('free_only')?.value;
+    this.searchForm.get('free_only')?.setValue(!currentValue);
   }
 }

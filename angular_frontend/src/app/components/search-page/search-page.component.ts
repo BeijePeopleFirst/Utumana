@@ -62,16 +62,18 @@ export class SearchPageComponent implements OnInit {
   }
 
   search(params: params): void {
+    console.log("arrivano: ", params.free_only);
     const currentParams = this.route.snapshot.queryParams;
     const searchParams: params = {
       destination: params.destination || '',
       ['check-in']: params['check-in']|| currentParams['check-in'] || '',
       ['check-out']: params['check-out']|| currentParams['check-out'] || '',
       number_of_guests: params.number_of_guests || currentParams['number_of_guests'] || 1,
-      free_only: currentParams['free_only'] || false,
+      free_only: params.free_only ,
       services: params.services || [''],
-      order_by: currentParams['order_by'] || ''
+      order_by: currentParams['order_by'] || '',
     };
+    console.log("page: ", searchParams);
     this.searchService.setSearchData(searchParams);
     this.router.navigate(['/search_page/'], { queryParams: searchParams});
   }

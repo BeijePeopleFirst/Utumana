@@ -32,7 +32,8 @@
 	"search": "Cerca",
 	"check_inError": "Data di checkIn non valida",
 	"check_outInconcistency": "Data di checkOut prima di checkIn",
-	"resFound": "Risultati ricerca"
+	"resFound": "Risultati ricerca",
+	"is_free": "Solo sistemazioni gratuite"
 },
 
 "accommodation-card-details": {
