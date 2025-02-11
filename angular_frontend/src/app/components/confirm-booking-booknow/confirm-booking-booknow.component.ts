@@ -55,7 +55,7 @@ export class ConfirmBookingBooknowComponent implements OnInit {
           return;
         }
         else {
-          this.messages.push("Created Booking ID -> " + response.id);
+          this.messages.push("Created Booking STATUS -> " + response.status);
           this.messages.push("Redirect in few seconds...");
           
           setTimeout(() => this.goBack(), 3500);

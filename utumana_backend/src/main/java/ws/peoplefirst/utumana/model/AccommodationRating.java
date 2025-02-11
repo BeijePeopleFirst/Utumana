@@ -2,6 +2,8 @@ package ws.peoplefirst.utumana.model;
 
 import org.hibernate.annotations.Immutable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -25,6 +27,7 @@ public class AccommodationRating {
 	@OneToOne(fetch = FetchType.LAZY)
 	@MapsId
 	@JoinColumn(name = "accommodation_id")
+	@JsonIgnore
 	private Accommodation accommodation;
 	
 
