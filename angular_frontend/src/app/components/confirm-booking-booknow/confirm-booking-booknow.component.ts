@@ -19,6 +19,8 @@ export class ConfirmBookingBooknowComponent implements OnInit {
 
   messages: string[] = [];
 
+  tmp!: any;
+
 
   constructor(
     private bookingService: BookingService,
@@ -26,16 +28,17 @@ export class ConfirmBookingBooknowComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    let tmp = JSON.parse(localStorage.getItem("created_booking")!);
-    this.createdBooking = new Booking(tmp._accommodation, tmp._timestamp, tmp._price, tmp._status, tmp._check_in, tmp._check_out, tmp._is_unavailability, tmp._user_id);
+    this.tmp = JSON.parse(localStorage.getItem("created_booking")!);
+    this.createdBooking = new Booking(this.tmp._accommodation, this.tmp._timestamp, this.tmp._price, this.tmp._status, this.tmp._check_in, this.tmp._check_out, this.tmp._is_unavailability, this.tmp._user_id);
     //console.log(this.createdBooking.accommodation);
-    tmp = JSON.parse(localStorage.getItem("num_guests")!);
-    this.numGuests = Number(tmp);
+
+    this.tmp = JSON.parse(localStorage.getItem("num_guests")!);
+    this.numGuests = Number(this.tmp);
     
-    tmp = JSON.parse(localStorage.getItem("chosen_availability_data")!);
-    this.pricePerNight = tmp.chosen_availability.price_per_night;
-    this.nightsNumber = tmp.nights_number;
-    this.postOperation = tmp.post_operation;
+    this.tmp = JSON.parse(localStorage.getItem("chosen_availability_data")!);
+    this.pricePerNight = this.tmp.chosen_availability.price_per_night;
+    this.nightsNumber = this.tmp.nights_number;
+    this.postOperation = this.tmp.post_operation;
   }
 
   goBack() {
@@ -44,9 +47,16 @@ export class ConfirmBookingBooknowComponent implements OnInit {
     return;
   }
 
+  invalidDateProvided!: boolean;
   bookNow() {
-    this.createdBooking.check_in = this.convertToCompatibleDateStringFormat(this.createdBooking.check_in);
-    this.createdBooking.check_out = this.convertToCompatibleDateStringFormat(this.createdBooking.check_out);
+    this.invalidDateProvided = false;
+
+    this.createdBooking.check_in = this.convertToCompatibleDateStringFormat(this.createdBooking.check_in) !== "Error" ? this.convertToCompatibleDateStringFormat(this.createdBooking.check_in) : this.createdBooking.check_in;
+    if(this.invalidDateProvided) return;
+
+    this.createdBooking.check_out = this.convertToCompatibleDateStringFormat(this.createdBooking.check_out) !== "Error" ? this.convertToCompatibleDateStringFormat(this.createdBooking.check_out) : this.createdBooking.check_out;
+    if(this.invalidDateProvided) return;
+    
     this.bookingService.newBooking(this.createdBooking).subscribe(
       response => {
         if("message" in response) {
@@ -56,6 +66,15 @@ export class ConfirmBookingBooknowComponent implements OnInit {
         }
         else {
           this.messages.push("Created Booking STATUS -> " + response.status);
+
+          this.tmp.chosen_availability.start_date = this.createdBooking.check_in;
+          this.tmp.chosen_availability.end_date = this.createdBooking.check_out;
+          localStorage.setItem("chosen_availability_data", JSON.stringify(this.tmp));
+
+          this.tmp = JSON.parse(localStorage.getItem("num_guests")!);
+          this.tmp = this.numGuests;
+          localStorage.setItem("num_guests", JSON.stringify(this.tmp));
+
           this.messages.push("Redirect in few seconds...");
           
           setTimeout(() => this.goBack(), 3500);
@@ -66,9 +85,52 @@ export class ConfirmBookingBooknowComponent implements OnInit {
 
   //From dd/MM/yyyy to yyyy-MM-dd:
   private convertToCompatibleDateStringFormat(date: string): string {
-    console.log("confirm booking booknow convertToCompatibleDateStringFormat -> received: ", date);
-    let tokens: string[] = date.split('/');
-    return tokens[2] + '-' + tokens[1] + '-' + tokens[0];
+
+    try {
+      this.checkDateInput(date);
+    }
+    catch(ex: any) {
+      this.addMessage(ex.message);
+      this.invalidDateProvided = true;
+      return "Error";
+    }
+
+    let tokens: string[] = date.includes('/') ? date.split('/') : date.split('-');
+
+    if(date.includes('/')) return tokens[2] + '-' + tokens[1] + '-' + tokens[0];
+    else return tokens[0] + '-' + tokens[1] + '-' + tokens[2];
+  }
+
+  private checkDateInput(date: string): void {
+
+    if(!date || date == "") throw new Error("Invalid Date Format provided");
+
+    //-> Accepted Pattern: dd/MM/yyyy
+    let dateRegex = /^(0?[1-9]|1[0-9]|2[0-9]|3[01])\/(0?[1-9]|1[0-2])\/([1-9][0-9]{3})$/;
+
+    //-> Accepted Pattern: yyyy-MM-dd
+    let dateRegex2 = /^([1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/
+    if(!dateRegex.test(date) && !dateRegex2.test(date)) throw new Error("Invalid Date provided");
+
+    if(!this.lecitDateProvided(date)) throw new Error("Invalid Date provided: the specified Date does not exist");
+
+  }
+
+  private lecitDateProvided(date: string): boolean {
+    try {
+      let args: string[] = date.includes('/') ? date.split('/') : date.split('-');
+
+      let tmp: Date;
+      if(date.includes('/')) tmp = new Date(+args[2], +args[1] - 1, +args[0]);
+      else tmp = new Date(+args[0], +args[1] - 1, +args[2]);
+
+      if(isNaN(tmp.getTime())) return false;
+    }
+    catch(ex: any) {
+      return false;
+    }
+
+    return true;
   }
 
   clearMessages() {
