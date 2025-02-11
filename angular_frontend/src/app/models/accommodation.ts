@@ -1,3 +1,4 @@
+import { AccommodationRating } from "./accommodationRating";
 import { Availability } from "./availability";
 import { Photo } from "./photo";
 import { Service } from "./service";
@@ -24,7 +25,8 @@ export class Accommodation {
 	private _services: Service[]= [];
 	private _photos: Photo[] = [];
 	private _availabilities: Availability[] = [];
-
+    private _accomodationRating?: AccommodationRating | undefined;
+    
 
     constructor() 
     {}
@@ -203,4 +205,10 @@ export class Accommodation {
         this._availabilities = value;
     }
 
+    public get rating(): AccommodationRating | undefined {
+        return this._accomodationRating;
+    }
+    public set rating(value: AccommodationRating | undefined) {
+        this._accomodationRating = value;
+    }
 }
