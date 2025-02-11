@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, of } from 'rxjs';
 import { AccommodationDTO } from 'src/app/dtos/accommodationDTO';
 import { AccommodationService } from 'src/app/services/accommodation.service';
 
@@ -8,34 +8,31 @@ import { AccommodationService } from 'src/app/services/accommodation.service';
   templateUrl: './favourites.component.html',
   styleUrls: ['./favourites.component.css']
 })
-export class FavouritesComponent implements OnInit, OnDestroy {
+export class FavouritesComponent implements OnInit {
   favourites$!: Observable<AccommodationDTO[]> ;
+  allFavourites!: AccommodationDTO[];
   favouritesPageSize!: number;
   favouritesPageNumber!: number;
   favouritesTotalPages!: number;
-  subscriptions: Subscription = new Subscription();
 
   constructor(
       private accommodationService: AccommodationService
     ){ }
 
   ngOnInit(): void {
-    this.favourites$ = this.accommodationService.favourites$;
     this.favouritesPageSize = 4;
     this.favouritesPageNumber = 0;
-    this.subscriptions.add(
-      this.accommodationService.favouritesTotalNumber.subscribe(
-        number => this.favouritesTotalPages = Math.ceil(number/this.favouritesPageSize))
-    );
-    this.loadFavouritesPage(0);
-  }
-
-  ngOnDestroy(): void {
-      this.subscriptions.unsubscribe();
+    this.accommodationService.getFavourites().subscribe(favourites => {
+      this.allFavourites = favourites;
+      console.log("All fav", this.allFavourites);
+      this.favouritesTotalPages = Math.ceil( favourites.length / this.favouritesPageSize );
+      this.favourites$ = of(favourites.slice(0, this.favouritesPageSize));
+    });
   }
 
   loadFavouritesPage(pageNumber: number): void {
     this.favouritesPageNumber = pageNumber;
-    this.accommodationService.getFavourites(this.favouritesPageNumber * this.favouritesPageSize, this.favouritesPageSize);
+    let offset = this.favouritesPageNumber * this.favouritesPageSize;
+    this.favourites$ = of(this.allFavourites.slice(offset, offset + this.favouritesPageSize));
   }
 }
