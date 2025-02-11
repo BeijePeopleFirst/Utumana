@@ -44,10 +44,9 @@ export class ConfirmBookingBooknowComponent implements OnInit {
     return;
   }
 
-  //TODO:
   bookNow() {
-    this.createdBooking.check_in = new Date(this.createdBooking.check_in).toISOString().split('T')[0];    //Possibile fonte di bug logici
-    this.createdBooking.check_out = new Date(this.createdBooking.check_out).toISOString().split('T')[0];  //Possibile fonte di bug logici
+    this.createdBooking.check_in = this.convertToCompatibleDateStringFormat(this.createdBooking.check_in);
+    this.createdBooking.check_out = this.convertToCompatibleDateStringFormat(this.createdBooking.check_out);
     this.bookingService.newBooking(this.createdBooking).subscribe(
       response => {
         if("message" in response) {
@@ -59,10 +58,17 @@ export class ConfirmBookingBooknowComponent implements OnInit {
           this.messages.push("Created Booking ID -> " + response.id);
           this.messages.push("Redirect in few seconds...");
           
-          setTimeout(() => this.goBack(), 3000);
+          setTimeout(() => this.goBack(), 3500);
         }
       }
     );
+  }
+
+  //From dd/MM/yyyy to yyyy-MM-dd:
+  private convertToCompatibleDateStringFormat(date: string): string {
+    console.log("confirm booking booknow convertToCompatibleDateStringFormat -> received: ", date);
+    let tokens: string[] = date.split('/');
+    return tokens[2] + '-' + tokens[1] + '-' + tokens[0];
   }
 
   clearMessages() {
