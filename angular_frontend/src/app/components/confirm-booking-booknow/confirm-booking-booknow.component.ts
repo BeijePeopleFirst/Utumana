@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Availability } from 'src/app/models/availability';
 import { Booking } from 'src/app/models/booking';
 import { BookingService } from 'src/app/services/booking.service';
 
@@ -17,6 +18,9 @@ export class ConfirmBookingBooknowComponent implements OnInit {
   nightsNumber!:number;
   postOperation!:number;
 
+  isUnavailability!: boolean;
+  isMe!: boolean;
+
   messages: string[] = [];
 
   tmp!: any;
@@ -24,6 +28,7 @@ export class ConfirmBookingBooknowComponent implements OnInit {
 
   constructor(
     private bookingService: BookingService,
+    private route: ActivatedRoute,
     private router: Router
   ) {}
 
@@ -31,6 +36,9 @@ export class ConfirmBookingBooknowComponent implements OnInit {
     this.tmp = JSON.parse(localStorage.getItem("created_booking")!);
     this.createdBooking = new Booking(this.tmp._accommodation, this.tmp._timestamp, this.tmp._price, this.tmp._status, this.tmp._check_in, this.tmp._check_out, this.tmp._is_unavailability, this.tmp._user_id);
     //console.log(this.createdBooking.accommodation);
+
+    if(this.route.snapshot.queryParams["userId"] && this.createdBooking.accommodation.owner_id === +this.route.snapshot.queryParams["userId"]) this.isMe = true;
+    else this.isMe = false;
 
     this.tmp = JSON.parse(localStorage.getItem("num_guests")!);
     this.numGuests = Number(this.tmp);
@@ -49,6 +57,8 @@ export class ConfirmBookingBooknowComponent implements OnInit {
 
   invalidDateProvided!: boolean;
   bookNow() {
+    this.createdBooking.is_unavailability = this.isUnavailability;
+
     this.invalidDateProvided = false;
 
     this.createdBooking.check_in = this.convertToCompatibleDateStringFormat(this.createdBooking.check_in) !== "Error" ? this.convertToCompatibleDateStringFormat(this.createdBooking.check_in) : this.createdBooking.check_in;
@@ -57,30 +67,64 @@ export class ConfirmBookingBooknowComponent implements OnInit {
     this.createdBooking.check_out = this.convertToCompatibleDateStringFormat(this.createdBooking.check_out) !== "Error" ? this.convertToCompatibleDateStringFormat(this.createdBooking.check_out) : this.createdBooking.check_out;
     if(this.invalidDateProvided) return;
     
-    this.bookingService.newBooking(this.createdBooking).subscribe(
-      response => {
-        if("message" in response) {
-          this.messages.push(response.message);
-          console.log("ERRORE");
-          return;
+    if(!this.isUnavailability)
+      this.bookingService.newBooking(this.createdBooking).subscribe(
+        response => {
+          if("message" in response) {
+            this.messages.push(response.message);
+            console.log("ERRORE");
+            return;
+          }
+          else {
+            this.messages.push("Created Booking STATUS -> " + response.status);
+
+            this.tmp.chosen_availability.start_date = this.createdBooking.check_in;
+            this.tmp.chosen_availability.end_date = this.createdBooking.check_out;
+            localStorage.setItem("chosen_availability_data", JSON.stringify(this.tmp));
+
+            this.tmp = JSON.parse(localStorage.getItem("num_guests")!);
+            this.tmp = this.numGuests;
+            localStorage.setItem("num_guests", JSON.stringify(this.tmp));
+
+            this.messages.push("Redirect in few seconds...");
+            
+            setTimeout(() => this.goBack(), 3500);
+          }
         }
-        else {
-          this.messages.push("Created Booking STATUS -> " + response.status);
+      );
 
-          this.tmp.chosen_availability.start_date = this.createdBooking.check_in;
-          this.tmp.chosen_availability.end_date = this.createdBooking.check_out;
-          localStorage.setItem("chosen_availability_data", JSON.stringify(this.tmp));
+    else {
+      let unavailability: Availability = new Availability();
+      unavailability.accommodation_id = this.createdBooking.accommodation.id!;
+      unavailability.start_date = this.createdBooking.check_in;
+      unavailability.end_date = this.createdBooking.check_out;
+      unavailability.price_per_night = this.pricePerNight;
 
-          this.tmp = JSON.parse(localStorage.getItem("num_guests")!);
-          this.tmp = this.numGuests;
-          localStorage.setItem("num_guests", JSON.stringify(this.tmp));
+      this.bookingService.newUnavailability(unavailability).subscribe(
+        response => {
+          if("message" in response) {
+            this.messages.push(response.message);
+            console.log("ERRORE");
+            return;
+          }
+          else {
+            this.messages.push("Created Unavailability ID -> " + response.id);
 
-          this.messages.push("Redirect in few seconds...");
-          
-          setTimeout(() => this.goBack(), 3500);
+            this.tmp.chosen_availability.start_date = this.createdBooking.check_in;
+            this.tmp.chosen_availability.end_date = this.createdBooking.check_out;
+            localStorage.setItem("chosen_availability_data", JSON.stringify(this.tmp));
+
+            this.tmp = JSON.parse(localStorage.getItem("num_guests")!);
+            this.tmp = this.numGuests;
+            localStorage.setItem("num_guests", JSON.stringify(this.tmp));
+
+            this.messages.push("Redirect in few seconds...");
+            
+            setTimeout(() => this.goBack(), 3500);
+          }
         }
-      }
-    );
+      );
+    }
   }
 
   //From dd/MM/yyyy to yyyy-MM-dd:

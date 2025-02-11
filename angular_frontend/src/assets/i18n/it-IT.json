@@ -81,7 +81,8 @@
 
 "confirm-booking-booknow": {
 	"go_back": "Torna Indietro",
-	"clear-messages-sentence": "Cancella Messaggi"
+	"clear-messages-sentence": "Cancella Messaggi",
+	"is_unavailability": "Si tratta di una Indisponibilita'"
 },
 
 "home":{

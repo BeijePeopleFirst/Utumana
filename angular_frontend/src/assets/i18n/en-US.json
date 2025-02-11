@@ -80,7 +80,8 @@
 
 "confirm-booking-booknow": {
 	"go_back": "Go Back",
-	"clear-messages-sentence": "Clear Messages"
+	"clear-messages-sentence": "Clear Messages",
+	"is_unavailability": "Is Unavailability"
 },
 
 "home":{

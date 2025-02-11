@@ -358,7 +358,7 @@ export class AccommodationDetailsComponent implements OnInit {
     localStorage.setItem("created_booking", JSON.stringify(booking));
     localStorage.setItem("num_guests", JSON.stringify(this.guestsNumber));
     localStorage.setItem("chosen_availability_data", JSON.stringify(container));
-    this.router.navigate(["/confirm_booking_on_creation"]);
+    this.router.navigate(["/confirm_booking_on_creation"], {queryParams: {userId: this.userId!}});
     return;
   }
 
