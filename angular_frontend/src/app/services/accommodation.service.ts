@@ -38,7 +38,7 @@ export class AccommodationService {
 
   public getLatestUploads(offset: number, pageSize: number): void {
     if(!this.allLatestAccommodations){
-      this.getAccommodationsDTOVoid(`${BACKEND_URL_PREFIX}/api/accommodation/latest_uploads`, 0, LATEST_UPLOADS_LIMIT, this.allLatestAccommodationsSubject);
+      this.getAccommodationsDTOToSubject(`${BACKEND_URL_PREFIX}/api/accommodation/latest_uploads`, 0, LATEST_UPLOADS_LIMIT, this.allLatestAccommodationsSubject);
     }
     this.allLatestAccommodationsSubject.asObservable().subscribe(accommodations =>{ 
       this.latestAccommodationsSubject.next(accommodations.slice(offset, offset + pageSize));
@@ -49,7 +49,7 @@ export class AccommodationService {
 
   getMostLikedAccommodations(offset: number, pageSize: number): void {
     if(!this.allMostLikedAccommodations){
-      this.getAccommodationsDTOVoid(`${BACKEND_URL_PREFIX}/api/accommodation/most_liked`, 0, LATEST_UPLOADS_LIMIT, this.allMostLikedAccommodationsSubject);
+      this.getAccommodationsDTOToSubject(`${BACKEND_URL_PREFIX}/api/accommodation/most_liked`, 0, LATEST_UPLOADS_LIMIT, this.allMostLikedAccommodationsSubject);
     }
     this.allMostLikedAccommodationsSubject.asObservable().subscribe(accommodations =>{ 
       this.mostLikedAccommodationsSubject.next(accommodations.slice(offset, offset + pageSize));
@@ -96,7 +96,7 @@ export class AccommodationService {
     );
   }
 
-  getAccommodationsDTOVoid(url: string, offset: number, pageSize: number, subject: Subject<AccommodationDTO[]>): void {
+  getAccommodationsDTOToSubject(url: string, offset: number, pageSize: number, subject: Subject<AccommodationDTO[]>): void {
     // TODO get page of results
     this.http.get<AccommodationDTO[]>(url).pipe(
       catchError(error => {
@@ -108,12 +108,12 @@ export class AccommodationService {
       if(data.length == 0){
         subject.next(data);
       }else{
-        this.getPricesVoid(data.slice(offset, offset + pageSize), subject); // remove slice when result will be paginated by backend
+        this.getPricesToSubject(data.slice(offset, offset + pageSize), subject); // remove slice when result will be paginated by backend
       }
     });
   }
 
-  getPricesVoid(accommodations: AccommodationDTO[], subject: Subject<AccommodationDTO[]>): void {
+  getPricesToSubject(accommodations: AccommodationDTO[], subject: Subject<AccommodationDTO[]>): void {
     let ids = accommodations.map(a => a.id);
     this.http.get<PriceDTO[]>(`${BACKEND_URL_PREFIX}/api/accommodation/prices?ids=${ids}`).pipe(
       catchError(error => {
@@ -146,7 +146,7 @@ export class AccommodationService {
         });
 
         const url = `${BACKEND_URL_PREFIX}/api/search?${httpParams.toString()}`;
-        this.getAccommodationsDTO(url, offset, pageSize, this.foundAccommodationsSubject);
+        this.getAccommodationsDTOToSubject(url, offset, pageSize, this.foundAccommodationsSubject);
       }
     }
     )
