@@ -75,7 +75,7 @@ export class AccommodationDetailsComponent implements OnInit {
 
     let tmp: any;
     if(tmp = localStorage.getItem("chosen_availability_data")) {
-      let dataSession = JSON.parse(tmp!);console.log(dataSession);
+      let dataSession = JSON.parse(tmp!);
       this.chosenAvailability = {start_date: dataSession.chosen_availability.start_date, end_date: dataSession.chosen_availability.end_date, price_per_night: dataSession.chosen_availability.price_per_night, accommodation_id: dataSession.chosen_availability.accommodation_id};
       this.postOperation$.next(dataSession.post_operation);
       this.nightsNumber$.next(dataSession.nights_number);
@@ -358,7 +358,7 @@ export class AccommodationDetailsComponent implements OnInit {
     localStorage.setItem("created_booking", JSON.stringify(booking));
     localStorage.setItem("num_guests", JSON.stringify(this.guestsNumber));
     localStorage.setItem("chosen_availability_data", JSON.stringify(container));
-    this.router.navigate(["/confirm_booking_on_creation"]);
+    this.router.navigate(["/confirm_booking_on_creation"], {queryParams: {userId: this.userId!}});
     return;
   }
 

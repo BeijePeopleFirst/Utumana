@@ -166,7 +166,7 @@ export class AccommodationService {
       "check-in": form.check_in,
       "check-out": form.check_out,
       "number_of_guests": form.people,
-      "free_only": false,
+      "free_only": form.free_only,
       "services": [""],
       "order_by": "minPrice-desc"
     }
