@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { BehaviorSubject, debounceTime, distinctUntilChanged, map, Observable, of, Subject, switchMap } from 'rxjs';
 import { Accommodation } from 'src/app/models/accommodation';
 import { Booking } from 'src/app/models/booking';
@@ -62,6 +62,7 @@ export class AccommodationDetailsComponent implements OnInit {
 
   //Child Communication:
   chosenAvailability?: {start_date: string, end_date: string, price_per_night: number, accommodation_id: number};
+  queryParams?: Params;
 
 
   constructor(
@@ -74,6 +75,8 @@ export class AccommodationDetailsComponent implements OnInit {
   {}
 
   ngOnInit(): void {
+
+    this.queryParams = this.route.snapshot.queryParams;
 
     let id: (string | undefined | null) = this.route.snapshot.params["id"];
 

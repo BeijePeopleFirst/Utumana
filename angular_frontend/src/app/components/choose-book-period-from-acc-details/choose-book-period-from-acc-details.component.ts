@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Params } from '@angular/router';
 import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 import { Accommodation } from 'src/app/models/accommodation';
 import { Availability } from 'src/app/models/availability';
@@ -13,6 +14,8 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
 
   @Input() accommodation!: Accommodation;
   @Output() sendChosenAvailability = new EventEmitter<{ start_date: string, end_date: string, price_per_night: number, accommodation_id: number } | {message: string}>();
+
+  @Input() queryParamsFromParent?: Params;
 
   chosenOne: Availability = new Availability();
 
@@ -39,6 +42,16 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
   ngOnInit() {
     this.initializeCalendars(new Date().getFullYear(), new Date().getMonth());
     this.initializeAvailabilityCache();
+
+    if(this.queryParamsFromParent && this.queryParamsFromParent["start_date"] && this.queryParamsFromParent["end_date"]) {
+      let tmp1: Date = new Date(this.queryParamsFromParent["start_date"]);
+      let tmp2: Date = new Date(this.queryParamsFromParent["end_date"]);
+      tmp1.setHours(0, 0, 0, 0);
+      tmp2.setHours(0, 0, 0, 0);
+
+      this.chosenOne.start_date = tmp1 + "";
+      this.chosenOne.end_date = tmp2 + "";
+    }
   }
 
   initializeCalendars(year: number, month: number) {
