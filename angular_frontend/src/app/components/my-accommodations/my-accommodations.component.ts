@@ -15,6 +15,18 @@ export class MyAccommodationsComponent implements OnInit {
   accommodationsPageNumber!: number;
   accommodationsTotalPages!: number;
 
+  pendingAccommodations$!: Observable<AccommodationDTO[]> ;
+  allPendingAccommodations!: AccommodationDTO[];
+  pendingAccommodationsPageSize!: number;
+  pendingAccommodationsPageNumber!: number;
+  pendingAccommodationsTotalPages!: number;
+
+  rejectedAccommodations$!: Observable<AccommodationDTO[]> ;
+  allRejectedAccommodations!: AccommodationDTO[];
+  rejectedAccommodationsPageSize!: number;
+  rejectedAccommodationsPageNumber!: number;
+  rejectedAccommodationsTotalPages!: number;
+
   constructor(
       private accommodationService: AccommodationService
     ){ }
@@ -29,11 +41,43 @@ export class MyAccommodationsComponent implements OnInit {
         this.accommodations$ = of(updated.slice(0, this.accommodationsPageSize));
       });
     });
+
+    this.pendingAccommodationsPageSize = 4;
+    this.pendingAccommodationsPageNumber = 0;
+    this.accommodationService.getMyPendingAccommodations().subscribe(accommodations => {
+      this.pendingAccommodationsTotalPages = Math.ceil( accommodations.length / this.pendingAccommodationsPageSize );
+      this.accommodationService.getPrices(accommodations).subscribe(updated => {
+        this.allPendingAccommodations = updated;
+        this.pendingAccommodations$ = of(updated.slice(0, this.pendingAccommodationsPageSize));
+      });
+    });
+
+    this.rejectedAccommodationsPageSize = 4;
+    this.rejectedAccommodationsPageNumber = 0;
+    this.accommodationService.getMyRejectedAccommodations().subscribe(accommodations => {
+      this.rejectedAccommodationsTotalPages = Math.ceil( accommodations.length / this.rejectedAccommodationsPageSize );
+      this.accommodationService.getPrices(accommodations).subscribe(updated => {
+        this.allRejectedAccommodations = updated;
+        this.rejectedAccommodations$ = of(updated.slice(0, this.rejectedAccommodationsPageSize));
+      });
+    });
   }
 
   loadAccommodationsPage(pageNumber: number): void {
     this.accommodationsPageNumber = pageNumber;
     let offset = this.accommodationsPageNumber * this.accommodationsPageSize;
     this.accommodations$ = of(this.allAccommodations.slice(offset, offset + this.accommodationsPageSize));
+  }
+
+  loadPendingAccommodationsPage(pageNumber: number): void {
+    this.pendingAccommodationsPageNumber = pageNumber;
+    let offset = this.pendingAccommodationsPageNumber * this.pendingAccommodationsPageSize;
+    this.pendingAccommodations$ = of(this.allPendingAccommodations.slice(offset, offset + this.pendingAccommodationsPageSize));
+  }
+
+  loadRejectedAccommodationsPage(pageNumber: number): void {
+    this.rejectedAccommodationsPageNumber = pageNumber;
+    let offset = this.rejectedAccommodationsPageNumber * this.rejectedAccommodationsPageSize;
+    this.rejectedAccommodations$ = of(this.allRejectedAccommodations.slice(offset, offset + this.rejectedAccommodationsPageSize));
   }
 }

@@ -132,6 +132,8 @@
 	"title": "Favourite accommodations"
 },
 "my_accommodations": {
-	"title": "My accommodations"
+	"title": "My accommodations",
+	"pending": "My accommodations waiting for approval",
+	"rejected": "Rejected accommodations"
 }
 }
