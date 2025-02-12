@@ -23,10 +23,11 @@ export class FavouritesComponent implements OnInit {
     this.favouritesPageSize = 4;
     this.favouritesPageNumber = 0;
     this.accommodationService.getFavourites().subscribe(favourites => {
-      this.allFavourites = favourites;
-      console.log("All fav", this.allFavourites);
       this.favouritesTotalPages = Math.ceil( favourites.length / this.favouritesPageSize );
-      this.favourites$ = of(favourites.slice(0, this.favouritesPageSize));
+      this.accommodationService.getPrices(favourites).subscribe(updatedFavs => {
+        this.allFavourites = updatedFavs;
+        this.favourites$ = of(updatedFavs.slice(0, this.favouritesPageSize));
+      });
     });
   }
 

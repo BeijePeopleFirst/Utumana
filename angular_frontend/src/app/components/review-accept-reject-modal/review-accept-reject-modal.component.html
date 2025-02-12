@@ -1,12 +1,29 @@
+<div *ngIf="isModalOpen" class="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50">
+    <div class="relative justify-center w-full max-w-md pb-5 text-center bg-white rounded-lg shadow-lg px-7 pt-7">
+        <ng-container *ngIf="action=='accept'">
+            <h5>{{'review.accept_title' | translate}}</h5>
+            <p class="text-sm">{{'review.accept_subtitle' | translate}}</p>
+        </ng-container>
+        <ng-container *ngIf="action=='reject'">
+            <h5>{{'review.reject_title' | translate}}</h5>
+            <p class="text-sm">{{'review.reject_subtitle' | translate}}</p>
+        </ng-container>
+  
+        <button (click)="close()" class="absolute p-2 text-3xl text-gray-500 -top-1 right-1">
+            &times;
+        </button>
 
-  <div *ngIf="isModalOpen" class="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50">
-    <div class="relative w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
-      <h5 class="mb-4 text-xl font-semibold text-gray-700">{{'review.write' | translate}}</h5>
-  
-      <button (click)="close()" class="absolute text-2xl text-gray-500 top-2 right-2">
-        &times;
-      </button>
-  
+        <div class="flex justify-center mt-4 gap-x-5">
+            <ng-container *ngIf="action=='accept'">
+                <button type="button" class="w-1/4 btn-success" (click)="accept()">{{'review.accept_button_label' | translate}}</button>
+            </ng-container>
+            <ng-container *ngIf="action=='reject'">
+                <button type="button" class="w-1/4 btn-danger" (click)="reject()">{{'review.reject_button_label' | translate}}</button>
+            </ng-container>
+            <button type="button" class="w-1/4 btn-cancel" (click)="close()">{{'review.cancel_button_label' | translate}}</button>
+        </div>
+        <p *ngIf="error" class="mt-4 mb-0 text-center error-message">{{'error' | translate}}</p>
+  <!--
       <form [formGroup]="reviewForm" (ngSubmit)="submitReview()">
   
         <input 
@@ -81,6 +98,6 @@
         {{'review.submit' | translate}}
         </button>
       </form>
+    -->
     </div>
   </div>
-  

@@ -36,8 +36,8 @@ public interface AccommodationRepository extends JpaRepository<Accommodation,Lon
 	public int isFavourite(@Param(value = "accommodationId") Long accommodationId, @Param(value = "userId") Long userId);
 	
 	
-	@Query("SELECT new ws.peoplefirst.utumana.dto.AccommodationDTO(a.id, a.title, a.city, a.mainPhotoUrl, a.country) " 
-			+ "FROM Accommodation a WHERE a.hidingTimestamp IS NULL AND a.id IN (SELECT f.id FROM User u JOIN u.favourites f WHERE u.id = :userId)")
+	@Query("SELECT new ws.peoplefirst.utumana.dto.AccommodationDTO(a.id, a.title, a.city, a.province, a.country, a.mainPhotoUrl, r.rating) " 
+			+ "FROM Accommodation a JOIN a.rating r WHERE a.hidingTimestamp IS NULL AND a.id IN (SELECT f.id FROM User u JOIN u.favourites f WHERE u.id = :userId)")
 	public List<AccommodationDTO> getFavouritesDTO( @Param(value = "userId") Long userId);
 
 	
@@ -53,8 +53,8 @@ public interface AccommodationRepository extends JpaRepository<Accommodation,Lon
 		);
 
 	
-	@Query(value="SELECT new ws.peoplefirst.utumana.dto.AccommodationDTO(a.id, a.title, a.city, a.mainPhotoUrl, a.country) "
-			+ " from Accommodation AS a WHERE (:dest IS NULL OR a.country LIKE %:dest% OR a.city LIKE %:dest%) AND "
+	@Query(value="SELECT new ws.peoplefirst.utumana.dto.AccommodationDTO(a.id, a.title, a.city, a.province, a.country, a.mainPhotoUrl, r.rating) "
+			+ " from Accommodation AS a JOIN a.rating r WHERE (:dest IS NULL OR a.country LIKE %:dest% OR a.city LIKE %:dest%) AND "
 			+ "a.beds >= :numGuests AND a.approvalTimestamp IS NOT NULL AND a.hidingTimestamp IS NULL "
 			+ "AND a.id IN (SELECT av.accommodation.id FROM Availability AS av WHERE "
 			+ "av.startDate <= :chkIn AND av.endDate >= :chkOut )")	
@@ -62,8 +62,8 @@ public interface AccommodationRepository extends JpaRepository<Accommodation,Lon
 			@Param(value="chkOut") LocalDate checkOutDate, @Param(value="numGuests") Integer numberOfGuests, Sort sort);
 	
 	
-	@Query(value="SELECT new ws.peoplefirst.utumana.dto.AccommodationDTO(a.id, a.title, a.city, a.mainPhotoUrl, a.country) "
-			+ "FROM Accommodation AS a "
+	@Query(value="SELECT new ws.peoplefirst.utumana.dto.AccommodationDTO(a.id, a.title, a.city, a.province, a.country, a.mainPhotoUrl, r.rating) "
+			+ "FROM Accommodation AS a JOIN a.rating r "
 			+ "WHERE (:dest IS NULL OR a.country LIKE %:dest% OR a.city LIKE %:dest%) AND "
 			+ "a.beds >= :numGuests AND a.approvalTimestamp IS NOT NULL AND a.hidingTimestamp IS NULL "
 			+ "AND a.id IN (SELECT av.accommodation.id FROM Availability AS av WHERE "
@@ -115,8 +115,8 @@ public interface AccommodationRepository extends JpaRepository<Accommodation,Lon
 			@Param(value="chkOut") LocalDate checkOutDate, @Param(value="numGuests") Integer numGst, Sort sort);
 	
 	
-	@Query(value="SELECT new ws.peoplefirst.utumana.dto.AccommodationDTO(a.id, a.title, a.city, a.mainPhotoUrl, a.country) "
-			+ " FROM Accommodation AS a WHERE (:dest IS NULL OR a.country LIKE %:dest% OR a.city LIKE %:dest%) AND "
+	@Query(value="SELECT new ws.peoplefirst.utumana.dto.AccommodationDTO(a.id, a.title, a.city, a.province, a.country, a.mainPhotoUrl, r.rating) "
+			+ " FROM Accommodation AS a JOIN a.rating r WHERE (:dest IS NULL OR a.country LIKE %:dest% OR a.city LIKE %:dest%) AND "
 			+ "a.beds >= :numGuests AND a.approvalTimestamp IS NOT NULL AND a.hidingTimestamp IS NULL "
 			+ "AND a.id IN (SELECT av.accommodation.id FROM Availability as av WHERE "
 			+ "av.startDate <= :chkIn AND av.endDate >= :chkOut AND av.pricePerNight = 0)")	
@@ -131,8 +131,8 @@ public interface AccommodationRepository extends JpaRepository<Accommodation,Lon
 			+ "FROM Accommodation as a WHERE a.approvalTimestamp IS NULL AND a.hidingTimestamp IS NULL")
 	public List<AccommodationDTO> getAccommodationDTOToBeApproved();
 
-	@Query("SELECT new ws.peoplefirst.utumana.dto.AccommodationDTO(a.id, a.title, a.city, a.mainPhotoUrl, a.country) FROM Accommodation as a "
-			+ "WHERE a.ownerId = :ownerId AND a.hidingTimestamp IS NULL AND a.approvalTimestamp IS NOT NULL")
+	@Query("SELECT new ws.peoplefirst.utumana.dto.AccommodationDTO(a.id, a.title, a.city, a.province, a.country, a.mainPhotoUrl, r.rating) FROM Accommodation as a "
+			+ "JOIN a.rating r WHERE a.ownerId = :ownerId AND a.hidingTimestamp IS NULL AND a.approvalTimestamp IS NOT NULL")
 	public List<AccommodationDTO> findByOwnerIdDTO(@Param(value = "ownerId") Long loggedUserId);
 	
 	@Query("SELECT new ws.peoplefirst.utumana.dto.AccommodationDTO(a.id, a.title, a.city, a.mainPhotoUrl, a.country) FROM Accommodation as a "

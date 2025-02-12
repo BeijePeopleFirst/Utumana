@@ -215,7 +215,15 @@ public class AccommodationService {
 	
 	private Sort getSortFromOrderByParam(String orderBy) {
 		String orderField = orderBy.trim().split("-")[0];
-		if(orderField.equals("minPrice")) orderField = "approvalTimestamp";
+		//if(orderField.equals("minPrice")) orderField = "approvalTimestamp";
+		switch (orderField) {
+			case "minPrice":
+				orderField = "approvalTimestamp";
+				break;
+			case "rating":
+				orderField = "rating.rating"; 
+				break;
+		}
 		
 		String orderDirection = orderBy.trim().split("-")[1];
 		if(orderDirection == null || (!orderDirection.equalsIgnoreCase("asc") && !orderDirection.equalsIgnoreCase("desc")))
@@ -227,7 +235,7 @@ public class AccommodationService {
 	public List<AccommodationDTO> findByUserInputDTO(String destination, LocalDate checkInDate, LocalDate checkOutDate,
 			Integer numberOfGuests, List<Long> serviceIds, String orderBy, Long userId) {
 		Sort sort = getSortFromOrderByParam(orderBy);
-		
+		System.out.println("sort: " + sort);
 		System.out.println("service ids = " + serviceIds);
 		List<AccommodationDTO> results;
 		if(serviceIds.size() == 0) {
@@ -254,7 +262,7 @@ public class AccommodationService {
 			results = new ArrayList<AccommodationDTO>();
 			for(Accommodation result : accommodationRepository.findByUserInputFree(destination, checkInDate, checkOutDate, numberOfGuests, sort)) {
 				if(result.getServices().stream().map(ws.peoplefirst.utumana.model.Service::getId).collect(Collectors.toList()).containsAll(serviceIds)) {
-					results.add(new AccommodationDTO(result.getId(), result.getTitle(), result.getCity(), result.getMainPhotoUrl(), result.getCountry()));
+					results.add(new AccommodationDTO(result.getId(), result.getTitle(), result.getCity(), result.getProvince(), result.getCountry(),result.getMainPhotoUrl(), result.getRating().getRating()));
 				}
 			}
 		}

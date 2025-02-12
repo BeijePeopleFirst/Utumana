@@ -42,6 +42,7 @@ import { SearchPageComponent } from './components/search-page/search-page.compon
 import { ConfirmBookingBooknowComponent } from './components/confirm-booking-booknow/confirm-booking-booknow.component';
 import { FilterModalComponent } from './components/filter-modal/filter-modal.component';
 import { FavouritesComponent } from './components/favourites/favourites.component';
+import { ReviewAcceptRejectModalComponent } from './components/review-accept-reject-modal/review-accept-reject-modal.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -77,7 +78,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     SearchPageComponent,
     ConfirmBookingBooknowComponent,
     FilterModalComponent,
-    FavouritesComponent
+    FavouritesComponent,
+    ReviewAcceptRejectModalComponent
   ],
   imports: [
     BrowserModule,

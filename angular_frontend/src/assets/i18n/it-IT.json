@@ -33,7 +33,21 @@
 	"check_inError": "Data di checkIn non valida",
 	"check_outInconcistency": "Data di checkOut prima di checkIn",
 	"resFound": "Risultati ricerca",
-	"is_free": "Solo sistemazioni gratuite"
+	"is_free": "Solo sistemazioni gratuite",
+	"order": "Ordine per",
+	"priceAsc": "Prezzo: crescente",
+	"priceDesc": "Prezzo: decrescente",
+	"recentAsc": "Recenti: crescente",
+	"recentDesc": "Recenti: decrescente",
+	"ratingAsc": "Voto: crescente",
+	"ratingDesc": "Voto: decrescente",
+	"minPrice-asc": " (Prezzo: crescente)",
+	"minPrice-desc": " (Prezzo: decrescente)",
+	"approvalTimestamp-asc": " (Recenti: crescente)",
+	"approvalTimestamp-desc": " (Recenti: decrescente)",
+	"rating-asc": " (Voto: crescente)",
+	"ratingd-esc": " (Voto: decrescente)"
+
 },
 
 "accommodation-card-details": {
@@ -104,7 +118,8 @@
 	"review":"Recensioni"
 },
 "profile": {
-	"reviews_title": "Recensioni ricevute"
+	"reviews_title": "Recensioni ricevute",
+	"reviews_to_accept": "Recensioni in attesa di un tuo riscontro"
 },
 "review": {
 	"comfort": "Comfort",
@@ -112,7 +127,20 @@
 	"position": "Posizione",
 	"see_more": "Scopri di più",
 	"see_less": "Mostra meno",
-	"no_reviews": "Nessuna recensione"
+	"no_reviews": "Nessuna recensione",
+	"title_error": "Un titolo è richiesto.",
+	"description_error":"Una recensione è necessaria",
+	"submit":"Salva recensione",
+	"write":"Scrivi una recensione",
+	"title_placeholder":"Tuo titolo",
+	"description_placeholder":"Tua descrizione",
+	"accept_title": "Accettare questa recensione?",
+	"accept_subtitle": "Se scegli \"Accetta\", la recensione verrà resa pubblica",
+	"reject_title": "Rifiutare questa recensione?",
+	"reject_subtitle": "Se scegli \"Rifiuta\", la recensione verrà eliminata definitivamente",
+	"accept_button_label": "Accetta",
+	"reject_button_label": "Rifiuta",
+	"cancel_button_label": "Annulla"
 },
 "accommodations_cards": {
 	"notFound": "Nessuna offerta disponibile"
@@ -142,5 +170,10 @@
 },
 "favourites": {
 	"title": "Preferiti"
+},
+"my_accommodations": {
+	"title": "Le mie sistemazioni",
+	"pending": "Le mie sistemazioni in attesa di conferma",
+	"rejected": "Sistemazioni rifiutate"
 }
 }

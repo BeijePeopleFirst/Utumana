@@ -29,7 +29,7 @@ public interface UserRepository extends JpaRepository<User,Long>{
 	public List<ReviewDTO> findUserReviewsDTO(@Param(value="id")Long id);
 	
 	@Query("SELECT b.review FROM Booking AS b "
-			+ "where b.accommodation.ownerId = :id AND b.accommodation.hidingTimestamp IS NULL")
+			+ "where b.accommodation.ownerId = :id AND b.accommodation.hidingTimestamp IS NULL ORDER BY b.review.approvalTimestamp DESC")
 	public List<Review> findUserReviews(@Param(value="id")Long id);
 	
 	@Query(value = "SELECT u FROM User as u LEFT JOIN FETCH u.favourites WHERE u.id = :userId")

@@ -33,6 +33,7 @@ export class AccommodationCardComponent implements OnInit {
       this.router.navigate(['book', this.accommodation.id]);
     }else if(this.heartClick){
       this.toggleFavourite();
+      this.heartClick = false;
     }else{
       this.router.navigate(['accommodation', this.accommodation.id]);
     }

@@ -1,6 +1,20 @@
-<p>profile works!</p>
-<div id="reviews-container" class="p-5 text-center bg-neutral-2">
-    <h2>{{'profile.reviews_title' | translate}}</h2>
-    <app-review-cards class="flex flex-col" [reviews]="reviews" [pageNumber]="reviewsPageNumber" [totalPages]="reviewsTotalPages" 
-    (askForPage)="loadUserReviewsPage($event)"></app-review-cards>
-</div>
+<section class="flex items-center justify-center pt-8 bg-neutral-1">
+    <p>profile works!</p>
+</section>
+<section class="flex items-center justify-center pt-8 bg-neutral-2">
+    <div class="container p-5 text-center">
+        <h2>{{'profile.reviews_to_accept' | translate}}</h2>
+        <app-review-cards [reviews]="waitingReviews" [pageNumber]="waitingReviewsPageNumber" [totalPages]="waitingReviewsTotalPages" 
+        (askForPage)="loadWaitingReviewsPage($event)" (reviewAction)="showReviewModal($event.id, $event.action)"></app-review-cards>
+    </div>
+</section>
+<section class="flex items-center justify-center pt-8 bg-neutral-1">
+    <div class="container p-5 text-center">
+        <h2>{{'profile.reviews_title' | translate}}</h2>
+        <app-review-cards [reviews]="reviews" [pageNumber]="reviewsPageNumber" [totalPages]="reviewsTotalPages" 
+        (askForPage)="loadUserReviewsPage($event)"></app-review-cards>
+    </div>
+</section>
+
+<app-review-accept-reject-modal [reviewId]="selectedReviewId" [isModalOpen]="isReviewModalOpen" [action]="reviewModalAction"
+(closeModal)="closeReviewModal($event)"></app-review-accept-reject-modal>

@@ -1,12 +1,22 @@
-<div *ngIf="review" class="w-72">
+<div *ngIf="review" class="relative w-72">
   <div class="flex-shrink-0 mx-4 mt-4">
-    <div class="flex items-center justify-left gap-x-5">
-      <div class="relative w-10 h-10 overflow-hidden rounded-full shadow-md">
-        <img class="absolute top-0 left-0 object-cover w-full h-full bg-cover object-fit" src="{{userPictureUrl}}" alt="Profile picture">
+    <div class="flex items-center justify-between w-full gap-x-5">
+      <div class="flex items-center gap-x-5">
+        <div class="relative w-10 h-10 overflow-hidden rounded-full shadow-md">
+          <img class="absolute top-0 left-0 object-cover w-full h-full bg-cover object-fit" src="{{iconsUrl}}\profile.png" alt="Profile picture">
+        </div>
+        <p class="relative">
+          <span class="font-bold text-gray-600">{{review.author}}</span>
+        </p>
       </div>
-      <p class="relative">
-        <span class="font-bold text-gray-600">{{review.author}}</span>
-      </p>
+      <div *ngIf="!review.approval_timestamp" class="flex items-center gap-x-3">
+        <button class="review-action" aria-label="accept review" (click)="acceptReview()">
+          <img src="{{iconsUrl}}\accept.png" alt="accept review">
+        </button>
+        <button class="review-action" aria-label="reject review" (click)="rejectReview()">
+          <img src="{{iconsUrl}}\reject.png" alt="reject review">
+        </button>
+      </div>
     </div>
   </div>
   <div class="mx-4 mt-2">

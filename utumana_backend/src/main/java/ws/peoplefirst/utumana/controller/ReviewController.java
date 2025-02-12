@@ -107,7 +107,7 @@ public class ReviewController {
 	
 	@PreAuthorize("hasAuthority('USER')")
 	@DeleteMapping("/review/{id}")
-	public String rejectReview(@PathVariable Long id, Authentication auth) {
+	public Boolean rejectReview(@PathVariable Long id, Authentication auth) {
 		log.debug("DELETE /review/" + id);
 		Review review = reviewService.getReviewById(id);
 		
@@ -116,9 +116,9 @@ public class ReviewController {
 		if(!loggedUserIsBookingHost(auth, review.getBookingId()))
 			throw new ForbiddenException("Only the host can reject a review to their accommodation");
 		
-		reviewService.deleteReview(review);
+		reviewService.deleteReview(review.getBookingId());
 		
-		return "Review successfully rejected";	
+		return true;	
 	}
 	
 	@PreAuthorize("hasAuthority('USER')")
