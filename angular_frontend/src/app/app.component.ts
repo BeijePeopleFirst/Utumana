@@ -50,18 +50,19 @@ export class AppComponent implements DoCheck {
     this.isProfileMenuOpen = false;
   }
 
-  changeLanguage(langCode: string) {
+  changeLanguage(langCode: string, event: Event) {
+    event.stopPropagation(); 
     this.selectedLanguage = langCode;
     this.translate.use(langCode);
     this.isLanguageMenuOpen = false;
   }
 
-  @HostListener('document:click', ['$event'])
+/*   @HostListener('document:click', ['$event'])
   closeMenus(event: Event) {
     const targetElement = event.target as HTMLElement;
     if (!targetElement.closest('.relative')) {
       this.isProfileMenuOpen = false;
       this.isLanguageMenuOpen = false;
     }
-  }
+  } */
 }

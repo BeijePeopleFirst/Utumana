@@ -29,7 +29,7 @@
   
           <div *ngIf="isLanguageMenuOpen" class="absolute right-0 z-50 w-32 mt-3 bg-white shadow-lg top-full rounded-xl ring-1 ring-gray-900/5">
             <div class="p-2 space-y-1">
-              <button *ngFor="let lang of languages" (click)="changeLanguage(lang.code)" class="flex items-center w-full px-4 py-2 text-sm text-left text-gray-900 gap-x-2 hover:bg-gray-50">
+              <button *ngFor="let lang of languages" (click)="changeLanguage(lang.code, $event)" class="flex items-center w-full px-4 py-2 text-sm text-left text-gray-900 gap-x-2 hover:bg-gray-50">
                 <img class="w-auto h-5" [src]="iconUrl + '/flags/' + lang.code + '.png'" alt="">
                 {{ lang.name }}
               </button>
