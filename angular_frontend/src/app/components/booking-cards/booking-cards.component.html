@@ -10,7 +10,7 @@
             <div class="flex flex-wrap justify-center gap-3">
                 <div *ngFor="let booking of bookings" class="p-4 bg-white rounded-lg shadow-lg">
                 <!--div *ngFor="let booking of bookings" class="flex max-w-sm p-2 rounded-lg text-start lg:max-w-4xl"-->
-                    <app-booking-card [booking]="booking"></app-booking-card>
+                    <app-booking-card (selectBooking)="onBookingSelected($event)" [booking]="booking"></app-booking-card>
                 </div>
                 
             </div>

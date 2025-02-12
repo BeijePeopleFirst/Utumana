@@ -8,13 +8,7 @@ import { BACKEND_URL_PREFIX } from 'src/costants';
   providedIn: 'root'
 })
 export class ReviewService {
-  token: string | null = localStorage.getItem("token");
-  httpOptions = {
-      headers: new HttpHeaders({ 
-        'Content-Type': 'application/json; charset=UTF-8', 
-        'Accept-Type': 'application/json; charset=UTF-8',
-        })
-    };
+
 
   constructor(
     private http: HttpClient
@@ -22,6 +16,10 @@ export class ReviewService {
 
   getUserReviews(userId: number, offset: number, pageSize: number): Observable<Review[]> {
     // TODO ask for a page of reviews
-    return this.http.get<Review[]>(`${BACKEND_URL_PREFIX}/api/review/user/${userId}`, this.httpOptions);
+    return this.http.get<Review[]>(`${BACKEND_URL_PREFIX}/api/review/user/${userId}`);
+  }
+
+  addReview(review :Review):Observable<Review>{
+    return this.http.post<Review>(`${BACKEND_URL_PREFIX}/api/review`,review);
   }
 }

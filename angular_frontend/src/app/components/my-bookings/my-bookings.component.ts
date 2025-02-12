@@ -38,6 +38,9 @@ export class MyBookingsComponent {
   doingBookingsPageNumber!: number;
   doingBookingsTotalPages!: number;
 
+  isModalOpen:boolean=false;
+  selectedBookingId:number=-1;
+
     constructor(
       private router: Router,
       private bookingService:BookingService
@@ -99,6 +102,17 @@ export class MyBookingsComponent {
   loadDoingBookingsPage(pageNumber: number): void {
     this.doingBookingsPageNumber = pageNumber;
     this.bookingService.getDoingBookings(this.doingBookingsPageNumber * this.doingBookingsPageSize, this.doingBookingsPageSize);
+  }
+
+  closeWriteReviewModal() {
+    this.isModalOpen = false;
+    this.selectedBookingId = -1
+  }
+
+  onWriteReview(bookingId: number) {
+    this.selectedBookingId = bookingId;
+    this.isModalOpen = true;
+    console.log(bookingId);
   }
 
 }
