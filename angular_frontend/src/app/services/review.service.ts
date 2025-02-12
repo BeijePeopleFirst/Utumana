@@ -8,24 +8,18 @@ import { BACKEND_URL_PREFIX } from 'src/costants';
   providedIn: 'root'
 })
 export class ReviewService {
-  token: string | null = localStorage.getItem("token");
-  httpOptions = {
-      headers: new HttpHeaders({ 
-        'Content-Type': 'application/json; charset=UTF-8', 
-        'Accept-Type': 'application/json; charset=UTF-8',
-        })
-    };
+
 
   constructor(
     private http: HttpClient
   ) { }
 
   getUserReviews(userId: number): Observable<Review[]> {
-    return this.http.get<Review[]>(`${BACKEND_URL_PREFIX}/api/review/user/${userId}`, this.httpOptions);
+    return this.http.get<Review[]>(`${BACKEND_URL_PREFIX}/api/review/user/${userId}`, {});
   }
 
   acceptReview(id: number): Observable<boolean> {
-    return this.http.patch<Review>(`${BACKEND_URL_PREFIX}/api/review/${id}`, this.httpOptions).pipe(
+    return this.http.patch<Review>(`${BACKEND_URL_PREFIX}/api/review/${id}`, {}).pipe(
       map(review => {
         console.log("Review accepted", review);
         return true;
@@ -38,7 +32,7 @@ export class ReviewService {
   }
 
   rejectReview(id: number): Observable<boolean> {
-    return this.http.delete<string>(`${BACKEND_URL_PREFIX}/api/review/${id}`, this.httpOptions).pipe(
+    return this.http.delete<string>(`${BACKEND_URL_PREFIX}/api/review/${id}`, {}).pipe(
       map(message => {
         console.log(message);
         return true;
@@ -48,5 +42,9 @@ export class ReviewService {
         return of(false);
       })
     );
+  }
+
+  addReview(review :Review):Observable<Review>{
+    return this.http.post<Review>(`${BACKEND_URL_PREFIX}/api/review`,review);
   }
 }

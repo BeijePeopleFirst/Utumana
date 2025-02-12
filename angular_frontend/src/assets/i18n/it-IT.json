@@ -115,7 +115,13 @@
 	"position": "Posizione",
 	"see_more": "Scopri di più",
 	"see_less": "Mostra meno",
-	"no_reviews": "Nessuna recensione"
+	"no_reviews": "Nessuna recensione",
+	"title_error": "Un titolo è richiesto.",
+	"description_error":"Una recensione è necessaria",
+	"submit":"Salva recensione",
+	"write":"Scrivi una recensione",
+	"title_placeholder":"Tuo titolo",
+	"description_placeholder":"Tua descrizione"
 },
 "accommodations_cards": {
 	"notFound": "Nessuna offerta disponibile"

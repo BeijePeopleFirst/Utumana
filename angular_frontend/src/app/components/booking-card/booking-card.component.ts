@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { AccommodationDTO } from 'src/app/dtos/accommodationDTO';
@@ -14,6 +14,8 @@ export class BookingCardComponent implements OnInit, OnDestroy {
   locale: string = 'en';
   localeSubscription?: Subscription;
 
+  @Output() selectBooking = new EventEmitter<number>();
+
   constructor(private translateService: TranslateService){ }
   
   ngOnInit(): void {
@@ -23,5 +25,9 @@ export class BookingCardComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if(this.localeSubscription)
       this.localeSubscription.unsubscribe();
+  }
+
+  selectCard() {
+    this.selectBooking.emit(this.booking?.id);
   }
 }

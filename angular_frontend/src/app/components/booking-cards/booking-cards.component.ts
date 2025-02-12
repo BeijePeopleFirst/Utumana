@@ -13,6 +13,7 @@ export class BookingCardsComponent {
   @Input() pageNumber!: number;
   @Input() totalPages!: number;
   @Output() askForPage = new EventEmitter<number>();
+  @Output() bookingSelected = new EventEmitter<number>();
 
   ngOnInit(){
     console.log("Page number: ", this.pageNumber, " of ", this.totalPages);
@@ -30,5 +31,9 @@ export class BookingCardsComponent {
     if(this.pageNumber != n){
       this.askForPage.emit(n);
     }
+  }
+
+  onBookingSelected(bookingId: number) {
+    this.bookingSelected.emit(bookingId);
   }
 }

@@ -115,7 +115,13 @@
 	"position": "Position",
 	"see_more": "See more",
 	"see_less": "See less",
-	"no_reviews": "No reviews"
+	"no_reviews": "No reviews",
+	"title_error": " Title is required.",
+	"description_error":"Review description is required.",
+	"submit":"Submit review",
+	"write":"Write a review",
+	"title_placeholder":"Your title",
+	"description_placeholder":"Your description"
 },
 "accommodations_cards": {
 	"notFound": "No accommodation found"

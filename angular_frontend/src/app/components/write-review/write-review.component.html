@@ -1,1 +1,86 @@
-<p>write-review works!</p>
+
+  <div *ngIf="isModalOpen" class="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50">
+    <div class="relative w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
+      <h5 class="mb-4 text-xl font-semibold text-gray-700">{{'review.write' | translate}}</h5>
+  
+      <button (click)="close()" class="absolute text-2xl text-gray-500 top-2 right-2">
+        &times;
+      </button>
+  
+      <form [formGroup]="reviewForm" (ngSubmit)="submitReview()">
+  
+        <input 
+          type="text" 
+          formControlName="title" 
+          placeholder="{{'review.title_placeholder' | translate}}" 
+          class="w-full p-2 mb-2 border rounded"
+        />
+        <div *ngIf="reviewForm.controls['title'].invalid && reviewForm.controls['title'].touched" class="text-red-500">
+            {{'review.title_error' | translate}}
+        </div>
+  
+        <div class="flex gap-2">
+          <span class="rating-label">{{'review.comfort' | translate}}</span>
+          <div class="mt-1 text-2xl stars-container">
+            <ng-container *ngFor="let star of stars; let i = index">
+              <div 
+                class="cursor-pointer star-container"  
+                (click)="setComfort(i + 1)" 
+                [ngClass]="{'star-full': reviewForm.get('comfort')?.value > i, 'star-empty': reviewForm.get('comfort')?.value <= i}"
+              >
+                &#x2605;
+              </div>
+            </ng-container>
+          </div>
+        </div>
+
+        <div class="flex gap-2">
+            <span class="rating-label">{{'review.convenience' | translate}}</span>
+            <div class="mt-1 text-2xl stars-container">
+                <ng-container *ngFor="let star of stars; let i = index">
+                    <div 
+                    class="cursor-pointer star-container"  
+                    (click)="setConvenience(i + 1)" 
+                    [ngClass]="{'star-full': reviewForm.get('convenience')?.value > i, 'star-empty': reviewForm.get('convenience')?.value <= i}"
+                    >
+                    &#x2605;
+                </div>
+            </ng-container>
+        </div>
+    </div>
+    
+    <div class="flex gap-2">
+        <span class="rating-label">{{'review.position' | translate}}</span>
+        <div class="mt-1 text-2xl stars-container">
+          <ng-container *ngFor="let star of stars; let i = index">
+            <div 
+              class="cursor-pointer star-container"  
+              (click)="setPosition(i + 1)" 
+              [ngClass]="{'star-full': reviewForm.get('position')?.value > i, 'star-empty': reviewForm.get('position')?.value <= i}"
+            >
+              &#x2605;
+            </div>
+          </ng-container>
+        </div>
+      </div>
+  
+        <textarea 
+          formControlName="description" 
+          placeholder="{{'review.description_placeholder' | translate}}"
+          class="w-full p-2 border rounded"
+        ></textarea>
+        <div *ngIf="reviewForm.controls['description'].invalid && reviewForm.controls['description'].touched" class="text-red-500">
+           {{'review.description_error' | translate}}
+        </div>
+  
+        <button 
+          type="submit" 
+          [disabled]="reviewForm.invalid" 
+          class="px-4 py-2 mt-2 btn-primary"
+        >
+        {{'review.submit' | translate}}
+        </button>
+      </form>
+    </div>
+  </div>
+  
