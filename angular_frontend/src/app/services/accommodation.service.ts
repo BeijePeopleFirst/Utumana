@@ -74,6 +74,22 @@ export class AccommodationService {
     return this.getAccommodationsDTO(`${BACKEND_URL_PREFIX}/api/my_accommodations/${userId}`); // backend is not paginated
   }
 
+  getMyPendingAccommodations(): Observable<AccommodationDTO[]> {
+    const userId = localStorage.getItem("id");
+    if(!userId){
+      return of([]);
+    }
+    return this.getAccommodationsDTO(`${BACKEND_URL_PREFIX}/api/pending_accommodations/${userId}`); // backend is not paginated
+  }
+
+  getMyRejectedAccommodations(): Observable<AccommodationDTO[]> {
+    const userId = localStorage.getItem("id");
+    if(!userId){
+      return of([]);
+    }
+    return this.getAccommodationsDTO(`${BACKEND_URL_PREFIX}/api/rejected_accommodations/${userId}`); // backend is not paginated
+  }
+
   /** @Param url - url of api request (should already include pagination params, if any) */
   getAccommodationsDTO(url: string): Observable<AccommodationDTO[]> {
     return this.http.get<AccommodationDTO[]>(url).pipe(
