@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, debounceTime, distinctUntilChanged, map, Observable, of, Subject, switchMap } from 'rxjs';
 import { Accommodation } from 'src/app/models/accommodation';
 import { Booking } from 'src/app/models/booking';
@@ -70,6 +71,7 @@ export class AccommodationDetailsComponent implements OnInit {
     private userService: UserService,
     private serviceService: ServiceService,
     private route: ActivatedRoute,
+    private translateService: TranslateService,
     private router: Router
   ) 
   {}
@@ -147,19 +149,24 @@ export class AccommodationDetailsComponent implements OnInit {
 
                 //Now lets retrieve the Accommodation Owner:
                 if(!this.accommodation.id) {
-                  this.message = "Error inside Accommodation Entity: ABORT";
+                  if(this.translateService.currentLang === "en-US") this.message = "Error inside Accommodation Entity: ABORT";
+                  if(this.translateService.currentLang === "it-IT") this.message = "Errore nell' entita' Accommodation: ANNULLAMENTO";
                   this.invalidAccommodation = true;
                   return;
                 }
                 this.userService.getUserById(this.accommodation.owner_id).subscribe(
                   foundUser => {
                     if(!foundUser) {
-                      this.message = "Error inside Accommodation Entity: ABORT";
+                      if(this.translateService.currentLang === "en-US") this.message = "Error inside Accommodation Entity: ABORT";
+                      if(this.translateService.currentLang === "it-IT") this.message = "Errore nell' entita' Accommodation: ANNULLAMENTO";
+
                       this.invalidAccommodation = true;
                       return;
                     }
                     else if("message" in foundUser) {
-                      this.message = "Error inside Accommodation Entity: ABORT\n";
+                      if(this.translateService.currentLang === "en-US") this.message = "Error inside Accommodation Entity: ABORT\n";
+                      if(this.translateService.currentLang === "it-IT") this.message = "Errore nell' entita' Accommodation: ANNULLAMENTO\n";
+
                       this.message += foundUser.message;
                       this.invalidAccommodation = true;
                       return;
@@ -239,7 +246,9 @@ export class AccommodationDetailsComponent implements OnInit {
     if(this.isFavourite) this.accommodationService.addFavourite(this.userId, this.accommodation.id).subscribe(
         result => {
           if(!result) {
-            this.message = "An Error occurred";
+            if(this.translateService.currentLang === "en-US") this.message = "An Error Occurred";
+            if(this.translateService.currentLang === "it-IT") this.message = "Si è verificato un Errore";
+            
             return;
           }
           else if("message" in result) {
@@ -247,7 +256,9 @@ export class AccommodationDetailsComponent implements OnInit {
             return;
           }
           else {
-            this.message = "Added to favourites -> " + result.toString();
+            if(this.translateService.currentLang === "en-US") this.message = "Added to favourites -> " + result.toString();
+            if(this.translateService.currentLang === "it-IT") this.message = "Aggiunto ai Preferiti -> " + result.toString();
+
             return;
           }
         }
@@ -256,7 +267,9 @@ export class AccommodationDetailsComponent implements OnInit {
     else this.accommodationService.removeFavourite(this.userId, this.accommodation.id).subscribe(
         result => {
           if(!result) {
-            this.message = "An Error occurred";
+            if(this.translateService.currentLang === "en-US") this.message = "An Error Occurred";
+            if(this.translateService.currentLang === "it-IT") this.message = "Si è verificato un Errore";
+
             return;
           }
           else if("message" in result) {
@@ -264,7 +277,9 @@ export class AccommodationDetailsComponent implements OnInit {
             return;
           }
           else {
-            this.message = "Removed from favourites -> " + result.toString();
+            if(this.translateService.currentLang === "en-US") this.message = "Removed from favourites -> " + result.toString();
+            if(this.translateService.currentLang === "it-IT") this.message = "Rimosso dai Preferiti -> " + result.toString();
+
             return;
           }
         }
@@ -279,7 +294,9 @@ export class AccommodationDetailsComponent implements OnInit {
         {
           if(!result) {
             console.error("Error occurred");
-            this.message = "Error occurred";
+            if(this.translateService.currentLang === "en-US") this.message = "An Error Occurred";
+            if(this.translateService.currentLang === "it-IT") this.message = "Si è verificato un Errore";
+
             return;
           }
           else if("message" in result) {
@@ -289,7 +306,9 @@ export class AccommodationDetailsComponent implements OnInit {
           }
           else {
             console.log("Deleted Accommodation -> ", result);
-            this.message = "Deleted Accommodation -> " + result.toString();
+            if(this.translateService.currentLang === "en-US") this.message = "Deleted Accommodation -> " + result.toString();
+            if(this.translateService.currentLang === "it-IT") this.message = "Accommodation Rimossa -> " + result.toString();
+
             return;
           }
         }
@@ -308,13 +327,19 @@ export class AccommodationDetailsComponent implements OnInit {
   confirmFormCityCountryProv() {
     if(!this.countryInputField) {
       this.toggleEditCityProvCountry();
-      this.message = "Country is REQUIRED";
+
+      if(this.translateService.currentLang === "en-US") this.message = "Country is REQUIRED";
+      if(this.translateService.currentLang === "it-IT") this.message = "Il Paese è RICHIESTO";
+
       return;
     }
 
     if(!this.CAPInputField) {
       this.toggleEditCityProvCountry();
-      this.message = "CAP is REQUIRED";
+
+      if(this.translateService.currentLang === "en-US") this.message = "CAP is REQUIRED";
+      if(this.translateService.currentLang === "it-IT") this.message = "Il CAP è RICHIESTO";
+      
       return;
     }
 
@@ -332,9 +357,15 @@ export class AccommodationDetailsComponent implements OnInit {
 
     this.accommodationService.updateAccommodationAddress(this.userId, this.accommodation).subscribe(
       result => {
-        if(!result) this.message = "An error occurred";
+        if(!result) {
+          if(this.translateService.currentLang === "en-US") this.message = "An error occurred";
+          if(this.translateService.currentLang === "it-IT") this.message = "Si è verificato un Errore";
+        }
         else if("message" in result) this.message = result.message;
-        else this.message = "updated Accommodation -> " + result.toString();
+        else {
+          if(this.translateService.currentLang === "en-US") this.message = "updated Accommodation -> " + result.toString();
+          if(this.translateService.currentLang === "it-IT") this.message = "Accommodation Aggiornata -> " + result.toString();
+        }
 
         this.toggleEditCityProvCountry();
       }
@@ -358,7 +389,9 @@ export class AccommodationDetailsComponent implements OnInit {
 
   confirmFormRoomsBeds() {
     if(!this.bedsNum || !this.roomsNum) {
-      this.message = "Rooms number and Beds number are both required";
+      if(this.translateService.currentLang === "en-US") this.message = "Rooms number and Beds number are both required";
+      if(this.translateService.currentLang === "it-IT") this.message = "I numeri di Stanze e Letti sono richiesti";
+
       return;
     }
 
@@ -369,9 +402,15 @@ export class AccommodationDetailsComponent implements OnInit {
 
     this.accommodationService.updateAccommodationInfo(this.accommodation).subscribe(
       result => {
-        if(!result) this.message = "An error occurred";
+        if(!result) {
+          if(this.translateService.currentLang === "en-US") this.message = "An error occurred";
+          if(this.translateService.currentLang === "it-IT") this.message = "Si è verificato un Errore";
+        }
         else if("message" in result) this.message = result.message;
-        else this.message = "Updated Accommodation -> " + result.toString();
+        else {
+          if(this.translateService.currentLang === "en-US") this.message = "Updated Accommodation -> " + result.toString();
+          if(this.translateService.currentLang === "it-IT") this.message = "Accommodation Aggiornata -> " + result.toString();
+        }
 
         this.toggleEditRoomsBeds();
       }
@@ -381,7 +420,8 @@ export class AccommodationDetailsComponent implements OnInit {
   bookNow() {
 
     if(!this.chosenAvailability || !this.chosenAvailability.start_date || !this.chosenAvailability.end_date || !this.userId || !this.accommodation) {
-      this.message = "Some values for Booking are Missing!";
+      if(this.translateService.currentLang === "en-US") this.message = "Some values for Booking are Missing!";
+      if(this.translateService.currentLang === "it-IT") this.message = "Alcuni valori per il Booking sono Assenti!";
       return;
     }
 
@@ -449,8 +489,9 @@ export class AccommodationDetailsComponent implements OnInit {
           return;
         }
         else {
-          this.message = "Successfully updated Accommodation Services";
-
+          if(this.translateService.currentLang === "en-US") this.message = "Successfully updated Accommodation Services";
+          if(this.translateService.currentLang === "it-IT") this.message = "Servizi dell' Accommodation aggiornati con Successo";
+          
           this.toggleEditServicesPerspective();
         }
       }

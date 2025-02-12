@@ -62,7 +62,19 @@
 	"guests-word": "Guests",
 	"nights-word": "Nights",
 	"edit-services-sentence": "Edit Services",
-	"confirm-services": "Confirm Services"
+	"confirm-services": "Confirm Services",
+	"city-word": "City",
+	"province-word": "Province",
+	"country-word": "Country",
+	"street-word": "Street",
+	"street-number-word": "Street Number",
+	"edit-address-sentence": "Edit Address",
+	"edit-rooms-and-beds-sentence": "Edit Rooms and Beds",
+	"cap-word": "CAP",
+	"user-error": "Error 401 Unauthorized: Need to be Logged-in with a lecit account",
+	"accommodation-error": "Error 404 Not Found: Invalid Accommodation ID Provided"
+	
+	
 },
 
 "choose-book-period-from-acc-details": {

@@ -1,9 +1,9 @@
 <ng-container *ngIf="invalidAccommodation" id="invalid-accommodation-container">
-    <h1 class="text-3xl text-orange-700">Error 404 Not Found: Invalid Accommodation ID Provided</h1>
+    <h1 class="text-3xl text-orange-700">{{"accommodation-card-details.accommodation-error" | translate}}</h1>
   </ng-container>
   
   <ng-container *ngIf="invalidUserId || userNotLogged">
-    <h1 class="text-3xl text-orange-700">Error 401 Unauthorized: Need to be Logged-in with a lecit account</h1>
+    <h1 class="text-3xl text-orange-700">{{"accommodation-card-details.user-error" | translate}}</h1>
   </ng-container>
   
   <ng-container *ngIf="!invalidAccommodation && !invalidUserId && !userNotLogged" id="accommodation-details-container">
@@ -149,10 +149,10 @@
       <form #cityProvCountryForm="ngForm" class="m-5">
         <div class="flex flex-col items-center justify-center">
 
-          <h1 class="text-2xl">Edit Address</h1>
+          <h1 class="text-2xl">{{"accommodation-card-details.edit-address-sentence" | translate}}</h1>
 
           <div class="flex flex-row">
-            <label class="label-primary" for="city-input-popup">City: </label>
+            <label class="label-primary" for="city-input-popup">{{"accommodation-card-details.city-word" | translate}}: </label>
             <div>
               <input class="input-primary" [(ngModel)]="cityInputField" name="city-input-popup" #cityInPopup="ngModel" id="city-input-popup" type="text" 
               [value]="accommodation.city ? accommodation.city : ('accommodation-card-details.city-placeholder-input-field' | translate)"
@@ -164,7 +164,7 @@
           </div>
 
           <div class="flex flex-row">
-            <label class="label-primary" for="cap-input-popup">CAP: </label>
+            <label class="label-primary" for="cap-input-popup">{{"accommodation-card-details.cap-word" | translate}}: </label>
             <div>
               <input name="cap-input-popup" class="input-primary" [(ngModel)]="CAPInputField" #CAPInPopup="ngModel" id="cap-input-popup" type="text" 
               [value]="accommodation.cap" pattern="[0-9]{5}" required />
@@ -175,7 +175,7 @@
           </div>
 
           <div class="flex flex-row">
-            <label class="label-primary" for="street-input-popup">Street: </label>
+            <label class="label-primary" for="street-input-popup">{{"accommodation-card-details.street-word" | translate}}: </label>
             <div>
               <input name="street-input-popup" class="input-primary" [(ngModel)]="streetInputField" #streetInPopup="ngModel" id="street-input-popup" type="text" 
               [value]="accommodation.street ? accommodation.street : ('accommodation-card-details.street-placeholder-input-field' | translate)"
@@ -187,7 +187,7 @@
           </div>
 
           <div class="flex flex-row">
-            <label class="label-primary" for="street-number-input-popup">Street Number: </label>
+            <label class="label-primary" for="street-number-input-popup">{{"accommodation-card-details.street-number-word" | translate}}: </label>
             <div>
               <input name="street-number-input-popup" class="input-primary" [(ngModel)]="strNumInputField" #streetNumInPopup="ngModel" id="street-number-input-popup" type="text" 
               [value]="accommodation.street_number ? accommodation.street_number : ('accommodation-card-details.street-number-placeholder-input-field' | translate)"
@@ -199,7 +199,7 @@
           </div>
   
           <div class="flex flex-row">
-            <label class="label-primary" for="prov-input-popup">Province: </label>
+            <label class="label-primary" for="prov-input-popup">{{"accommodation-card-details.province-word" | translate}}: </label>
             <div>
               <input name="prov-input-popup" class="input-primary" [(ngModel)]="provinceInputField" #provInPopup="ngModel" id="prov-input-popup" type="text" 
               [value]="accommodation.province ? accommodation.province : ('accommodation-card-details.province-placeholder-input-field' | translate)"
@@ -211,7 +211,7 @@
           </div>
   
           <div class="flex flex-row">
-            <label class="label-primary" for="country-input-popup">Country: </label>
+            <label class="label-primary" for="country-input-popup">{{"accommodation-card-details.country-word" | translate}}: </label>
             <div>
               <input name="country-input-popup" class="input-primary" [(ngModel)]="countryInputField" #countryInPopup="ngModel" id="country-input-popup" type="text" [value]="accommodation.country" required pattern="^[a-zA-Z]+( [a-zA-Z]+)*$" />
               <div class="error-message" *ngIf="countryInPopup.invalid && (!countryInPopup.pristine && countryInPopup.dirty) && (countryInPopup.hasError('pattern') || countryInPopup.hasError('required'))">
@@ -247,10 +247,10 @@
       <form #roomsBedsForm="ngForm" class="m-5">
         <div class="flex flex-col items-center justify-center">
 
-          <h1 class="text-2xl">Edit Rooms and Beds</h1>
+          <h1 class="text-2xl">{{"accommodation-card-details.edit-rooms-and-beds-sentence" | translate}}</h1>
 
           <div class="flex flex-row">
-            <label class="label-primary" for="rooms-input-popup">Rooms: </label>
+            <label class="label-primary" for="rooms-input-popup">{{"accommodation-card-details.rooms-word" | translate}}: </label>
             <div>
               <input name="rooms-input-popup" class="input-primary" [(ngModel)]="roomsNum" #roomsInPopup="ngModel" id="rooms-input-popup" type="text" [value]="accommodation.rooms" required pattern="[1-9]+[0-9]*" />
               <div class="error-message" *ngIf="roomsInPopup.invalid && (!roomsInPopup.pristine && roomsInPopup.dirty) && (roomsInPopup.hasError('pattern') || roomsInPopup.hasError('required'))">
@@ -260,7 +260,7 @@
           </div>
   
           <div class="flex flex-row">
-            <label class="label-primary" for="beds-input-popup">Beds: </label>
+            <label class="label-primary" for="beds-input-popup">{{"accommodation-card-details.beds-word" | translate}}: </label>
             <div>
               <input name="beds-input-popup" class="input-primary" [(ngModel)]="bedsNum" #bedsInPopup="ngModel" id="beds-input-popup" type="text" [value]="accommodation.beds" required pattern="[1-9]+[0-9]*" />
               <div class="error-message" *ngIf="bedsInPopup.invalid && (!bedsInPopup.pristine && bedsInPopup.dirty) && (bedsInPopup.hasError('pattern') || bedsInPopup.hasError('required'))">

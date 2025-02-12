@@ -63,7 +63,17 @@
 	"guests-word": "Ospiti",
 	"nights-word": "Notti",
 	"edit-services-sentence": "Modifica Servizi",
-	"confirm-services": "Conferma Servizi"
+	"confirm-services": "Conferma Servizi",
+	"city-word": "Citta'",
+	"province-word": "Provincia",
+	"country-word": "Paese",
+	"street-word": "Strada",
+	"street-number-word": "Numero Civico",
+	"edit-address-sentence": "Modifica Indirizzo",
+	"cap-word": "CAP",
+	"edit-rooms-and-beds-sentence": "Modifica Stanze e Letti",
+	"user-error": "Error 401 Unauthorized: Necessario essere loggati con un profilo valido",
+	"accommodation-error": "Error 404 Not Found: Accommodation ID fornito non valido"
 },
 
 "choose-book-period-from-acc-details": {
