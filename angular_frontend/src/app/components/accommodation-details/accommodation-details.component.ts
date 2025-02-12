@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, debounceTime, distinctUntilChanged, map, Observable, of, Subject, switchMap } from 'rxjs';
 import { Accommodation } from 'src/app/models/accommodation';
 import { Booking } from 'src/app/models/booking';
+import { Service } from 'src/app/models/service';
 import { User } from 'src/app/models/user';
 import { AccommodationService } from 'src/app/services/accommodation.service';
+import { ServiceService } from 'src/app/services/service.service';
 import { UserService } from 'src/app/services/user.service';
 import { BookingStatus } from 'src/app/utils/enums';
 
@@ -50,6 +52,12 @@ export class AccommodationDetailsComponent implements OnInit {
   nightsNumber$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   postOperation$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
 
+  private servicesSearchBarInputToken$: Subject<string> = new Subject<string>();
+  foundServices$!: Observable<Service[]>;
+  private selectedServices: Service[] = [];
+
+  selectedServicesView$: BehaviorSubject<Service[]> = new BehaviorSubject<Service[]>([]);
+
   message?: string;
 
   //Child Communication:
@@ -59,6 +67,7 @@ export class AccommodationDetailsComponent implements OnInit {
   constructor(
     private accommodationService: AccommodationService,
     private userService: UserService,
+    private serviceService: ServiceService,
     private route: ActivatedRoute,
     private router: Router
   ) 
@@ -100,6 +109,11 @@ export class AccommodationDetailsComponent implements OnInit {
           this.accommodation = data;
 
           console.log("STAMPO ACC trovata -> ", this.accommodation);
+
+          for(let s of this.accommodation.services)
+            this.selectedServices.push(new Service(s.id, s.title, s.icon_url));
+
+          this.selectedServicesView$.next(this.selectedServices);
 
           this.userId = localStorage.getItem("id") ? Number(localStorage.getItem("id")) : undefined;
           //this.userId = 1;
@@ -150,6 +164,28 @@ export class AccommodationDetailsComponent implements OnInit {
                     else {
                       this.accommodationOwner = foundUser;
                     }
+
+                    //Lets configure the search services service:
+                    this.foundServices$ = this.servicesSearchBarInputToken$.pipe(
+                      // wait 300ms after each keystroke before considering the term
+                      debounceTime(300),
+
+                      // ignore new term if same as previous term: need to test this one
+                      //distinctUntilChanged(),
+
+                      // switch to new search observable each time the term changes
+                      switchMap((term: string) =>
+                        this.serviceService.searchServices(term).pipe(
+                          map(res => {
+                            if("message" in res) {
+                              this.message = res.message + ", status: " + res.status;
+                              return [];
+                            }
+                            else return res;
+                          })
+                        )
+                      )
+                    );
                   }
                 )
               }
@@ -362,9 +398,33 @@ export class AccommodationDetailsComponent implements OnInit {
     return;
   }
 
-  //TODO + perspective itself
+  showEditServicesPerspective: boolean = false;
   toggleEditServicesPerspective() {
+    this.showEditServicesPerspective = !this.showEditServicesPerspective;
+  }
 
+  searchServices(token: string): void {
+    this.servicesSearchBarInputToken$.next(token);
+  }
+
+  removeSelectedService(service: Service) {
+    this.selectedServices = this.selectedServices.filter(s => s.id !== service.id);
+    this.selectedServicesView$.next(this.selectedServices);
+  }
+
+  elaborateCheckbox(input: boolean, s: Service): void {
+    //input -> Sarà "true" o "false"
+    if(input) this.selectedServices.push(s);
+    else this.selectedServices = this.selectedServices.filter(ser => ser.id !== s.id);
+
+    this.selectedServicesView$.next(this.selectedServices);
+  }
+
+  isSelectedService(service: Service): boolean {
+    for(let s of this.selectedServices)
+      if(s.id == service.id) return true;
+
+    return false;
   }
 
   clearMessage() {
