@@ -38,10 +38,15 @@
 	"priceDesc": "Price: Desc",
 	"recentAsc": "Recent: Asc",
 	"recentDesc": "Recent: Desc",
+	"ratingAsc": "Rating: Asc",
+	"ratingDesc": "Rating: Desc",
 	"minPrice-asc": " (Price: Asc)",
 	"minPrice-desc": " (Price: Desc)",
 	"approvalTimestamp-asc": " (Recent: Asc)",
-	"approvalTimestamp-desc": " (Recent: Desc)"
+	"approvalTimestamp-desc": " (Recent: Desc)",
+	"rating-asc": " (Rating: Asc)",
+	"rating-desc": " (Rating: Desc)"
+
 },
 
 "accommodation-card-details": {

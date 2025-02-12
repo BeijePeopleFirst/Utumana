@@ -46,7 +46,7 @@ export class SearchPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.foundAccommodationsPageSize = 4;
+    this.foundAccommodationsPageSize = 8;
     this.foundAccommodationsPageNumber = 0;
     this.foundAccommodationsTotalPages = 2; 
     this.foundAccommodations$ = this.accommodationService.foundAccommodations$;

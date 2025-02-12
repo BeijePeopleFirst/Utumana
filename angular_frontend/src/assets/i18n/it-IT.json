@@ -39,10 +39,15 @@
 	"priceDesc": "Prezzo: decrescente",
 	"recentAsc": "Recenti: crescente",
 	"recentDesc": "Recenti: decrescente",
+	"ratingAsc": "Voto: crescente",
+	"ratingDesc": "Voto: decrescente",
 	"minPrice-asc": " (Prezzo: crescente)",
 	"minPrice-desc": " (Prezzo: decrescente)",
 	"approvalTimestamp-asc": " (Recenti: crescente)",
-	"approvalTimestamp-desc": " (Recenti: decrescente)"
+	"approvalTimestamp-desc": " (Recenti: decrescente)",
+	"rating-asc": " (Voto: crescente)",
+	"ratingd-esc": " (Voto: decrescente)"
+
 },
 
 "accommodation-card-details": {
