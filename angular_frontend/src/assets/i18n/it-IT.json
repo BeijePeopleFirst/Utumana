@@ -33,7 +33,16 @@
 	"check_inError": "Data di checkIn non valida",
 	"check_outInconcistency": "Data di checkOut prima di checkIn",
 	"resFound": "Risultati ricerca",
-	"is_free": "Solo sistemazioni gratuite"
+	"is_free": "Solo sistemazioni gratuite",
+	"order": "Ordine per",
+	"priceAsc": "Prezzo: crescente",
+	"priceDesc": "Prezzo: decrescente",
+	"recentAsc": "Recenti: crescente",
+	"recentDesc": "Recenti: decrescente",
+	"minPrice-asc": " (Prezzo: crescente)",
+	"minPrice-desc": " (Prezzo: decrescente)",
+	"approvalTimestamp-asc": " (Recenti: crescente)",
+	"approvalTimestamp-desc": " (Recenti: decrescente)"
 },
 
 "accommodation-card-details": {

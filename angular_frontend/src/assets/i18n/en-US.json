@@ -32,7 +32,16 @@
 	"check_inError": "checkIn date invalid",
 	"check_outInconcistency": "checkIn not before checkOut",
 	"resFound": "Found Result",
-	"is_free": "Only free accommodations"
+	"is_free": "Only free accommodations",
+	"order": "Order by",
+	"priceAsc": "Price: Asc",
+	"priceDesc": "Price: Desc",
+	"recentAsc": "Recent: Asc",
+	"recentDesc": "Recent: Desc",
+	"minPrice-asc": " (Price: Asc)",
+	"minPrice-desc": " (Price: Desc)",
+	"approvalTimestamp-asc": " (Recent: Asc)",
+	"approvalTimestamp-desc": " (Recent: Desc)"
 },
 
 "accommodation-card-details": {
