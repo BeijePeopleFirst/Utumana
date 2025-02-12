@@ -8,6 +8,7 @@ import { FormGroup } from '@angular/forms';
 import { params } from '../models/searchParams';
 import { Availability } from '../models/availability';
 import { PriceDTO } from '../dtos/priceDTO';
+import { SearchService } from './search.service';
 
 @Injectable({
   providedIn: 'root'
@@ -31,9 +32,9 @@ export class AccommodationService {
   private foundAccommodationsSubject = new BehaviorSubject<AccommodationDTO[]>([]);
   public foundAccommodations$ = this.foundAccommodationsSubject.asObservable();
 
-  private searchParamsSubject = new BehaviorSubject<any>(null);
+  //private searchParamsSubject = new BehaviorSubject<any>(null);
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,private searchService: SearchService ) { }
 
   public getLatestUploads(offset: number, pageSize: number): void {
     if(!this.allLatestAccommodations){
@@ -136,28 +137,19 @@ export class AccommodationService {
     })
   }
 
-  public searchAccommodations(params: any) {
-    this.searchParamsSubject.next(params)
-  }
-
   public getSearchResults(offset: number, pageSize: number): void{
-    this.searchParamsSubject.subscribe({
-      next: params => {
-        if (!params) return;
-        let httpParams = new HttpParams();
-
-        Object.keys(params).forEach(key => {
-          if (params[key] != null) {
-            httpParams = httpParams.set(key, params[key]);
-          }
-        });
-
-        const url = `${BACKEND_URL_PREFIX}/api/search?${httpParams.toString()}`;
-        this.getAccommodationsDTOToSubject(url, offset, pageSize, this.foundAccommodationsSubject);
-      }
+    const currentParams = this.searchService.getSearchData();
+    console.log("current params: ",currentParams)
+    if (!currentParams) return;
+      let httpParams = new HttpParams();
+      Object.keys(currentParams).forEach(key => {
+        if ((currentParams as any)[key] != null) {
+          httpParams = httpParams.set(key, (currentParams as any)[key]);
+        }
+      })
+      const url = `${BACKEND_URL_PREFIX}/api/search?${httpParams.toString()}`;
+      this.getAccommodationsDTOToSubject(url, offset, pageSize, this.foundAccommodationsSubject);
     }
-    )
-  }
 
   getParams(form: any): params {
     console.log(form)
