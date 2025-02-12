@@ -7,3 +7,6 @@
 .star-empty { @apply text-gray-300; }
 
 .preview { @apply overflow-hidden h-36; }
+
+.review-action { @apply relative inline align-middle justify-self-end hover:opacity-80 hover:scale-105; }
+.review-action img { @apply object-contain w-8 h-8; }
