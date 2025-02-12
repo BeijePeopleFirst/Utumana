@@ -9,7 +9,7 @@
         
         <div class="flex flex-wrap justify-center gap-3">
             <div *ngFor="let review of reviews" class="flex max-w-sm p-4 bg-white rounded-lg shadow-md text-start lg:max-w-4xl">
-                <app-review-card [review]="review"></app-review-card>
+                <app-review-card [review]="review" (reviewChange)="refreshReviews()"></app-review-card>
             </div>
         </div>
 

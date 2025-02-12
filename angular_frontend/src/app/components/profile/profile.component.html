@@ -1,5 +1,14 @@
-<p>profile works!</p>
+<section class="flex items-center justify-center pt-8 bg-neutral-1">
+    <p>profile works!</p>
+</section>
 <section class="flex items-center justify-center pt-8 bg-neutral-2">
+    <div class="container p-5 text-center">
+        <h2>{{'profile.reviews_to_accept' | translate}}</h2>
+        <app-review-cards [reviews]="waitingReviews" [pageNumber]="waitingReviewsPageNumber" [totalPages]="waitingReviewsTotalPages" 
+        (askForPage)="loadWaitingReviewsPage($event)" (refresh)="loadUserReviews()"></app-review-cards>
+    </div>
+</section>
+<section class="flex items-center justify-center pt-8 bg-neutral-1">
     <div class="container p-5 text-center">
         <h2>{{'profile.reviews_title' | translate}}</h2>
         <app-review-cards [reviews]="reviews" [pageNumber]="reviewsPageNumber" [totalPages]="reviewsTotalPages" 

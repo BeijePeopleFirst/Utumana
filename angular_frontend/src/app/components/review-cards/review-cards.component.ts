@@ -11,6 +11,7 @@ export class ReviewCardsComponent {
   @Input() pageNumber!: number;
   @Input() totalPages!: number;
   @Output() askForPage = new EventEmitter<number>();
+  @Output() refresh = new EventEmitter<void>();
 
   prevPage(): void {
     this.getPage(this.pageNumber - 1);
@@ -24,5 +25,9 @@ export class ReviewCardsComponent {
     if(this.pageNumber != n){
       this.askForPage.emit(n);
     }
+  }
+
+  refreshReviews(): void {
+    this.refresh.emit();
   }
 }

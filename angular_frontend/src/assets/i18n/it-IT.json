@@ -92,7 +92,8 @@
 	"review":"Recensioni"
 },
 "profile": {
-	"reviews_title": "Recensioni ricevute"
+	"reviews_title": "Recensioni ricevute",
+	"reviews_to_accept": "Recensioni in attesa di un tuo riscontro"
 },
 "review": {
 	"comfort": "Comfort",
