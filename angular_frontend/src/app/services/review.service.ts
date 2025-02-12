@@ -15,11 +15,11 @@ export class ReviewService {
   ) { }
 
   getUserReviews(userId: number): Observable<Review[]> {
-    return this.http.get<Review[]>(`${BACKEND_URL_PREFIX}/api/review/user/${userId}`, this.httpOptions);
+    return this.http.get<Review[]>(`${BACKEND_URL_PREFIX}/api/review/user/${userId}`, {});
   }
 
   acceptReview(id: number): Observable<boolean> {
-    return this.http.patch<Review>(`${BACKEND_URL_PREFIX}/api/review/${id}`, this.httpOptions).pipe(
+    return this.http.patch<Review>(`${BACKEND_URL_PREFIX}/api/review/${id}`, {}).pipe(
       map(review => {
         console.log("Review accepted", review);
         return true;
@@ -32,7 +32,7 @@ export class ReviewService {
   }
 
   rejectReview(id: number): Observable<boolean> {
-    return this.http.delete<string>(`${BACKEND_URL_PREFIX}/api/review/${id}`, this.httpOptions).pipe(
+    return this.http.delete<string>(`${BACKEND_URL_PREFIX}/api/review/${id}`, {}).pipe(
       map(message => {
         console.log(message);
         return true;
@@ -42,5 +42,9 @@ export class ReviewService {
         return of(false);
       })
     );
+  }
+
+  addReview(review :Review):Observable<Review>{
+    return this.http.post<Review>(`${BACKEND_URL_PREFIX}/api/review`,review);
   }
 }
