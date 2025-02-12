@@ -38,4 +38,4 @@
     </div>
 </section>
 
-<app-write-review (closeModal)="closeWriteReviewModal()" [bookingId]="selectedBookingId" [isModalOpen]="isModalOpen"></app-write-review>
+<app-write-review  (reviewAdded)="onReviewAdded()" (closeModal)="closeWriteReviewModal()" [bookingId]="selectedBookingId" [isModalOpen]="isModalOpen"></app-write-review>

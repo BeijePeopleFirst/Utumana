@@ -13,6 +13,7 @@ export class WriteReviewComponent {
   @Input() isModalOpen = false;
   @Input() bookingId!:number;
   @Output() closeModal = new EventEmitter<void>();
+  @Output() reviewAdded = new EventEmitter<void>();
 
   reviewForm: FormGroup;
   stars = [1, 2, 3, 4, 5];
@@ -44,8 +45,9 @@ export class WriteReviewComponent {
       this.reviewService.addReview(review).subscribe({
         next: () => {
           console.log('Review Submitted:', this.reviewForm.value);
-          alert('Review Submitted Successfully!');
           this.close();
+          this.reviewAdded.emit();
+          alert('Review Submitted Successfully!');
         },
         error: (error) => {
           console.error('Error submitting review:', error);
@@ -72,10 +74,6 @@ export class WriteReviewComponent {
     this.reviewForm.patchValue({ convenience: star });
   }
   
-  openModal() {
-    this.isModalOpen = true;
-  }
-
   close() {
     this.closeModal.emit(); 
   }

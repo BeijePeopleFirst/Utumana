@@ -47,36 +47,15 @@ export class MyBookingsComponent {
     ){ }
 
   ngOnInit(): void {
-    
-    this.acceptedBookings$ = this.bookingService.acceptedBookings$;
-    this.acceptedBookingsPageSize = 4;
-    this.acceptedBookingsPageNumber = 0;
-    this.acceptedBookingsTotalPages = 2;
-    this.loadAcceptedBookingsPage(0);
+    this.loadAcceptedBookings();
 
-    this.rejectedBookings$ = this.bookingService.rejectedBookings$;
-    this.rejectedBookingsPageSize = 2;
-    this.rejectedBookingsPageNumber = 0;
-    this.rejectedBookingsTotalPages = 2;
-    this.loadRejectedBookingsPage(0);
+    this.loadRejectedBookings();
 
-    this.doneBookings$ = this.bookingService.doneBookings$;
-    this.doneBookingsPageSize = 2;
-    this.doneBookingsPageNumber = 0;
-    this.doneBookingsTotalPages = 4;
-    this.loadDoneBookingsPage(0);
+    this.loadDoneBookings();
 
-    this.pendingBookings$ = this.bookingService.pendingBookings$;
-    this.pendingBookingsPageSize = 4;
-    this.pendingBookingsPageNumber = 0;
-    this.pendingBookingsTotalPages = 2;
-    this.loadPendingBookingsPage(0);
+    this.loadPendingBookings();
 
-    this.doingBookings$ = this.bookingService.doingBookings$;
-    this.doingBookingsPageSize = 2;
-    this.doingBookingsPageNumber = 0;
-    this.doingBookingsTotalPages = 1; // only one page for the only possible ongoing booking
-    this.loadDoingBookingsPage(0);
+    this.loadDoingBookings();
   }
 
   loadDoneBookingsPage(pageNumber: number): void {
@@ -107,12 +86,59 @@ export class MyBookingsComponent {
   closeWriteReviewModal() {
     this.isModalOpen = false;
     this.selectedBookingId = -1
+    document.body.style.overflow = 'auto';
   }
 
   onWriteReview(bookingId: number) {
     this.selectedBookingId = bookingId;
     this.isModalOpen = true;
+    document.body.style.overflow = 'hidden';
     console.log(bookingId);
+  }
+
+  onReviewAdded() {
+    this.loadDoneBookings();
+    this.closeWriteReviewModal();
+  }
+
+  loadDoneBookings(){
+    this.doneBookings$ = this.bookingService.doneBookings$;
+    this.doneBookingsPageSize = 2;
+    this.doneBookingsPageNumber = 0;
+    this.doneBookingsTotalPages = 4;
+    this.loadDoneBookingsPage(0);
+  }
+
+  loadAcceptedBookings(){
+    this.acceptedBookings$ = this.bookingService.acceptedBookings$;
+    this.acceptedBookingsPageSize = 4;
+    this.acceptedBookingsPageNumber = 0;
+    this.acceptedBookingsTotalPages = 2;
+    this.loadAcceptedBookingsPage(0);
+  }
+
+  loadRejectedBookings(){
+    this.rejectedBookings$ = this.bookingService.rejectedBookings$;
+    this.rejectedBookingsPageSize = 2;
+    this.rejectedBookingsPageNumber = 0;
+    this.rejectedBookingsTotalPages = 2;
+    this.loadRejectedBookingsPage(0);
+  }
+
+  loadDoingBookings(){
+    this.doingBookings$ = this.bookingService.doingBookings$;
+    this.doingBookingsPageSize = 2;
+    this.doingBookingsPageNumber = 0;
+    this.doingBookingsTotalPages = 1; // only one page for the only possible ongoing booking
+    this.loadDoingBookingsPage(0);
+  }
+
+  loadPendingBookings(){
+    this.pendingBookings$ = this.bookingService.pendingBookings$;
+    this.pendingBookingsPageSize = 4;
+    this.pendingBookingsPageNumber = 0;
+    this.pendingBookingsTotalPages = 2;
+    this.loadPendingBookingsPage(0);
   }
 
 }
