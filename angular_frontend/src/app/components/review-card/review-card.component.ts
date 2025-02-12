@@ -33,24 +33,28 @@ export class ReviewCardComponent implements OnInit, OnDestroy {
   }
 
   acceptReview(): void {
-    console.log("Accept review " + this.review.id);
-    this.reviewService.acceptReview(this.review.id).subscribe(ok => {
-      if(ok === true){
-        this.reviewChange.emit();
-      }else{
-        // show error message
-      }
-    });
+    if(this.review.id){
+      console.log("Accept review " + this.review.id);
+      this.reviewService.acceptReview(this.review.id).subscribe(ok => {
+        if(ok === true){
+          this.reviewChange.emit();
+        }else{
+          // show error message
+        }
+      });
+    }
   }
 
   rejectReview(): void {
-    console.log("Reject review " + this.review.id);
-    this.reviewService.rejectReview(this.review.id).subscribe(ok => {
-      if(ok === true){
-        this.reviewChange.emit();
-      }else{
-        // show error message
-      }
-    });
+    if(this.review.id){
+      console.log("Reject review " + this.review.id);
+      this.reviewService.rejectReview(this.review.id).subscribe(ok => {
+        if(ok === true){
+          this.reviewChange.emit();
+        }else{
+          // show error message
+        }
+      });
+    }
   }
 }
