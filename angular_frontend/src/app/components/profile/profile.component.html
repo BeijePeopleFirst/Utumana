@@ -5,7 +5,7 @@
     <div class="container p-5 text-center">
         <h2>{{'profile.reviews_to_accept' | translate}}</h2>
         <app-review-cards [reviews]="waitingReviews" [pageNumber]="waitingReviewsPageNumber" [totalPages]="waitingReviewsTotalPages" 
-        (askForPage)="loadWaitingReviewsPage($event)" (refresh)="loadUserReviews()"></app-review-cards>
+        (askForPage)="loadWaitingReviewsPage($event)" (reviewAction)="showReviewModal($event.id, $event.action)"></app-review-cards>
     </div>
 </section>
 <section class="flex items-center justify-center pt-8 bg-neutral-1">
@@ -16,4 +16,5 @@
     </div>
 </section>
 
-<app-write-review></app-write-review>
+<app-review-accept-reject-modal [reviewId]="selectedReviewId" [isModalOpen]="isReviewModalOpen" [action]="reviewModalAction"
+(closeModal)="closeReviewModal($event)"></app-review-accept-reject-modal>

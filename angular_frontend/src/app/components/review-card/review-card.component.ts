@@ -12,7 +12,7 @@ import iconURL from 'src/costants';
 })
 export class ReviewCardComponent implements OnInit, OnDestroy {
   @Input() review!: Review;
-  @Output() reviewChange = new EventEmitter<void>();
+  @Output() reviewChange = new EventEmitter<{id:number, action:string}>();
   iconsUrl: string = iconURL;
   locale: string = 'en';
   localeSubscription?: Subscription;
@@ -34,27 +34,21 @@ export class ReviewCardComponent implements OnInit, OnDestroy {
 
   acceptReview(): void {
     if(this.review.id){
-      console.log("Accept review " + this.review.id);
+      this.reviewChange.emit({ id: this.review.id, action: 'accept' });
+      /*
       this.reviewService.acceptReview(this.review.id).subscribe(ok => {
         if(ok === true){
-          this.reviewChange.emit();
+          this.reviewChange.emit({ id: this.review.id, action: 'accept' });
         }else{
           // show error message
         }
-      });
+      });*/
     }
   }
 
   rejectReview(): void {
     if(this.review.id){
-      console.log("Reject review " + this.review.id);
-      this.reviewService.rejectReview(this.review.id).subscribe(ok => {
-        if(ok === true){
-          this.reviewChange.emit();
-        }else{
-          // show error message
-        }
-      });
+      this.reviewChange.emit({ id: this.review.id, action: 'reject' });
     }
   }
 }

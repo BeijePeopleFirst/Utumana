@@ -121,7 +121,14 @@
 	"submit":"Salva recensione",
 	"write":"Scrivi una recensione",
 	"title_placeholder":"Tuo titolo",
-	"description_placeholder":"Tua descrizione"
+	"description_placeholder":"Tua descrizione",
+	"accept_title": "Accettare questa recensione?",
+	"accept_subtitle": "Se scegli \"Accetta\", la recensione verrà resa pubblica",
+	"reject_title": "Rifiutare questa recensione?",
+	"reject_subtitle": "Se scegli \"Rifiuta\", la recensione verrà eliminata definitivamente",
+	"accept_button_label": "Accetta",
+	"reject_button_label": "Rifiuta",
+	"cancel_button_label": "Annulla"
 },
 "accommodations_cards": {
 	"notFound": "Nessuna offerta disponibile"

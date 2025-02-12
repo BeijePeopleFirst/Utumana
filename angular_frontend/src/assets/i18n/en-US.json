@@ -1,4 +1,4 @@
-{"greeting" : "hello",
+{"error": "Unexpected error. Please retry.",
 "login": {
 	"welcome": "Welcome back!",
 	"email_label": "Email address",
@@ -10,8 +10,7 @@
 	"password_short": "Password too short",
 	"password_wrong": "Wrong password",
 	"forget_password": "Forgot your password?",
-	"button_text": "Login",
-	"error": "Unexpected error. Please retry."
+	"button_text": "Login"
 	},
 "header": {
 	"profile": "Profile",
@@ -121,7 +120,14 @@
 	"submit":"Submit review",
 	"write":"Write a review",
 	"title_placeholder":"Your title",
-	"description_placeholder":"Your description"
+	"description_placeholder":"Your description",
+	"accept_title": "Are you sure you want to accept this review?",
+	"accept_subtitle": "If you choose \"Accept\", the review will be published",
+	"reject_title": "Are you sure you want to reject this review?",
+	"reject_subtitle": "If you choose \"Reject\", the review will be permanently deleted",
+	"accept_button_label": "Accept",
+	"reject_button_label": "Reject",
+	"cancel_button_label": "Cancel"
 },
 "accommodations_cards": {
 	"notFound": "No accommodation found"
