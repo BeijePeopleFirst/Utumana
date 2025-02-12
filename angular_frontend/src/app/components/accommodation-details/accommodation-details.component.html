@@ -132,12 +132,14 @@
         </div>
       </div>
       <!-------------------------------------------------------------------------------------------------------------------------------------------------->
-      <app-review-cards></app-review-cards>
+      <div class="mt-14">
+        <app-review-cards></app-review-cards>
+      </div>
     </div>
   </ng-container>
   
-  <ng-container *ngIf="message">
-    <button type="button" (click)="clearMessage()">clear</button>
+  <ng-container *ngIf="message" class="mt-16">
+    <button class="btn-primary" type="button" (click)="clearMessage()">clear</button>
     <br>
     <h1 class="text-xl text-blue-800">{{message}}</h1>
   </ng-container>
@@ -291,14 +293,15 @@
   </ng-container>
 
   <ng-template #editServicesPerspective>
-    <div id="edit-services-container" class="absolute bottom-0 flex flex-col transform -translate-x-1/2 -translate-y-1/2 border-8 border-solid w-[400px] bg-neutral-1 border-primary-dark left-64">
+    <div id="edit-services-container" class="absolute bottom-0 flex flex-col transform -translate-x-1/2 -translate-y-1/2 border-8 border-solid w-[650px] bg-neutral-1 border-primary-dark left-1/2">
       <div class="relative bg-neutral-2">
         <p class="text-3xl label-primary">{{('accommodation-card-details.edit-services-sentence' | translate)}}</p>
         <p class="absolute text-2xl cursor-pointer top-1 right-1" (click)="toggleEditServicesPerspective()" id="close-popup">X</p>
       </div>
       <div id="search-and-selected-services" class="flex flex-row w-full">
         <div id="search-section" class="w-full">
-          <input type="text" class="w-full text-xl text-center input-primary" #servicesBarInput (input)="searchServices(servicesBarInput.value)" />
+          <input type="text" class="w-full text-xl text-center input-primary" #servicesBarInput (input)="searchServices(servicesBarInput.value)" 
+            (focus)="searchBarFocusAction()" (focusout)="searchBarOutFocusAction()"/>
           <div *ngIf="foundServices$ && foundServices$ | async as ser">
             <div *ngIf="ser.length > 0" class="flex flex-col items-center justify-center text-center align-middle border-4 border-solid border-secondary-light bg-neutral-2">
               <div *ngFor="let s of ser" class="flex flex-row w-full border-2 border-solid border-secondary-light">
@@ -319,7 +322,9 @@
           </div>
         </div>
       </div>
-      <!--METTERE QUI IL BOTTONE AL POSTO DI QUESTO COMMENTO-->
+      <div class="text-center">
+        <button id="confirm-services-btn" (click)="confirmServices()" class="mt-8 btn-primary">{{('accommodation-card-details.confirm-services' | translate)}}</button>
+      </div>
     </div>
   </ng-template>
 

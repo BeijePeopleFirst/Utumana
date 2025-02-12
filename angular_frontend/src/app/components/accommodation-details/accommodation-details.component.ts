@@ -407,6 +407,15 @@ export class AccommodationDetailsComponent implements OnInit {
     this.servicesSearchBarInputToken$.next(token);
   }
 
+  searchBarFocusAction(): void {
+    this.servicesSearchBarInputToken$.next("");
+  }
+
+  //It provides an invalid random string in order to trigger the subscribed observable:
+  searchBarOutFocusAction(): void {
+    this.servicesSearchBarInputToken$.next((Math.random() * 1000) + "");
+  }
+
   removeSelectedService(service: Service) {
     this.selectedServices = this.selectedServices.filter(s => s.id !== service.id);
     this.selectedServicesView$.next(this.selectedServices);
@@ -425,6 +434,24 @@ export class AccommodationDetailsComponent implements OnInit {
       if(s.id == service.id) return true;
 
     return false;
+  }
+
+  confirmServices(): void {
+    
+    this.accommodationService.setAccommodationServices(this.accommodation, this.selectedServices).subscribe(
+      result => {
+
+        if("message" in result) {
+          this.message = result.message;
+          return;
+        }
+        else {
+          this.message = "Successfully updated Accommodation Services";
+
+          this.toggleEditServicesPerspective();
+        }
+      }
+    )
   }
 
   clearMessage() {
