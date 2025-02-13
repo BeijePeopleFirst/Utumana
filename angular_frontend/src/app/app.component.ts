@@ -31,12 +31,15 @@ export class AppComponent implements DoCheck {
     public authService: AuthService
   ) {
     this.selectedLanguage = this.translate.currentLang || 'en-US';
-    this.translate.use(this.selectedLanguage);
+    //this.translate.use(this.selectedLanguage);
+    this.selectedLanguage = localStorage.getItem("currLan") ?? 'en-US';
+    this.translate.use(this.selectedLanguage)
   }
 
   ngDoCheck(): void {
     this.isLogin = this.location.path().indexOf('/login') >= 0;
   }
+
 
   toggleProfileMenu(event: Event) {
     event.stopPropagation();
@@ -55,6 +58,7 @@ export class AppComponent implements DoCheck {
     this.selectedLanguage = langCode;
     this.translate.use(langCode);
     this.isLanguageMenuOpen = false;
+    localStorage.setItem("currLan", langCode);
   }
 
 /*   @HostListener('document:click', ['$event'])
