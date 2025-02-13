@@ -178,7 +178,7 @@ export class AccommodationService {
       "number_of_guests": form.people,
       "free_only": form.free_only,
       "services": [""],
-      "order_by": "minPrice-desc"
+      "order_by": "minPrice-asc"
     }
     return params;
   }

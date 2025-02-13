@@ -10,6 +10,7 @@ import { AccommodationService } from 'src/app/services/accommodation.service';
 import { ServiceService } from 'src/app/services/service.service';
 import { UserService } from 'src/app/services/user.service';
 import { BookingStatus } from 'src/app/utils/enums';
+import iconURL from 'src/costants';
 
 @Component({
   selector: 'app-accommodation-details',
@@ -60,6 +61,7 @@ export class AccommodationDetailsComponent implements OnInit {
   selectedServicesView$: BehaviorSubject<Service[]> = new BehaviorSubject<Service[]>([]);
 
   message?: string;
+  iconUrl = iconURL
 
   //Child Communication:
   chosenAvailability?: {start_date: string, end_date: string, price_per_night: number, accommodation_id: number};
@@ -480,6 +482,8 @@ export class AccommodationDetailsComponent implements OnInit {
   }
 
   confirmServices(): void {
+
+    this.accommodation.services = this.selectedServices;
     
     this.accommodationService.setAccommodationServices(this.accommodation, this.selectedServices).subscribe(
       result => {

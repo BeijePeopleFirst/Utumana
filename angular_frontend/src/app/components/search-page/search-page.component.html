@@ -50,12 +50,12 @@
       </div>
     </div>
 
-    <app-accommodation-cards 
+    <app-search-accommodation-list
       [accommodations$]="foundAccommodations$" 
       [pageNumber]="foundAccommodationsPageNumber" 
       [totalPages]="foundAccommodationsTotalPages" 
       (askForPage)="loadFoundResearchPage($event)">
-    </app-accommodation-cards>
+    </app-search-accommodation-list>
   </div>
 </section>
 

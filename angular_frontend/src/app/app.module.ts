@@ -44,6 +44,7 @@ import { FilterModalComponent } from './components/filter-modal/filter-modal.com
 import { FavouritesComponent } from './components/favourites/favourites.component';
 import { ReviewAcceptRejectModalComponent } from './components/review-accept-reject-modal/review-accept-reject-modal.component';
 import { TimerComponent } from './components/timer/timer.component';
+import { SearchAccommodationListComponent } from './components/search-accommodation-list/search-accommodation-list.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -82,6 +83,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     FavouritesComponent,
     ReviewAcceptRejectModalComponent,
     TimerComponent
+    SearchAccommodationListComponent
   ],
   imports: [
     BrowserModule,
