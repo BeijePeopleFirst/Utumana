@@ -61,12 +61,9 @@ export class AppComponent implements DoCheck {
     localStorage.setItem("currLan", langCode);
   }
 
-/*   @HostListener('document:click', ['$event'])
-  closeMenus(event: Event) {
-    const targetElement = event.target as HTMLElement;
-    if (!targetElement.closest('.relative')) {
+  @HostListener('document:click', ['$event'])
+  closeMenus() {
       this.isProfileMenuOpen = false;
       this.isLanguageMenuOpen = false;
     }
-  } */
 }
