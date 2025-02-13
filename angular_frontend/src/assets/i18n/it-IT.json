@@ -169,10 +169,9 @@
 	"approvalTimestamp-asc": " (Recenti: crescente)",
 	"approvalTimestamp-desc": " (Recenti: decrescente)",
 	"rating-asc": " (Voto: crescente)",
-	"ratingd-esc": " (Voto: decrescente)"
+	"rating-esc": " (Voto: decrescente)"
 	},
 	"timer":{
 		"label":"Mancanti alla partenza"
-	"ratingd-desc": " (Voto: decrescente)"
 	}
 }

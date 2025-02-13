@@ -1,5 +1,21 @@
 package ws.peoplefirst.utumana.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import ws.peoplefirst.utumana.dto.UserDTO;
+import ws.peoplefirst.utumana.exception.*;
+import ws.peoplefirst.utumana.model.BadgeAward;
+import ws.peoplefirst.utumana.model.User;
+import ws.peoplefirst.utumana.service.UserService;
+import ws.peoplefirst.utumana.utility.AuthorizationUtility;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -13,42 +29,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
-import ws.peoplefirst.utumana.dto.UserDTO;
-import ws.peoplefirst.utumana.exception.DBException;
-import ws.peoplefirst.utumana.exception.ForbiddenException;
-import ws.peoplefirst.utumana.exception.IdNotFoundException;
-import ws.peoplefirst.utumana.exception.InvalidJSONException;
-import ws.peoplefirst.utumana.exception.TheJBeansException;
-import ws.peoplefirst.utumana.model.BadgeAward;
-import ws.peoplefirst.utumana.model.User;
-import ws.peoplefirst.utumana.service.UserService;
-import ws.peoplefirst.utumana.utility.AuthorizationUtility;
-
 
 @RestController
 @RequestMapping(value = "/api")
 public class UserController {
 	
 	private Logger log = LoggerFactory.getLogger(this.getClass());
-	
+
 	@Value("${photoPrefixPath.path}")
 	private String destinationPathPhotoPrefix;
 	
