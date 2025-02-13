@@ -173,5 +173,6 @@
 	},
 	"timer":{
 		"label":"Mancanti alla partenza"
+	"ratingd-desc": " (Voto: decrescente)"
 	}
 }
