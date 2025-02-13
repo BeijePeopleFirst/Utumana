@@ -69,7 +69,9 @@
   nav a {@apply no-underline; }
   .clickable_card {@apply relative no-underline text-inherit; }
 
-  .heart { @apply absolute inline align-middle top-4 right-4 hover:opacity-80 hover:scale-105; }
+  .icon { @apply absolute z-20 inline w-10 h-10 align-middle hover:scale-105; }
+  .icon img { @apply object-contain p-1.5; }
+  .heart { @apply icon top-4 right-4; }
   .heart img { @apply object-contain h-6 w-7; }
 
   .carousel-position {

@@ -1,15 +1,46 @@
-<section class="flex items-center justify-center pt-8 bg-neutral-1">
-    <div class="flex items-center gap-x-28">
-        <div class="relative overflow-hidden rounded-full shadow-md w-44 h-44">
-            <img class="absolute top-0 left-0 object-cover w-full h-full bg-cover object-fit" src="{{pictureUrl || defaultPictureUrl}}" alt="Profile picture">
+<section class="flex items-center justify-center pt-6 pb-4 bg-neutral-1">
+    <ng-container *ngIf="user">
+        <div class="flex items-center gap-x-20">
+            <div class="relative">
+                <div class="relative overflow-hidden rounded-full shadow-md w-44 h-44">
+                    <img class="absolute top-0 left-0 object-cover w-full h-full bg-cover object-fit" src="{{pictureUrl || defaultPictureUrl}}" alt="Profile picture">
+                </div>
+                <button class="top-0 right-0 rounded-full shadow-md bg-neutral-2 icon" (click)="editPicture()">
+                    <img src="{{iconsUrl}}\\pencil.png" alt="edit profile picture">
+                </button>
+            </div>
+            <div>
+                <div class="relative">            
+                    <table class="p-4 border-separate border-spacing-x-5">
+                        <tr>
+                            <td class="font-bold text-primary">{{'profile.name' | translate}}</td>
+                            <td>{{user.name}}</td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold text-primary">{{'profile.surname' | translate}}</td>
+                            <td>{{user.surname}}</td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold text-primary">{{'profile.email' | translate}}</td>
+                            <td>{{user.email}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="relative">
+                    <button class="top-0 right-0 rounded-full shadow-md bg-neutral-2 icon peer" (click)="editBio()">
+                        <img src="{{iconsUrl}}\\pencil.png" alt="edit biography">
+                    </button>
+                
+                    <table class="pr-8 ml-4 border-separate rounded-lg peer-hover:shadow-md border-spacing-x-5">
+                        <tr>
+                            <td class="font-bold text-primary">{{'profile.bio' | translate}}</td>
+                            <td>{{user.bio}}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
         </div>
-        <p class="relative">
-        <span class="font-bold text-primary">{{'profile.name' | translate}}</span> {{user.name}}
-        </p>
-    </div>
-    <div class="flex items-center gap-x-3">
-        <p>bla bla</p>
-    </div>
+    </ng-container>
 </section>
 <section class="flex items-center justify-center pt-8 bg-neutral-2">
     <div class="container p-5 text-center">

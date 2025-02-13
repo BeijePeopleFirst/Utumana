@@ -1,6 +1,7 @@
 {
 "accommodation-card": {
-	"book": "Book now"
+	"book": "Book now",
+	"free": "free"
 	},
 "accommodations_cards": {
 	"notFound": "No accommodation found"
@@ -124,7 +125,11 @@
 "profile": {
 	"reviews_title": "Reviews received",
 	"reviews_to_accept": "Reviews waiting for your feedback",
-	"name": "Name"
+	"name": "Name",
+	"surname": "Surname",
+	"email": "Email",
+	"bio": "Bio",
+	"change_password": "Change password"
 	},
 "review": {
 	"comfort": "Comfort",
