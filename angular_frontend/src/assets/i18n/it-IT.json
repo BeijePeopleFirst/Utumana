@@ -190,7 +190,11 @@
 	"rating-asc": " (Voto: crescente)",
 	"rating-desc": " (Voto: decrescente)"
 	},
-	"timer":{
+"settings": {
+	"title": "Impostazioni",
+	"change_password": "Modifica password"
+},
+"timer":{
 		"label":"Mancanti alla partenza"
 	}
 }
