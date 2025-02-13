@@ -125,7 +125,7 @@
         <div class="flex flex-row justify-normal">
 
           <div id="single-service-block" *ngFor="let s of accommodation.services" class="flex flex-row mr-8">
-            <img [src]="'/assets/' + s.icon_url" class="w-5" />
+            <img [src]="iconUrl + '/services/' + s.icon_url" class="w-5" />
             <p class="ml-1">{{s.title}}</p>
           </div>
 
@@ -306,7 +306,7 @@
             <div *ngIf="ser.length > 0" class="flex flex-col items-center justify-center text-center align-middle border-4 border-solid border-secondary-light bg-neutral-2">
               <div *ngFor="let s of ser" class="flex flex-row w-full border-2 border-solid border-secondary-light">
                 <input type="checkbox" [checked]="isSelectedService(s)" #checkBoxFoundService (input)="elaborateCheckbox(checkBoxFoundService.checked, s)" />
-                <img [src]="'/assets/' + s.icon_url" class="w-5 ml-1" />
+                <img [src]="iconUrl + '/services/' + s.icon_url" class="w-5 ml-1" />
                 <p class="ml-2">{{s.title}}</p>
               </div>
             </div>
@@ -316,7 +316,7 @@
           <div *ngIf="servicesView.length > 0">
             <div class="flex flex-row" *ngFor="let s of servicesView">
               <p class="text-2xl cursor-pointer" (click)="removeSelectedService(s)">X</p>
-              <img [src]="'/assets/' + s.icon_url" class="w-5 ml-1" />
+              <img [src]="iconUrl + '/services/' + s.icon_url" class="w-5 ml-1" />
               <p class="ml-2">{{s.title}}</p>
             </div>
           </div>
