@@ -480,6 +480,8 @@ export class AccommodationDetailsComponent implements OnInit {
   }
 
   confirmServices(): void {
+
+    this.accommodation.services = this.selectedServices;
     
     this.accommodationService.setAccommodationServices(this.accommodation, this.selectedServices).subscribe(
       result => {
