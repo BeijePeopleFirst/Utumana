@@ -1,6 +1,7 @@
 {
 "accommodation-card": {
-	"book": "Prenota ora"
+	"book": "Prenota ora",
+	"free": "gratis"
 	},
 "accommodations_cards": {
 	"notFound": "Nessuna offerta disponibile"
@@ -78,6 +79,7 @@
 	"clear-messages-sentence": "Cancella Messaggi",
 	"is_unavailability": "Si tratta di una Indisponibilita'"
 	},
+"error": "Errore sconosciuto. Per favore, riprova.",
 "favourites": {
 	"title": "Preferiti"
 	},
@@ -113,8 +115,7 @@
 	"password_short": "Password troppo corta",
 	"password_wrong": "Password errata",
 	"forget_password": "Hai dimenticato la password?",
-	"button_text": "Login",
-	"error": "Errore sconosciuto. Per favore, riprova."
+	"button_text": "Login"
 	},
 "my_accommodations": {
 	"title": "Le mie sistemazioni",
@@ -124,7 +125,11 @@
 "profile": {
 	"reviews_title": "Recensioni ricevute",
 	"reviews_to_accept": "Recensioni in attesa di un tuo riscontro",
-	"name": "Nome"
+	"name": "Nome",
+	"surname": "Cognome",
+	"email": "Email",
+	"bio": "Biografia",
+	"change_password": "Cambia password"
 	},
 "review": {
 	"comfort": "Comfort",
