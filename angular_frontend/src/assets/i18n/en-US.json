@@ -106,7 +106,8 @@
 
 "profile": {
 	"reviews_title": "Reviews received",
-	"reviews_to_accept": "Reviews waiting for your feedback"
+	"reviews_to_accept": "Reviews waiting for your feedback",
+	"name": "Name"
 },
 "review": {
 	"comfort": "Comfort",

@@ -3,6 +3,8 @@ import { Review } from 'src/app/models/review';
 import { User } from 'src/app/models/user';
 import { AuthService } from 'src/app/services/auth.service';
 import { ReviewService } from 'src/app/services/review.service';
+import { UserService } from 'src/app/services/user.service';
+import { imagesURL } from 'src/costants';
 
 @Component({
   selector: 'app-profile',
@@ -12,6 +14,8 @@ import { ReviewService } from 'src/app/services/review.service';
 export class ProfileComponent implements OnInit {
   id: number | undefined = Number(localStorage.getItem("id"));
   user!: User;
+  pictureUrl!: string;
+  defaultPictureUrl: string = `${imagesURL}\\users\\default_profile.png`;
 
   reviews: Review[] = [];
   reviewsPageSize!: number;
@@ -30,14 +34,23 @@ export class ProfileComponent implements OnInit {
   reviewModalAction: string = '';
 
   constructor(
+    private userService: UserService,
     private reviewService: ReviewService
   ){}
 
   ngOnInit(): void {
-    // TODO get real user
-    this.user = new User();
+    if(this.id){
+      this.userService.getUserById(this.id).subscribe(res => {
+        if('message' in res){
+          return;
+        }else{
+          this.user = res;
+          this.pictureUrl = `${imagesURL}\\users\\${this.user.id}\\profile.png`;
 
-    this.loadUserReviews();    
+          this.loadUserReviews();    
+        }
+      })
+    }
   }
 
   loadUserReviews(): void {
