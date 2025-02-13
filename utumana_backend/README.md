@@ -60,3 +60,16 @@ You can also stop your running container following those steps:
 2. Move on 'Containers' page
 3. Find your active container and then press the square on the right
 
+# Swagger:
+
+The swagger UI version of the application could be found at:
+
+- <BASE_PATH>/swagger-ui/index.html
+
+(Example: http://localhost:8080/swagger-ui/index.html)
+
+The swagger JSON version of the application could be found at:
+
+- <BASE_PATH>/v3/api-docs
+
+(Example: http://localhost:8080/v3/api-docs)
