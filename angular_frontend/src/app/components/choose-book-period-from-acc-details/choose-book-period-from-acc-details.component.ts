@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Params } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 import { Accommodation } from 'src/app/models/accommodation';
 import { Availability } from 'src/app/models/availability';
@@ -29,7 +30,8 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
 
 
   constructor(
-    private accommodationService: AccommodationService
+    private accommodationService: AccommodationService,
+    private translateService: TranslateService
   )
   {}
 
@@ -100,7 +102,8 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
     }
     else {
       if(Date.parse(this.chosenOne.start_date) >= this.accommodationService.fetchDate(day, monthName, year)) {
-        this.sendChosenAvailability.emit({message: "Start Date must be AFTER End Date"});
+        if(this.translateService.currentLang === 'en-US') this.sendChosenAvailability.emit({message: "Start Date must be BEFORE End Date"});
+        if(this.translateService.currentLang === 'it-IT') this.sendChosenAvailability.emit({message: "La data di inizio deve essere precedente alla data di fine"});
         return;
       }
       this.chosenOne.end_date = new Date(this.accommodationService.fetchDate(day, monthName, year)) + "";
@@ -267,8 +270,8 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
     this.chosenOne = new Availability();
     this.chosenOne.accommodation_id = this.accommodation.id!;
     this.chosenOne.price_per_night = 0;
-    this.chosenOne.start_date = "1970/01/01";
-    this.chosenOne.end_date = "1970/01/02";
+    this.chosenOne.start_date = "";
+    this.chosenOne.end_date = "";
     this.alreadySelectedStart = false;
 
     this.sendAvailability();

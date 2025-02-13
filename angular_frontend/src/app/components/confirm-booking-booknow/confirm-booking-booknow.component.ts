@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { Availability } from 'src/app/models/availability';
 import { Booking } from 'src/app/models/booking';
 import { BookingService } from 'src/app/services/booking.service';
@@ -29,6 +30,7 @@ export class ConfirmBookingBooknowComponent implements OnInit {
   constructor(
     private bookingService: BookingService,
     private route: ActivatedRoute,
+    private translateService: TranslateService,
     private router: Router
   ) {}
 
@@ -82,7 +84,8 @@ export class ConfirmBookingBooknowComponent implements OnInit {
             return;
           }
           else {
-            this.messages.push("Created Booking STATUS -> " + response.status);
+            if(this.translateService.currentLang === 'en-US') this.messages.push("Created Booking STATUS -> " + response.status);
+            if(this.translateService.currentLang === "it-IT") this.messages.push("STATO del Booking Creato -> " + response.status);
 
             this.tmp.chosen_availability.start_date = this.createdBooking.check_in;
             this.tmp.chosen_availability.end_date = this.createdBooking.check_out;
@@ -92,7 +95,8 @@ export class ConfirmBookingBooknowComponent implements OnInit {
             this.tmp = this.numGuests;
             localStorage.setItem("num_guests", JSON.stringify(this.tmp));
 
-            this.messages.push("Redirect in few seconds...");
+            if(this.translateService.currentLang === 'en-US') this.messages.push("Redirect in few seconds...");
+            if(this.translateService.currentLang === 'it-IT') this.messages.push("Cambio di Pagina tra qualche secondo...");
             
             setTimeout(() => this.goBack(), 3500);
           }
@@ -114,7 +118,8 @@ export class ConfirmBookingBooknowComponent implements OnInit {
             return;
           }
           else {
-            this.messages.push("Created Unavailability ID -> " + response.id);
+            if(this.translateService.currentLang === 'en-US') this.messages.push("Created Unavailability ID -> " + response.id);
+            if(this.translateService.currentLang === 'it-IT') this.messages.push("ID della Availability Creata -> " + response.id);
 
             this.tmp.chosen_availability.start_date = this.createdBooking.check_in;
             this.tmp.chosen_availability.end_date = this.createdBooking.check_out;
@@ -124,7 +129,8 @@ export class ConfirmBookingBooknowComponent implements OnInit {
             this.tmp = this.numGuests;
             localStorage.setItem("num_guests", JSON.stringify(this.tmp));
 
-            this.messages.push("Redirect in few seconds...");
+            if(this.translateService.currentLang === 'en-US') this.messages.push("Redirect in few seconds...");
+            if(this.translateService.currentLang === 'it-IT') this.messages.push("Cambio di Pagina tra qualche secondo...");
             
             setTimeout(() => this.goBack(), 3500);
           }
