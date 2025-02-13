@@ -75,7 +75,19 @@
 	"availabilities-word": "Disponibilita'",
 	"description-word": "Descrizione",
 	"guests-word": "Ospiti",
-	"nights-word": "Notti"
+	"nights-word": "Notti",
+	"edit-services-sentence": "Modifica Servizi",
+	"confirm-services": "Conferma Servizi",
+	"city-word": "Citta'",
+	"province-word": "Provincia",
+	"country-word": "Paese",
+	"street-word": "Strada",
+	"street-number-word": "Numero Civico",
+	"edit-address-sentence": "Modifica Indirizzo",
+	"cap-word": "CAP",
+	"edit-rooms-and-beds-sentence": "Modifica Stanze e Letti",
+	"user-error": "Error 401 Unauthorized: Necessario essere loggati con un profilo valido",
+	"accommodation-error": "Error 404 Not Found: Accommodation ID fornito non valido"
 },
 
 "choose-book-period-from-acc-details": {
@@ -121,7 +133,14 @@
 	"submit":"Salva recensione",
 	"write":"Scrivi una recensione",
 	"title_placeholder":"Tuo titolo",
-	"description_placeholder":"Tua descrizione"
+	"description_placeholder":"Tua descrizione",
+	"accept_title": "Accettare questa recensione?",
+	"accept_subtitle": "Se scegli \"Accetta\", la recensione verrà resa pubblica",
+	"reject_title": "Rifiutare questa recensione?",
+	"reject_subtitle": "Se scegli \"Rifiuta\", la recensione verrà eliminata definitivamente",
+	"accept_button_label": "Accetta",
+	"reject_button_label": "Rifiuta",
+	"cancel_button_label": "Annulla"
 },
 "accommodations_cards": {
 	"notFound": "Nessuna offerta disponibile"

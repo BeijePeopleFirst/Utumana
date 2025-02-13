@@ -25,6 +25,10 @@ export class ProfileComponent implements OnInit {
   waitingReviewsTotalPages!: number;
   allWaitingReviews: Review[] = [];
 
+  selectedReviewId: number = -1;
+  isReviewModalOpen: boolean = false;
+  reviewModalAction: string = '';
+
   constructor(
     private reviewService: ReviewService
   ){}
@@ -43,9 +47,12 @@ export class ProfileComponent implements OnInit {
     this.waitingReviewsPageNumber = 0;
 
     if(this.id){
+      this.allReviews = [];
+      this.allWaitingReviews = [];
       this.reviewService.getUserReviews(this.id).subscribe(reviews => {
+        console.log(reviews);
         for(let i:number = 0; i < reviews.length; i++){
-          reviews[i].approval_timestamp != null ? this.allReviews.push(reviews[i]) : this.waitingReviews.push(reviews[i]);
+          reviews[i].approval_timestamp != null ? this.allReviews.push(reviews[i]) : this.allWaitingReviews.push(reviews[i]);
         }
         this.reviewsTotalPages = Math.ceil(this.allReviews.length / this.reviewsPageSize);
         this.loadUserReviewsPage(0);
@@ -67,5 +74,25 @@ export class ProfileComponent implements OnInit {
     this.waitingReviews = this.allWaitingReviews.slice(offset, offset + this.waitingReviewsPageSize);
     this.waitingReviews.forEach(review => { if(!review.author) review.author = 'User'; }); // TODO get real author
     this.waitingReviewsPageNumber = pageNumber;
+  }
+
+  closeReviewModal(refresh: boolean): void {
+    this.selectedReviewId = -1;
+    this.isReviewModalOpen = false;
+    document.body.style.overflow = 'auto';
+    if(refresh == true){
+      this.loadUserReviews();
+    }
+  }
+
+  showReviewModal(reviewId: number, action: string): void {
+    if(action != 'accept' && action != 'reject'){
+      console.log("Error: unknown action on review: ", action);
+      return;
+    }
+    this.selectedReviewId = reviewId;
+    this.isReviewModalOpen = true;
+    this.reviewModalAction = action;
+    document.body.style.overflow = 'hidden';
   }
 }

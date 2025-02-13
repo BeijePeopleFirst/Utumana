@@ -1,5 +1,5 @@
-<ng-container *ngIf="reviews && reviews.length > 0" class="justify-self-center">
-    <div class="flex items-start self-center justify-center p-3 align-top w-fit 2xl:w-max flex-nowrap gap-x-10">
+<ng-container *ngIf="reviews && reviews.length > 0">
+    <div class="flex items-start self-center justify-center p-3 align-top justify-self-center w-fit 2xl:w-max flex-nowrap gap-x-10">
         <button type="button" class="carousel-arrow" (click)="prevPage()" [disabled]="pageNumber === 0">
             <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg">
@@ -9,7 +9,7 @@
         
         <div class="flex flex-wrap justify-center gap-3">
             <div *ngFor="let review of reviews" class="flex max-w-sm p-4 bg-white rounded-lg shadow-md text-start lg:max-w-4xl">
-                <app-review-card [review]="review" (reviewChange)="refreshReviews()"></app-review-card>
+                <app-review-card [review]="review" (reviewChange)="propagateReviewChange($event)"></app-review-card>
             </div>
         </div>
 

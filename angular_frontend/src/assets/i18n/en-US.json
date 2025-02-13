@@ -1,4 +1,4 @@
-{"greeting" : "hello",
+{"error": "Unexpected error. Please retry.",
 "login": {
 	"welcome": "Welcome back!",
 	"email_label": "Email address",
@@ -10,8 +10,7 @@
 	"password_short": "Password too short",
 	"password_wrong": "Wrong password",
 	"forget_password": "Forgot your password?",
-	"button_text": "Login",
-	"error": "Unexpected error. Please retry."
+	"button_text": "Login"
 	},
 "header": {
 	"profile": "Profile",
@@ -74,7 +73,21 @@
 	"availabilities-word": "Availabilities",
 	"description-word": "Description",
 	"guests-word": "Guests",
-	"nights-word": "Nights"
+	"nights-word": "Nights",
+	"edit-services-sentence": "Edit Services",
+	"confirm-services": "Confirm Services",
+	"city-word": "City",
+	"province-word": "Province",
+	"country-word": "Country",
+	"street-word": "Street",
+	"street-number-word": "Street Number",
+	"edit-address-sentence": "Edit Address",
+	"edit-rooms-and-beds-sentence": "Edit Rooms and Beds",
+	"cap-word": "CAP",
+	"user-error": "Error 401 Unauthorized: Need to be Logged-in with a lecit account",
+	"accommodation-error": "Error 404 Not Found: Invalid Accommodation ID Provided"
+	
+	
 },
 
 "choose-book-period-from-acc-details": {
@@ -121,7 +134,14 @@
 	"submit":"Submit review",
 	"write":"Write a review",
 	"title_placeholder":"Your title",
-	"description_placeholder":"Your description"
+	"description_placeholder":"Your description",
+	"accept_title": "Are you sure you want to accept this review?",
+	"accept_subtitle": "If you choose \"Accept\", the review will be published",
+	"reject_title": "Are you sure you want to reject this review?",
+	"reject_subtitle": "If you choose \"Reject\", the review will be permanently deleted",
+	"accept_button_label": "Accept",
+	"reject_button_label": "Reject",
+	"cancel_button_label": "Cancel"
 },
 "accommodations_cards": {
 	"notFound": "No accommodation found"

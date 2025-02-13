@@ -11,7 +11,7 @@ export class ReviewCardsComponent {
   @Input() pageNumber!: number;
   @Input() totalPages!: number;
   @Output() askForPage = new EventEmitter<number>();
-  @Output() refresh = new EventEmitter<void>();
+  @Output() reviewAction = new EventEmitter<{ id:number, action:string }>();
 
   prevPage(): void {
     this.getPage(this.pageNumber - 1);
@@ -27,7 +27,7 @@ export class ReviewCardsComponent {
     }
   }
 
-  refreshReviews(): void {
-    this.refresh.emit();
+  propagateReviewChange($event: { id:number, action:string }): void {
+    this.reviewAction.emit($event);
   }
 }
