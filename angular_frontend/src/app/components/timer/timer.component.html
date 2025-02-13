@@ -1,12 +1,12 @@
 <div class="flex justify-center">
   <div class="bg-gray-50 rounded-lg shadow-lg px-4 py-2">
       <div class="flex flex-col gap-2 items-center justify-between">
-          <span id="countdown" class="text-lg sm:text-sm font-semibold">
-            Countdown Timer
+        <div class="mt-4 text-2xl text-gray-600">
+          {{ timeLeft }}
+        </div>
+        <span id="countdown" class="text-lg sm:text-sm font-semibold">
+            {{'timer.label' | translate}}
           </span>
-      </div>
-      <div class="mt-4 text-2xl text-gray-600">
-        {{ timeLeft }}
       </div>
     </div>
   </div>

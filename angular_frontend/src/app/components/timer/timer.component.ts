@@ -24,7 +24,6 @@ export class TimerComponent {
   
       if (distance < 0) {
         clearInterval(this.intervalId);
-        this.timeLeft = 'EXPIRED';
         return;
       }
   

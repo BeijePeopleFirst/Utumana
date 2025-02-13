@@ -170,5 +170,8 @@
 	"approvalTimestamp-desc": " (Recent: Desc)",
 	"rating-asc": " (Rating: Asc)",
 	"rating-desc": " (Rating: Desc)"
+	},
+	"timer":{
+		"label":"Left to depart"
 	}
 }
