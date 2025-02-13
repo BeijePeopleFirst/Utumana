@@ -8,12 +8,14 @@ import { FormGroup } from '@angular/forms';
 import { params } from '../models/searchParams';
 import { Availability } from '../models/availability';
 import { PriceDTO } from '../dtos/priceDTO';
+import { Service } from '../models/service';
 import { SearchService } from './search.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccommodationService {
+  
   private allLatestAccommodations: boolean = false;
   private allLatestAccommodationsSubject = new BehaviorSubject<AccommodationDTO[]>([]);
   private latestAccommodationsSubject = new BehaviorSubject<AccommodationDTO[]>([]);
@@ -176,7 +178,7 @@ export class AccommodationService {
       "number_of_guests": form.people,
       "free_only": form.free_only,
       "services": [""],
-      "order_by": "minPrice-desc"
+      "order_by": "minPrice-asc"
     }
     return params;
   }
@@ -315,6 +317,20 @@ export class AccommodationService {
       case "December": return Date.parse("" + year + "/12/" + (day < 10 ? "0" + day : day));
       default: return -1;
     }
+  }
+
+  setAccommodationServices(acc: Accommodation, selectedServices: Service[]): Observable<Accommodation | {message: string, status: string, time: string}> {
+
+    let list: number[] = selectedServices.map(s => s.id);
+
+    return this.http.patch<Accommodation | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/accommodation/" + acc.id + "/services",
+      list
+    ).pipe(
+      catchError(error => {
+        console.log("Error inside setAccommodationServices accommodation service");
+        return of();
+      })
+    );
   }
 
   /*private getAuth(): HttpHeaders {

@@ -49,13 +49,19 @@ export class ConfirmBookingBooknowComponent implements OnInit {
     this.postOperation = this.tmp.post_operation;
   }
 
+  invalidDateProvided!: boolean;
   goBack() {
     localStorage.removeItem("created_booking");
-    this.router.navigate(["/accommodation/" + this.createdBooking.accommodation.id]);
+    let checkInDateStr: string = this.convertToCompatibleDateStringFormat(this.createdBooking.check_in) !== "Error" ? this.convertToCompatibleDateStringFormat(this.createdBooking.check_in) : this.createdBooking.check_in;
+    if(this.invalidDateProvided) return;
+    
+    let checkOutDateStr: string = this.convertToCompatibleDateStringFormat(this.createdBooking.check_out) !== "Error" ? this.convertToCompatibleDateStringFormat(this.createdBooking.check_out) : this.createdBooking.check_out;
+    if(this.invalidDateProvided) return;
+    
+    this.router.navigate(["/accommodation/" + this.createdBooking.accommodation.id], {queryParams: {start_date: checkInDateStr, end_date: checkOutDateStr}});
     return;
   }
 
-  invalidDateProvided!: boolean;
   bookNow() {
     this.createdBooking.is_unavailability = this.isUnavailability;
 
