@@ -69,6 +69,7 @@ export class SearchPageComponent implements OnInit {
       this.loadFoundResearchPage(0);
       this.filterService.getAllServices();
       this.filterService.setSelectedFilters(searchParams.services);
+
     });
   }
 
