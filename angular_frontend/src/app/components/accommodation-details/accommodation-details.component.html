@@ -138,11 +138,57 @@
     </div>
   </ng-container>
   
+  <!-- MESSAGGES -->
+   <!-------------------------------------------------------------------------------------------------------------------------------------------------->
   <ng-container *ngIf="message" class="mt-16">
     <button class="btn-primary" type="button" (click)="clearMessage()">clear</button>
     <br>
-    <h1 class="text-xl text-blue-800">{{message}}</h1>
+    <h1 class="text-xl text-blue-800" *ngIf="accommodationEntityError">
+      {{"accommodation-card-details.accommodation-entity-error" | translate}}
+    </h1>
+    
+    <h1 class="text-xl text-blue-800" *ngIf="errorOccurred">
+      {{"accommodation-card-details.error-occurred" | translate}}
+    </h1>
+    
+    <h1 class="text-xl text-blue-800" *ngIf="addedToFavourites">
+      {{"accommodation-card-details.added-to-favourites" | translate}}
+    </h1>
+    
+    <h1 class="text-xl text-blue-800" *ngIf="removedFromFavourites">
+      {{"accommodation-card-details.removed-from-favourites" | translate}}
+    </h1>
+    
+    <h1 class="text-xl text-blue-800" *ngIf="deletedAccommodation">
+      {{"accommodation-card-details.deleted-accommodation" | translate}}
+    </h1>
+    
+    <h1 class="text-xl text-blue-800" *ngIf="countryRequired">
+      {{"accommodation-card-details.country-required" | translate}}
+    </h1>
+    
+    <h1 class="text-xl text-blue-800" *ngIf="capRequired">
+      {{"accommodation-card-details.cap-required" | translate}}
+    </h1>
+    
+    <h1 class="text-xl text-blue-800" *ngIf="updatedAccommodation">
+      {{"accommodation-card-details.updated-accommodation" | translate}}
+    </h1>
+    
+    <h1 class="text-xl text-blue-800" *ngIf="roomsBedsRequired">
+      {{"accommodation-card-details.rooms-beds-required" | translate}}
+    </h1>
+    
+    <h1 class="text-xl text-blue-800" *ngIf="bookingValuesMissing">
+      {{"accommodation-card-details.booking-values-missing" | translate}}
+    </h1>
+    
+    <h1 class="text-xl text-blue-800" *ngIf="updatedAccommodationServices">
+      {{"accommodation-card-details.updated-accommodation-services" | translate}}
+    </h1>
+    
   </ng-container>
+  <!-------------------------------------------------------------------------------------------------------------------------------------------------->
   
   <ng-template #editCityProvCountryTemplate>
     <div class="absolute transform -translate-x-1/2 -translate-y-1/2 border-4 border-solid border-primary-dark bg-neutral-2 top-1/2 left-1/2">

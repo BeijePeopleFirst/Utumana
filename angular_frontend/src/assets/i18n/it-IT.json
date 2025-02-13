@@ -42,7 +42,18 @@
 	"cap-word": "CAP",
 	"edit-rooms-and-beds-sentence": "Modifica Stanze e Letti",
 	"user-error": "Error 401 Unauthorized: Necessario essere loggati con un profilo valido",
-	"accommodation-error": "Error 404 Not Found: Accommodation ID fornito non valido"
+	"accommodation-error": "Error 404 Not Found: Accommodation ID fornito non valido",
+	"accommodation-entity-error": "Errore nell' entita' Accommodation: ANNULLAMENTO",
+	"error-occurred": "Si è verificato un Errore",
+	"added-to-favourites": "Aggiunto ai Preferiti",
+	"removed-from-favourites": "Rimosso dai Preferiti",
+	"deleted-accommodation": "Accommodation Rimossa",
+	"country-required": "Il Paese è RICHIESTO",
+	"cap-required": "Il CAP è RICHIESTO",
+	"updated-accommodation": "Accommodation Aggiornata",
+	"rooms-beds-required": "I numeri di Stanze e Letti sono richiesti",
+	"booking-values-missing": "Alcuni valori per il Booking sono Assenti!",
+	"updated-accommodation-services": "Servizi dell' Accommodation aggiornati con Successo"
 },
 "bookings":{
 	"checkIn":"Check-in",

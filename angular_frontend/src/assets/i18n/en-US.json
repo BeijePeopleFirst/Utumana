@@ -42,7 +42,19 @@
 	"edit-rooms-and-beds-sentence": "Edit Rooms and Beds",
 	"cap-word": "CAP",
 	"user-error": "Error 401 Unauthorized: Need to be Logged-in with a lecit account",
-	"accommodation-error": "Error 404 Not Found: Invalid Accommodation ID Provided"
+	"accommodation-error": "Error 404 Not Found: Invalid Accommodation ID Provided",
+	"accommodation-entity-error": "Error inside Accommodation Entity: ABORT",
+	"error-occurred": "An Error Occurred",
+	"added-to-favourites": "Added to favourites",
+	"removed-from-favourites": "Removed from favourites",
+	"deleted-accommodation": "Deleted Accommodation",
+	"country-required": "Country is REQUIRED",
+	"cap-required": "CAP is REQUIRED",
+	"updated-accommodation": "Updated Accommodation",
+	"rooms-beds-required": "Rooms number and Beds number are both required",
+	"booking-values-missing": "Some values for Booking are Missing!",
+	"updated-accommodation-services": "Successfully updated Accommodation Services"
+	
 	},
 "bookings": {
 	"checkIn":"Check-in",
