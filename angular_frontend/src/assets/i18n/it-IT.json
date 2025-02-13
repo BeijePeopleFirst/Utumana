@@ -169,6 +169,6 @@
 	"approvalTimestamp-asc": " (Recenti: crescente)",
 	"approvalTimestamp-desc": " (Recenti: decrescente)",
 	"rating-asc": " (Voto: crescente)",
-	"ratingd-esc": " (Voto: decrescente)"
+	"ratingd-desc": " (Voto: decrescente)"
 	}
 }
