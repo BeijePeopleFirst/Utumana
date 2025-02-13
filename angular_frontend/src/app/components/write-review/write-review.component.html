@@ -1,9 +1,9 @@
 
-  <div *ngIf="isModalOpen" class="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50">
+  <div *ngIf="isModalOpen" class="modal">
     <div class="relative w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
       <h5 class="mb-4 text-xl font-semibold text-gray-700">{{'review.write' | translate}}</h5>
   
-      <button (click)="close()" class="absolute text-2xl text-gray-500 top-2 right-2">
+      <button (click)="close()" class="close-modal">
         &times;
       </button>
   
