@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Service } from 'src/app/models/service';
 import { FiltersService } from 'src/app/services/filters.service';
+import iconURL from 'src/costants';
 
 @Component({
   selector: 'app-filter-modal',
@@ -13,6 +14,7 @@ export class FilterModalComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
   @Output() apply = new EventEmitter<string[]>();
 
+  iconUrl = iconURL;
   selectedServices: string[];
 
   constructor(private filtersService: FiltersService) {

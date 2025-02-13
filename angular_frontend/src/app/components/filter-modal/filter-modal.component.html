@@ -22,7 +22,7 @@
             'border-gray-200 hover:border-blue-300': !isSelected(service)
           }"
         >
-          <img [src]="service.icon_url" class="w-6 h-6 mr-2" [alt]="service.title">
+          <img [src]="iconUrl + '/services/' + service.icon_url" class="w-6 h-6 mr-2" [alt]="service.title">
           <span class="text-sm">{{ service.title }}</span>
         </div>
       </div>
