@@ -43,6 +43,7 @@ import { ConfirmBookingBooknowComponent } from './components/confirm-booking-boo
 import { FilterModalComponent } from './components/filter-modal/filter-modal.component';
 import { FavouritesComponent } from './components/favourites/favourites.component';
 import { ReviewAcceptRejectModalComponent } from './components/review-accept-reject-modal/review-accept-reject-modal.component';
+import { TimerComponent } from './components/timer/timer.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -79,7 +80,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     ConfirmBookingBooknowComponent,
     FilterModalComponent,
     FavouritesComponent,
-    ReviewAcceptRejectModalComponent
+    ReviewAcceptRejectModalComponent,
+    TimerComponent
   ],
   imports: [
     BrowserModule,

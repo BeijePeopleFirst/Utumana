@@ -19,6 +19,10 @@
                     {{'bookings.review' | translate}}
                 </button>
             </div>
+
+            <div *ngIf="booking.status == 'ACCEPTED'">
+                <app-timer [startDate]="booking.checkIn"></app-timer>
+            </div>
         </div>
     </div>
 </div>
