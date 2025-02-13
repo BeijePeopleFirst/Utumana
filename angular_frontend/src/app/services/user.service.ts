@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, Observable, of } from 'rxjs';
+import { catchError, map, Observable, of } from 'rxjs';
 import { BACKEND_URL_PREFIX } from 'src/costants';
 import { User } from '../models/user';
 
@@ -16,6 +16,16 @@ export class UserService {
       catchError(error => {
         console.error(error);
         return of(error.error);
+      })
+    )
+  }
+
+  updateBio(id: number, newBio: string): Observable<boolean> {
+    return this.http.patch<User>(`${BACKEND_URL_PREFIX}/api/user`, {id: id, bio: newBio}).pipe(
+      map(_ => true),
+      catchError(error => {
+        console.log(error.error);
+        return of(false);
       })
     )
   }

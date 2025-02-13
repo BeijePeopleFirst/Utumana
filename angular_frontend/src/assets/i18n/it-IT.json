@@ -70,6 +70,7 @@
 	"rejected":"Prenotazioni rifiutate",
 	"no_bookings": "Nessuna prenotazione"
 	},
+"cancel_button_label": "Annulla",
 "choose-book-period-from-acc-details": {
 	"reset-btn": "Reimposta Scelte",
 	"January": "Gennaio",
@@ -140,7 +141,10 @@
 	"surname": "Cognome",
 	"email": "Email",
 	"bio": "Biografia",
-	"change_password": "Cambia password"
+	"change_password": "Cambia password",
+	"edit_bio": "Modifica la tua biografia",
+	"edit_bio_button_label": "Salva",
+	"edit_bio_placeholder": "Scrivi una tua breve presentazione..."
 	},
 "review": {
 	"comfort": "Comfort",
@@ -160,8 +164,7 @@
 	"reject_title": "Rifiutare questa recensione?",
 	"reject_subtitle": "Se scegli \"Rifiuta\", la recensione verrà eliminata definitivamente",
 	"accept_button_label": "Accetta",
-	"reject_button_label": "Rifiuta",
-	"cancel_button_label": "Annulla"
+	"reject_button_label": "Rifiuta"
 	},
 "search": {
 	"city": "Città",
