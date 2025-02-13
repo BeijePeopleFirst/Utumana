@@ -3,29 +3,21 @@ package ws.peoplefirst.utumana.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import ws.peoplefirst.utumana.dto.UserDTO;
-import ws.peoplefirst.utumana.exception.*;
+import ws.peoplefirst.utumana.exception.DBException;
+import ws.peoplefirst.utumana.exception.ForbiddenException;
+import ws.peoplefirst.utumana.exception.IdNotFoundException;
+import ws.peoplefirst.utumana.exception.InvalidJSONException;
 import ws.peoplefirst.utumana.model.BadgeAward;
 import ws.peoplefirst.utumana.model.User;
 import ws.peoplefirst.utumana.service.UserService;
 import ws.peoplefirst.utumana.utility.AuthorizationUtility;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,8 +28,8 @@ public class UserController {
 	
 	private Logger log = LoggerFactory.getLogger(this.getClass());
 
-	@Value("${photoPrefixPath.path}")
-	private String destinationPathPhotoPrefix;
+//	@Value("${photoPrefixPath.path}")
+//	private String destinationPathPhotoPrefix;
 	
 	@Autowired
 	private UserService userService;
@@ -214,61 +206,61 @@ public class UserController {
 		log.debug("GET /user/badges/" + userId);
 		return userService.getAllUserBadges(userId);
 	}
-	
-	@PreAuthorize("hasAuthority('USER')")
-	@PostMapping(value = "/user/store_photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public Map<String, String> storePhotoOnServer(@RequestParam MultipartFile img, Authentication auth) {
-		
-		System.out.println("File -> " + img);
-		UserDTO loggedUser = AuthorizationUtility.getUserFromAuthentication(auth);
-		
-		if(img == null || img.isEmpty()) throw new InvalidJSONException("You have to provide a photo");
-		
-		String orFilename = img.getOriginalFilename();
-		byte[] content = null;
-		FileOutputStream out = null;
-		String finalUrl = null;
-		try {
-			
-			finalUrl = URLEncoder.encode(loggedUser.getId() + "_" + new Date().getTime() + "." + orFilename.substring(orFilename.lastIndexOf('.') + 1), StandardCharsets.UTF_8.toString());
-			
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			throw new TheJBeansException("" + e);
-		}
-		//File destination = new File("/Users/riccardogugolati/LAVORO/People First/CouchSurfing/TheJBeansCouchSurfing/src/main/resources/static/images/" + finalUrl);
-		File destination = new File(destinationPathPhotoPrefix + finalUrl);
-		try {
-			
-			System.out.println("SONO DENTRO AL TRY");
-			destination.createNewFile();
-			out = new FileOutputStream(destination);
-			content = img.getBytes();
-			
-			out.write(content);
-			
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		finally {
-			
-			try {
-				out.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-		}
-		
-		Map<String, String> map = new HashMap<String, String>();
-		String res = null;
-		res = "/images/" + finalUrl;
-		map.put("url", res);
-	
-		return map;
-	}
+
+//	@PreAuthorize("hasAuthority('USER')")
+//	@PostMapping(value = "/user/store_photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//	public Map<String, String> storePhotoOnServer(@RequestParam MultipartFile img, Authentication auth) {
+//
+//		System.out.println("File -> " + img);
+//		UserDTO loggedUser = AuthorizationUtility.getUserFromAuthentication(auth);
+//
+//		if(img == null || img.isEmpty()) throw new InvalidJSONException("You have to provide a photo");
+//
+//		String orFilename = img.getOriginalFilename();
+//		byte[] content = null;
+//		FileOutputStream out = null;
+//		String finalUrl = null;
+//		try {
+//
+//			finalUrl = URLEncoder.encode(loggedUser.getId() + "_" + new Date().getTime() + "." + orFilename.substring(orFilename.lastIndexOf('.') + 1), StandardCharsets.UTF_8.toString());
+//
+//		} catch (UnsupportedEncodingException e) {
+//			// TODO Auto-generated catch block
+//			throw new TheJBeansException("" + e);
+//		}
+//		//File destination = new File("/Users/riccardogugolati/LAVORO/People First/CouchSurfing/TheJBeansCouchSurfing/src/main/resources/static/images/" + finalUrl);
+//		File destination = new File(destinationPathPhotoPrefix + finalUrl);
+//		try {
+//
+//			System.out.println("SONO DENTRO AL TRY");
+//			destination.createNewFile();
+//			out = new FileOutputStream(destination);
+//			content = img.getBytes();
+//
+//			out.write(content);
+//
+//
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		finally {
+//
+//			try {
+//				out.close();
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//
+//		}
+//
+//		Map<String, String> map = new HashMap<String, String>();
+//		String res = null;
+//		res = "/images/" + finalUrl;
+//		map.put("url", res);
+//
+//		return map;
+//	}
 }
 	
