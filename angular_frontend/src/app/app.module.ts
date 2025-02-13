@@ -82,7 +82,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     FilterModalComponent,
     FavouritesComponent,
     ReviewAcceptRejectModalComponent,
-    TimerComponent
+    TimerComponent,
     SearchAccommodationListComponent
   ],
   imports: [
