@@ -80,4 +80,11 @@ public interface BookingRepository extends JpaRepository<Booking,Long>{
            + " FROM Booking b WHERE b.accommodation.id = :accommodationId AND " + "(b.status = 'ACCEPTED' OR b.status = 'DOING') AND b.isUnavailability IS false")
     public List<BookingDTO> findByStatusACCEPTEDOrDOINGAndAccommodationId(@Param("accommodationId") Long accommodationId);
 
+	@Query("SELECT new ws.peoplefirst.utumana.dto.BookingDTO(b.id,b.price,b.status,b.checkIn,b.checkOut,b.review.id, new ws.peoplefirst.utumana.dto.AccommodationDTO(b.accommodation.id, b.accommodation.title, b.accommodation.city, b.accommodation.mainPhotoUrl, b.accommodation.country)) "
+	           + " FROM Booking b WHERE b.status != 'PENDING' AND b.status != 'REJECTED' AND b.accommodation.id = :id")
+	List<BookingDTO> findNotPendingNotRejectedBookingsByAccommodationID(@Param("id") Long id);
+
+	@Query("SELECT b FROM Booking as b WHERE b.status = 'PENDING' AND b.accommodation.id = :id")
+	List<Booking> findPendingBookingsByAccommodationID(@Param("id") Long id);
+
 }

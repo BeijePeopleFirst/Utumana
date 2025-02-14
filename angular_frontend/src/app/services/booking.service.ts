@@ -14,6 +14,7 @@ export class BookingService {
   constructor(private http: HttpClient) { }
 
   newBooking(createdBooking: Booking): Observable<{message: string, status: string, time: string} | BookingDTO> {
+    console.log("Stampo il booking -> ", createdBooking);
     return this.http.post<{message: string, status: string, time: string} | BookingDTO>(BACKEND_URL_PREFIX + "/api/book/" + createdBooking.accommodation.id + "?checkIn=" + createdBooking.check_in + "&checkOut=" + createdBooking.check_out, 
                         {
                           checkIn: createdBooking.check_in,
@@ -25,7 +26,7 @@ export class BookingService {
   }
 
   newUnavailability(createdBooking: Availability): Observable<{message: string, status: string, time: string} | Availability> {
-    
+    console.log("PROVA", createdBooking);
     return this.http.post<{message: string, status: string, time: string} | Availability>(BACKEND_URL_PREFIX + "/api/add_unavailability", 
       {
         start_date: createdBooking.start_date,

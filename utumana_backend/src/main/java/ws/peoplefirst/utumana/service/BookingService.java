@@ -3,6 +3,7 @@ package ws.peoplefirst.utumana.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -248,7 +249,7 @@ public class BookingService {
 
 	}
 
-	public Booking addUnAvailabilities(Long userId,Availability unavailability) {
+	public Booking addUnAvailabilities(Long userId,Availability unavailability) {System.out.println("AGGIUNGO UNAVAILABLITY \n\n\n\n");
 		
 		Booking selfBooking=new Booking();
 		
@@ -273,7 +274,7 @@ public class BookingService {
 			throw new ForbiddenException("cannot set an end date previous than the star date");
 		}
 		selfBooking.setCheckIn(LocalDateTime.of(unavailability.getStartDate(), LocalTime.of(14, 0)));
-		selfBooking.setCheckOut(LocalDateTime.of(unavailability.getStartDate(), LocalTime.of(10, 0)));
+		selfBooking.setCheckOut(LocalDateTime.of(unavailability.getEndDate(), LocalTime.of(10, 0)));
 		selfBooking.setIsUnavailability(true);
 		selfBooking.setPrice(0.0);
 		selfBooking.setStatus(BookingStatus.ACCEPTED);
@@ -291,6 +292,27 @@ public class BookingService {
 		}
 		selfBooking.setAccommodation(accommodation);
 		
+		//Lets retrieve the Booking that are considered to be valid:
+		//if there will be some overlapping the operation won' t be allowed
+		List<BookingDTO> occupiedBookings = this.bookingRepository.findNotPendingNotRejectedBookingsByAccommodationID(accommodation.getId());
+		
+		for(BookingDTO b : occupiedBookings) {
+			if(checkIfDatesAreOverlapping(unavailability.getStartDate(), unavailability.getEndDate(), LocalDate.parse(b.getCheckIn(), DateTimeFormatter.ISO_DATE_TIME), LocalDate.parse(b.getCheckOut(), DateTimeFormatter.ISO_DATE_TIME))) {
+				log.error("unavailability dates are overlapping with pre-existent lecit bookings" );
+				throw new ForbiddenException("cannot set unavailability due to overlapping dates");
+			}
+		}
+		
+		//Now that the operation is considered legal lets REJECT all the Bookings that are PENDING:
+		List<Booking> pendingBookings = this.bookingRepository.findPendingBookingsByAccommodationID(accommodation.getId());
+		
+		for(Booking b : pendingBookings) {
+			if(checkIfDatesAreOverlapping(unavailability.getStartDate(), unavailability.getEndDate(), b.getCheckIn().toLocalDate(), b.getCheckOut().toLocalDate())) {
+				b.setStatus(BookingStatus.REJECTED);
+				this.bookingRepository.save(b);
+			}
+		}
+		
 		try {
 			bookingRepository.save(selfBooking);
 		}catch(PersistenceException e) {
@@ -298,6 +320,19 @@ public class BookingService {
 			throw new DBException("cannot dave current unavailailability");
 		}
 		return selfBooking;
+	}
+
+	private static boolean checkIfDatesAreOverlapping(LocalDate startDate, LocalDate endDate, LocalDate checkIn,
+			LocalDate checkOut) {
+		
+		
+		if((startDate.isEqual(checkIn) || endDate.isEqual(checkOut))) return true;
+		
+		if(startDate.isAfter(checkIn) && startDate.isBefore(checkOut)) return true;
+		
+		if(endDate.isAfter(checkIn) && endDate.isBefore(checkOut)) return true;
+		
+		return false;
 	}
 
 	public List<Booking> getAcceptedBookings(Long accommodationId, LocalDateTime now, LocalDateTime of) {

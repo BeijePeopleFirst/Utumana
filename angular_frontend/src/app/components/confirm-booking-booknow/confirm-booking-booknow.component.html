@@ -34,7 +34,19 @@
     </div>
 </div>
 
-<div id="messages" *ngIf="messages && messages.length > 0" class="mt-48">
+<div id="messages-communications" *ngIf="messagesCommunications || (messages && messages.length > 0)" class="mt-48">
     <button class="mb-4 btn-primary" (click)="clearMessages()">{{("confirm-booking-booknow.clear-messages-sentence" | translate)}}</button>
-    <p *ngFor="let m of messages">{{m}}</p>
+    <h1 *ngIf="createdBookingStatus" class="text-xl text-blue-800">{{ "confirm-booking-booknow.created-booking-status" | translate }}</h1>
+    <h1 *ngIf="createdUnavailabilityId" class="text-xl text-blue-800">{{ "confirm-booking-booknow.created-unavailability-id" | translate }}</h1>
+    <h1 *ngIf="invalidDateFormatProvided" class="text-xl text-blue-800">{{ "confirm-booking-booknow.invalid-date-format-provided" | translate }}</h1>
+    <h1 *ngIf="invalidDateProvidedMsg" class="text-xl text-blue-800">{{ "confirm-booking-booknow.invalid-date-provided" | translate }}</h1>
+    <h1 *ngIf="invalidDateDoesNotExist" class="text-xl text-blue-800">{{ "confirm-booking-booknow.invalid-date-does-not-exist" | translate }}</h1>
+    <h1 *ngIf="redirectInFewSeconds" class="text-xl text-blue-800">{{ "confirm-booking-booknow.redirect-in-few-seconds" | translate }}</h1>
+
+    <div id="messages-server" *ngIf="messages && messages.length > 0">
+      <div *ngFor="let m of messages">
+        <h1 class="text-xl text-blue-950">{{m}}</h1>
+      </div>
+    </div>
+
 </div>
