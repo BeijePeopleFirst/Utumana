@@ -84,4 +84,7 @@ public interface BookingRepository extends JpaRepository<Booking,Long>{
 	           + " FROM Booking b WHERE b.status != 'PENDING' AND b.status != 'REJECTED' AND b.accommodation.id = :id")
 	List<BookingDTO> findNotPendingNotRejectedBookingsByAccommodationID(@Param("id") Long id);
 
+	@Query("SELECT b FROM Booking as b WHERE b.status = 'PENDING' AND b.accommodation.id = :id")
+	List<Booking> findPendingBookingsByAccommodationID(@Param("id") Long id);
+
 }
