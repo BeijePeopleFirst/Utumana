@@ -58,7 +58,7 @@ public class ReviewController {
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping("/review/{id}")
 	public Review getReviewDetails(@Parameter(description = "id of the review", example = "1") @PathVariable Long id, Authentication auth) {
-		log.debug("\"GET /review/"  + id + "\"");
+		log.debug("GET /review/"  + id);
 		
 		Review review = reviewService.getReviewById(id);
 		
@@ -71,6 +71,8 @@ public class ReviewController {
 		return review;
 	}
 	
+	/** Returns true if logged user is the owner of the accommodation associated with the booking with given bookingId.
+	 *  Otherwise, returns false. */
 	private boolean loggedUserIsBookingHost(Authentication auth, Long bookingId) {
 		Long userId = AuthorizationUtility.getUserFromAuthentication(auth).getId();
 		Booking booking = bookingService.findById(bookingId);
@@ -121,6 +123,9 @@ public class ReviewController {
 		return review;
 	}
 	
+	/** Returns true if logged user is the guest who made the the booking with given bookingId.
+	 *  Otherwise, returns false. 
+	 *  Throws IdNotFoundException if the booking doesn't exist. */
 	private boolean loggedUserIsBookingGuest(Authentication auth, Long bookingId) {
 		Long userId = AuthorizationUtility.getUserFromAuthentication(auth).getId();
 		Booking booking = bookingService.findById(bookingId);
