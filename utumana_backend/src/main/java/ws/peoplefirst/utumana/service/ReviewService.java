@@ -47,10 +47,11 @@ public class ReviewService {
 		if(!isReviewOK(review))
 			throw new InvalidJSONException("Invalid review");
 		
-		review.setOverallRating((review.getPosition() + review.getConvenience( ) + review.getComfort()) / 3);
+		if(review.getComfort() != null && review.getConvenience() != null && review.getPosition() != null)
+			review.setOverallRating((review.getPosition() + review.getConvenience( ) + review.getComfort()) / 3);
 		
+		review.setApprovalTimestamp((String)null);
 		review = reviewRepository.save(review);
-		
 		
 		booking.setReview(review);
 		bookingRepository.save(booking);
@@ -66,9 +67,9 @@ public class ReviewService {
 			return false;
 		
 		// check that each star rating is between 0.0 and 5.0
-		if(review.getComfort() > 5.0 || review.getComfort() < 0.0 ||
-				review.getConvenience() > 5.0 || review.getConvenience() < 0.0 ||
-				review.getPosition() > 5.0 || review.getPosition() < 0.0)
+		if(	(review.getComfort() != null && (review.getComfort() > 5.0 || review.getComfort() < 0.0)) ||
+			(review.getConvenience() != null && (review.getConvenience() > 5.0 || review.getConvenience() < 0.0)) ||
+			(review.getPosition() != null && (review.getPosition() > 5.0 || review.getPosition() < 0.0)))
 			return false;
 		return true;
 	}
