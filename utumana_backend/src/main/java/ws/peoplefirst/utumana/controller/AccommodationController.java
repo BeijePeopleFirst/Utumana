@@ -431,15 +431,6 @@ public class AccommodationController {
 	    		schema=@Schema(implementation=ErrorMessage.class))),
 	    @ApiResponse(responseCode = "404", description = "Accommodation ID not valid or owner id not specified", content=@Content(mediaType = "application/json",
 	    		schema=@Schema(implementation=ErrorMessage.class)))
-	    @ApiResponse(responseCode = "400", description = "Invalid JSON was received due to missing fields or illegal ones",
-	    	content=@Content(mediaType = "application/json",
-	    		schema=@Schema(implementation=InvalidJSONException.class))),
-	    @ApiResponse(responseCode = "403", description = "The user who tried to change the Accommodation' s data was nor the owner nor an admin: only the owners and/or admins of the accommodation can edit its informations",
-	    	content=@Content(mediaType = "application/json",
-	    		schema=@Schema(implementation=ForbiddenException.class))),
-	    @ApiResponse(responseCode = "404", description = "Accommodation ID not valid or owner id not specified",
-    	content=@Content(mediaType = "application/json",
-		schema=@Schema(implementation=IdNotFoundException.class))),
 	})
 	@Operation(summary = "This API updates the specified Accommodation' s tile, description, number of beds and number of rooms informations inside the Database")
 	@PreAuthorize("hasAuthority('USER')")
@@ -536,8 +527,10 @@ public class AccommodationController {
 	@Operation(summary = "Return the most recent added accommodation using AccommodationDTO")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "If the latest uploads are correctly taken"),
-        @ApiResponse(responseCode = "400", description = "If the user is not correctly logged in"),
-        @ApiResponse(responseCode = "403", description = "If the given check_in or check_out date has wrong format or null")
+        @ApiResponse(responseCode = "400", description = "If the user is not correctly logged in", content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ErrorMessage.class))),
+        @ApiResponse(responseCode = "403", description = "If the given check_in or check_out date has wrong format or null", content=@Content(mediaType = "application/json",
+		schema=@Schema(implementation=ErrorMessage.class)))
     })
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value="/accommodation/latest_uploads")
@@ -563,7 +556,8 @@ public class AccommodationController {
 	@Operation(summary = "Return the list of accommodation ordered by average review rating")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "If the list of most liked accommodation returned correctly"),
-        @ApiResponse(responseCode = "400", description = "If the user is not correctly logged in")
+        @ApiResponse(responseCode = "400", description = "If the user is not correctly logged in", content=@Content(mediaType = "application/json",
+		schema=@Schema(implementation=ErrorMessage.class)))
     })
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value="/accommodation/most_liked")
@@ -576,8 +570,10 @@ public class AccommodationController {
 	@Operation(summary = "Return the list of priceDTO for the given array of accommodation id for a given period if null controls all availabilities")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "If the prices are correctly set"),
-        @ApiResponse(responseCode = "403", description = "If the given check_in or check_out date has wrong format"),
-        @ApiResponse(responseCode = "400", description = "If the user is not correctly logged in")
+        @ApiResponse(responseCode = "403", description = "If the given check_in or check_out date has wrong format", content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ErrorMessage.class))),
+        @ApiResponse(responseCode = "400", description = "If the user is not correctly logged in", content=@Content(mediaType = "application/json",
+		schema=@Schema(implementation=ErrorMessage.class)))
     })
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value = "/accommodation/prices")
@@ -598,8 +594,10 @@ public class AccommodationController {
 	@Operation(summary = "Return the full accommodation that the user adds as favourites")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "If a valid accommodation is added into logged user favourites"),
-        @ApiResponse(responseCode = "403", description = "If you are not an admin or a logged user"),
-        @ApiResponse(responseCode = "404", description = "If the accoomodation_id does not match any existing accommodation")
+        @ApiResponse(responseCode = "403", description = "If you are not an admin or a logged user", content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ErrorMessage.class))),
+        @ApiResponse(responseCode = "404", description = "If the accoomodation_id does not match any existing accommodation", content=@Content(mediaType = "application/json",
+		schema=@Schema(implementation=ErrorMessage.class)))
     })
 	@PreAuthorize("hasAuthority('USER')")
 	@PatchMapping(value = "/add-favourite/{user_id}/{accommodation_id}")
@@ -618,7 +616,8 @@ public class AccommodationController {
 	@Operation(summary = "Return the full accommodation that the user removed from favourites")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "If a valid accommodation is removed from the logged user favourites"),
-        @ApiResponse(responseCode = "403", description = "If you are not an admin or a logged user"),
+        @ApiResponse(responseCode = "403", description = "If you are not an admin or a logged user", content=@Content(mediaType = "application/json",
+		schema=@Schema(implementation=ErrorMessage.class)))
     })
 	@PreAuthorize("hasAuthority('USER')")
 	@PatchMapping(value = "/remove-favourite/{user_id}/{accommodation_id}")
@@ -635,8 +634,10 @@ public class AccommodationController {
 	@Operation(summary = "Return the list of favourites (as DTOs) for given user_id")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "If the list of favourites is correctly returned"),
-        @ApiResponse(responseCode = "403", description = "If you are not an admin or a logged user"),
-        @ApiResponse(responseCode = "404", description = "If the user_id does not match any existing user")
+        @ApiResponse(responseCode = "403", description = "If you are not an admin or a logged user", content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ErrorMessage.class))),
+        @ApiResponse(responseCode = "404", description = "If the user_id does not match any existing user", content=@Content(mediaType = "application/json",
+		schema=@Schema(implementation=ErrorMessage.class)))
     })
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value = "/favorites/{user_id}")
@@ -673,8 +674,10 @@ public class AccommodationController {
 	@Operation(summary = "Return the list of accommodations posted by an user (as DTOs)")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "If the list of my accommodations is correctly returned"),
-        @ApiResponse(responseCode = "403", description = "If you are not the logged user or an admin"),
-        @ApiResponse(responseCode = "404", description = "If the user_id does not match any existing user"),
+        @ApiResponse(responseCode = "403", description = "If you are not the logged user or an admin", content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ErrorMessage.class))),
+        @ApiResponse(responseCode = "404", description = "If the user_id does not match any existing user", content=@Content(mediaType = "application/json",
+			schema=@Schema(implementation=ErrorMessage.class)))
     })
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value="/my_accommodations/{userId}")
@@ -692,8 +695,10 @@ public class AccommodationController {
 	@Operation(summary = "Return the list of accommodation that are not already accepted by an admin")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "If the list of pending accommodations is correctly returned"),
-        @ApiResponse(responseCode = "403", description = "If you are not the logged user or an admin"),
-        @ApiResponse(responseCode = "404", description = "If the user_id does not match any existing user"),
+        @ApiResponse(responseCode = "403", description = "If you are not the logged user or an admin", content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ErrorMessage.class))),
+        @ApiResponse(responseCode = "404", description = "If the user_id does not match any existing user", content=@Content(mediaType = "application/json",
+			schema=@Schema(implementation=ErrorMessage.class)))
     })
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value="/pending_accommodations/{userId}")
@@ -711,8 +716,10 @@ public class AccommodationController {
 	@Operation(summary = "Return the list of accommodation that were rejected by an admin")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "If the list of rejected accommodations is correctly returned"),
-        @ApiResponse(responseCode = "403", description = "If you are not the logged user or an admin"),
-        @ApiResponse(responseCode = "404", description = "If the user_id does not match any existing user"),
+        @ApiResponse(responseCode = "403", description = "If you are not the logged user or an admin", content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ErrorMessage.class))),
+        @ApiResponse(responseCode = "404", description = "If the user_id does not match any existing user", content=@Content(mediaType = "application/json",
+			schema=@Schema(implementation=ErrorMessage.class)))
     })
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value="/rejected_accommodations/{userId}")
@@ -730,11 +737,16 @@ public class AccommodationController {
 	@Operation(summary = "Return the list of accommodation that match the search criteria")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "If the list of searched accommodations is correctly returned"),
-        @ApiResponse(responseCode = "400", description = "If an error occurs decoding the query params"),
-        @ApiResponse(responseCode = "400", description = "If check-in and check-out query params are blank"),
-        @ApiResponse(responseCode = "403", description = "If check-in and check-out query params cannot be parsed into LocalDate"),
-        @ApiResponse(responseCode = "400", description = "If check-in is after the check-out date"),
-        @ApiResponse(responseCode = "403", description = "If the number of guests is less than 0")
+        @ApiResponse(responseCode = "400", description = "If an error occurs decoding the query params", content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ErrorMessage.class))),
+        @ApiResponse(responseCode = "400", description = "If check-in and check-out query params are blank", content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ErrorMessage.class))),
+        @ApiResponse(responseCode = "403", description = "If check-in and check-out query params cannot be parsed into LocalDate", content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ErrorMessage.class))),
+        @ApiResponse(responseCode = "400", description = "If check-in is after the check-out date", content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ErrorMessage.class))),
+        @ApiResponse(responseCode = "403", description = "If the number of guests is less than 0", content=@Content(mediaType = "application/json",
+			schema=@Schema(implementation=ErrorMessage.class)))
     })
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value = "/search")
@@ -803,7 +815,8 @@ public class AccommodationController {
 			+ " the id of the pending booking, a formatted approval timestamp, all the reviews ")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "If the accomomodation is found"),
-        @ApiResponse(responseCode = "404", description = "If there is not any accommodation with given id")
+        @ApiResponse(responseCode = "404", description = "If there is not any accommodation with given id", content=@Content(mediaType = "application/json",
+			schema=@Schema(implementation=ErrorMessage.class)))
     })
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value = "/accommodation_info/{accommodationId}")
@@ -842,7 +855,8 @@ public class AccommodationController {
 	@Operation(summary = "Return the house that has been approved")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "If the list of searched accommodations is correctly returned"),
-        @ApiResponse(responseCode = "404", description = "If the accommodation_id does not match any accommodation with null approval_timestamp")
+        @ApiResponse(responseCode = "404", description = "If the accommodation_id does not match any accommodation with null approval_timestamp", content=@Content(mediaType = "application/json",
+			schema=@Schema(implementation=ErrorMessage.class)))
     })
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@PatchMapping(value = "/approve_accommodation/{accommodation_id}")
