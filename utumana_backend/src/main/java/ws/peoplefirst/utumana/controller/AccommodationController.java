@@ -302,17 +302,18 @@ public class AccommodationController {
 		
 		return accommodationService.setAccommodationAvailabilities(id, availabilities, userId);
 	}
-	
-	@PreAuthorize("hasAuthority('USER')")
-	@PatchMapping(value = "/accommodation/{id}/unavailabilities")
-	public Accommodation setAccommodationUnavailabilities(@PathVariable Long id, 
-			@RequestBody List<Booking> unavailabilities, Authentication auth) {
-		logger.debug("PATCH /accommodation/" + id + "/unavailabilities");
-		
-		Long userId = AuthorizationUtility.getUserFromAuthentication(auth).getId();
-		
-		return accommodationService.setAccommodationUnavailabilities(id, unavailabilities, userId);
-	}
+
+// UNUSED METHOD: USE METHOD addUnavilability IN BOOK CONTROLLER
+//	@PreAuthorize("hasAuthority('USER')")
+//	@PatchMapping(value = "/accommodation/{id}/unavailabilities")
+//	public Accommodation setAccommodationUnavailabilities(@PathVariable Long id, 
+//			@RequestBody List<Booking> unavailabilities, Authentication auth) {
+//		logger.debug("PATCH /accommodation/" + id + "/unavailabilities");
+//		
+//		Long userId = AuthorizationUtility.getUserFromAuthentication(auth).getId();
+//		
+//		return accommodationService.setAccommodationUnavailabilities(id, unavailabilities, userId);
+//	}
 	
 	@PreAuthorize("hasAuthority('USER')")
 	@PatchMapping(value="/accommodation/{id}")

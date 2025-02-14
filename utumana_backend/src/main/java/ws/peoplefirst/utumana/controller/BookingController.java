@@ -168,6 +168,7 @@ public class BookingController {
 		return booking;
 	}
 	
+	// Unless you specifically need a BookingDTO, you might want to use the method getAccommodationUnavailabilitiesDTO in AccommodationController
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value = "/unavailabilities/{accommodation_id}")
 	public List<BookingDTO> getUnavailabilityList(Authentication auth,
