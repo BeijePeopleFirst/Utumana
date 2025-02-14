@@ -22,7 +22,7 @@
 
         <!--pt-2 border-t border-grey-light-->
         <p class="my-1 text-sm tracking-wide uppercase text-grey hover:text-red">
-          <span *ngIf="free" class="px-3 font-semibold text-green-600 bg-green-200 rounded-full">free</span>
+          <span *ngIf="free" class="px-3 font-semibold text-green-600 bg-green-200 rounded-full">{{'accommodation-card.free' | translate | uppercase }}</span>
           <span *ngIf="!free">
             {{accommodation.min_price | currency:'EUR':'symbol-narrow':'1.2-2':'it-IT'}}
             <span *ngIf="priceRange"> - {{accommodation.max_price | currency:'EUR':'symbol-narrow':'1.2-2':'it-IT'}} </span>

@@ -1,0 +1,22 @@
+<div *ngIf="isModalOpen" class="modal">
+    <div class="relative justify-center w-full max-w-md pb-5 bg-white rounded-lg shadow-lg px-7 pt-7">
+        <h5 class="text-center">{{'profile.edit_bio' | translate}}</h5>
+  
+        <button (click)="close()" class="close-modal">
+            &times;
+        </button>
+
+        <form (ngSubmit)="updateBio()">
+            <div class="flex justify-center">
+                <textarea class="w-full p-2 mx-4 border-none rounded-md resize-y focus:outline-secondary bg-neutral-2" rows="10" placeholder="{{'profile.edit_bio_placeholder' | translate}}"
+                id="bio" name="bio" [(ngModel)]="bio"></textarea>
+            </div>
+
+            <div class="flex justify-center mt-4 gap-x-5">
+                <button type="submit" class="w-1/4 btn-primary">{{'profile.edit_bio_button_label' | translate}}</button>
+                <button type="button" class="w-1/4 btn-cancel" (click)="close()">{{'cancel_button_label' | translate}}</button>
+            </div>
+        </form>
+        <p *ngIf="error" class="mt-4 mb-0 text-center error-message">{{'error' | translate}}</p>
+    </div>
+  </div>

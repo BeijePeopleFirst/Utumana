@@ -4,7 +4,7 @@ import { User } from 'src/app/models/user';
 import { AuthService } from 'src/app/services/auth.service';
 import { ReviewService } from 'src/app/services/review.service';
 import { UserService } from 'src/app/services/user.service';
-import { imagesURL } from 'src/costants';
+import iconURL, { imagesURL } from 'src/costants';
 
 @Component({
   selector: 'app-profile',
@@ -14,8 +14,10 @@ import { imagesURL } from 'src/costants';
 export class ProfileComponent implements OnInit {
   id: number | undefined = Number(localStorage.getItem("id"));
   user!: User;
+  iconsUrl: string = iconURL;
   pictureUrl!: string;
   defaultPictureUrl: string = `${imagesURL}\\users\\default_profile.png`;
+  isEditBioModalOpen: boolean = false;
 
   reviews: Review[] = [];
   reviewsPageSize!: number;
@@ -48,6 +50,25 @@ export class ProfileComponent implements OnInit {
           this.pictureUrl = `${imagesURL}\\users\\${this.user.id}\\profile.png`;
 
           this.loadUserReviews();    
+        }
+      })
+    }
+  }
+
+  editPicture(): void {
+    console.log("Editing profile picture");
+  }
+
+
+
+  loadUser(): void {
+    if(this.id){
+      this.userService.getUserById(this.id).subscribe(res => {
+        if('message' in res){
+          return;
+        }else{
+          this.user = res;
+          this.pictureUrl = `${imagesURL}\\users\\${this.user.id}\\profile.png`; 
         }
       })
     }
@@ -89,6 +110,7 @@ export class ProfileComponent implements OnInit {
     this.waitingReviewsPageNumber = pageNumber;
   }
 
+
   closeReviewModal(refresh: boolean): void {
     this.selectedReviewId = -1;
     this.isReviewModalOpen = false;
@@ -106,6 +128,20 @@ export class ProfileComponent implements OnInit {
     this.selectedReviewId = reviewId;
     this.isReviewModalOpen = true;
     this.reviewModalAction = action;
+    document.body.style.overflow = 'hidden';
+  }
+
+
+  closeEditBioModal(refresh: boolean): void {
+    this.isEditBioModalOpen = false;
+    document.body.style.overflow = 'auto';
+    if(refresh == true){
+      this.loadUser();
+    }
+  }
+
+  showEditBioModal(): void {
+    this.isEditBioModalOpen = true;
     document.body.style.overflow = 'hidden';
   }
 }

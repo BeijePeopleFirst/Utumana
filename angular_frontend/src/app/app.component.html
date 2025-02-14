@@ -9,20 +9,20 @@
       </div>
   
       <div class="hidden lg:flex lg:gap-x-12">
-        <a routerLink="/create" class="font-semibold text-sm/6 text-primary">{{'header.create' | translate}}</a>
-        <a routerLink="/my_bookings" class="font-semibold text-sm/6 text-primary">{{'header.bookings'| translate}}</a>
-        <a routerLink="/host_dashboard" class="font-semibold text-sm/6 text-primary">{{'header.host-dashboard' | translate}}</a>
+        <a routerLink="/create" class="font-semibold select-none text-sm/6 text-primary">{{'header.create' | translate}}</a>
+        <a routerLink="/my_bookings" class="font-semibold select-none text-sm/6 text-primary">{{'header.bookings'| translate}}</a>
+        <a routerLink="/host_dashboard" class="font-semibold select-none text-sm/6 text-primary">{{'header.host-dashboard' | translate}}</a>
       </div>
   
       <div class="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-7">
         <a routerLink="/notifications" class="font-semibold text-sm/6 text-primary">
-          <img class="w-auto h-8" [src]="iconUrl + '/notification.png'" alt="">
+          <img class="w-auto h-8 select-none" [src]="iconUrl + '/notification.png'" alt="">
         </a>
   
         <div class="relative" (click)="toggleLanguageMenu($event)">
-          <button type="button" class="flex items-center font-semibold gap-x-1 text-sm/6 text-primary">
-            <img class="w-auto h-8" [src]="iconUrl + '/flags/' + selectedLanguage + '.png'" alt="">
-            <svg class="flex-none text-gray-400 size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <button type="button" class="flex items-center font-semibold select-none gap-x-1 text-sm/6 text-primary">
+            <img class="w-auto h-8 select-none" [src]="iconUrl + '/flags/' + selectedLanguage + '.png'" alt="">
+            <svg class="flex-none text-gray-400 select-none size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
               <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
             </svg>
           </button>
@@ -30,7 +30,7 @@
           <div *ngIf="isLanguageMenuOpen" class="absolute right-0 z-50 w-32 mt-3 bg-white shadow-lg top-full rounded-xl ring-1 ring-gray-900/5">
             <div class="p-2 space-y-1">
               <button *ngFor="let lang of languages" (click)="changeLanguage(lang.code, $event)" class="flex items-center w-full px-4 py-2 text-sm text-left text-gray-900 gap-x-2 hover:bg-gray-50">
-                <img class="w-auto h-5" [src]="iconUrl + '/flags/' + lang.code + '.png'" alt="">
+                <img class="w-auto h-5 select-none" [src]="iconUrl + '/flags/' + lang.code + '.png'" alt="">
                 {{ lang.name }}
               </button>
             </div>
@@ -47,11 +47,11 @@
   
           <div *ngIf="isProfileMenuOpen" class="absolute right-0 z-50 w-48 mt-3 bg-white shadow-lg top-full rounded-xl ring-1 ring-gray-900/5">
             <div class="p-4 space-y-2">
-              <a routerLink="/profile" class="block px-4 py-2 text-sm text-gray-900 hover:bg-gray-50">{{'header.profile' | translate}}</a>
-              <a routerLink="/favourites" class="block px-4 py-2 text-sm text-gray-900 hover:bg-gray-50">{{'header.favourites' | translate}}</a>
-              <a routerLink="/my_accommodations" class="block px-4 py-2 text-sm text-gray-900 hover:bg-gray-50">{{'header.accommodations' | translate}}</a>
-              <a routerLink="/admin_dashboard" class="block px-4 py-2 text-sm text-gray-900 hover:bg-gray-50">{{'header.admin' | translate}}</a>
-              <a (click)="authService.logout()" class="block px-4 py-2 text-sm text-gray-900 cursor-pointer hover:bg-gray-50">{{'header.logout' | translate}}</a>       
+              <a routerLink="/profile" class="block px-4 py-2 text-sm text-gray-900 select-none hover:bg-gray-50">{{'header.profile' | translate}}</a>
+              <a routerLink="/favourites" class="block px-4 py-2 text-sm text-gray-900 select-none hover:bg-gray-50">{{'header.favourites' | translate}}</a>
+              <a routerLink="/my_accommodations" class="block px-4 py-2 text-sm text-gray-900 select-none hover:bg-gray-50">{{'header.accommodations' | translate}}</a>
+              <a routerLink="/admin_dashboard" class="block px-4 py-2 text-sm text-gray-900 select-none hover:bg-gray-50">{{'header.admin' | translate}}</a>
+              <a (click)="authService.logout()" class="block px-4 py-2 text-sm text-gray-900 cursor-pointer select-none hover:bg-gray-50">{{'header.logout' | translate}}</a>       
             </div>
           </div>
         </div>

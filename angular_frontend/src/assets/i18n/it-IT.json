@@ -1,6 +1,7 @@
 {
 "accommodation-card": {
-	"book": "Prenota ora"
+	"book": "Prenota ora",
+	"free": "gratis"
 	},
 "accommodations_cards": {
 	"notFound": "Nessuna offerta disponibile"
@@ -42,7 +43,18 @@
 	"cap-word": "CAP",
 	"edit-rooms-and-beds-sentence": "Modifica Stanze e Letti",
 	"user-error": "Error 401 Unauthorized: Necessario essere loggati con un profilo valido",
-	"accommodation-error": "Error 404 Not Found: Accommodation ID fornito non valido"
+	"accommodation-error": "Error 404 Not Found: Accommodation ID fornito non valido",
+	"accommodation-entity-error": "Errore nell' entita' Accommodation: ANNULLAMENTO",
+	"error-occurred": "Si è verificato un Errore",
+	"added-to-favourites": "Aggiunto ai Preferiti",
+	"removed-from-favourites": "Rimosso dai Preferiti",
+	"deleted-accommodation": "Accommodation Rimossa",
+	"country-required": "Il Paese è RICHIESTO",
+	"cap-required": "Il CAP è RICHIESTO",
+	"updated-accommodation": "Accommodation Aggiornata",
+	"rooms-beds-required": "I numeri di Stanze e Letti sono richiesti",
+	"booking-values-missing": "Alcuni valori per il Booking sono Assenti!",
+	"updated-accommodation-services": "Servizi dell' Accommodation aggiornati con Successo"
 },
 "bookings":{
 	"checkIn":"Check-in",
@@ -58,6 +70,7 @@
 	"rejected":"Prenotazioni rifiutate",
 	"no_bookings": "Nessuna prenotazione"
 	},
+"cancel_button_label": "Annulla",
 "choose-book-period-from-acc-details": {
 	"reset-btn": "Reimposta Scelte",
 	"January": "Gennaio",
@@ -76,8 +89,15 @@
 "confirm-booking-booknow": {
 	"go_back": "Torna Indietro",
 	"clear-messages-sentence": "Cancella Messaggi",
-	"is_unavailability": "Si tratta di una Indisponibilita'"
+	"is_unavailability": "Si tratta di una Indisponibilita'",
+	"invalid-date-format-provided": "Formato data non valido",
+	"invalid-date-provided": "Data non valida",
+	"invalid-date-does-not-exist": "Data non valida: la data specificata non esiste",
+	"created-booking-status": "Booking Creato",
+	"redirect-in-few-seconds": "Cambio di Pagina tra qualche secondo...",
+	"created-unavailability-id": "Indisponibilita' Creata"
 	},
+"error": "Errore sconosciuto. Per favore, riprova.",
 "favourites": {
 	"title": "Preferiti"
 	},
@@ -113,8 +133,7 @@
 	"password_short": "Password troppo corta",
 	"password_wrong": "Password errata",
 	"forget_password": "Hai dimenticato la password?",
-	"button_text": "Login",
-	"error": "Errore sconosciuto. Per favore, riprova."
+	"button_text": "Login"
 	},
 "my_accommodations": {
 	"title": "Le mie sistemazioni",
@@ -124,7 +143,14 @@
 "profile": {
 	"reviews_title": "Recensioni ricevute",
 	"reviews_to_accept": "Recensioni in attesa di un tuo riscontro",
-	"name": "Nome"
+	"name": "Nome",
+	"surname": "Cognome",
+	"email": "Email",
+	"bio": "Biografia",
+	"change_password": "Cambia password",
+	"edit_bio": "Modifica la tua biografia",
+	"edit_bio_button_label": "Salva",
+	"edit_bio_placeholder": "Scrivi una tua breve presentazione..."
 	},
 "review": {
 	"comfort": "Comfort",
@@ -144,8 +170,7 @@
 	"reject_title": "Rifiutare questa recensione?",
 	"reject_subtitle": "Se scegli \"Rifiuta\", la recensione verrà eliminata definitivamente",
 	"accept_button_label": "Accetta",
-	"reject_button_label": "Rifiuta",
-	"cancel_button_label": "Annulla"
+	"reject_button_label": "Rifiuta"
 	},
 "search": {
 	"city": "Città",
@@ -170,5 +195,12 @@
 	"approvalTimestamp-desc": " (Recenti: decrescente)",
 	"rating-asc": " (Voto: crescente)",
 	"rating-desc": " (Voto: decrescente)"
+	},
+"settings": {
+	"title": "Impostazioni",
+	"change_password": "Modifica password"
+},
+"timer":{
+		"label":"Mancanti alla partenza"
 	}
 }

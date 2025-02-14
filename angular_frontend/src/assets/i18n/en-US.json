@@ -1,6 +1,7 @@
 {
 "accommodation-card": {
-	"book": "Book now"
+	"book": "Book now",
+	"free": "free"
 	},
 "accommodations_cards": {
 	"notFound": "No accommodation found"
@@ -42,7 +43,19 @@
 	"edit-rooms-and-beds-sentence": "Edit Rooms and Beds",
 	"cap-word": "CAP",
 	"user-error": "Error 401 Unauthorized: Need to be Logged-in with a lecit account",
-	"accommodation-error": "Error 404 Not Found: Invalid Accommodation ID Provided"
+	"accommodation-error": "Error 404 Not Found: Invalid Accommodation ID Provided",
+	"accommodation-entity-error": "Error inside Accommodation Entity: ABORT",
+	"error-occurred": "An Error Occurred",
+	"added-to-favourites": "Added to favourites",
+	"removed-from-favourites": "Removed from favourites",
+	"deleted-accommodation": "Deleted Accommodation",
+	"country-required": "Country is REQUIRED",
+	"cap-required": "CAP is REQUIRED",
+	"updated-accommodation": "Updated Accommodation",
+	"rooms-beds-required": "Rooms number and Beds number are both required",
+	"booking-values-missing": "Some values for Booking are Missing!",
+	"updated-accommodation-services": "Successfully updated Accommodation Services"
+	
 	},
 "bookings": {
 	"checkIn":"Check-in",
@@ -58,6 +71,7 @@
 	"rejected":"Rejected bookings",
 	"no_bookings": "No bookings"
 	},
+"cancel_button_label": "Cancel",
 "choose-book-period-from-acc-details": {
 	"reset-btn": "Reset Choices",
 	"January": "January",
@@ -76,7 +90,13 @@
 "confirm-booking-booknow": {
 	"go_back": "Go Back",
 	"clear-messages-sentence": "Clear Messages",
-	"is_unavailability": "Is Unavailability"
+	"is_unavailability": "Is Unavailability",
+	"invalid-date-format-provided": "Invalid Date Format provided",
+	"invalid-date-provided": "Invalid Date provided",
+	"invalid-date-does-not-exist": "Invalid Date provided: the specified Date does not exist",
+	"created-booking-status": "Booking Created",
+	"redirect-in-few-seconds": "Redirect in few seconds...",
+	"created-unavailability-id": "Unavailability Created"
 	},
 "error": "Unexpected error. Please retry.",
 "favourites": {
@@ -124,7 +144,14 @@
 "profile": {
 	"reviews_title": "Reviews received",
 	"reviews_to_accept": "Reviews waiting for your feedback",
-	"name": "Name"
+	"name": "Name",
+	"surname": "Surname",
+	"email": "Email",
+	"bio": "Bio",
+	"change_password": "Change password",
+	"edit_bio": "Edit your bio",
+	"edit_bio_button_label": "Save",
+	"edit_bio_placeholder": "Write a short introduction about yourself..."
 	},
 "review": {
 	"comfort": "Comfort",
@@ -144,8 +171,7 @@
 	"reject_title": "Are you sure you want to reject this review?",
 	"reject_subtitle": "If you choose \"Reject\", the review will be permanently deleted",
 	"accept_button_label": "Accept",
-	"reject_button_label": "Reject",
-	"cancel_button_label": "Cancel"
+	"reject_button_label": "Reject"
 },
 "search": {
 	"city": "City",
@@ -170,5 +196,12 @@
 	"approvalTimestamp-desc": " (Recent: Desc)",
 	"rating-asc": " (Rating: Asc)",
 	"rating-desc": " (Rating: Desc)"
+	},
+"settings": {
+	"title": "Settings",
+	"change_password": "Change password"
+},
+"timer":{
+		"label":"Left to depart"
 	}
 }
