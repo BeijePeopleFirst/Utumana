@@ -59,6 +59,7 @@ import ws.peoplefirst.utumana.utility.AuthorizationUtility;
 import ws.peoplefirst.utumana.utility.Constants;
 import ws.peoplefirst.utumana.utility.JsonFormatter;
 
+@Tag(name = "Accommodations", description="APIs for Accommodation section")
 @RestController
 @RequestMapping(value="/api")
 public class AccommodationController {
@@ -81,7 +82,10 @@ public class AccommodationController {
 	private BookingService bookingService;
 	
 	
-	
+	@ApiResponses({
+	    @ApiResponse(responseCode = "200", description = "Accommodations were retrieved Successfully")
+	})
+	@Operation(summary = "Get all Accommodations")
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value="/accommodations")
 	public List<Accommodation> getAllAccommodationsAPI(Authentication auth) {
@@ -95,6 +99,11 @@ public class AccommodationController {
 		}
 	}
 	
+	@ApiResponses({
+	    @ApiResponse(responseCode = "200", description = "Accommodation was retrieved Successfully"),
+	    @ApiResponse(responseCode = "404", description = "Accommodation Not Found: entity Hidden or illegal ID provided")
+	})
+	@Operation(summary = "Get single Accommodation by ID only if it is not hidden")
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value="/accommodation/{id}")
 	public Accommodation getSingleAccommodationAPI(@PathVariable Long id, Authentication auth) {	
@@ -109,6 +118,11 @@ public class AccommodationController {
 		}
 	}
 	
+	@ApiResponses({
+	    @ApiResponse(responseCode = "200", description = "Accommodation was retrieved Successfully"),
+	    @ApiResponse(responseCode = "404", description = "Accommodation Not Found: entity not Hidden or illegal ID provided")
+	})
+	@Operation(summary = "Get single Accommodation by ID only if it is rejected (which means hidden accommodation)")
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value="/rejected_accommodation/{id}")
 	public Accommodation getRejectedAccommodationAPI(@PathVariable Long id, Authentication auth) {	
@@ -123,6 +137,12 @@ public class AccommodationController {
 		}
 	}
 	
+	@ApiResponses({
+	    @ApiResponse(responseCode = "200", description = "Accommodation' s ID, title, description, number of beds and number of rooms were retrieved successfully"),
+	    @ApiResponse(responseCode = "403", description = "The user who tried to get the Accommodation Informations was not the owner: only the owners of the accommodation can edit its informations"),
+	    @ApiResponse(responseCode = "404", description = "Accommodation Not Found: illegal ID provided or accommodation was deleted (which means that it was hidden)")
+	})
+	@Operation(summary = "Get single Accommodation informations (ID, title, description, number of beds, number of rooms) by Accommodation ID")
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value = "/accommodation/{accommodationId}/info")
 	public ResponseEntity<Map<String, Object>> getAccomodationInfo(Authentication auth, 
@@ -152,6 +172,12 @@ public class AccommodationController {
 		return ok(res);
 	}
 	
+	@ApiResponses({
+	    @ApiResponse(responseCode = "200", description = "Accommodation' s ID, country, cap, street, street_number, city, province and address_notes were retrieved successfully"),
+	    @ApiResponse(responseCode = "403", description = "The user who tried to get the Accommodation Informations was not the owner: only the owners of the accommodation can edit its informations"),
+	    @ApiResponse(responseCode = "404", description = "Accommodation Not Found: illegal ID provided or accommodation was deleted (which means that it was hidden)")
+	})
+	@Operation(summary = "Get single Accommodation address informations (Accommodation ID, country, cap, street, street_number, city, province and address_notes) by Accommodation ID")
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value = "/accommodation/{accommodationId}/address")
 	public ResponseEntity<Map<String, Object>> getAccomodationAddress(Authentication auth, 
@@ -184,6 +210,12 @@ public class AccommodationController {
 		return ok(res);
 	}
 	
+	@ApiResponses({
+	    @ApiResponse(responseCode = "200", description = "Accommodation' s services were retrieved successfully"),
+	    @ApiResponse(responseCode = "403", description = "The user who tried to get the Accommodation services was not the owner: only the owners of the accommodation can edit its informations"),
+	    @ApiResponse(responseCode = "404", description = "Accommodation Not Found: illegal ID provided or accommodation was deleted (which means that it was hidden)")
+	})
+	@Operation(summary = "Get single Accommodation service list by Accommodation ID: it gets all the services which are possessed by the accomodation")
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value="/accommodation/{id}/services")
 	public Set<Service> getAccommodationServices(@PathVariable Long id, Authentication auth) {
@@ -205,6 +237,12 @@ public class AccommodationController {
 		return accommodationService.getAccommodationServices(id);
 	}
 	
+	@ApiResponses({
+	    @ApiResponse(responseCode = "200", description = "Accommodation' s availabilities were retrieved successfully"),
+	    @ApiResponse(responseCode = "403", description = "The user who tried to get the Accommodation availabilities was not the owner: only the owners of the accommodation can edit its informations"),
+	    @ApiResponse(responseCode = "404", description = "Accommodation Not Found: illegal ID provided or accommodation was deleted (which means that it was hidden)")
+	})
+	@Operation(summary = "Get single Accommodation availabilities list by Accommodation ID: it gets all the availabilities which are possessed by the accomodation")
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value="/accommodation/{id}/availabilities")
 	public List<Availability> getAccommodationAvailabilities(@PathVariable Long id, Authentication auth) {
@@ -226,6 +264,12 @@ public class AccommodationController {
 		return avService.findByAccommodationId(id);
 	}
 	
+	@ApiResponses({
+	    @ApiResponse(responseCode = "200", description = "Accommodation' s unavailabilities DTOs were retrieved successfully"),
+	    @ApiResponse(responseCode = "403", description = "The user who tried to get the Accommodation unavailabilities was not the owner: only the owners of the accommodation can edit its informations"),
+	    @ApiResponse(responseCode = "404", description = "Accommodation Not Found: illegal ID provided or accommodation was deleted (which means that it was hidden)")
+	})
+	@Operation(summary = "Get single Accommodation UnavailabilitiesDTO list by Accommodation ID: it gets all the unavailabilities (DTO) which are possessed by the accomodation")
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value="/accommodation/{id}/unavailabilities")
 	public List<UnavailabilityDTO> getAccommodationUnavailabilitiesDTO(@PathVariable Long id, Authentication auth) {
@@ -247,16 +291,30 @@ public class AccommodationController {
 		return bookingService.findUnavailabilitiesDTO(id);
 	}
 	
+	//Need to decide if the control that verifies the accommodation was hidden is needed -> TODO
+	@ApiResponses({
+	    @ApiResponse(responseCode = "200", description = "Accommodation' s availabilities in the provided time interval were retrieved successfully"),
+	    @ApiResponse(responseCode = "404", description = "Accommodation ID does not exist")
+	})
+	@Operation(summary = "Get single Accommodation availabilities list by Accommodation ID in a fixed period of time (the returned result will consider the accepted bookings as well")
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value = "/availabilities/{accommodation_id}")
 	public Map<LocalDate, Double> getAvailabilities(@PathVariable (name = "accommodation_id") Long accommodationId,
 												@RequestParam(name = "check_in") String checkIn,
 												@RequestParam(name = "check_out") String checkOut) {
+		
+		Accommodation acc = this.accommodationService.findById(accommodationId);
+		if(acc == null) throw new IdNotFoundException("Accommodation with id " + accommodationId + " not found");
+		
 		return avService.findAvailableDatesByMonth(accommodationId, checkIn, checkOut);
 	}
 	
 	
-	
+	@ApiResponses({
+	    @ApiResponse(responseCode = "200", description = "Accommodation successfully created"),
+	    @ApiResponse(responseCode = "400", description = "Some accommodation fields/properties that were provided were not valid fields (for example it was provided a number were there must be letters only")
+	})
+	@Operation(summary = "This API creates a new Accommodation and stores it into the Database")
 	@PreAuthorize("hasAuthority('USER')")
 	@PostMapping(value="/accommodation")
 	public Accommodation createAccommodationAPI(@RequestBody Accommodation accommodation, Authentication auth) {
@@ -267,7 +325,13 @@ public class AccommodationController {
 	}
 	
 	
-	
+	@ApiResponses({
+	    @ApiResponse(responseCode = "200", description = "Accommodation successfully updated"),
+	    @ApiResponse(responseCode = "400", description = "Some accommodation fields/properties that were provided were not valid fields (for example it was provided a number were there must be letters only"),
+	    @ApiResponse(responseCode = "403", description = "The user who tried to change the Accommodation' s address was not the owner: only the owners of the accommodation can edit its informations"),
+	    @ApiResponse(responseCode = "404", description = "Accommodation ID and/or accommodation owner id were/was not provided")
+	})
+	@Operation(summary = "This API updates the specified Accommodation' s address informations inside the Database")
 	@PreAuthorize("hasAuthority('USER')")
 	@PatchMapping(value = "/accommodation/{id}/address")
 	public Accommodation setAccommodationAddress(@RequestBody Accommodation newOne, 
@@ -287,6 +351,13 @@ public class AccommodationController {
 		return accommodationService.setAccommodationAddress(newOne);
 	}
 	
+	@ApiResponses({
+	    @ApiResponse(responseCode = "200", description = "Accommodation successfully updated"),
+	    @ApiResponse(responseCode = "400", description = "The user is not logged"),
+	    @ApiResponse(responseCode = "403", description = "The user who tried to change the Accommodation' s services was not the owner: only the owners of the accommodation can edit its informations"),
+	    @ApiResponse(responseCode = "404", description = "Accommodation ID not valid")
+	})
+	@Operation(summary = "This API updates the specified Accommodation' s services inside the Database")
 	@PreAuthorize("hasAuthority('USER')")
 	@PatchMapping(value = "/accommodation/{id}/services")
 	public Accommodation setAccommodationServices(@PathVariable Long id,
@@ -298,6 +369,13 @@ public class AccommodationController {
 		return accommodationService.setAccommodationServices(id, serviceIds, userId);
 	}
 	
+	@ApiResponses({
+	    @ApiResponse(responseCode = "200", description = "Accommodation successfully updated"),
+	    @ApiResponse(responseCode = "400", description = "The user is not logged"),
+	    @ApiResponse(responseCode = "403", description = "The user who tried to change the Accommodation' s availabilities was not the owner: only the owners of the accommodation can edit its informations"),
+	    @ApiResponse(responseCode = "404", description = "Accommodation ID not valid")
+	})
+	@Operation(summary = "This API updates the specified Accommodation' s availabilities inside the Database")
 	@PreAuthorize("hasAuthority('USER')")
 	@PatchMapping(value = "/accommodation/{id}/availabilities")
 	public Accommodation setAccommodationAvailabilities(@PathVariable Long id, 
@@ -321,6 +399,13 @@ public class AccommodationController {
 //		return accommodationService.setAccommodationUnavailabilities(id, unavailabilities, userId);
 //	}
 	
+	@ApiResponses({
+	    @ApiResponse(responseCode = "200", description = "Accommodation successfully updated"),
+	    @ApiResponse(responseCode = "400", description = "Invalid JSON was received due to missing fields or illegal ones"),
+	    @ApiResponse(responseCode = "403", description = "The user who tried to change the Accommodation' s data was nor the owner nor an admin: only the owners and/or admins of the accommodation can edit its informations"),
+	    @ApiResponse(responseCode = "404", description = "Accommodation ID not valid or owner id not specified")
+	})
+	@Operation(summary = "This API updates the specified Accommodation' s tile, description, number of beds and number of rooms informations inside the Database")
 	@PreAuthorize("hasAuthority('USER')")
 	@PatchMapping(value="/accommodation/{id}")
 	public Accommodation setAccommodationInfo(@RequestBody Accommodation newOne, 
