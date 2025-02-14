@@ -2,11 +2,18 @@ package ws.peoplefirst.utumana.exception;
 
 import java.time.LocalDateTime;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 
+@Schema(description="Error Message")
 public class ErrorMessage {
 	
+	@Schema(description = "time", example = "00:00:00")
 	private String time;
+	
+	@Schema(description = "status", example = "400")
 	private String status;
+	
+	@Schema(description = "message", example = "Error Message")
 	private String message;
 
 	public String getTime() {

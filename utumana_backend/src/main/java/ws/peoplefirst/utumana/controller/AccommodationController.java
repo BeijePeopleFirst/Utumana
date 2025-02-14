@@ -41,6 +41,7 @@ import ws.peoplefirst.utumana.dto.BookingDTO;
 import ws.peoplefirst.utumana.dto.PriceDTO;
 import ws.peoplefirst.utumana.dto.UnavailabilityDTO;
 import ws.peoplefirst.utumana.dto.UserDTO;
+import ws.peoplefirst.utumana.exception.ErrorMessage;
 import ws.peoplefirst.utumana.exception.ForbiddenException;
 import ws.peoplefirst.utumana.exception.IdNotFoundException;
 import ws.peoplefirst.utumana.exception.InvalidJSONException;
@@ -101,7 +102,8 @@ public class AccommodationController {
 	
 	@ApiResponses({
 	    @ApiResponse(responseCode = "200", description = "Accommodation was retrieved Successfully"),
-	    @ApiResponse(responseCode = "404", description = "Accommodation Not Found: entity Hidden or illegal ID provided")
+	    @ApiResponse(responseCode = "404", description = "Accommodation Not Found: entity Hidden or illegal ID provided", content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ErrorMessage.class)))
 	})
 	@Operation(summary = "Get single Accommodation by ID only if it is not hidden")
 	@PreAuthorize("hasAuthority('USER')")
@@ -120,7 +122,8 @@ public class AccommodationController {
 	
 	@ApiResponses({
 	    @ApiResponse(responseCode = "200", description = "Accommodation was retrieved Successfully"),
-	    @ApiResponse(responseCode = "404", description = "Accommodation Not Found: entity not Hidden or illegal ID provided")
+	    @ApiResponse(responseCode = "404", description = "Accommodation Not Found: entity not Hidden or illegal ID provided", content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ErrorMessage.class)))
 	})
 	@Operation(summary = "Get single Accommodation by ID only if it is rejected (which means hidden accommodation)")
 	@PreAuthorize("hasAuthority('USER')")
@@ -139,8 +142,10 @@ public class AccommodationController {
 	
 	@ApiResponses({
 	    @ApiResponse(responseCode = "200", description = "Accommodation' s ID, title, description, number of beds and number of rooms were retrieved successfully"),
-	    @ApiResponse(responseCode = "403", description = "The user who tried to get the Accommodation Informations was not the owner: only the owners of the accommodation can edit its informations"),
-	    @ApiResponse(responseCode = "404", description = "Accommodation Not Found: illegal ID provided or accommodation was deleted (which means that it was hidden)")
+	    @ApiResponse(responseCode = "403", description = "The user who tried to get the Accommodation Informations was not the owner: only the owners of the accommodation can edit its informations", content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ErrorMessage.class))),
+	    @ApiResponse(responseCode = "404", description = "Accommodation Not Found: illegal ID provided or accommodation was deleted (which means that it was hidden)", content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ErrorMessage.class)))
 	})
 	@Operation(summary = "Get single Accommodation informations (ID, title, description, number of beds, number of rooms) by Accommodation ID")
 	@PreAuthorize("hasAuthority('USER')")
@@ -174,8 +179,10 @@ public class AccommodationController {
 	
 	@ApiResponses({
 	    @ApiResponse(responseCode = "200", description = "Accommodation' s ID, country, cap, street, street_number, city, province and address_notes were retrieved successfully"),
-	    @ApiResponse(responseCode = "403", description = "The user who tried to get the Accommodation Informations was not the owner: only the owners of the accommodation can edit its informations"),
-	    @ApiResponse(responseCode = "404", description = "Accommodation Not Found: illegal ID provided or accommodation was deleted (which means that it was hidden)")
+	    @ApiResponse(responseCode = "403", description = "The user who tried to get the Accommodation Informations was not the owner: only the owners of the accommodation can edit its informations", content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ErrorMessage.class))),
+	    @ApiResponse(responseCode = "404", description = "Accommodation Not Found: illegal ID provided or accommodation was deleted (which means that it was hidden)", content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ErrorMessage.class)))
 	})
 	@Operation(summary = "Get single Accommodation address informations (Accommodation ID, country, cap, street, street_number, city, province and address_notes) by Accommodation ID")
 	@PreAuthorize("hasAuthority('USER')")
@@ -212,8 +219,10 @@ public class AccommodationController {
 	
 	@ApiResponses({
 	    @ApiResponse(responseCode = "200", description = "Accommodation' s services were retrieved successfully"),
-	    @ApiResponse(responseCode = "403", description = "The user who tried to get the Accommodation services was not the owner: only the owners of the accommodation can edit its informations"),
-	    @ApiResponse(responseCode = "404", description = "Accommodation Not Found: illegal ID provided or accommodation was deleted (which means that it was hidden)")
+	    @ApiResponse(responseCode = "403", description = "The user who tried to get the Accommodation services was not the owner: only the owners of the accommodation can edit its informations", content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ErrorMessage.class))),
+	    @ApiResponse(responseCode = "404", description = "Accommodation Not Found: illegal ID provided or accommodation was deleted (which means that it was hidden)", content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ErrorMessage.class)))
 	})
 	@Operation(summary = "Get single Accommodation service list by Accommodation ID: it gets all the services which are possessed by the accomodation")
 	@PreAuthorize("hasAuthority('USER')")
@@ -239,8 +248,10 @@ public class AccommodationController {
 	
 	@ApiResponses({
 	    @ApiResponse(responseCode = "200", description = "Accommodation' s availabilities were retrieved successfully"),
-	    @ApiResponse(responseCode = "403", description = "The user who tried to get the Accommodation availabilities was not the owner: only the owners of the accommodation can edit its informations"),
-	    @ApiResponse(responseCode = "404", description = "Accommodation Not Found: illegal ID provided or accommodation was deleted (which means that it was hidden)")
+	    @ApiResponse(responseCode = "403", description = "The user who tried to get the Accommodation availabilities was not the owner: only the owners of the accommodation can edit its informations", content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ErrorMessage.class))),
+	    @ApiResponse(responseCode = "404", description = "Accommodation Not Found: illegal ID provided or accommodation was deleted (which means that it was hidden)", content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ErrorMessage.class)))
 	})
 	@Operation(summary = "Get single Accommodation availabilities list by Accommodation ID: it gets all the availabilities which are possessed by the accomodation")
 	@PreAuthorize("hasAuthority('USER')")
@@ -266,8 +277,10 @@ public class AccommodationController {
 	
 	@ApiResponses({
 	    @ApiResponse(responseCode = "200", description = "Accommodation' s unavailabilities DTOs were retrieved successfully"),
-	    @ApiResponse(responseCode = "403", description = "The user who tried to get the Accommodation unavailabilities was not the owner: only the owners of the accommodation can edit its informations"),
-	    @ApiResponse(responseCode = "404", description = "Accommodation Not Found: illegal ID provided or accommodation was deleted (which means that it was hidden)")
+	    @ApiResponse(responseCode = "403", description = "The user who tried to get the Accommodation unavailabilities was not the owner: only the owners of the accommodation can edit its informations", content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ErrorMessage.class))),
+	    @ApiResponse(responseCode = "404", description = "Accommodation Not Found: illegal ID provided or accommodation was deleted (which means that it was hidden)", content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ErrorMessage.class)))
 	})
 	@Operation(summary = "Get single Accommodation UnavailabilitiesDTO list by Accommodation ID: it gets all the unavailabilities (DTO) which are possessed by the accomodation")
 	@PreAuthorize("hasAuthority('USER')")
@@ -294,7 +307,8 @@ public class AccommodationController {
 	//Need to decide if the control that verifies the accommodation was hidden is needed -> TODO
 	@ApiResponses({
 	    @ApiResponse(responseCode = "200", description = "Accommodation' s availabilities in the provided time interval were retrieved successfully"),
-	    @ApiResponse(responseCode = "404", description = "Accommodation ID does not exist")
+	    @ApiResponse(responseCode = "404", description = "Accommodation ID does not exist", content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ErrorMessage.class)))
 	})
 	@Operation(summary = "Get single Accommodation availabilities list by Accommodation ID in a fixed period of time (the returned result will consider the accepted bookings as well")
 	@PreAuthorize("hasAuthority('USER')")
@@ -312,7 +326,8 @@ public class AccommodationController {
 	
 	@ApiResponses({
 	    @ApiResponse(responseCode = "200", description = "Accommodation successfully created"),
-	    @ApiResponse(responseCode = "400", description = "Some accommodation fields/properties that were provided were not valid fields (for example it was provided a number were there must be letters only")
+	    @ApiResponse(responseCode = "400", description = "Some accommodation fields/properties that were provided were not valid fields (for example it was provided a number were there must be letters only", content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ErrorMessage.class)))
 	})
 	@Operation(summary = "This API creates a new Accommodation and stores it into the Database")
 	@PreAuthorize("hasAuthority('USER')")
@@ -327,9 +342,12 @@ public class AccommodationController {
 	
 	@ApiResponses({
 	    @ApiResponse(responseCode = "200", description = "Accommodation successfully updated"),
-	    @ApiResponse(responseCode = "400", description = "Some accommodation fields/properties that were provided were not valid fields (for example it was provided a number were there must be letters only"),
-	    @ApiResponse(responseCode = "403", description = "The user who tried to change the Accommodation' s address was not the owner: only the owners of the accommodation can edit its informations"),
-	    @ApiResponse(responseCode = "404", description = "Accommodation ID and/or accommodation owner id were/was not provided")
+	    @ApiResponse(responseCode = "400", description = "Some accommodation fields/properties that were provided were not valid fields (for example it was provided a number were there must be letters only", content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ErrorMessage.class))),
+	    @ApiResponse(responseCode = "403", description = "The user who tried to change the Accommodation' s address was not the owner: only the owners of the accommodation can edit its informations", content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ErrorMessage.class))),
+	    @ApiResponse(responseCode = "404", description = "Accommodation ID and/or accommodation owner id were/was not provided", content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ErrorMessage.class)))
 	})
 	@Operation(summary = "This API updates the specified Accommodation' s address informations inside the Database")
 	@PreAuthorize("hasAuthority('USER')")
@@ -353,9 +371,12 @@ public class AccommodationController {
 	
 	@ApiResponses({
 	    @ApiResponse(responseCode = "200", description = "Accommodation successfully updated"),
-	    @ApiResponse(responseCode = "400", description = "The user is not logged"),
-	    @ApiResponse(responseCode = "403", description = "The user who tried to change the Accommodation' s services was not the owner: only the owners of the accommodation can edit its informations"),
-	    @ApiResponse(responseCode = "404", description = "Accommodation ID not valid")
+	    @ApiResponse(responseCode = "400", description = "The user is not logged", content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ErrorMessage.class))),
+	    @ApiResponse(responseCode = "403", description = "The user who tried to change the Accommodation' s services was not the owner: only the owners of the accommodation can edit its informations", content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ErrorMessage.class))),
+	    @ApiResponse(responseCode = "404", description = "Accommodation ID not valid", content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ErrorMessage.class)))
 	})
 	@Operation(summary = "This API updates the specified Accommodation' s services inside the Database")
 	@PreAuthorize("hasAuthority('USER')")
@@ -371,9 +392,12 @@ public class AccommodationController {
 	
 	@ApiResponses({
 	    @ApiResponse(responseCode = "200", description = "Accommodation successfully updated"),
-	    @ApiResponse(responseCode = "400", description = "The user is not logged"),
-	    @ApiResponse(responseCode = "403", description = "The user who tried to change the Accommodation' s availabilities was not the owner: only the owners of the accommodation can edit its informations"),
-	    @ApiResponse(responseCode = "404", description = "Accommodation ID not valid")
+	    @ApiResponse(responseCode = "400", description = "The user is not logged", content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ErrorMessage.class))),
+	    @ApiResponse(responseCode = "403", description = "The user who tried to change the Accommodation' s availabilities was not the owner: only the owners of the accommodation can edit its informations", content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ErrorMessage.class))),
+	    @ApiResponse(responseCode = "404", description = "Accommodation ID not valid", content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ErrorMessage.class)))
 	})
 	@Operation(summary = "This API updates the specified Accommodation' s availabilities inside the Database")
 	@PreAuthorize("hasAuthority('USER')")
@@ -401,9 +425,12 @@ public class AccommodationController {
 	
 	@ApiResponses({
 	    @ApiResponse(responseCode = "200", description = "Accommodation successfully updated"),
-	    @ApiResponse(responseCode = "400", description = "Invalid JSON was received due to missing fields or illegal ones"),
-	    @ApiResponse(responseCode = "403", description = "The user who tried to change the Accommodation' s data was nor the owner nor an admin: only the owners and/or admins of the accommodation can edit its informations"),
-	    @ApiResponse(responseCode = "404", description = "Accommodation ID not valid or owner id not specified")
+	    @ApiResponse(responseCode = "400", description = "Invalid JSON was received due to missing fields or illegal ones", content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ErrorMessage.class))),
+	    @ApiResponse(responseCode = "403", description = "The user who tried to change the Accommodation' s data was nor the owner nor an admin: only the owners and/or admins of the accommodation can edit its informations", content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ErrorMessage.class))),
+	    @ApiResponse(responseCode = "404", description = "Accommodation ID not valid or owner id not specified", content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ErrorMessage.class)))
 	})
 	@Operation(summary = "This API updates the specified Accommodation' s tile, description, number of beds and number of rooms informations inside the Database")
 	@PreAuthorize("hasAuthority('USER')")
