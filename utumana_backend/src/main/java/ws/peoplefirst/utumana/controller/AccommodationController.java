@@ -401,9 +401,15 @@ public class AccommodationController {
 	
 	@ApiResponses({
 	    @ApiResponse(responseCode = "200", description = "Accommodation successfully updated"),
-	    @ApiResponse(responseCode = "400", description = "Invalid JSON was received due to missing fields or illegal ones"),
-	    @ApiResponse(responseCode = "403", description = "The user who tried to change the Accommodation' s data was nor the owner nor an admin: only the owners and/or admins of the accommodation can edit its informations"),
-	    @ApiResponse(responseCode = "404", description = "Accommodation ID not valid or owner id not specified")
+	    @ApiResponse(responseCode = "400", description = "Invalid JSON was received due to missing fields or illegal ones",
+	    	content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=InvalidJSONException.class))),
+	    @ApiResponse(responseCode = "403", description = "The user who tried to change the Accommodation' s data was nor the owner nor an admin: only the owners and/or admins of the accommodation can edit its informations",
+	    	content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ForbiddenException.class))),
+	    @ApiResponse(responseCode = "404", description = "Accommodation ID not valid or owner id not specified",
+    	content=@Content(mediaType = "application/json",
+		schema=@Schema(implementation=IdNotFoundException.class))),
 	})
 	@Operation(summary = "This API updates the specified Accommodation' s tile, description, number of beds and number of rooms informations inside the Database")
 	@PreAuthorize("hasAuthority('USER')")
@@ -469,10 +475,18 @@ public class AccommodationController {
 	@Operation(summary = "Delete an accommodation with given id")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Accommodation deleted successfully"),
-        @ApiResponse(responseCode = "400", description = "If the user is not correctly logged in"),
-        @ApiResponse(responseCode = "404", description = "If the given id does not match any accommodation"),
-        @ApiResponse(responseCode = "403", description = "If you are not the logged user or an admin"),
-        @ApiResponse(responseCode = "403", description = "If you are deleting an accommodation with ongoing or future booking")
+        @ApiResponse(responseCode = "400", description = "If the user is not correctly logged in",
+	    	content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=InvalidJSONException.class))),
+        @ApiResponse(responseCode = "404", description = "If the given id does not match any accommodation",
+	    	content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=InvalidJSONException.class))),
+        @ApiResponse(responseCode = "403", description = "If you are not the logged user or an admin",
+	    	content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=InvalidJSONException.class))),
+        @ApiResponse(responseCode = "403", description = "If you are deleting an accommodation with ongoing or future booking",
+    		content=@Content(mediaType = "application/json",
+    			schema=@Schema(implementation=InvalidJSONException.class))),
     })
 	@PreAuthorize("hasAuthority('USER')")
 	@PatchMapping(value="/delete_accommodation/{id}")
