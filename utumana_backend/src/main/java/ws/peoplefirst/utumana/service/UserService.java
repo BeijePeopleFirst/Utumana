@@ -143,7 +143,7 @@ public class UserService implements UserDetailsService {
 
 	public List<ReviewDTO> getUserReviews(Long id)  {
 		log.trace("Getting reviews of user with id " + id);
-		return userRepository.findUserReviews(id);
+		return userRepository.findUserReviewsDTO(id);
 	}
 	
 	public List<UserDTO> getUsersDTO() {
@@ -207,7 +207,7 @@ public class UserService implements UserDetailsService {
 	public User loadUserByUsername(String email) throws UsernameNotFoundException {
 		try {
 			User user = userRepository.findUserByEmail(email);
-			if (user == null) new UsernameNotFoundException("email: " + email + " not found");
+			if (user == null) throw new UsernameNotFoundException("email: " + email + " not found");
 
 			return user;
 		} catch (Exception e) {

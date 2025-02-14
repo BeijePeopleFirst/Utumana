@@ -73,12 +73,13 @@ public class ReviewService {
 		return true;
 	}
 	
-	public void deleteReview(Review review) {
-		if(review != null) {
-			reviewRepository.delete(review);
-		} else {
-			throw new NullPointerException("Review is null");
-		}
+	public void deleteReview(Long bookingId) {
+		Booking booking = bookingRepository.findById(bookingId).orElse(null);
+		if(booking == null)	throw new IdNotFoundException("Cannot delete review because its booking doesn't exist");
+		Review review = booking.getReview();
+		booking.setReview(null);
+		bookingRepository.save(booking);
+		reviewRepository.delete(review);
 	}
 	
 	public Review acceptReview(Review review) {
@@ -94,7 +95,7 @@ public class ReviewService {
 		return reviewRepository.findByBookingId(id);
 	}	
 		
-	public List<ReviewDTO> getUserReview(Long userId) {
+	public List<Review> getUserReview(Long userId) {
 		return userRepository.findUserReviews(userId);
 	}
 }

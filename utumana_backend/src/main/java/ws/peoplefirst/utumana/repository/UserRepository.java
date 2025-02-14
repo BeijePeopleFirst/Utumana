@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import ws.peoplefirst.utumana.dto.ReviewDTO;
 import ws.peoplefirst.utumana.dto.UserDTO;
 import ws.peoplefirst.utumana.model.BadgeAward;
+import ws.peoplefirst.utumana.model.Review;
 import ws.peoplefirst.utumana.model.User;
 
 @Repository
@@ -25,7 +26,11 @@ public interface UserRepository extends JpaRepository<User,Long>{
 	
 	@Query("SELECT new ws.peoplefirst.utumana.dto.ReviewDTO(b.review.id, b.review.title, b.review.description, b.review.overallRating, b.review.approvalTimestamp) FROM Booking AS b "
 			+ "where b.accommodation.ownerId = :id AND b.accommodation.hidingTimestamp IS NULL")
-	public List<ReviewDTO> findUserReviews(@Param(value="id")Long id);
+	public List<ReviewDTO> findUserReviewsDTO(@Param(value="id")Long id);
+	
+	@Query("SELECT b.review FROM Booking AS b "
+			+ "where b.accommodation.ownerId = :id AND b.accommodation.hidingTimestamp IS NULL ORDER BY b.review.approvalTimestamp DESC")
+	public List<Review> findUserReviews(@Param(value="id")Long id);
 	
 	@Query(value = "SELECT u FROM User as u LEFT JOIN FETCH u.favourites WHERE u.id = :userId")
 	public User getUserWithFavourites(@Param(value="userId") Long userId);

@@ -47,8 +47,13 @@ public class RefreshTokenService {
 		try {
 			//clearOldTokens();
 			Optional<RefreshToken> oldToken = tokenRepository.findByUserId(user.getId());
-			if (oldToken.isPresent())
-				return oldToken.get();
+			if (oldToken.isPresent()) {
+				if(oldToken.get().getExpirationDate().before(Timestamp.valueOf(LocalDateTime.now()))) {
+					tokenRepository.delete(oldToken.get());
+				} else {
+					return oldToken.get();
+				}
+			}
 
 			RefreshToken token = new RefreshToken();
 			token.setUserId(user.getId());
@@ -75,6 +80,7 @@ public class RefreshTokenService {
 		RefreshToken token = tokenRepository.findByRefreshToken(tokenString)
 				.orElseThrow(() -> new InvalidJwtAuthenticationException("token not present",
 						InvalidJwtAuthenticationException.FORBIDDEN));
+		System.out.println("Token exp: " + token.getExpirationDate() + ", now: " + Timestamp.valueOf(LocalDateTime.now()));
 		if (token.getExpirationDate().before(Timestamp.valueOf(LocalDateTime.now())))
 			throw new InvalidJwtAuthenticationException("token expired", InvalidJwtAuthenticationException.EXPIRED);
 		User user = userRepository.findById(token.getUserId())

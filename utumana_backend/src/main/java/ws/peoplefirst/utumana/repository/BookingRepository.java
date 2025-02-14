@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import ws.peoplefirst.utumana.dto.BookingDTO;
 import ws.peoplefirst.utumana.dto.UnavailabilityDTO;
 import ws.peoplefirst.utumana.model.Accommodation;
@@ -24,15 +25,19 @@ public interface BookingRepository extends JpaRepository<Booking,Long>{
 	
 	public List<Booking> findAllByUserIdAndIsUnavailabilityIsFalseOrderByCheckInDesc(Long userId);
 	
-	@Query("SELECT new ws.peoplefirst.utumana.dto.BookingDTO(b.id, b.accommodation.mainPhotoUrl,b.accommodation.title,b.price,b.status,b.accommodation.id,b.checkIn,b.checkOut,b.review.id) "
+	@Query("SELECT new ws.peoplefirst.utumana.dto.BookingDTO(b.id,b.price,b.status,b.checkIn,b.checkOut,b.review.id, new ws.peoplefirst.utumana.dto.AccommodationDTO(b.accommodation.id, b.accommodation.title, b.accommodation.city, b.accommodation.mainPhotoUrl, b.accommodation.country)) "
 			+ "FROM Booking as b WHERE b.user.id = :userId AND b.isUnavailability IS false ORDER BY b.checkIn DESC")
 	public List<BookingDTO> findAllDTOByUserId(@Param(value="userId")Long userId);
+	
+	@Query("SELECT new ws.peoplefirst.utumana.dto.BookingDTO(b.id,b.price,b.status,b.checkIn,b.checkOut,b.review.id, new ws.peoplefirst.utumana.dto.AccommodationDTO(b.accommodation.id, b.accommodation.title, b.accommodation.city, b.accommodation.mainPhotoUrl, b.accommodation.country)) "
+			+ "FROM Booking as b WHERE b.user.id = :userId AND b.isUnavailability IS false AND b.status = :status ORDER BY b.checkIn DESC")
+	public List<BookingDTO> findByUserIdAndStatusDTO(@Param(value="userId")Long userId, @Param(value = "status") BookingStatus status);
 	
 	@Query("SELECT b from Booking as b WHERE b.accommodation.ownerId = :ownerId AND b.isUnavailability IS false ORDER BY b.checkIn DESC")
 	public List<Booking> findAllByOwnerId(@Param(value="ownerId")Long ownerId);
 	
-	@Query("SELECT new ws.peoplefirst.utumana.dto.BookingDTO(b.id, b.accommodation.mainPhotoUrl,b.accommodation.title,b.price,b.status,b.accommodation.id,b.checkIn,b.checkOut,b.review.id) "
-			+ "FROM Booking as b WHERE b.accommodation.ownerId = :ownerId  AND b.isUnavailability IS false ORDER BY b.checkIn DESC")
+	@Query("SELECT new ws.peoplefirst.utumana.dto.BookingDTO(b.id,b.price,b.status,b.checkIn,b.checkOut,b.review.id, new ws.peoplefirst.utumana.dto.AccommodationDTO(b.accommodation.id, b.accommodation.title, b.accommodation.city, b.accommodation.mainPhotoUrl, b.accommodation.country)) "
+			+ "FROM Booking as b, Accommodation as a WHERE b.accommodation.ownerId = :ownerId AND b.isUnavailability  IS false ORDER BY b.checkIn DESC")
 	public List<BookingDTO> findAllDTOByOwnerId(@Param(value="ownerId")Long ownerId);
 	
 	public List<Booking> findByUserIdAndAccommodationIdAndStatus(Long userId, Long accommodationId, BookingStatus status);
@@ -50,7 +55,7 @@ public interface BookingRepository extends JpaRepository<Booking,Long>{
 	
 	public List<Booking> findByAccommodationIdAndIsUnavailabilityIsTrue(Long accommodationId);
 
-	@Query("SELECT new ws.peoplefirst.utumana.dto.BookingDTO(b.id, b.accommodation.mainPhotoUrl,b.accommodation.title,b.price,b.status,b.accommodation.id,b.checkIn,b.checkOut,b.review.id) "
+	@Query("SELECT new ws.peoplefirst.utumana.dto.BookingDTO(b.id,b.price,b.status,b.checkIn,b.checkOut,b.review.id, new ws.peoplefirst.utumana.dto.AccommodationDTO(b.accommodation.id, b.accommodation.title, b.accommodation.city, b.accommodation.mainPhotoUrl, b.accommodation.country)) "
 			+ "FROM Booking as b WHERE b.accommodation.id = :accommodationId  AND b.isUnavailability IS true ORDER BY b.checkIn DESC")
 	List<BookingDTO> findUnAvailabilities(@Param(value="accommodationId")Long accommodationId);
 
@@ -71,9 +76,8 @@ public interface BookingRepository extends JpaRepository<Booking,Long>{
 
 	public abstract List<Booking> findByAccommodationAndUser(Accommodation acc, User user);
 	
-    @Query("SELECT new ws.peoplefirst.utumana.dto.BookingDTO(b.id, b.accommodation.mainPhotoUrl,b.accommodation.title,b.price,b.status,b.accommodation.id,b.checkIn,b.checkOut,b.review.id)  FROM Booking b WHERE " +
-            "b.accommodation.id = :accommodationId AND " +
-            "(b.status = 'ACCEPTED' OR b.status = 'DOING') AND b.isUnavailability IS false")
+	@Query("SELECT new ws.peoplefirst.utumana.dto.BookingDTO(b.id,b.price,b.status,b.checkIn,b.checkOut,b.review.id, new ws.peoplefirst.utumana.dto.AccommodationDTO(b.accommodation.id, b.accommodation.title, b.accommodation.city, b.accommodation.mainPhotoUrl, b.accommodation.country)) "
+           + " FROM Booking b WHERE b.accommodation.id = :accommodationId AND " + "(b.status = 'ACCEPTED' OR b.status = 'DOING') AND b.isUnavailability IS false")
     public List<BookingDTO> findByStatusACCEPTEDOrDOINGAndAccommodationId(@Param("accommodationId") Long accommodationId);
 
 }

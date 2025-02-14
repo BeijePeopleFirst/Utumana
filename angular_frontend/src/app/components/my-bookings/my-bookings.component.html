@@ -1,0 +1,41 @@
+<section class="flex items-center justify-center pt-8 bg-neutral-1">
+    <div class="container justify-center p-5 text-center">
+        <h1 class="text-gray-800">{{'bookings.doing' | translate}}</h1>
+        <app-booking-cards (bookingSelected)="onWriteReview($event)" [bookings$]="doingBookings$" [pageNumber]="doingBookingsPageNumber" [totalPages]="doingBookingsTotalPages"
+        (askForPage)="loadDoingBookingsPage($event)"></app-booking-cards>
+    </div>
+</section>
+
+<section class="flex items-center justify-center pt-8 bg-neutral-2">
+    <div class="container p-5 text-center">
+        <h1 class="text-gray-800">{{'bookings.pending' | translate}}</h1>
+        <app-booking-cards (bookingSelected)="onWriteReview($event)" [bookings$]="pendingBookings$" [pageNumber]="pendingBookingsPageNumber" [totalPages]="pendingBookingsTotalPages"
+        (askForPage)="loadPendingBookingsPage($event)"></app-booking-cards>
+    </div>
+</section>
+
+<section class="flex items-center justify-center pt-8 bg-neutral-1">
+    <div class="container p-5 text-center">
+        <h1 class="text-gray-800">{{'bookings.done' | translate}}</h1>
+        <app-booking-cards (bookingSelected)="onWriteReview($event)" [bookings$]="doneBookings$" [pageNumber]="doneBookingsPageNumber" [totalPages]="doneBookingsTotalPages"
+        (askForPage)="loadDoneBookingsPage($event)"></app-booking-cards>
+    </div>
+</section>
+
+<section class="flex items-center justify-center pt-8 bg-neutral-2">
+    <div class="container p-5 text-center">
+        <h1 class="text-gray-800">{{'bookings.accepted' | translate}}</h1>
+        <app-booking-cards (bookingSelected)="onWriteReview($event)" [bookings$]="acceptedBookings$" [pageNumber]="acceptedBookingsPageNumber" [totalPages]="acceptedBookingsTotalPages"
+        (askForPage)="loadAcceptedBookingsPage($event)"></app-booking-cards>
+    </div>
+</section>
+
+<section class="flex items-center justify-center pt-8 bg-neutral-1">
+    <div class="container p-5 text-center">
+        <h1 class="text-gray-800">{{'bookings.rejected' | translate}}</h1>
+        <app-booking-cards  (bookingSelected)="onWriteReview($event)" [bookings$]="rejectedBookings$" [pageNumber]="rejectedBookingsPageNumber" [totalPages]="rejectedBookingsTotalPages"
+        (askForPage)="loadRejectedBookingsPage($event)"></app-booking-cards>
+    </div>
+</section>
+
+<app-write-review  (reviewAdded)="onReviewAdded()" (closeModal)="closeWriteReviewModal()" [bookingId]="selectedBookingId" [isModalOpen]="isModalOpen"></app-write-review>

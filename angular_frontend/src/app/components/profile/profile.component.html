@@ -1,0 +1,30 @@
+<section class="flex items-center justify-center pt-8 bg-neutral-1">
+    <div class="flex items-center gap-x-28">
+        <div class="relative overflow-hidden rounded-full shadow-md w-44 h-44">
+            <img class="absolute top-0 left-0 object-cover w-full h-full bg-cover object-fit" src="{{pictureUrl || defaultPictureUrl}}" alt="Profile picture">
+        </div>
+        <p class="relative">
+        <span class="font-bold text-primary">{{'profile.name' | translate}}</span> {{user.name}}
+        </p>
+    </div>
+    <div class="flex items-center gap-x-3">
+        <p>bla bla</p>
+    </div>
+</section>
+<section class="flex items-center justify-center pt-8 bg-neutral-2">
+    <div class="container p-5 text-center">
+        <h2>{{'profile.reviews_to_accept' | translate}}</h2>
+        <app-review-cards [reviews]="waitingReviews" [pageNumber]="waitingReviewsPageNumber" [totalPages]="waitingReviewsTotalPages" 
+        (askForPage)="loadWaitingReviewsPage($event)" (reviewAction)="showReviewModal($event.id, $event.action)"></app-review-cards>
+    </div>
+</section>
+<section class="flex items-center justify-center pt-8 bg-neutral-1">
+    <div class="container p-5 text-center">
+        <h2>{{'profile.reviews_title' | translate}}</h2>
+        <app-review-cards [reviews]="reviews" [pageNumber]="reviewsPageNumber" [totalPages]="reviewsTotalPages" 
+        (askForPage)="loadUserReviewsPage($event)"></app-review-cards>
+    </div>
+</section>
+
+<app-review-accept-reject-modal [reviewId]="selectedReviewId" [isModalOpen]="isReviewModalOpen" [action]="reviewModalAction"
+(closeModal)="closeReviewModal($event)"></app-review-accept-reject-modal>

@@ -3,7 +3,7 @@ package ws.peoplefirst.utumana.utility;
 import java.time.format.DateTimeFormatter;
 
 public class Constants {
-	public static final int ACCOMMODATIONS_PAGE_SIZE = 8;
+	public static final int ACCOMMODATIONS_PAGE_SIZE = 20;
 	public static final int MAX_PASSWORD_CHARACTERS = 30;
 	public static final int MIN_PASSWORD_CHARACTERS = 8;
 	public static final int MIN_PASSWORD_UPPER_CHARACTERS = 1;

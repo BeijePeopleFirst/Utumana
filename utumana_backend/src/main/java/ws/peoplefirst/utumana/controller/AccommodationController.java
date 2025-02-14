@@ -320,6 +320,7 @@ public class AccommodationController {
 			@PathVariable Long id, Authentication auth) {
 		
 		if(newOne.getOwnerId() == null || newOne.getId() == null) {
+			System.out.println("Stampo Errore in questione" + newOne);
 			logger.error("Accommodation ID and Owner ID must be provided");
 			throw new IdNotFoundException("Accommodation ID and Owner ID must be provided");
 		}
@@ -389,13 +390,13 @@ public class AccommodationController {
 	}
 	
 	@PreAuthorize("hasAuthority('USER')")
-	@GetMapping(value="/get_latest_uploads")
+	@GetMapping(value="/accommodation/latest_uploads")
 	public List<AccommodationDTO> getLatestUploadsDTO(@RequestParam(value="check_in",required=false) String checkIn, 
 			@RequestParam(value="check_out",required=false) String checkOut, 
 			Authentication auth) {
 		
 		Long userId = AuthorizationUtility.getUserFromAuthentication(auth).getId();
-		List<AccommodationDTO> latestAccommodations = accommodationService.getLatestUploadsDTO(Constants.ACCOMMODATIONS_PAGE_SIZE, userId);
+		List<AccommodationDTO> latestAccommodations = accommodationService.getLatestUploadsDTO(0, Constants.ACCOMMODATIONS_PAGE_SIZE, userId);
 		
 		LocalDate checkInDate = null;
 		LocalDate checkOutDate = null;
@@ -410,7 +411,15 @@ public class AccommodationController {
 	}
 	
 	@PreAuthorize("hasAuthority('USER')")
-	@GetMapping(value = "/prices")
+	@GetMapping(value="/accommodation/most_liked")
+	public List<AccommodationDTO> getMostLikedAccommodationsDTO(Authentication auth) {
+		logger.debug("GET /accommodation/most_liked");
+		Long userId = AuthorizationUtility.getUserFromAuthentication(auth).getId();
+		return accommodationService.getMostLikedAccommodationsDTO(0, Constants.ACCOMMODATIONS_PAGE_SIZE, userId);
+	}
+	
+	@PreAuthorize("hasAuthority('USER')")
+	@GetMapping(value = "/accommodation/prices")
 	public List<PriceDTO> configurePriceRanges(@RequestParam(value="ids") List<Long> ids, @RequestParam(value="check_in",required=false) String checkIn, 
 			@RequestParam(value="check_out",required=false) String checkOut){
 		
@@ -477,7 +486,7 @@ public class AccommodationController {
 	}
 	
 	@PreAuthorize("hasAuthority('USER')")
-	@GetMapping(value="/get_my_accommodations/{userId}")
+	@GetMapping(value="/my_accommodations/{userId}")
 	public List<AccommodationDTO> getMyAccommodationsDTO(@PathVariable Long userId, Authentication auth) {
 		
 		AuthorizationUtility.checkIsAdminOrMe(auth, userId);

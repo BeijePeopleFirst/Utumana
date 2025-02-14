@@ -1,0 +1,37 @@
+<ng-container *ngIf="(bookings$ | async) as bookings">
+    <div *ngIf="bookings && bookings.length > 0" class="justify-self-center">
+        <div class="flex items-start self-center justify-center p-3 align-top w-fit flex-nowrap gap-x-5">
+            <button type="button" class="carousel-arrow" (click)="prevPage()" [disabled]="pageNumber === 0">
+                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+            <div class="flex flex-wrap justify-center gap-3">
+                <div *ngFor="let booking of bookings" class="p-4 bg-white rounded-lg shadow-lg">
+                <!--div *ngFor="let booking of bookings" class="flex max-w-sm p-2 rounded-lg text-start lg:max-w-4xl"-->
+                    <app-booking-card (selectBooking)="onBookingSelected($event)" [booking]="booking"></app-booking-card>
+                </div>
+                
+            </div>
+
+            <!-- class="z-40 flex items-center self-center justify-center w-10 h-10 transition rounded-full bg-gray-200/50 hover:bg-gray-300 focus:outline-none"-->
+            <button type="button" class="carousel-arrow" (click)="nextPage()" [disabled]="pageNumber === totalPages - 1">
+                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+            </button>
+        </div>
+
+        <div class="flex items-center justify-center space-x-2 lg:px-2"> 
+            <div class="carousel-positions-container">
+                <input type="radio" name="pagePosition" class="carousel-position" *ngFor="let _ of [].constructor(totalPages); let n = index" [checked]="n == pageNumber" value="{{n}}" (click)="getPage(n)">
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="!bookings || bookings.length === 0" class="text-center">
+        <span>{{"bookings.no_bookings" | translate}}</span>
+    </div>
+</ng-container>

@@ -1,0 +1,103 @@
+<div *ngIf="isModalOpen" class="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50">
+    <div class="relative justify-center w-full max-w-md pb-5 text-center bg-white rounded-lg shadow-lg px-7 pt-7">
+        <ng-container *ngIf="action=='accept'">
+            <h5>{{'review.accept_title' | translate}}</h5>
+            <p class="text-sm">{{'review.accept_subtitle' | translate}}</p>
+        </ng-container>
+        <ng-container *ngIf="action=='reject'">
+            <h5>{{'review.reject_title' | translate}}</h5>
+            <p class="text-sm">{{'review.reject_subtitle' | translate}}</p>
+        </ng-container>
+  
+        <button (click)="close()" class="absolute p-2 text-3xl text-gray-500 -top-1 right-1">
+            &times;
+        </button>
+
+        <div class="flex justify-center mt-4 gap-x-5">
+            <ng-container *ngIf="action=='accept'">
+                <button type="button" class="w-1/4 btn-success" (click)="accept()">{{'review.accept_button_label' | translate}}</button>
+            </ng-container>
+            <ng-container *ngIf="action=='reject'">
+                <button type="button" class="w-1/4 btn-danger" (click)="reject()">{{'review.reject_button_label' | translate}}</button>
+            </ng-container>
+            <button type="button" class="w-1/4 btn-cancel" (click)="close()">{{'review.cancel_button_label' | translate}}</button>
+        </div>
+        <p *ngIf="error" class="mt-4 mb-0 text-center error-message">{{'error' | translate}}</p>
+  <!--
+      <form [formGroup]="reviewForm" (ngSubmit)="submitReview()">
+  
+        <input 
+          type="text" 
+          formControlName="title" 
+          placeholder="{{'review.title_placeholder' | translate}}" 
+          class="w-full p-2 mb-2 border rounded"
+        />
+        <div *ngIf="reviewForm.controls['title'].invalid && reviewForm.controls['title'].touched" class="text-red-500">
+            {{'review.title_error' | translate}}
+        </div>
+  
+        <div class="flex gap-2">
+          <span class="rating-label">{{'review.comfort' | translate}}</span>
+          <div class="mt-1 text-2xl stars-container">
+            <ng-container *ngFor="let star of stars; let i = index">
+              <div 
+                class="cursor-pointer star-container"  
+                (click)="setComfort(i + 1)" 
+                [ngClass]="{'star-full': reviewForm.get('comfort')?.value > i, 'star-empty': reviewForm.get('comfort')?.value <= i}"
+              >
+                &#x2605;
+              </div>
+            </ng-container>
+          </div>
+        </div>
+
+        <div class="flex gap-2">
+            <span class="rating-label">{{'review.convenience' | translate}}</span>
+            <div class="mt-1 text-2xl stars-container">
+                <ng-container *ngFor="let star of stars; let i = index">
+                    <div 
+                    class="cursor-pointer star-container"  
+                    (click)="setConvenience(i + 1)" 
+                    [ngClass]="{'star-full': reviewForm.get('convenience')?.value > i, 'star-empty': reviewForm.get('convenience')?.value <= i}"
+                    >
+                    &#x2605;
+                </div>
+            </ng-container>
+        </div>
+    </div>
+    
+    <div class="flex gap-2">
+        <span class="rating-label">{{'review.position' | translate}}</span>
+        <div class="mt-1 text-2xl stars-container">
+          <ng-container *ngFor="let star of stars; let i = index">
+            <div 
+              class="cursor-pointer star-container"  
+              (click)="setPosition(i + 1)" 
+              [ngClass]="{'star-full': reviewForm.get('position')?.value > i, 'star-empty': reviewForm.get('position')?.value <= i}"
+            >
+              &#x2605;
+            </div>
+          </ng-container>
+        </div>
+      </div>
+  
+        <textarea 
+          formControlName="description" 
+          placeholder="{{'review.description_placeholder' | translate}}"
+          class="w-full p-2 border rounded"
+        ></textarea>
+        <div *ngIf="reviewForm.controls['description'].invalid && reviewForm.controls['description'].touched" class="text-red-500">
+           {{'review.description_error' | translate}}
+        </div>
+  
+        <button 
+          type="submit" 
+          [disabled]="reviewForm.invalid" 
+          class="px-4 py-2 mt-2 btn-primary"
+        >
+        {{'review.submit' | translate}}
+        </button>
+      </form>
+    -->
+    </div>
+  </div>

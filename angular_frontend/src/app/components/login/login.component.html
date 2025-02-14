@@ -1,0 +1,59 @@
+<div class="flex py-16 h-dvh">
+    <div class="flex w-full max-w-sm m-auto overflow-hidden rounded-lg shadow-lg place-self-center bg-neutral-1 lg:max-w-4xl">
+        <div class="hidden lg:block lg:w-1/2 bg-cover bg-[url('/assets/images/login.jpg')]">
+        </div>
+        <div class="w-full p-8 lg:w-1/2">
+            <h2 class="text-2xl font-bold text-center text-primary">Utumana</h2>
+            <p class="text-xl text-center text-primary">{{'login.welcome' | translate}}</p>
+            <form class="form" (ngSubmit)="login()" #loginForm="ngForm">
+                <div class="mt-4">
+                    <label class="label-primary">{{'login.email_label' | translate}}</label>
+                    <input class="input-primary" [ngClass]="{'alert-danger': email.invalid && showEmailError}" 
+                    type="email" id="email" name="email" autocomplete="email" 
+                    required pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"   
+                    [(ngModel)]="user.email" #email="ngModel" 
+                    (input)="showEmailError = false; emailError = false;" />
+                </div>
+                <ng-container *ngIf="showEmailError">
+                    <div *ngIf="email.errors?.['required']" class="error-message">
+                        {{'login.email_required' | translate}}
+                    </div>
+                    <div *ngIf="email.errors?.['pattern']" class="error-message">
+                        {{'login.email_invalid' | translate}}
+                    </div>
+                    <div *ngIf="emailError" class="error-message">
+                        {{'login.email_unknown' | translate}}
+                    </div>
+                </ng-container>
+                <div class="mt-4">
+                    <div class="flex justify-between">
+                        <label class="label-primary">{{'login.password_label' | translate}}</label>
+                        <a href="#" class="self-center text-xs text-gray-500">{{'login.forget_password' | translate}}</a>
+                    </div>
+                    <input class="input-primary" [ngClass]="{'alert-danger': password.invalid && showPasswordError}" 
+                    type="password" id="password" name="password" autocomplete="current-password"
+                    required minlength="8"
+                    [(ngModel)]="user.password" #password="ngModel" 
+                    (input)="showPasswordError = false; passwordError = false;"/>
+                </div>
+                <ng-container *ngIf="showPasswordError" >
+                    <div *ngIf="password.errors?.['required']" class="error-message">
+                        {{'login.password_required' | translate}}
+                    </div>
+                    <div *ngIf="password.errors?.['minlength']" class="error-message">
+                        {{'login.password_short' | translate}}
+                    </div>
+                    <div *ngIf="passwordError" class="error-message">
+                        {{'login.password_wrong' | translate}}
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="genericError">
+                    <div class="error-message">{{'error' | translate}}</div>
+                </ng-container>
+                <div class="grid mt-8 justify-items-center">
+                    <button type="submit" class="btn-primary">{{'login.button_text' | translate}}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
