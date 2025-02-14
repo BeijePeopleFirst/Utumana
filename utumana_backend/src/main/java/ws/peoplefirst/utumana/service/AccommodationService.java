@@ -293,7 +293,7 @@ public class AccommodationService {
 		Accommodation accommodation = findById(accommodationId);
 		
 		if(accommodation.getOwnerId() != userId)
-			throw new TheJBeansException("Error: logged user must be the accommodation's owner to modify its services");
+			throw new ForbiddenException("Error: logged user must be the accommodation's owner to modify its services");
 		
 		Set<ws.peoplefirst.utumana.model.Service> services = serviceService.getServicesByIds(serviceIds);
 		System.out.println("services: " + services);
@@ -307,7 +307,7 @@ public class AccommodationService {
 		if(accommodation == null)
 			throw new IdNotFoundException("Accommodation with id " + accommodationId  +" not found");
 		if(!accommodation.getOwnerId().equals(userId))
-			throw new TheJBeansException("Error: logged user must be the accommodation's owner to modify its availabilities");
+			throw new ForbiddenException("Error: logged user must be the accommodation's owner to modify its availabilities");
 		checkAvailabilites(availabilities);
 		
 		System.out.println(availabilities);
