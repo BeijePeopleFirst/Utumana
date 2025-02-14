@@ -6,26 +6,31 @@ import { Booking } from 'src/app/models/booking';
 import { BookingService } from 'src/app/services/booking.service';
 
 @Component({
-  selector: 'app-confirm-booking-booknow',
-  templateUrl: './confirm-booking-booknow.component.html',
-  styleUrls: ['./confirm-booking-booknow.component.css']
+  selector: "app-confirm-booking-booknow",
+  templateUrl: "./confirm-booking-booknow.component.html",
+  styleUrls: ["./confirm-booking-booknow.component.css"],
 })
 export class ConfirmBookingBooknowComponent implements OnInit {
-
   createdBooking!: Booking;
   numGuests!: number;
-  chosenAvailability:any;
+  chosenAvailability: any;
   pricePerNight!: number;
-  nightsNumber!:number;
-  postOperation!:number;
+  nightsNumber!: number;
+  postOperation!: number;
 
   isUnavailability!: boolean;
   isMe!: boolean;
 
   messages: string[] = [];
+  invalidDateFormatProvided: boolean = false;
+  invalidDateProvidedMsg: boolean = false;
+  invalidDateDoesNotExist: boolean = false;
+  createdBookingStatus: boolean = false;
+  redirectInFewSeconds: boolean = false;
+  createdUnavailabilityId: boolean = false;
+  messagesCommunications: boolean = false;
 
   tmp!: any;
-
 
   constructor(
     private bookingService: BookingService,
@@ -36,15 +41,29 @@ export class ConfirmBookingBooknowComponent implements OnInit {
 
   ngOnInit(): void {
     this.tmp = JSON.parse(localStorage.getItem("created_booking")!);
-    this.createdBooking = new Booking(this.tmp._accommodation, this.tmp._timestamp, this.tmp._price, this.tmp._status, this.tmp._check_in, this.tmp._check_out, this.tmp._is_unavailability, this.tmp._user_id);
+    this.createdBooking = new Booking(
+      this.tmp._accommodation,
+      this.tmp._timestamp,
+      this.tmp._price,
+      this.tmp._status,
+      this.tmp._check_in,
+      this.tmp._check_out,
+      this.tmp._is_unavailability,
+      this.tmp._user_id
+    );
     //console.log(this.createdBooking.accommodation);
 
-    if(this.route.snapshot.queryParams["userId"] && this.createdBooking.accommodation.owner_id === +this.route.snapshot.queryParams["userId"]) this.isMe = true;
+    if (
+      this.route.snapshot.queryParams["userId"] &&
+      this.createdBooking.accommodation.owner_id ===
+        +this.route.snapshot.queryParams["userId"]
+    )
+      this.isMe = true;
     else this.isMe = false;
 
     this.tmp = JSON.parse(localStorage.getItem("num_guests")!);
     this.numGuests = Number(this.tmp);
-    
+
     this.tmp = JSON.parse(localStorage.getItem("chosen_availability_data")!);
     this.pricePerNight = this.tmp.chosen_availability.price_per_night;
     this.nightsNumber = this.tmp.nights_number;
@@ -54,13 +73,27 @@ export class ConfirmBookingBooknowComponent implements OnInit {
   invalidDateProvided!: boolean;
   goBack() {
     localStorage.removeItem("created_booking");
-    let checkInDateStr: string = this.convertToCompatibleDateStringFormat(this.createdBooking.check_in) !== "Error" ? this.convertToCompatibleDateStringFormat(this.createdBooking.check_in) : this.createdBooking.check_in;
-    if(this.invalidDateProvided) return;
-    
-    let checkOutDateStr: string = this.convertToCompatibleDateStringFormat(this.createdBooking.check_out) !== "Error" ? this.convertToCompatibleDateStringFormat(this.createdBooking.check_out) : this.createdBooking.check_out;
-    if(this.invalidDateProvided) return;
-    
-    this.router.navigate(["/accommodation/" + this.createdBooking.accommodation.id], {queryParams: {start_date: checkInDateStr, end_date: checkOutDateStr}});
+    let checkInDateStr: string =
+      this.convertToCompatibleDateStringFormat(this.createdBooking.check_in) !==
+      "Error"
+        ? this.convertToCompatibleDateStringFormat(this.createdBooking.check_in)
+        : this.createdBooking.check_in;
+    if (this.invalidDateProvided) return;
+
+    let checkOutDateStr: string =
+      this.convertToCompatibleDateStringFormat(
+        this.createdBooking.check_out
+      ) !== "Error"
+        ? this.convertToCompatibleDateStringFormat(
+            this.createdBooking.check_out
+          )
+        : this.createdBooking.check_out;
+    if (this.invalidDateProvided) return;
+
+    this.router.navigate(
+      ["/accommodation/" + this.createdBooking.accommodation.id],
+      { queryParams: { start_date: checkInDateStr, end_date: checkOutDateStr } }
+    );
     return;
   }
 
@@ -69,40 +102,54 @@ export class ConfirmBookingBooknowComponent implements OnInit {
 
     this.invalidDateProvided = false;
 
-    this.createdBooking.check_in = this.convertToCompatibleDateStringFormat(this.createdBooking.check_in) !== "Error" ? this.convertToCompatibleDateStringFormat(this.createdBooking.check_in) : this.createdBooking.check_in;
-    if(this.invalidDateProvided) return;
+    this.createdBooking.check_in =
+      this.convertToCompatibleDateStringFormat(this.createdBooking.check_in) !==
+      "Error"
+        ? this.convertToCompatibleDateStringFormat(this.createdBooking.check_in)
+        : this.createdBooking.check_in;
+    if (this.invalidDateProvided) return;
 
-    this.createdBooking.check_out = this.convertToCompatibleDateStringFormat(this.createdBooking.check_out) !== "Error" ? this.convertToCompatibleDateStringFormat(this.createdBooking.check_out) : this.createdBooking.check_out;
-    if(this.invalidDateProvided) return;
-    
-    if(!this.isUnavailability)
-      this.bookingService.newBooking(this.createdBooking).subscribe(
-        response => {
-          if("message" in response) {
+    this.createdBooking.check_out =
+      this.convertToCompatibleDateStringFormat(
+        this.createdBooking.check_out
+      ) !== "Error"
+        ? this.convertToCompatibleDateStringFormat(
+            this.createdBooking.check_out
+          )
+        : this.createdBooking.check_out;
+    if (this.invalidDateProvided) return;
+
+    if (!this.isUnavailability)
+      this.bookingService
+        .newBooking(this.createdBooking)
+        .subscribe((response) => {
+          if ("message" in response) {
             this.messages.push(response.message);
-            console.log("ERRORE");
+            console.log("Ho Aggiunto a messages");
             return;
-          }
-          else {
-            if(this.translateService.currentLang === 'en-US') this.messages.push("Created Booking STATUS -> " + response.status);
-            if(this.translateService.currentLang === "it-IT") this.messages.push("STATO del Booking Creato -> " + response.status);
+          } else {
+            this.messagesCommunications = true;
+            this.createdBookingStatus = true;
 
-            this.tmp.chosen_availability.start_date = this.createdBooking.check_in;
-            this.tmp.chosen_availability.end_date = this.createdBooking.check_out;
-            localStorage.setItem("chosen_availability_data", JSON.stringify(this.tmp));
+            this.tmp.chosen_availability.start_date =
+              this.createdBooking.check_in;
+            this.tmp.chosen_availability.end_date =
+              this.createdBooking.check_out;
+            localStorage.setItem(
+              "chosen_availability_data",
+              JSON.stringify(this.tmp)
+            );
 
             this.tmp = JSON.parse(localStorage.getItem("num_guests")!);
             this.tmp = this.numGuests;
             localStorage.setItem("num_guests", JSON.stringify(this.tmp));
 
-            if(this.translateService.currentLang === 'en-US') this.messages.push("Redirect in few seconds...");
-            if(this.translateService.currentLang === 'it-IT') this.messages.push("Cambio di Pagina tra qualche secondo...");
-            
+            this.messagesCommunications = true;
+            this.redirectInFewSeconds = true;
+
             setTimeout(() => this.goBack(), 3500);
           }
-        }
-      );
-
+        });
     else {
       let unavailability: Availability = new Availability();
       unavailability.accommodation_id = this.createdBooking.accommodation.id!;
@@ -110,79 +157,95 @@ export class ConfirmBookingBooknowComponent implements OnInit {
       unavailability.end_date = this.createdBooking.check_out;
       unavailability.price_per_night = this.pricePerNight;
 
-      this.bookingService.newUnavailability(unavailability).subscribe(
-        response => {
-          if("message" in response) {
+      this.bookingService
+        .newUnavailability(unavailability)
+        .subscribe((response) => {
+          if ("message" in response) {
             this.messages.push(response.message);
-            console.log("ERRORE");
+            console.log("Ho aggiunto a messages 2");
             return;
-          }
-          else {
-            if(this.translateService.currentLang === 'en-US') this.messages.push("Created Unavailability ID -> " + response.id);
-            if(this.translateService.currentLang === 'it-IT') this.messages.push("ID della Availability Creata -> " + response.id);
+          } else {
+            this.messagesCommunications = true;
+            this.createdUnavailabilityId = true;
 
-            this.tmp.chosen_availability.start_date = this.createdBooking.check_in;
-            this.tmp.chosen_availability.end_date = this.createdBooking.check_out;
-            localStorage.setItem("chosen_availability_data", JSON.stringify(this.tmp));
+            this.tmp.chosen_availability.start_date =
+              this.createdBooking.check_in;
+            this.tmp.chosen_availability.end_date =
+              this.createdBooking.check_out;
+            localStorage.setItem(
+              "chosen_availability_data",
+              JSON.stringify(this.tmp)
+            );
 
             this.tmp = JSON.parse(localStorage.getItem("num_guests")!);
             this.tmp = this.numGuests;
             localStorage.setItem("num_guests", JSON.stringify(this.tmp));
 
-            if(this.translateService.currentLang === 'en-US') this.messages.push("Redirect in few seconds...");
-            if(this.translateService.currentLang === 'it-IT') this.messages.push("Cambio di Pagina tra qualche secondo...");
-            
+            this.messagesCommunications = true;
+            this.redirectInFewSeconds = true;
+
             setTimeout(() => this.goBack(), 3500);
           }
-        }
-      );
+        });
     }
   }
 
   //From dd/MM/yyyy to yyyy-MM-dd:
   private convertToCompatibleDateStringFormat(date: string): string {
-
     try {
       this.checkDateInput(date);
-    }
-    catch(ex: any) {
-      this.addMessage(ex.message);
+    } catch (ex: any) {
       this.invalidDateProvided = true;
+
+      this.messagesCommunications = true;
+      if((ex.message + "").includes("TYPE1")) this.invalidDateFormatProvided = true;
+      else if((ex.message + "").includes("TYPE2")) this.invalidDateProvidedMsg = true;
+      else if((ex.message + "").includes("TYPE3")) this.invalidDateDoesNotExist = true;
+      else {}
+
       return "Error";
     }
 
-    let tokens: string[] = date.includes('/') ? date.split('/') : date.split('-');
+    let tokens: string[] = date.includes("/")
+      ? date.split("/")
+      : date.split("-");
 
-    if(date.includes('/')) return tokens[2] + '-' + tokens[1] + '-' + tokens[0];
-    else return tokens[0] + '-' + tokens[1] + '-' + tokens[2];
+    if (date.includes("/"))
+      return tokens[2] + "-" + tokens[1] + "-" + tokens[0];
+    else return tokens[0] + "-" + tokens[1] + "-" + tokens[2];
   }
 
   private checkDateInput(date: string): void {
-
-    if(!date || date == "") throw new Error("Invalid Date Format provided");
+    if (!date || date == "") throw new Error("TYPE1: Invalid Date Format provided");
 
     //-> Accepted Pattern: dd/MM/yyyy
-    let dateRegex = /^(0?[1-9]|1[0-9]|2[0-9]|3[01])\/(0?[1-9]|1[0-2])\/([1-9][0-9]{3})$/;
+    let dateRegex =
+      /^(0?[1-9]|1[0-9]|2[0-9]|3[01])\/(0?[1-9]|1[0-2])\/([1-9][0-9]{3})$/;
 
     //-> Accepted Pattern: yyyy-MM-dd
-    let dateRegex2 = /^([1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/
-    if(!dateRegex.test(date) && !dateRegex2.test(date)) throw new Error("Invalid Date provided");
+    let dateRegex2 =
+      /^([1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/;
+    if (!dateRegex.test(date) && !dateRegex2.test(date))
+      throw new Error("TYPE2: Invalid Date provided");
 
-    if(!this.lecitDateProvided(date)) throw new Error("Invalid Date provided: the specified Date does not exist");
-
+    if (!this.lecitDateProvided(date))
+      throw new Error(
+        "TYPE3: Invalid Date provided: the specified Date does not exist"
+      );
   }
 
   private lecitDateProvided(date: string): boolean {
     try {
-      let args: string[] = date.includes('/') ? date.split('/') : date.split('-');
+      let args: string[] = date.includes("/")
+        ? date.split("/")
+        : date.split("-");
 
       let tmp: Date;
-      if(date.includes('/')) tmp = new Date(+args[2], +args[1] - 1, +args[0]);
+      if (date.includes("/")) tmp = new Date(+args[2], +args[1] - 1, +args[0]);
       else tmp = new Date(+args[0], +args[1] - 1, +args[2]);
 
-      if(isNaN(tmp.getTime())) return false;
-    }
-    catch(ex: any) {
+      if (isNaN(tmp.getTime())) return false;
+    } catch (ex: any) {
       return false;
     }
 
@@ -191,10 +254,17 @@ export class ConfirmBookingBooknowComponent implements OnInit {
 
   clearMessages() {
     this.messages = [];
+    this.createdBookingStatus = false;
+    this.redirectInFewSeconds = false;
+    this.createdUnavailabilityId = false;
+    this.messagesCommunications = false;
+    this.invalidDateFormatProvided = false;
+    this.invalidDateProvidedMsg = false;
+    this.invalidDateDoesNotExist = false;
+
   }
 
   addMessage(msg: string) {
     this.messages.push(msg);
   }
-
 }

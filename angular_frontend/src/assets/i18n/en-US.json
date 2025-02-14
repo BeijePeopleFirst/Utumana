@@ -89,7 +89,13 @@
 "confirm-booking-booknow": {
 	"go_back": "Go Back",
 	"clear-messages-sentence": "Clear Messages",
-	"is_unavailability": "Is Unavailability"
+	"is_unavailability": "Is Unavailability",
+	"invalid-date-format-provided": "Invalid Date Format provided",
+	"invalid-date-provided": "Invalid Date provided",
+	"invalid-date-does-not-exist": "Invalid Date provided: the specified Date does not exist",
+	"created-booking-status": "Booking Created",
+	"redirect-in-few-seconds": "Redirect in few seconds...",
+	"created-unavailability-id": "Unavailability Created"
 	},
 "error": "Unexpected error. Please retry.",
 "favourites": {

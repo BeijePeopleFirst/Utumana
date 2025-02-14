@@ -88,7 +88,13 @@
 "confirm-booking-booknow": {
 	"go_back": "Torna Indietro",
 	"clear-messages-sentence": "Cancella Messaggi",
-	"is_unavailability": "Si tratta di una Indisponibilita'"
+	"is_unavailability": "Si tratta di una Indisponibilita'",
+	"invalid-date-format-provided": "Formato data non valido",
+	"invalid-date-provided": "Data non valida",
+	"invalid-date-does-not-exist": "Data non valida: la data specificata non esiste",
+	"created-booking-status": "Booking Creato",
+	"redirect-in-few-seconds": "Cambio di Pagina tra qualche secondo...",
+	"created-unavailability-id": "Indisponibilita' Creata"
 	},
 "error": "Errore sconosciuto. Per favore, riprova.",
 "favourites": {
