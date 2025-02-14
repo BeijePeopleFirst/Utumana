@@ -143,7 +143,6 @@
 	"bio": "Biografia",
 	"change_password": "Cambia password",
 	"edit_bio": "Modifica la tua biografia",
-	"edit_bio_button_label": "Salva",
 	"edit_bio_placeholder": "Scrivi una tua breve presentazione..."
 	},
 "review": {
@@ -166,6 +165,7 @@
 	"accept_button_label": "Accetta",
 	"reject_button_label": "Rifiuta"
 	},
+"save_button_label": "Salva",
 "search": {
 	"city": "Città",
 	"date-error": "La data è obbligatoria",
@@ -192,7 +192,11 @@
 	},
 "settings": {
 	"title": "Impostazioni",
-	"change_password": "Modifica password"
+	"change_password": "Modifica password",
+	"old_password": "Password attuale",
+	"new_password": "Nuova password",
+	"new_password_confirm": "Conferma nuova password",
+	"password_confirm_different": "La password di conferma e la nuova password sono diverse"
 },
 "timer":{
 		"label":"Mancanti alla partenza"

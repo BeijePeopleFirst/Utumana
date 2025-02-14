@@ -43,7 +43,7 @@
   }
 
   .label-primary {
-    @apply block mb-2 text-sm font-bold text-secondary;
+    @apply block mb-1 text-sm font-bold text-secondary;
   }
 
   .error-message {

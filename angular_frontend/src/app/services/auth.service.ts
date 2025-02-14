@@ -6,14 +6,8 @@ import { tap, delay, map, catchError, filter, switchMap } from 'rxjs/operators';
 import { BACKEND_URL_PREFIX } from 'src/costants';
 import { AuthCredentials } from '../dtos/authCredential';
 import { RefreshToken } from '../models/refreshToken';
+import { LoginResponse } from '../utils/LoginResponse';
 
-interface LoginResponse {
-  email: string,
-  permission: string,
-  token: string,
-  refresh_token: string,
-  id: number
-}
 
 @Injectable({
   providedIn: 'root',
@@ -40,6 +34,7 @@ export class AuthService {
       map(json => {
         console.log(json);
         localStorage.setItem('id',json.id.toString());
+        localStorage.setItem("email", json.email);
 			  localStorage.setItem("token", json.token);
 			  document.cookie = "refresh_token=" + json.refresh_token;
         return {ok: true, status: 200, message: 'Successfully logged in'};
