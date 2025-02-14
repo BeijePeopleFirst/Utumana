@@ -71,6 +71,7 @@
 	"rejected":"Rejected bookings",
 	"no_bookings": "No bookings"
 	},
+"cancel_button_label": "Cancel",
 "choose-book-period-from-acc-details": {
 	"reset-btn": "Reset Choices",
 	"January": "January",
@@ -147,7 +148,10 @@
 	"surname": "Surname",
 	"email": "Email",
 	"bio": "Bio",
-	"change_password": "Change password"
+	"change_password": "Change password",
+	"edit_bio": "Edit your bio",
+	"edit_bio_button_label": "Save",
+	"edit_bio_placeholder": "Write a short introduction about yourself..."
 	},
 "review": {
 	"comfort": "Comfort",
@@ -167,8 +171,7 @@
 	"reject_title": "Are you sure you want to reject this review?",
 	"reject_subtitle": "If you choose \"Reject\", the review will be permanently deleted",
 	"accept_button_label": "Accept",
-	"reject_button_label": "Reject",
-	"cancel_button_label": "Cancel"
+	"reject_button_label": "Reject"
 },
 "search": {
 	"city": "City",
@@ -194,7 +197,11 @@
 	"rating-asc": " (Rating: Asc)",
 	"rating-desc": " (Rating: Desc)"
 	},
-	"timer":{
+"settings": {
+	"title": "Settings",
+	"change_password": "Change password"
+},
+"timer":{
 		"label":"Left to depart"
 	}
 }
