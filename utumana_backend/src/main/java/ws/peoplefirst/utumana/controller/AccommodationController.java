@@ -13,6 +13,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +33,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import ws.peoplefirst.utumana.dto.AccommodationDTO;
 import ws.peoplefirst.utumana.dto.BookingDTO;
 import ws.peoplefirst.utumana.dto.PriceDTO;
@@ -375,6 +381,14 @@ public class AccommodationController {
 //		}
 //	}
 	
+	@Operation(summary = "Delete an accommodation with given id")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Accommodation deleted successfully"),
+        @ApiResponse(responseCode = "400", description = "If the user is not correctly logged in"),
+        @ApiResponse(responseCode = "404", description = "If the given id does not match any accommodation"),
+        @ApiResponse(responseCode = "403", description = "If you are not the logged user or an admin"),
+        @ApiResponse(responseCode = "403", description = "If you are deleting an accommodation with ongoing or future booking")
+    })
 	@PreAuthorize("hasAuthority('USER')")
 	@PatchMapping(value="/delete_accommodation/{id}")
 	public Accommodation deleteAccommodationAPI(@PathVariable Long id, Authentication auth) {
@@ -390,6 +404,12 @@ public class AccommodationController {
 		return accommodationService.deleteAccommodation(id);
 	}
 	
+	@Operation(summary = "Return the most recent added accommodation using AccommodationDTO")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "If the latest uploads are correctly taken"),
+        @ApiResponse(responseCode = "400", description = "If the user is not correctly logged in"),
+        @ApiResponse(responseCode = "403", description = "If the given check_in or check_out date has wrong format or null")
+    })
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value="/accommodation/latest_uploads")
 	public List<AccommodationDTO> getLatestUploadsDTO(@RequestParam(value="check_in",required=false) String checkIn, 
@@ -411,6 +431,11 @@ public class AccommodationController {
 		return latestAccommodations;
 	}
 	
+	@Operation(summary = "Return the list of accommodation ordered by average review rating")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "If the list of most liked accommodation returned correctly"),
+        @ApiResponse(responseCode = "400", description = "If the user is not correctly logged in")
+    })
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value="/accommodation/most_liked")
 	public List<AccommodationDTO> getMostLikedAccommodationsDTO(Authentication auth) {
@@ -419,6 +444,12 @@ public class AccommodationController {
 		return accommodationService.getMostLikedAccommodationsDTO(0, Constants.ACCOMMODATIONS_PAGE_SIZE, userId);
 	}
 	
+	@Operation(summary = "Return the list of priceDTO for the given array of accommodation id for a given period if null controls all availabilities")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "If the prices are correctly set"),
+        @ApiResponse(responseCode = "403", description = "If the given check_in or check_out date has wrong format"),
+        @ApiResponse(responseCode = "400", description = "If the user is not correctly logged in")
+    })
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value = "/accommodation/prices")
 	public List<PriceDTO> configurePriceRanges(@RequestParam(value="ids") List<Long> ids, @RequestParam(value="check_in",required=false) String checkIn, 
@@ -431,12 +462,16 @@ public class AccommodationController {
 			checkInDate = JsonFormatter.parseStringIntoDate(checkIn);
 			checkOutDate = JsonFormatter.parseStringIntoDate(checkOut);
 		}
-		System.out.println(ids);
 
 		return accommodationService.configurePriceRanges(ids, checkInDate, checkOutDate);
 	}
 	
-	
+	@Operation(summary = "Return the full accommodation that the user adds as favourites")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "If a valid accommodation is added into logged user favourites"),
+        @ApiResponse(responseCode = "403", description = "If you are not an admin or a logged user"),
+        @ApiResponse(responseCode = "404", description = "If the accoomodation_id does not match any existing accommodation")
+    })
 	@PreAuthorize("hasAuthority('USER')")
 	@PatchMapping(value = "/add-favourite/{user_id}/{accommodation_id}")
 	public Accommodation addFavourite(@PathVariable(name="user_id") Long userId,
@@ -444,12 +479,18 @@ public class AccommodationController {
 		
 		AuthorizationUtility.checkIsAdminOrMe(auth, userId);
 		
+		//TODO this method also calls findByIdAndHidingTimestampIsNull remove one
 		accommodationService.addFavourite(accommodationId, userId);
 		
 		//TODO decide what to return based on graphical view
 		return accommodationService.findByIdAndHidingTimestampIsNull(accommodationId);
 	}
 	
+	@Operation(summary = "Return the full accommodation that the user removed from favourites")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "If a valid accommodation is removed from the logged user favourites"),
+        @ApiResponse(responseCode = "403", description = "If you are not an admin or a logged user"),
+    })
 	@PreAuthorize("hasAuthority('USER')")
 	@PatchMapping(value = "/remove-favourite/{user_id}/{accommodation_id}")
 	public Accommodation removeFavourite(@PathVariable(name="user_id") Long userId,
@@ -462,6 +503,12 @@ public class AccommodationController {
 		return accommodationService.findByIdAndHidingTimestampIsNull(accommodationId);
 	}
 	
+	@Operation(summary = "Return the list of favourites (as DTOs) for given user_id")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "If the list of favourites is correctly returned"),
+        @ApiResponse(responseCode = "403", description = "If you are not an admin or a logged user"),
+        @ApiResponse(responseCode = "404", description = "If the user_id does not match any existing user")
+    })
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value = "/favorites/{user_id}")
 	public List<AccommodationDTO> showFavourites(@PathVariable(name="user_id") Long userId, Authentication auth) {
@@ -474,18 +521,32 @@ public class AccommodationController {
 		return favourites;
 	}
 	
+	@Operation(summary = "Return the list of accommodations to be approved by an admin")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "If the list is correctly returned"),
+    })
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@GetMapping(value="/get_accommodations_to_approve") 
 	public List<Accommodation> getAccommodationsToBeApproved(Authentication auth) {
 		return accommodationService.getAccommodationsToBeApproved();
 	}
 	
+	@Operation(summary = "Return the list of accommodation to be approved by an admin (as DTOs)")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "If the list is correctly returned"),
+    })
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@GetMapping(value="/get_accommodationsdto_to_approve")
 	public List<AccommodationDTO> getAccommodationsDTOToBeApproved(Authentication auth) {
 		return accommodationService.getAccommodationsDTOToBeApproved();
 	}
 	
+	@Operation(summary = "Return the list of accommodations posted by an user (as DTOs)")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "If the list of my accommodations is correctly returned"),
+        @ApiResponse(responseCode = "403", description = "If you are not the logged user or an admin"),
+        @ApiResponse(responseCode = "404", description = "If the user_id does not match any existing user"),
+    })
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value="/my_accommodations/{userId}")
 	public List<AccommodationDTO> getMyAccommodationsDTO(@PathVariable Long userId, Authentication auth) {
@@ -499,7 +560,12 @@ public class AccommodationController {
 		return accommodationService.getMyAccommodationsDTO(userId);
 	}
 	
-	
+	@Operation(summary = "Return the list of accommodation that are not already accepted by an admin")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "If the list of pending accommodations is correctly returned"),
+        @ApiResponse(responseCode = "403", description = "If you are not the logged user or an admin"),
+        @ApiResponse(responseCode = "404", description = "If the user_id does not match any existing user"),
+    })
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value="/pending_accommodations/{userId}")
 	public List<AccommodationDTO> getPendingAccommodationsDTO(@PathVariable Long userId, Authentication auth) {
@@ -513,6 +579,12 @@ public class AccommodationController {
 		return accommodationService.getPendingAccommodationsDTO(userId);
 	}
 	
+	@Operation(summary = "Return the list of accommodation that were rejected by an admin")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "If the list of rejected accommodations is correctly returned"),
+        @ApiResponse(responseCode = "403", description = "If you are not the logged user or an admin"),
+        @ApiResponse(responseCode = "404", description = "If the user_id does not match any existing user"),
+    })
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value="/rejected_accommodations/{userId}")
 	public List<AccommodationDTO> getRejectedAccommodationsDTO(@PathVariable Long userId, Authentication auth) {
@@ -526,6 +598,15 @@ public class AccommodationController {
 		return accommodationService.getRejectedAccommodationsDTO(userId);
 	}
 	
+	@Operation(summary = "Return the list of accommodation that match the search criteria")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "If the list of searched accommodations is correctly returned"),
+        @ApiResponse(responseCode = "400", description = "If an error occurs decoding the query params"),
+        @ApiResponse(responseCode = "400", description = "If check-in and check-out query params are blank"),
+        @ApiResponse(responseCode = "403", description = "If check-in and check-out query params cannot be parsed into LocalDate"),
+        @ApiResponse(responseCode = "400", description = "If check-in is after the check-out date"),
+        @ApiResponse(responseCode = "403", description = "If the number of guests is less than 0")
+    })
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value = "/search")
 	public List<AccommodationDTO> searchResults(
@@ -589,7 +670,12 @@ public class AccommodationController {
 		return resList;
 	}
 	
-	
+	@Operation(summary = "Return the full accommodation with utility fields such as : if the logged user is and admin or owner, hasPendingBooking,"
+			+ " the id of the pending booking, a formatted approval timestamp, all the reviews ")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "If the accomomodation is found"),
+        @ApiResponse(responseCode = "404", description = "If there is not any accommodation with given id")
+    })
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value = "/accommodation_info/{accommodationId}")
 	public ResponseEntity<Map<String, Object>> getAccomodationDetails(Authentication auth,@PathVariable(name = "accommodationId") Long accommodationId) {
@@ -624,6 +710,11 @@ public class AccommodationController {
 		return ok(res);
 	}
 	
+	@Operation(summary = "Return the house that has been approved")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "If the list of searched accommodations is correctly returned"),
+        @ApiResponse(responseCode = "404", description = "If the accommodation_id does not match any accommodation with null approval_timestamp")
+    })
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@PatchMapping(value = "/approve_accommodation/{accommodation_id}")
 	public Accommodation approveHouse( @PathVariable (name="accommodation_id")Long accommodationId) {
