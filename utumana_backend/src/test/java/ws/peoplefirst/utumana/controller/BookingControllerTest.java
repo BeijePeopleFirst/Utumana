@@ -61,6 +61,10 @@ public class BookingControllerTest {
         }
     }
 
+    private UserDTO getUnautorizedUser() {
+        return new UserDTO(1L, "", "", "");
+    }
+
     private BookingDTO getBookingDTO() {
         return new BookingDTO(0L
                 , 0.0
@@ -285,7 +289,7 @@ public class BookingControllerTest {
         mockBooking.setId(0L);
         mockBooking.setUserId(0L);
         when(bookingService.findByIdIfDONE(anyLong())).thenReturn(mockBooking);
-        when(authentication.getPrincipal()).thenReturn(null);
+        when(authentication.getPrincipal()).thenReturn(getUnautorizedUser());
         assertThrows(ForbiddenException.class, () -> bookingController.assignReviewToBooking(0L, mockBooking, authentication));
     }
 }
