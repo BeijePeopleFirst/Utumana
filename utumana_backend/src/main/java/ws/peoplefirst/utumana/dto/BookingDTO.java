@@ -2,24 +2,32 @@ package ws.peoplefirst.utumana.dto;
 
 import java.time.LocalDateTime;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import ws.peoplefirst.utumana.utility.BookingStatus;
 import ws.peoplefirst.utumana.utility.JsonFormatter;
-
+@Schema(description = "DTO representing a booking")
 public class BookingDTO {
-	
-	private Long id;
-	
-	private AccommodationDTO accommodation;
-	
-	private String checkIn;
-	
-	private String checkOut;
-	
-	private Double price;
-	
-	private BookingStatus status;
-	
-	private Long reviewId;
+
+    @Schema(description = "Unique identifier of the booking", example = "101")
+    private Long id;
+
+    @Schema(description = "Accommodation related to the booking")
+    private AccommodationDTO accommodation;
+
+    @Schema(description = "Check-in date and time in ISO format", example = "2025-03-15T14:00:00")
+    private String checkIn;
+
+    @Schema(description = "Check-out date and time in ISO format", example = "2025-03-20T11:00:00")
+    private String checkOut;
+
+    @Schema(description = "Total price of the booking", example = "250.50")
+    private Double price;
+
+    @Schema(description = "Current status of the booking", example = "ACCEPTED")
+    private BookingStatus status;
+
+    @Schema(description = "Identifier of the review associated with this booking (if any)", example = "55")
+    private Long reviewId;
 	
 	public BookingDTO(Double price,BookingStatus status,LocalDateTime checkIn,LocalDateTime checkOut,
 			AccommodationDTO accommodation) {
