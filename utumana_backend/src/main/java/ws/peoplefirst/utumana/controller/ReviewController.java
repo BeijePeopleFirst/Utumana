@@ -199,7 +199,7 @@ public class ReviewController {
 	@Operation(summary = "Get review by booking ID", description = "Get the review associated with given booking ID.", tags = { "Reviews" })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Review returned successfully. If the booking with given id doesn't exist or it isn't associated with any reviews, it returns null.",
-                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = Review.class))))
+                    content = @Content(schema = @Schema(implementation = Review.class)))
     })
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping("/review_by_booking_id/{bookingId}")

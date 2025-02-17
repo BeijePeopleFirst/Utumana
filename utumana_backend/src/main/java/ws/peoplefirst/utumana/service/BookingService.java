@@ -92,22 +92,27 @@ public class BookingService {
 		}
 	}
 	
-	public Booking hostActionOnBooking(Long bookingId,BookingStatus newStatus) {
+	public Booking hostActionOnBooking(Long bookingId,BookingStatus newStatus, Long userId) {
 		Optional<Booking> optionalBooking=bookingRepository.findById(bookingId);
 		if(optionalBooking.isPresent()) {
 			Booking booking= optionalBooking.get();
 			booking.setTimestamp(LocalDateTime.now());
 			
 			if(booking.getStatus()==BookingStatus.DOING || booking.getStatus()==BookingStatus.DONE) {
-				log.error("current booking status is "+booking.getStatus()+" changing it is not allowed");
+				log.warn("current booking status is "+booking.getStatus()+" changing it is not allowed");
 				throw new ForbiddenException("you cannot change a doing or done booking");
+			}
+			
+			if(booking.getAccommodation().getOwnerId() != userId) {
+				log.warn("Cannot aprove or reject booking: your id is "+userId+" but the owner of the booking id is "+booking.getUser().getId());
+				throw new ForbiddenException("you are not the owner of this booking");
 			}
 			
 			booking.setStatus(newStatus);
 			try {				
 				bookingRepository.save(booking);
 			}catch(PersistenceException e) {
-				log.error("booking cannot be saved with id "+bookingId);
+				log.warn("booking cannot be saved with id "+bookingId);
 				throw new DBException("something wrong saving booking");
 			}
 			return booking;
