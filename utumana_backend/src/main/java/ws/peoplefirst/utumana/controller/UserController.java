@@ -8,7 +8,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -99,7 +101,7 @@ public class UserController {
     })
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping(value = "/user")
-	public User insertUser(@RequestBody User user){
+	public User insertUser(@Parameter(description = "the user to insert", schema = @Schema(implementation = User.class)) @RequestBody User user){
 		log.debug("POST /user");
 		log.debug("User to insert: " + user);		
 		
@@ -116,7 +118,12 @@ public class UserController {
     })
 	@PreAuthorize("permitAll()")
 	@PatchMapping(value = "/change_password")
-	public User modifyPassword(@RequestBody Map<String, Object> body) {
+	public User modifyPassword(@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "the map containing email and the new password", content = @Content( mediaType = "application/json",
+            schema = @Schema(implementation = Map.class),
+            examples = @ExampleObject(
+                name = "Example request",
+                value = "{ \"email\": \"john.doe@gmail.com\", \"password\": \"password123\" }"
+            ))) @RequestBody Map<String, Object> body) {
 		String email= ""+body.get("email");
 		
 		User user = userService.getUserByEmail(email);
@@ -149,7 +156,12 @@ public class UserController {
     })
 	@PreAuthorize("hasAuthority('USER')")
 	@PatchMapping(value = "/user")
-	public User modifyUser(@RequestBody Map<String, Object> body, Authentication auth) //@PathVariable Long id, 
+	public User modifyUser(@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "the map containing user's field to change", content = @Content( mediaType = "application/json",
+	schema = @Schema(implementation = Map.class),
+	examples = @ExampleObject(
+		name = "Example request",
+		value = "{ \"id\": \"1\", \"name\": \"Mario\", \"bio\": \"I like travelling\" }"
+	)))@RequestBody Map<String, Object> body, Authentication auth) 
 	{	
 		log.debug("PATCH /user");
 		
