@@ -1,8 +1,5 @@
 package ws.peoplefirst.utumana.repository;
 
-import java.time.LocalDate;
-import java.util.List;
-
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,12 +9,15 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
 import ws.peoplefirst.utumana.dto.AccommodationDTO;
 import ws.peoplefirst.utumana.model.Accommodation;
+import ws.peoplefirst.utumana.repository.dsl.QAccommodationRepository;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Repository
-public interface AccommodationRepository extends JpaRepository<Accommodation,Long>{
+public interface AccommodationRepository extends JpaRepository<Accommodation, Long>, QAccommodationRepository {
 	
 	@Query(value = "SELECT a FROM Accommodation AS a WHERE a.approvalTimestamp IS NOT NULL AND a.hidingTimestamp IS NULL ORDER BY a.approvalTimestamp DESC")
 	public List<Accommodation> getLatestUploads(Pageable pageable);
