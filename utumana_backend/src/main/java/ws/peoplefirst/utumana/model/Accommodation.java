@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -33,65 +34,83 @@ import ws.peoplefirst.utumana.utility.JsonFormatter;
 @Entity
 @Table(name = "accommodation")
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Schema(description = "Model representing an accommodation")
 public class Accommodation {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "id")
-	private Long id;
+	@Schema(description = "Unique identifier of the accommodation", example = "1")
+    private Long id;
 	
 	@JsonProperty(value = "owner_id")
 	@Column(name = "owner_id")
-	private Long ownerId;
+	@Schema(description = "ID of the owner of the accommodation", example = "123")
+    private Long ownerId;
 
 	@Column(name = "title")
-	private String title;
+	@Schema(description = "Title of the accommodation", example = "Cozy Apartment in the City")
+    private String title;
 	
 	@Column(name = "description")
+	@Schema(description = "Description of the accommodation", example = "A beautiful apartment located in the heart of the city.")
 	private String description;
 	
 	//@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	@JsonIgnore
 	@Column(name = "approval_timestamp")
-	private LocalDateTime approvalTimestamp;
+	@Schema(description = "Timestamp when the accommodation was approved", example = "2023-10-01T12:00:00")
+    private LocalDateTime approvalTimestamp;
 	
 	@JsonIgnore
 	@Column(name = "hiding_timestamp")
-	private LocalDateTime hidingTimestamp;
+	@Schema(description = "Timestamp when the accommodation was hidden", example = "2023-10-01T12:00:00")
+    private LocalDateTime hidingTimestamp;
 	
 	@Column(name = "beds")
-	private Integer beds;
+	@Schema(description = "Number of beds in the accommodation", example = "2")
+    private Integer beds;
 	
 	@Column(name = "rooms")
-	private Integer rooms;
+	@Schema(description = "Number of rooms in the accommodation", example = "3")
+    private Integer rooms;
 	
 	@Column(name = "street")
+	@Schema(description = "Street name of the accommodation's address", example = "Main Street")
 	private String street;
 	
 	@JsonProperty(value = "street_number")
 	@Column(name = "street_number")
+	@Schema(description = "Street number of the accommodation's address", example = "123")
 	private String streetNumber;
 	
 	@JsonProperty(value = "address_notes")
 	@Column(name = "address_notes")
-	private String addressNotes;
+	@Schema(description = "Additional notes for the address", example = "Near the central park")
+    private String addressNotes;
 	
 	@Column(name = "city")
+	@Schema(description = "City of the accommodation", example = "New York")
 	private String city;
 	
 	@Column(name = "cap")
-	private String cap;
+	@Schema(description = "Postal code of the accommodation", example = "10001")
+    private String cap;
 	
 	@Column(name = "province")
-	private String province;
+	@Schema(description = "Province of the accommodation", example = "NY")
+    private String province;
 	
 	@Column(name = "country")
-	private String country;
+	@Schema(description = "Country of the accommodation", example = "USA")
+    private String country;
 	
 	@Column(name = "coordinates")
+	@Schema(description = "Geographical coordinates of the accommodation", example = "40.7128,-74.0060")
 	private String coordinates;
 	
 	@JsonProperty(value = "main_photo_url")
 	@Column(name = "main_photo_url")
+	@Schema(description = "URL of the main photo of the accommodation", example = "https://example.com/photo.jpg")
 	private String mainPhotoUrl;
 	
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -99,20 +118,24 @@ public class Accommodation {
 	@JoinTable(name = "service_availability", joinColumns = {
             @JoinColumn(name = "accommodation_id", referencedColumnName = "id", insertable = true, nullable = false, updatable = true) }, inverseJoinColumns = {
                     @JoinColumn(name = "service_id", referencedColumnName = "id", insertable = true, nullable = false, updatable = true) })
+	@Schema(description = "Set of services available in the accommodation")
 	private Set<Service> services;
 	
 	@OneToMany(mappedBy = "accommodation", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@OrderColumn(name = "order")
+	@Schema(description = "List of photos of the accommodation")
 	private List<Photo> photos;
 
 
 	@OneToMany(mappedBy = "accommodation", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@OrderBy("startDate")
-	private List<Availability> availabilities;
+	@Schema(description = "List of availabilities of the accommodation")
+    private List<Availability> availabilities;
 	
 	@OneToOne(mappedBy = "accommodation", fetch = FetchType.LAZY)
 	@PrimaryKeyJoinColumn
-	private AccommodationRating rating;
+	@Schema(description = "Rating of the accommodation")
+    private AccommodationRating rating;
 	
 
 
