@@ -10,13 +10,14 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.security.core.Authentication;
 import ws.peoplefirst.utumana.dto.AccommodationDTO;
 import ws.peoplefirst.utumana.dto.PriceDTO;
-import ws.peoplefirst.utumana.dto.UnavailabilityDTO;
 import ws.peoplefirst.utumana.dto.UserDTO;
 import ws.peoplefirst.utumana.exception.ForbiddenException;
 import ws.peoplefirst.utumana.exception.IdNotFoundException;
 import ws.peoplefirst.utumana.exception.InvalidJSONException;
 import ws.peoplefirst.utumana.exception.TheJBeansException;
-import ws.peoplefirst.utumana.model.*;
+import ws.peoplefirst.utumana.model.Accommodation;
+import ws.peoplefirst.utumana.model.Review;
+import ws.peoplefirst.utumana.model.User;
 import ws.peoplefirst.utumana.repository.BookingRepository;
 import ws.peoplefirst.utumana.service.AccommodationService;
 import ws.peoplefirst.utumana.service.AvailabilityService;
@@ -72,6 +73,10 @@ public class AccommodationControllerTest {
         }
     }
 
+    private UserDTO getUnautorizedUser() {
+        return new UserDTO(1L, "", "", "");
+    }
+
     private <T> Page<T> getPage(List<T> pageValues) {
         return new PageImpl<T>(pageValues);
     }
@@ -95,13 +100,13 @@ public class AccommodationControllerTest {
 
     @Test
     void getSingleAccommodationAPI() {
-        when(accommodationService.findById(anyLong())).thenReturn(getInstance(Accommodation.class));
+        when(accommodationService.findByIdAndHidingTimestampIsNull(anyLong())).thenReturn(getInstance(Accommodation.class));
         assertDoesNotThrow(() -> accommodationController.getSingleAccommodationAPI(0L, authentication));
     }
 
     @Test
     void getSingleAccommodationAPIKo() {
-        when(accommodationService.findById(anyLong())).thenReturn(null);
+        when(accommodationService.findByIdAndHidingTimestampIsNull(anyLong())).thenReturn(null);
         assertThrows(IdNotFoundException.class, () -> accommodationController.getSingleAccommodationAPI(0L, authentication));
     }
 
@@ -112,15 +117,34 @@ public class AccommodationControllerTest {
 
     @Test
     void getAccommodationServices() {
-        when(accommodationService.findById(anyLong())).thenReturn(getInstance(Accommodation.class));
-        when(accommodationService.getAccommodationServices(anyLong())).thenReturn(Set.of(getInstance(Service.class)));
+        Accommodation mockAccomodation = getInstance(Accommodation.class);
+        mockAccomodation.setOwnerId(0L);
+        when(accommodationService.findById(anyLong())).thenReturn(mockAccomodation);
+        when(authentication.getPrincipal()).thenReturn(userDTO);
+        when(accommodationService.getAccommodationServices(anyLong())).thenReturn(Set.of());
         assertDoesNotThrow(() -> accommodationController.getAccommodationServices(0L, authentication));
     }
 
     @Test
-    void getAccommodationServicesKo() {
+    void getAccommodationServicesKoAccomodationNull() {
         when(accommodationService.findById(anyLong())).thenReturn(null);
         assertThrows(IdNotFoundException.class, () -> accommodationController.getAccommodationServices(0L, authentication));
+    }
+
+    @Test
+    void getAccommodationServicesKoTimestampsNotNull() {
+        Accommodation mockAccomodation = getInstance(Accommodation.class);
+        mockAccomodation.setApprovalTimestamp(LocalDateTime.now());
+        mockAccomodation.setHidingTimestamp(LocalDateTime.now());
+        when(accommodationService.findById(anyLong())).thenReturn(mockAccomodation);
+        assertThrows(IdNotFoundException.class, () -> accommodationController.getAccommodationServices(0L, authentication));
+    }
+
+    @Test
+    void getAccommodationServicesKoAuth() {
+        when(accommodationService.findById(anyLong())).thenReturn(getInstance(Accommodation.class));
+        when(authentication.getPrincipal()).thenReturn(getUnautorizedUser());
+        assertThrows(ForbiddenException.class, () -> accommodationController.getAccommodationServices(0L, authentication));
     }
 
     /**
@@ -130,15 +154,34 @@ public class AccommodationControllerTest {
 
     @Test
     void getAccommodationAvailabilities() {
-        when(accommodationService.findById(anyLong())).thenReturn(getInstance(Accommodation.class));
-        when(availabilityService.findByAccommodationId(anyLong())).thenReturn(List.of(getInstance(Availability.class)));
+        Accommodation mockAccomodation = getInstance(Accommodation.class);
+        mockAccomodation.setOwnerId(0L);
+        when(accommodationService.findById(anyLong())).thenReturn(mockAccomodation);
+        when(authentication.getPrincipal()).thenReturn(userDTO);
+        when(availabilityService.findByAccommodationId(anyLong())).thenReturn(List.of());
         assertDoesNotThrow(() -> accommodationController.getAccommodationAvailabilities(0L, authentication));
     }
 
     @Test
-    void getAccommodationAvailabilitiesKo() {
+    void getAccommodationAvailabilitiesKoAccomodationNull() {
         when(accommodationService.findById(anyLong())).thenReturn(null);
         assertThrows(IdNotFoundException.class, () -> accommodationController.getAccommodationAvailabilities(0L, authentication));
+    }
+
+    @Test
+    void getAccommodationAvailabilitiesKoTimstamsNotNull() {
+        Accommodation mockAccomodation = getInstance(Accommodation.class);
+        mockAccomodation.setApprovalTimestamp(LocalDateTime.now());
+        mockAccomodation.setHidingTimestamp(LocalDateTime.now());
+        when(accommodationService.findById(anyLong())).thenReturn(mockAccomodation);
+        assertThrows(IdNotFoundException.class, () -> accommodationController.getAccommodationAvailabilities(0L, authentication));
+    }
+
+    @Test
+    void getAccommodationAvailabilitiesKoAuth() {
+        when(accommodationService.findById(anyLong())).thenReturn(getInstance(Accommodation.class));
+        when(authentication.getPrincipal()).thenReturn(getUnautorizedUser());
+        assertThrows(ForbiddenException.class, () -> accommodationController.getAccommodationAvailabilities(0L, authentication));
     }
 
     /**
@@ -148,15 +191,34 @@ public class AccommodationControllerTest {
 
     @Test
     void getAccommodationUnavailabilitiesDTO() {
-        when(accommodationService.findById(anyLong())).thenReturn(getInstance(Accommodation.class));
-        when(bookingService.findUnavailabilitiesDTO(anyLong())).thenReturn(List.of(getInstance(UnavailabilityDTO.class)));
+        Accommodation mockAccomodation = getInstance(Accommodation.class);
+        mockAccomodation.setOwnerId(0L);
+        when(accommodationService.findById(anyLong())).thenReturn(mockAccomodation);
+        when(authentication.getPrincipal()).thenReturn(userDTO);
+        when(bookingService.findUnavailabilitiesDTO(anyLong())).thenReturn(List.of());
         assertDoesNotThrow(() -> accommodationController.getAccommodationUnavailabilitiesDTO(0L, authentication));
     }
 
     @Test
-    void getAccommodationUnavailabilitiesDTOKo() {
+    void getAccommodationUnavailabilitiesDTOKoAccomodationNull() {
         when(accommodationService.findById(anyLong())).thenReturn(null);
         assertThrows(IdNotFoundException.class, () -> accommodationController.getAccommodationUnavailabilitiesDTO(0L, authentication));
+    }
+
+    @Test
+    void getAccommodationUnavailabilitiesDTOKoTimstamsNotNull() {
+        Accommodation mockAccomodation = getInstance(Accommodation.class);
+        mockAccomodation.setApprovalTimestamp(LocalDateTime.now());
+        mockAccomodation.setHidingTimestamp(LocalDateTime.now());
+        when(accommodationService.findById(anyLong())).thenReturn(mockAccomodation);
+        assertThrows(IdNotFoundException.class, () -> accommodationController.getAccommodationUnavailabilitiesDTO(0L, authentication));
+    }
+
+    @Test
+    void getAccommodationUnavailabilitiesDTOKoAuth() {
+        when(accommodationService.findById(anyLong())).thenReturn(getInstance(Accommodation.class));
+        when(authentication.getPrincipal()).thenReturn(getUnautorizedUser());
+        assertThrows(ForbiddenException.class, () -> accommodationController.getAccommodationUnavailabilitiesDTO(0L, authentication));
     }
 
     /**
@@ -306,7 +368,7 @@ public class AccommodationControllerTest {
         Accommodation mockAccomodation = getInstance(Accommodation.class);
         mockAccomodation.setOwnerId(0L);
         mockAccomodation.setId(0L);
-        when(authentication.getPrincipal()).thenReturn(null);
+        when(authentication.getPrincipal()).thenReturn(getUnautorizedUser());
         assertThrows(ForbiddenException.class, () -> accommodationController.setAccommodationInfo(mockAccomodation, 0L, authentication));
     }
 
@@ -316,32 +378,26 @@ public class AccommodationControllerTest {
      */
 
     @Test
-    void deleteAccommodationAPINoBookings() {
-        when(accommodationService.findById(anyLong())).thenReturn(getInstance(Accommodation.class));
-        when(accommodationService.hasNoBookings(any())).thenReturn(true);
-        assertDoesNotThrow(() -> accommodationController.deleteAccommodationAPI(0L, authentication));
-    }
-
-    @Test
     void deleteAccommodationAPIBookings() {
         Accommodation mockAccomodation = getInstance(Accommodation.class);
         mockAccomodation.setOwnerId(0L);
-        when(accommodationService.findById(anyLong())).thenReturn(mockAccomodation);
-        when(accommodationService.hasNoBookings(any())).thenReturn(false);
+        when(accommodationService.findByIdAndHidingTimestampIsNull(anyLong())).thenReturn(mockAccomodation);
         when(authentication.getPrincipal()).thenReturn(userDTO);
         assertDoesNotThrow(() -> accommodationController.deleteAccommodationAPI(0L, authentication));
     }
 
     @Test
     void deleteAccommodationAPIKoNotFound() {
-        when(accommodationService.findById(anyLong())).thenReturn(null);
+        when(accommodationService.findByIdAndHidingTimestampIsNull(anyLong())).thenReturn(null);
         assertThrows(IdNotFoundException.class, () -> accommodationController.deleteAccommodationAPI(0L, authentication));
     }
 
     @Test
     void deleteAccommodationAPIKoAuth() {
-        when(accommodationService.findById(anyLong())).thenReturn(getInstance(Accommodation.class));
-        when(authentication.getPrincipal()).thenReturn(null);
+        Accommodation mockAccomodation = getInstance(Accommodation.class);
+        mockAccomodation.setOwnerId(0L);
+        when(accommodationService.findByIdAndHidingTimestampIsNull(anyLong())).thenReturn(mockAccomodation);
+        when(authentication.getPrincipal()).thenReturn(getUnautorizedUser());
         assertThrows(ForbiddenException.class, () -> accommodationController.deleteAccommodationAPI(0L, authentication));
     }
 
@@ -409,13 +465,13 @@ public class AccommodationControllerTest {
     void addFavourite() {
         when(authentication.getPrincipal()).thenReturn(userDTO);
         doNothing().when(accommodationService).addFavourite(anyLong(), anyLong());
-        when(accommodationService.findById(anyLong())).thenReturn(getInstance(Accommodation.class));
+        when(accommodationService.findByIdAndHidingTimestampIsNull(anyLong())).thenReturn(getInstance(Accommodation.class));
         assertDoesNotThrow(() -> accommodationController.addFavourite(0L, 0L, authentication));
     }
 
     @Test
     void addFavouriteKoAuth() {
-        when(authentication.getPrincipal()).thenReturn(null);
+        when(authentication.getPrincipal()).thenReturn(getUnautorizedUser());
         assertThrows(ForbiddenException.class, () -> accommodationController.addFavourite(0L, 0L, authentication));
     }
 
@@ -428,13 +484,13 @@ public class AccommodationControllerTest {
     void removeFavourite() {
         when(authentication.getPrincipal()).thenReturn(userDTO);
         doNothing().when(accommodationService).removeFavourite(anyLong(), anyLong());
-        when(accommodationService.findById(anyLong())).thenReturn(getInstance(Accommodation.class));
+        when(accommodationService.findByIdAndHidingTimestampIsNull(anyLong())).thenReturn(getInstance(Accommodation.class));
         assertDoesNotThrow(() -> accommodationController.removeFavourite(0L, 0L, authentication));
     }
 
     @Test
     void removeFavouriteKoAuth() {
-        when(authentication.getPrincipal()).thenReturn(null);
+        when(authentication.getPrincipal()).thenReturn(getUnautorizedUser());
         assertThrows(ForbiddenException.class, () -> accommodationController.removeFavourite(0L, 0L, authentication));
     }
 
@@ -452,7 +508,7 @@ public class AccommodationControllerTest {
 
     @Test
     void showFavouritesKoAuth() {
-        when(authentication.getPrincipal()).thenReturn(null);
+        when(authentication.getPrincipal()).thenReturn(getUnautorizedUser());
         assertThrows(ForbiddenException.class, () -> accommodationController.showFavourites(0L, authentication));
     }
 
@@ -493,7 +549,7 @@ public class AccommodationControllerTest {
 
     @Test
     void getMyAccommodationsDTOKoAuth() {
-        when(authentication.getPrincipal()).thenReturn(null);
+        when(authentication.getPrincipal()).thenReturn(getUnautorizedUser());
         assertThrows(ForbiddenException.class, () -> accommodationController.getMyAccommodationsDTO(0L, authentication));
     }
 
@@ -658,13 +714,6 @@ public class AccommodationControllerTest {
     @Test
     void approveHouse() {
         when(accommodationService.approveAccommodation(anyLong())).thenReturn(getInstance(Accommodation.class));
-        when(accommodationService.findById(anyLong())).thenReturn(getInstance(Accommodation.class));
         assertDoesNotThrow(() -> accommodationController.approveHouse(0L));
-    }
-
-    @Test
-    void approveHouseKoIdNotFound() {
-        when(accommodationService.approveAccommodation(anyLong())).thenReturn(getInstance(Accommodation.class));
-        assertThrows(IdNotFoundException.class, () -> accommodationController.approveHouse(0L));
     }
 }
