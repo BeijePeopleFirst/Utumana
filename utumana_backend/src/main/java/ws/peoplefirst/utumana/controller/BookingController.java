@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.annotations.Array;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import ws.peoplefirst.utumana.dto.BookingDTO;
 import ws.peoplefirst.utumana.dto.UserDTO;
 import ws.peoplefirst.utumana.exception.DBException;
@@ -37,6 +46,7 @@ import ws.peoplefirst.utumana.utility.JsonFormatter;
 
 @RestController
 @RequestMapping(value="/api")
+@Tag(name = "Bookings", description = "Endpoints for bookings operations")
 public class BookingController {
 	
 	private Logger log = LoggerFactory.getLogger(this.getClass());
@@ -47,9 +57,17 @@ public class BookingController {
 	@Autowired
 	private AvailabilityService availabilityService;
 	
+	@Operation(summary = "Get bookings made by the current user as guest", description = "Get all bookings where the guest is the current user. Returns a list of Booking DTOs. If the parameter status is present, filters the list to return only the bookings with the given status.", tags = { "Bookings" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Booking DTO's list returned successfully, ordered by check-in timestamp.",
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = BookingDTO.class)))),
+            @ApiResponse(responseCode = "400", description = "Logged user's info not found", content = @Content),
+            @ApiResponse(responseCode = "404", description = "User does not exist.", content = @Content)
+    })
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value="/myBookingGuest")
 	public List<BookingDTO> openBookingGuest(Authentication auth,
+			@Parameter(description = "status of the bookings to return", example = "'PENDING'") 
 			@RequestParam(name = "status", required = false) BookingStatus status){
 		
 		log.debug("GET /myBookingGuest");
@@ -61,6 +79,13 @@ public class BookingController {
 		return allBookings;
 	}
 	
+	@Operation(summary = "Get bookings received by the current user as the host", description = "Get all bookings where the host and owner of the associated accommodation is the current user. Returns a list of Booking DTOs.", tags = { "Bookings" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Booking DTO's list returned successfully, ordered by check-in timestamp.",
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = BookingDTO.class)))),
+            @ApiResponse(responseCode = "400", description = "Logged user's info not found", content = @Content),
+            @ApiResponse(responseCode = "404", description = "User does not exist.", content = @Content)
+    })
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value="/myBookingHost")
 	public List<BookingDTO> openBookingHost(Authentication auth){
@@ -73,32 +98,64 @@ public class BookingController {
 		Collections.sort(allBookings, Comparator.comparing(BookingDTO::getCheckIn));
 		return allBookings;
 	}
-	
+
+	@Operation(summary = "Approve a booking", description = "Approve a booking you received as the host and owner of the associated accommodation. Returns the booking updated with the 'ACCEPTED' status and the approval timestamp.", tags = { "Bookings" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Booking approved successfully. Returns the booking updated with the 'ACCEPTED' status and the approval timestamp.",
+                    content = @Content(schema = @Schema(implementation = Booking.class))),
+            @ApiResponse(responseCode = "400", description = "Logged user's info not found", content = @Content),
+            @ApiResponse(responseCode = "403", description = "You cannot approve this booking. The booking is already ongoing or done (status is 'DOING' or 'DONE'), or you are not the host and owner of the accommodation associated with this booking.", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Booking with given ID does not exist.", content = @Content),
+            @ApiResponse(responseCode = "503", description = "The booking could not be saved in the database due to an unexpected error", content = @Content)
+    })
 	@PreAuthorize("hasAuthority('USER')")
 	@PatchMapping(value="/manage_booking/{booking_id}/approve")
 	public Booking manageBookingAppove(Authentication auth,
+			@Parameter(description = "ID of the booking to approve", example = "1") 
 			@PathVariable(name="booking_id")Long bookingId){
 		
 		log.debug("PATCH /manage_booking/{booking_id}/approve");
 		
-		Booking savedBooking=bookingService.hostActionOnBooking(bookingId,BookingStatus.ACCEPTED);
+		UserDTO userDTO = AuthorizationUtility.getUserFromAuthentication(auth);
+		Booking savedBooking=bookingService.hostActionOnBooking(bookingId,BookingStatus.ACCEPTED, userDTO.getId());
 		return savedBooking;
 	}
 	
+	@Operation(summary = "Reject a booking", description = "Reject a booking you received as the host and owner of the associated accommodation. Returns the booking updated with the 'REJECTED' status.", tags = { "Bookings" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Booking rejected successfully. Returns the booking updated with the 'REJECTED' status.",
+                    content = @Content(schema = @Schema(implementation = Booking.class))),
+            @ApiResponse(responseCode = "400", description = "Logged user's info not found", content = @Content),
+            @ApiResponse(responseCode = "403", description = "You cannot reject this booking. The booking is already ongoing or done (status is 'DOING' or 'DONE'), or you are not the host and owner of the accommodation associated with this booking.", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Booking with given ID does not exist.", content = @Content),
+            @ApiResponse(responseCode = "503", description = "The booking could not be saved in the database due to an unexpected error", content = @Content)
+    })
 	@PreAuthorize("hasAuthority('USER')")
 	@PatchMapping(value="/manage_booking/{booking_id}/reject")
 	public Booking manageBookingReject(Authentication auth,
+			@Parameter(description = "ID of the booking to reject", example = "1") 
 			@PathVariable(name="booking_id")Long bookingId){
 		
 		log.debug("PATCH /manage_booking/{booking_id}/reject");
 	
-		Booking savedBooking=bookingService.hostActionOnBooking(bookingId,BookingStatus.REJECTED);
+		UserDTO userDTO = AuthorizationUtility.getUserFromAuthentication(auth);
+		Booking savedBooking=bookingService.hostActionOnBooking(bookingId, BookingStatus.REJECTED, userDTO.getId());
 		return savedBooking;
 	}
 	
+	@Operation(summary = "Delete a booking", description = "Reject a booking you received as the host and owner of the associated accommodation. Returns the booking updated with the 'REJECTED' status.", tags = { "Bookings" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Booking deleted successfully. Returns the booking DTO.",
+                    content = @Content(schema = @Schema(implementation = BookingDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Logged user's info not found", content = @Content),
+            @ApiResponse(responseCode = "403", description = "You cannot delete this booking. The booking is already ongoing or done (status is 'DOING' or 'DONE'), or you are not the host and owner of the accommodation associated with this booking.", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Booking with given ID does not exist.", content = @Content),
+            @ApiResponse(responseCode = "503", description = "The booking could not be deleted from the database due to an unexpected error", content = @Content)
+    })
 	@PreAuthorize("hasAuthority('USER')")
 	@DeleteMapping(value = "/delete_booking/{booking_id}")
 	public BookingDTO deleteBooking(Authentication auth,
+			@Parameter(description = "ID of the booking to delete", example = "1") 
 			@PathVariable(name="booking_id") Long bookingId) {
 		
 		log.debug("DELETE /delete_booking/{booking_id}");

@@ -19,7 +19,7 @@ import ws.peoplefirst.utumana.utility.Constants;
 
 @Entity
 @Table(name = "review")
-@Schema(description = "Model to represent a review. A review is in a one on one relationship with a booking.")
+@Schema(description = "Model to represent a review. A review is in a one to one relationship with a booking.")
 public class Review {
 	
 	@Id

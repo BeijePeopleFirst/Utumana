@@ -3,31 +3,37 @@ package ws.peoplefirst.utumana.dto;
 import java.time.LocalDateTime;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.Min;
 import ws.peoplefirst.utumana.utility.BookingStatus;
 import ws.peoplefirst.utumana.utility.JsonFormatter;
-@Schema(description = "DTO representing a booking")
+
+@Schema(description = "DTO representing a booking. A booking is in a many to one relationship with an accommodation, in a many to one relationship with a user (the booking's guest), and in a one to one relationship with a review (that may be null).")
 public class BookingDTO {
-
-    @Schema(description = "Unique identifier of the booking", example = "101")
-    private Long id;
-
-    @Schema(description = "Accommodation related to the booking")
-    private AccommodationDTO accommodation;
-
-    @Schema(description = "Check-in date and time in ISO format", example = "2025-03-15T14:00:00")
-    private String checkIn;
-
-    @Schema(description = "Check-out date and time in ISO format", example = "2025-03-20T11:00:00")
-    private String checkOut;
-
-    @Schema(description = "Total price of the booking", example = "250.50")
-    private Double price;
-
-    @Schema(description = "Current status of the booking", example = "ACCEPTED")
-    private BookingStatus status;
-
-    @Schema(description = "Identifier of the review associated with this booking (if any)", example = "55")
-    private Long reviewId;
+	@Schema(description = "booking's unique ID", example = "1")
+	@Min(value = 1)
+	private Long id;
+	
+	@Schema(description = "DTO of the booked accommodation")
+	private AccommodationDTO accommodation;
+	
+	@Schema(description = "check-in's date and time in ISO format", example = "2024-11-18T14:00:00")
+	private String checkIn;
+	
+	@Schema(description = "check-out's date and time in ISO format", example = "2024-11-25T10:00:00")
+	private String checkOut;
+	
+	@Schema(description = "total price of the booking. Must be a decimal greater or equal to 0.0", example = "10.00")
+	@Nullable
+	private Double price;
+	
+	@Schema(description = "booking's current status. Can be 'PENDING', 'ACCEPTED', 'REJECTED', 'DOING' or 'DONE'.", example = "ACCEPTED")
+	private BookingStatus status;
+	
+	@Schema(description = "id of the review associated with this booking. A review may only be written when the booking's status is 'DONE'.", example = "1")
+	@Nullable
+	private Long reviewId;
+	
 	
 	public BookingDTO(Double price,BookingStatus status,LocalDateTime checkIn,LocalDateTime checkOut,
 			AccommodationDTO accommodation) {
@@ -49,6 +55,15 @@ public class BookingDTO {
 		this.reviewId = reviewId;
 	}
 	
+	
+	public Long getId() {
+		return id;
+	}
+	
+	public AccommodationDTO getAccommodation() {
+		return accommodation;
+	}
+	
 	public String getCheckIn() {
 		return checkIn;
 	}
@@ -64,19 +79,11 @@ public class BookingDTO {
 	public BookingStatus getStatus() {
 		return status;
 	}
-
-
-	public Long getId() {
-		return id;
-	}
 	
 	public Long getReviewId() {
 		return reviewId;
 	}
 	
-	public AccommodationDTO getAccommodation() {
-		return accommodation;
-	}
 
 	@Override
 	public String toString() {

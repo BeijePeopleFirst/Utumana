@@ -7,27 +7,33 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.Min;
 import ws.peoplefirst.utumana.utility.Constants;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Schema(description = "DTO representing a review for an accommodation or service")
+@Schema(description = "DTO representing a review. Used to get a preview of a review.")
 public class ReviewDTO {
-
-	@Schema(description = "Unique identifier of the review", example = "456")
+	@Schema(description = "review's unique ID", example = "1")
+	@Min(value = 1)
 	private final Long id;
 	
-	@Schema(description = "Title of the review", example = "Great stay!")
-    private final String title;
+	@Schema(description = "review's title", example = "Wonderful house in the city")
+	@Nullable
+	private final String title;
 	
-	@Schema(description = "Detailed description of the review", example = "The place was clean and the host was very kind.")
-    private final String description;
+	@Schema(description = "review's description", example = "The house was cozy and the owner Mario made us feel at home since the beginning. Close to the subway in the city center.")
+	@Nullable
+	private final String description;
 	
-	@Schema(description = "Overall rating score given in the review", example = "4.5")
-    private final Double overallRating;
+	@Schema(description = "review's overall rating. Must be a decimal between 0.0 and 5.0", example = "4.33")
+	@Nullable
+	private final Double overallRating;
 	
 	@JsonProperty(value = "approval_timestamp")
-	@Schema(description = "Timestamp when the review was approved, formatted as YYYY-MM-DD HH:mm:ss", example = "2025-06-15 14:30:00")
-    private final LocalDateTime approvalTimestamp;
+	@Schema(description = "timestamp of the review's approval, formatted as YYYY-MM-DD HH:mm:ss", example = "2024-11-06T15:39:45")
+	@Nullable
+	private final LocalDateTime approvalTimestamp;
 	
 
 	public ReviewDTO(Long id, String title, String description, Double overallRating, LocalDateTime approvalTimestamp) {
