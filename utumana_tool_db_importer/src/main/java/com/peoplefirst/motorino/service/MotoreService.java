@@ -114,9 +114,9 @@ public class MotoreService {
             else userDestinazioneEntityList.remove(userPresente);   //SE PRESENTE --> REMOVE DALLA LISTA
         }
 
-        if (!userDestinazioneEntityList.isEmpty()) {
+        if (!userDestinazioneEntityList.isEmpty()) {    //CHECK CHE NON CI SIANO PIU' UTENTI IN DESTINAZIONE
             for (UserDestinazioneEntity userDestinazione : userDestinazioneEntityList) {
-                userDestinazioneRepository.delete(userDestinazione);
+                userDestinazioneRepository.delete(userDestinazione);    //SE PRESENTI --> RIMUOVERLI A DB
             }
         }
 
