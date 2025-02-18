@@ -229,7 +229,7 @@ public class BookingService {
 		}
 	}
 	
-	public Booking deleteUnAvailabilities(Long userId,Long bookingId) {
+	public UnavailabilityDTO deleteUnAvailability(Long userId,Long bookingId) {
 		Optional<Booking> optionalBooking=bookingRepository.findById(bookingId);
 		
 		if(optionalBooking.isPresent()) {
@@ -237,16 +237,16 @@ public class BookingService {
 			
 			if(!booking.getIsUnavailability()) {
 				log.error("deleteUnAvailabilities unavailability with id "+bookingId+" is a normal booking and not an unavailability");
-				throw new ForbiddenException("cannot delete a not unavailaiblity");
+				throw new ForbiddenException("cannot delete a non unavailaiblity");
 			}
 
 			if(booking.getUser().getId()!=userId) {
 				log.warn("deleteUnAvailabilities unavailability with id "+bookingId+" belongs to "+booking.getUser().getId()+" your id is "+userId);
-				throw new ForbiddenException("cannot delete another user unavailability");
+				throw new ForbiddenException("cannot delete another user's unavailability");
 			}
 			
 			bookingRepository.delete(booking);
-			return booking;
+			return new UnavailabilityDTO(booking.getId(), booking.getCheckIn(), booking.getCheckOut());
 		}else {
 			log.error("deleteUnAvailabilities unavailability with id "+bookingId+" not found");
 			throw new IdNotFoundException("unavailability not found");
@@ -254,13 +254,14 @@ public class BookingService {
 
 	}
 
-	public Booking addUnAvailabilities(Long userId,Availability unavailability) {System.out.println("AGGIUNGO UNAVAILABLITY \n\n\n\n");
+	public UnavailabilityDTO addUnAvailability(Long userId,Availability unavailability) {
+		System.out.println("AGGIUNGO UNAVAILABLITY \n\n");
 		
 		Booking selfBooking=new Booking();
 		
 		if(unavailability==null) {
 			log.error("addUnAvailabilities the unavailability arrived null");
-			throw new InvalidJSONException("wrong unavailability format");
+			throw new InvalidJSONException("Unavailability is null");
 		}
 		
 		if(unavailability.getStartDate()==null || unavailability.getEndDate()==null) {
@@ -276,7 +277,7 @@ public class BookingService {
 		
 		if(!unavailability.getStartDate().isBefore(unavailability.getEndDate())) {
 			log.warn("addUnAvailabilities start date "+unavailability.getStartDate()+" is after "+ unavailability.getEndDate());
-			throw new ForbiddenException("cannot set an end date previous than the star date");
+			throw new ForbiddenException("cannot set an end date previous than the start date");
 		}
 		selfBooking.setCheckIn(LocalDateTime.of(unavailability.getStartDate(), LocalTime.of(14, 0)));
 		selfBooking.setCheckOut(LocalDateTime.of(unavailability.getEndDate(), LocalTime.of(10, 0)));
@@ -324,7 +325,7 @@ public class BookingService {
 			log.warn("cannot dave current unavailailability");
 			throw new DBException("cannot dave current unavailailability");
 		}
-		return selfBooking;
+		return new UnavailabilityDTO(selfBooking.getId(),selfBooking.getCheckIn(),selfBooking.getCheckOut());
 	}
 
 	private static boolean checkIfDatesAreOverlapping(LocalDate startDate, LocalDate endDate, LocalDate checkIn,
@@ -345,7 +346,11 @@ public class BookingService {
 	}
 
 	public Booking findByIdIfDONE(Long id) {
-		return bookingRepository.findByIdAndStatus(id, BookingStatus.DONE);
+		Booking booking = bookingRepository.findByIdAndStatus(id, BookingStatus.DONE);
+		if(booking == null) {
+			throw new IdNotFoundException("booking not found");
+		}
+		return booking;
 	}
 
 	public void save(Booking b) {
