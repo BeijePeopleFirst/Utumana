@@ -509,7 +509,7 @@ public class AccommodationController {
 			@RequestParam(name = "free_only", required = false, defaultValue = "false") boolean freeOnly,
 			@RequestParam(name = "services", required = false) List<Long> serviceIds,
 			@RequestParam(name = "order_by", required = false, defaultValue = "id") String orderBy,
-			@RequestParam(name = "oder_direction", required = false, defaultValue = "desc") String oderDirection,
+			@RequestParam(name = "order_direction", required = false, defaultValue = "desc") String oderDirection,
 			Authentication auth) {
 		logger.debug("GET /search");
 
