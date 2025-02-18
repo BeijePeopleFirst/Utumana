@@ -1,57 +1,48 @@
 package ws.peoplefirst.utumana.model;
 
-import org.hibernate.annotations.Immutable;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapsId;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import org.hibernate.annotations.Immutable;
 
 @Entity
 @Immutable
 @Table(name = "accommodation_rating_view")
 public class AccommodationRating {
-	@Id
-	@Column(name = "accommodation_id")
-	private Long accommodationId;
-	
-	@Column
-	private Double rating;
-	
-	@OneToOne(fetch = FetchType.LAZY)
-	@MapsId
-	@JoinColumn(name = "accommodation_id")
-	@JsonIgnore
-	private Accommodation accommodation;
-	
+    @Id
+    @Column(name = "accommodation_id")
+    private Long accommodationId;
 
-	public Long getAccommodationId() {
-		return accommodationId;
-	}
+    @Column
+    private Double rating;
 
-	public void setAccommodationId(Long accommodationId) {
-		this.accommodationId = accommodationId;
-	}
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
+    @JoinColumn(name = "accommodation_id")
+    @JsonIgnore
+    private Accommodation accommodation;
 
-	public Double getRating() {
-		return rating;
-	}
 
-	public void setRating(Double rating) {
-		this.rating = rating;
-	}
+    public Long getAccommodationId() {
+        return accommodationId;
+    }
 
-	public Accommodation getAccommodation() {
-		return accommodation;
-	}
+    public void setAccommodationId(Long accommodationId) {
+        this.accommodationId = accommodationId;
+    }
 
-	public void setAccommodation(Accommodation accommodation) {
-		this.accommodation = accommodation;
-	}
+    public Double getRating() {
+        return rating;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
+    }
+
+    public Accommodation getAccommodation() {
+        return accommodation;
+    }
+
+    public void setAccommodation(Accommodation accommodation) {
+        this.accommodation = accommodation;
+    }
 }
