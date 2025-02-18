@@ -26,8 +26,8 @@ export class SearchPageComponent implements OnInit {
   
   services$ = this.filterService.services$;
   searchParams$ = this.searchService.searchData$;
-  currentOrderBySelected$ = new BehaviorSubject<string>('');
-  translatedOrderText$: Observable<string>;
+  //currentOrderBySelected$ = new BehaviorSubject<string>('');
+  //translatedOrderText$: Observable<string>;
 
   showFilters: boolean = false;
   isOrderByOpen: boolean = false;
@@ -40,9 +40,9 @@ export class SearchPageComponent implements OnInit {
     private searchService: SearchService,
     private translate: TranslateService
   ) {
-    this.translatedOrderText$ = this.currentOrderBySelected$.pipe(
+/*     this.translatedOrderText$ = this.currentOrderBySelected$.pipe(
       switchMap(order => this.translate.get(`search.${order}`))
-    );
+    ); */
   }
 
   ngOnInit() {
@@ -53,7 +53,7 @@ export class SearchPageComponent implements OnInit {
     
     this.route.queryParams.subscribe(queryParams => {
       const searchParams: params = {
-        destination: queryParams['destination'] || '',
+/*         destination: queryParams['destination'] || '',
         ['check-in']: queryParams['check-in'] || '',
         ['check-out']: queryParams['check-out'] || '',
         number_of_guests: queryParams['number_of_guests'] || 1,
@@ -61,14 +61,23 @@ export class SearchPageComponent implements OnInit {
         services: queryParams['services'] 
         ? (Array.isArray(queryParams['services']) ? queryParams['services'] : [queryParams['services']]) 
         : [''],
-        order_by: queryParams['order_by'] || ''
+        order_by: queryParams['order_by'] || '' */
+
+        destination: queryParams['destination'],
+        ['check-in']: queryParams['check-in'] ?? '',
+        ['check-out']: queryParams['check-out'] ?? '',
+        number_of_guests: queryParams['number_of_guests'],
+        free_only: queryParams['free_only'],
+        services: queryParams['services'],
+        order_by: queryParams['order_by'],
+        order_direction: queryParams['order_direction'],
       };
-      this.currentOrderBySelected$.next(searchParams.order_by);
+      //this.currentOrderBySelected$.next(searchParams.order_by);
       this.searchService.setSearchData(searchParams);
-      
       this.loadFoundResearchPage(0);
       this.filterService.getAllServices();
-      this.filterService.setSelectedFilters(searchParams.services);
+      const currServices = searchParams.services ?? [];
+      this.filterService.setSelectedFilters(currServices);
 
     });
   }
@@ -76,13 +85,14 @@ export class SearchPageComponent implements OnInit {
   search(params: params): void {
     const currentParams = this.route.snapshot.queryParams;
     const searchParams: params = {
-      destination: params.destination || '',
-      ['check-in']: params['check-in']|| currentParams['check-in'] || '',
-      ['check-out']: params['check-out']|| currentParams['check-out'] || '',
-      number_of_guests: params.number_of_guests || currentParams['number_of_guests'] || 1,
-      free_only: params.free_only ,
-      services: params.services || [''],
-      order_by: params.order_by || currentParams['order_by'] || '',
+      destination: params.destination,
+      ['check-in']: params['check-in'] ?? currentParams['check-in'] ?? '',
+      ['check-out']: params['check-out'] ?? currentParams['check-out'] ?? '',
+      number_of_guests: params.number_of_guests ?? currentParams['number_of_guests'],
+      free_only: params.free_only ?? currentParams['free_only'],
+      services: params.services ?? currentParams['services'],
+      order_by: params.order_by ?? currentParams['order_by'],
+      order_direction: params.order_direction ?? currentParams['order_direction'],
     };
     this.searchService.setSearchData(searchParams);
     this.router.navigate(['/search_page/'], { queryParams: searchParams});
@@ -105,11 +115,12 @@ export class SearchPageComponent implements OnInit {
     this.isOrderByOpen = !this.isOrderByOpen;
   }
 
-  setOrderParam(orderBy: string, event: MouseEvent) {
+  setOrderParam(orderBy: string, orderDirection: string, event: MouseEvent) {
     event.stopPropagation()
     const curr = this.searchService.getSearchData();
     curr.order_by = orderBy;
-    this.currentOrderBySelected$.next(orderBy); 
+    curr.order_direction = orderDirection;
+    //this.currentOrderBySelected$.next(orderBy); 
     this.isOrderByOpen = false;
     this.search(curr);
   }
