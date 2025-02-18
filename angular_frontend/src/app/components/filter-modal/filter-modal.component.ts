@@ -135,4 +135,11 @@ export class FilterModalComponent implements OnInit {
   setMaxRating(value: number) {
     this.filterForm.patchValue({ maxRating: value });
   }
+  resetMinRating() {
+    this.filterForm.patchValue({ minRating: null });
+  }
+  
+  resetMaxRating() {
+    this.filterForm.patchValue({ maxRating: null });
+  }
 }

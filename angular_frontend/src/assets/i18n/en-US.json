@@ -114,7 +114,9 @@
 	"min_rating": "Min Rating",
 	"max_rating": "Max Rating",
 	"invalid_price_range": "Invalid price range",
-	"invalid_rating_range": "Invalid rating range"
+	"invalid_rating_range": "Invalid rating range",
+	"min_reset": "Reset Min Rating",
+	"max_reset": "Reset Max Rating"
 	},
 "header": {
 	"profile": "Profile",
