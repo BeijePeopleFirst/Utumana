@@ -1,14 +1,14 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable, switchMap } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { AccommodationDTO } from 'src/app/dtos/accommodationDTO';
 import { AccommodationService } from 'src/app/services/accommodation.service';
-import { FiltersService } from 'src/app/services/filters.service';
+import { FiltersService} from 'src/app/services/filters.service';
 import { SearchService } from 'src/app/services/search.service';
-import { params } from 'src/app/models/searchParams';
 import iconURL from 'src/costants';
 import { TranslateService } from '@ngx-translate/core';
+import { CompleteParams } from 'src/app/models/completeParams';
+import { FilterParams } from 'src/app/models/filterParams';
 
 @Component({
   selector: 'app-search-page',
@@ -16,7 +16,6 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./search-page.component.css']
 })
 export class SearchPageComponent implements OnInit {
-
   iconUrl = iconURL;
   
   foundAccommodations$!: Observable<AccommodationDTO[] | null>;
@@ -55,9 +54,8 @@ export class SearchPageComponent implements OnInit {
             ? [...queryParams['services']]
             : [queryParams['services']])
         : [];
-      console.log("servizi init :", services);
 
-      const searchParams: params = {
+      const searchParams: CompleteParams = {
         destination: queryParams['destination'],
         ['check-in']: queryParams['check-in'] ?? '',
         ['check-out']: queryParams['check-out'] ?? '',
@@ -66,6 +64,10 @@ export class SearchPageComponent implements OnInit {
         services: services,
         order_by: queryParams['order_by'],
         order_direction: queryParams['order_direction'],
+        min_price: queryParams['min_price'],
+        max_price: queryParams['max_price'],
+        min_rating: queryParams['min_rating'],
+        max_rating: queryParams['max_rating']
       };
 
       this.currentOrderBySelected$.next([
@@ -75,41 +77,63 @@ export class SearchPageComponent implements OnInit {
 
       this.searchService.setSearchData(searchParams);
       this.filterService.getAllServices();
-      const currServices = searchParams.services ?? [];
-      this.filterService.setSelectedFilters(currServices);
+      const filterParams: FilterParams = {
+        services: services,
+        min_price: searchParams.min_price,
+        max_price: searchParams.max_price,
+        min_rating: searchParams.min_rating,
+        max_rating: searchParams.max_rating
+      };
+      this.filterService.setSelectedFilters(filterParams);
       this.loadFoundResearchPage(0);
     });
   }
 
-  search(params: params): void {
+  search(params: CompleteParams): void {
     const currentParams = this.route.snapshot.queryParams;
     const services = params.services
       ? (Array.isArray(params.services) ? [...params.services] : [params.services])
-      : currentParams['services']
-      ? (Array.isArray(currentParams['services']) ? [...currentParams['services']] : [currentParams['services']])
       : [];
-    
-    const searchParams: params = {
+  
+    console.log("services:", services);
+    const searchParams: CompleteParams = {
       destination: params.destination,
       ['check-in']: params['check-in'] ?? currentParams['check-in'] ?? '',
       ['check-out']: params['check-out'] ?? currentParams['check-out'] ?? '',
       number_of_guests: params.number_of_guests ?? currentParams['number_of_guests'],
       free_only: params.free_only ?? currentParams['free_only'],
-      services: services,
+      services: services.length > 0 ? services : undefined,
       order_by: params.order_by ?? currentParams['order_by'],
       order_direction: params.order_direction ?? currentParams['order_direction'],
+      min_price: params.min_price,
+      max_price: params.max_price,
+      min_rating: params.min_rating,
+      max_rating: params.max_rating
     };
-
-    this.searchService.setSearchData(searchParams);
-    this.router.navigate(['/search_page/'], { queryParams: searchParams });
+  
+    const cleanedParams: CompleteParams = Object.fromEntries(
+      Object.entries(searchParams).filter(([_, value]) => value !== undefined)
+    );
+  
+    //console.log("params search:", cleanedParams);
+  
+    this.searchService.setSearchData(cleanedParams);
+    this.router.navigate(['/search_page/'], { queryParams: cleanedParams });
   }
+  
 
-  onApplyFilters(selectedServices: string[]): void {
-    console.log(selectedServices);
-    this.filterService.setSelectedFilters(selectedServices);
-    const curr = this.searchService.getSearchData();
-    curr.services = selectedServices ?? [];
-    this.search(curr);
+  onApplyFilters(filters: FilterParams): void {
+    this.filterService.setSelectedFilters(filters);
+    const currentSearchParams = this.searchService.getSearchData();
+    const updatedParams: CompleteParams = {
+      ...currentSearchParams,
+      services: filters.services,
+      min_price: filters.min_price,
+      max_price: filters.max_price,
+      min_rating: filters.min_rating,
+      max_rating: filters.max_rating
+    };
+    this.search(updatedParams);
   }
 
   loadFoundResearchPage(pageNumber: number): void {

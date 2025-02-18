@@ -65,9 +65,9 @@ export class SearchBarComponent implements OnInit{
     if (this.searchForm.valid) {
       const params = this.accommodationService.getParams(this.searchForm.value);
       const selectedServices = this.filtersService.getSelectedFilters();
-      if (selectedServices.length > 0) {
+/*       if (selectedServices.length > 0) {
         params.services = selectedServices.map(id => id.toString());
-      } 
+      }  */
       this.searchService.setSearchData(params);
       this.searchSubmitted.emit(params);
     } else {

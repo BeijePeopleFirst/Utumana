@@ -106,7 +106,15 @@
 	"title": "Filters",
 	"cancel": "Cancel",
 	"apply": "Apply",
-	"services": "Services"
+	"services": "Services",
+	"price": "Price",
+	"rating": "Rating",
+	"min_price": "Min Price per night",
+	"max_price": "Max Price per night",
+	"min_rating": "Min Rating",
+	"max_rating": "Max Rating",
+	"invalid_price_range": "Invalid price range",
+	"invalid_rating_range": "Invalid rating range"
 	},
 "header": {
 	"profile": "Profile",
