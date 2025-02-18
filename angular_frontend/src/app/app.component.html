@@ -1,57 +1,85 @@
 <div class="flex flex-col min-h-screen">
 <ng-container *ngIf="isLogin === false">
 <header class="bg-neutral-2">
-    <nav class="flex items-center justify-between p-6 mx-auto max-w-7xl lg:px-8" aria-label="Global">
+    <nav class="flex flex-wrap justify-between items-center p-6 mx-auto max-w-7xl lg:px-8" aria-label="navigation bar">
       <div class="flex lg:flex-1">
-        <a routerLink="/" class="-m-1.5 p-1.5">
+        <a routerLink="/" class="p-1.5 -m-1.5">
           <img class="w-auto h-12" [src]="iconUrl + '/fagiolo.png'" alt="">
         </a>
       </div>
+
+      <button type="button" class="inline-flex items-center self-end p-2 ml-1 align-middle rounded-lg lg:hidden group" aria-controls="mobile-menu" aria-expanded="true" (click)="toggleMobileMenu($event)">
+        <svg xmlns="http://www.w3.org/2000/svg" height="28px" viewBox="0 -960 960 960" width="28px" class="fill-secondary hover:fill-secondary-dark group-focus:fill-secondary-dark">
+          <path d="M100.78-212.3v-106h758.44v106H100.78Zm0-214.7v-106h758.44v106H100.78Zm0-214.7v-106h758.44v106H100.78Z"/>
+        </svg>
+			</button>
   
-      <div class="hidden lg:flex lg:gap-x-12">
-        <a routerLink="/create" class="font-semibold select-none text-sm/6 text-primary">{{'header.create' | translate}}</a>
-        <a routerLink="/my_bookings" class="font-semibold select-none text-sm/6 text-primary">{{'header.bookings'| translate}}</a>
-        <a routerLink="/host_dashboard" class="font-semibold select-none text-sm/6 text-primary">{{'header.host-dashboard' | translate}}</a>
-      </div>
-  
-      <div class="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-7">
-        <a routerLink="/notifications" class="font-semibold text-sm/6 text-primary">
-          <img class="w-auto h-8 select-none" [src]="iconUrl + '/notification.png'" alt="">
-        </a>
-  
-        <div class="relative" (click)="toggleLanguageMenu($event)">
-          <button type="button" class="flex items-center font-semibold select-none gap-x-1 text-sm/6 text-primary">
-            <img class="w-auto h-8 select-none" [src]="iconUrl + '/flags/' + selectedLanguage + '.png'" alt="">
-            <svg class="flex-none text-gray-400 select-none size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-              <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
-            </svg>
-          </button>
-  
-          <div *ngIf="isLanguageMenuOpen" class="absolute right-0 z-50 w-32 mt-3 bg-white shadow-lg top-full rounded-xl ring-1 ring-gray-900/5">
-            <div class="p-2 space-y-1">
-              <button *ngFor="let lang of languages" (click)="changeLanguage(lang.code, $event)" class="flex items-center w-full px-4 py-2 text-sm text-left text-gray-900 gap-x-2 hover:bg-gray-50">
-                <img class="w-auto h-5 select-none" [src]="iconUrl + '/flags/' + lang.code + '.png'" alt="">
-                {{ lang.name }}
-              </button>
-            </div>
-          </div>
+      <div id="mobile-menu" class="justify-between items-center w-full align-middle lg:w-auto lg:flex">
+        <div class="lg:flex lg:flex-row lg:gap-x-12 lg:pr-12" 
+        [hidden]="isMenuOpen === false" [ngClass]="{'flex flex-col py-2 gap-y-2': isMenuOpen === true}">
+          <a routerLink="/create" class="font-semibold select-none text-sm/6 text-primary" 
+          [ngClass]="{'px-2 rounded-md hover:ring-2 hover:ring-secondary-light/50': isMenuOpen === true}">{{'header.create' | translate}}</a>
+          <a routerLink="/my_bookings" class="font-semibold select-none text-sm/6 text-primary" 
+          [ngClass]="{'px-2 rounded-md hover:ring-2 hover:ring-secondary-light/50': isMenuOpen === true}">{{'header.bookings'| translate}}</a>
+          <a routerLink="/host_dashboard" class="font-semibold select-none text-sm/6 text-primary" 
+          [ngClass]="{'px-2 rounded-md hover:ring-2 hover:ring-secondary-light/50': isMenuOpen === true}">{{'header.host-dashboard' | translate}}</a>
         </div>
   
-        <div class="relative" (click)="toggleProfileMenu($event)">
-          <button type="button" class="flex items-center font-semibold gap-x-1 text-sm/6 text-primary">
-            <img class="w-auto h-8" [src]="iconUrl + '/profile.png'" alt="">
-            <svg class="flex-none text-gray-400 size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-              <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
-            </svg>
-          </button>
+        <div class="justify-center lg:flex lg:flex-1 lg:gap-x-7" [hidden]="isMenuOpen === false">
+          <a routerLink="/notifications" class="font-semibold text-sm/6 text-primary" 
+          [ngClass]="{'flex flex-row items-center px-2 gap-x-2 rounded-md hover:ring-2 hover:ring-secondary-light/50': isMenuOpen === true}">
+            <img class="w-auto h-8 select-none" [ngClass]="{'h-4': isMenuOpen === true}" 
+            [src]="iconUrl + '/notification.png'" alt="">
+            <span class="lg:hidden">{{'header.notifications' | translate}}</span>
+          </a>
+    
+          <div class="relative w-fit" [ngClass]="{'p-2': isMenuOpen === true}" (click)="toggleLanguageMenu($event)">
+            <button type="button" class="flex gap-x-1 items-center font-semibold select-none text-sm/6 text-primary">
+              <img class="w-auto h-8 select-none" [ngClass]="{'h-4': isMenuOpen === true}" [src]="iconUrl + '/flags/' + selectedLanguage + '.png'" alt="">
+              <svg class="flex-none text-gray-400 select-none size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+              </svg>
+            </button>
+    
+            <div *ngIf="isLanguageMenuOpen" class="absolute right-0 top-full z-50 mt-3 w-32 bg-white rounded-xl ring-1 shadow-lg ring-gray-900/5"
+            [ngClass]="{'relative right-auto top-auto w-fit shadow-none ring-none ring-transparent mt-1 bg-inherit': isMenuOpen === true}">
+              <div class="p-2 space-y-1" [ngClass]="{'space-y-0 w-full': isMenuOpen === true}">
+                <button *ngFor="let lang of languages" (click)="changeLanguage(lang.code, $event)" class="flex gap-x-2 items-center px-4 py-2 w-full text-sm text-left text-gray-900 hover:bg-gray-50" 
+                [ngClass]="{'rounded-md hover:ring-2 hover:bg-inherit hover:ring-secondary-light/50 hover:text-secondary-dark': isMenuOpen === true}">
+                  <img class="w-auto h-5 select-none" [src]="iconUrl + '/flags/' + lang.code + '.png'" alt="">
+                  {{ lang.name }}
+                </button>
+              </div>
+            </div>
+          </div>
   
-          <div *ngIf="isProfileMenuOpen" class="absolute right-0 z-50 w-48 mt-3 bg-white shadow-lg top-full rounded-xl ring-1 ring-gray-900/5">
-            <div class="p-4 space-y-2">
-              <a routerLink="/profile" class="block px-4 py-2 text-sm text-gray-900 select-none hover:bg-gray-50">{{'header.profile' | translate}}</a>
-              <a routerLink="/favourites" class="block px-4 py-2 text-sm text-gray-900 select-none hover:bg-gray-50">{{'header.favourites' | translate}}</a>
-              <a routerLink="/my_accommodations" class="block px-4 py-2 text-sm text-gray-900 select-none hover:bg-gray-50">{{'header.accommodations' | translate}}</a>
-              <a routerLink="/admin_dashboard" class="block px-4 py-2 text-sm text-gray-900 select-none hover:bg-gray-50">{{'header.admin' | translate}}</a>
-              <a (click)="authService.logout()" class="block px-4 py-2 text-sm text-gray-900 cursor-pointer select-none hover:bg-gray-50">{{'header.logout' | translate}}</a>       
+          <div class="relative w-fit" [ngClass]="{'p-2': isMenuOpen === true}" (click)="toggleProfileMenu($event)">
+            <button type="button" class="flex gap-x-1 items-center font-semibold text-sm/6 text-primary">
+              <img class="w-auto h-8" [ngClass]="{'h-4': isMenuOpen === true}" [src]="iconUrl + '/profile.png'" alt="">
+              <svg class="flex-none text-gray-400 size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+              </svg>
+            </button>
+    
+            <div *ngIf="isProfileMenuOpen" class="absolute right-0 top-full z-50 mt-3 w-48 bg-white rounded-xl ring-1 shadow-lg ring-gray-900/5"
+            [ngClass]="{'relative right-auto top-auto w-fit shadow-none ring-none ring-transparent mt-0 bg-inherit': isMenuOpen === true}">
+              <div class="p-4 space-y-2" [ngClass]="{'py-2 space-y-0 w-full': isMenuOpen === true}">
+                <a routerLink="/profile" (click)="closeMenus()" 
+                class="block px-4 py-2 text-sm text-gray-900 select-none hover:bg-gray-50"
+                [ngClass]="{'px-2 py-1 rounded-md hover:ring-2 hover:bg-inherit hover:ring-secondary-light/50': isMenuOpen === true}">{{'header.profile' | translate}}</a>
+                <a routerLink="/favourites" (click)="closeMenus()" 
+                class="block px-4 py-2 text-sm text-gray-900 select-none hover:bg-gray-50"
+                [ngClass]="{'px-2 py-1 rounded-md hover:ring-2 hover:bg-inherit hover:ring-secondary-light/50': isMenuOpen === true}">{{'header.favourites' | translate}}</a>
+                <a routerLink="/my_accommodations" (click)="closeMenus()" 
+                class="block px-4 py-2 text-sm text-gray-900 select-none hover:bg-gray-50"
+                [ngClass]="{'px-2 py-1 rounded-md hover:ring-2 hover:bg-inherit hover:ring-secondary-light/50': isMenuOpen === true}">{{'header.accommodations' | translate}}</a>
+                <a routerLink="/admin_dashboard" (click)="closeMenus()" 
+                class="block px-4 py-2 text-sm text-gray-900 select-none hover:bg-gray-50"
+                [ngClass]="{'px-2 py-1 rounded-md hover:ring-2 hover:bg-inherit hover:ring-secondary-light/50': isMenuOpen === true}">{{'header.admin' | translate}}</a>
+                <a (click)="authService.logout()" (click)="closeMenus()" 
+                class="block px-4 py-2 text-sm text-gray-900 select-none hover:bg-gray-50"
+                [ngClass]="{'px-2 py-1 rounded-md hover:ring-2 hover:bg-inherit hover:ring-secondary-light/50': isMenuOpen === true}">{{'header.logout' | translate}}</a>       
+              </div>
             </div>
           </div>
         </div>
@@ -65,7 +93,7 @@
 </main>
 
 <ng-container *ngIf="isLogin === false">
-  <footer class="w-full p-4 text-sm text-center text-gray-600 bg-gray-100 ">
+  <footer class="p-4 w-full text-sm text-center text-gray-600 bg-gray-100">
     <p>&copy; {{ currentYear }} My Company. All rights reserved.</p>
   </footer>
 </ng-container>

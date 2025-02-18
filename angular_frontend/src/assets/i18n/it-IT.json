@@ -115,7 +115,8 @@
 	"logout": "Logout",
 	"create": "Crea",
 	"bookings": "Le mie prenotazioni",
-	"host-dashboard": "Dashboard Host"
+	"host-dashboard": "Dashboard Host",
+	"notifications": "Notifiche"
 	},
 "home":{
 	"latest":"Caricamenti recenti",

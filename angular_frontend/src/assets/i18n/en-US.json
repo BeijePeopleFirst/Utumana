@@ -116,7 +116,8 @@
 	"logout": "Logout",
 	"create": "Create",
 	"bookings": "My bookings",
-	"host-dashboard": "Host Dashboard"
+	"host-dashboard": "Host Dashboard",
+	"notifications": "Notifications"
 	},
 "home":{
 	"latest":"Latest uploads",
