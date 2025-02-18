@@ -1,4 +1,4 @@
-export class UnAvailabilityDTO{
+export class UnavailabilityDTO{
     constructor(
         public id: number,
         public check_in: string,
