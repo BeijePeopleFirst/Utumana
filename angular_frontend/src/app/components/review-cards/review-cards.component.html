@@ -1,20 +1,20 @@
 <ng-container *ngIf="reviews && reviews.length > 0">
-    <div class="flex items-start self-center justify-center p-3 align-top justify-self-center w-fit 2xl:w-max flex-nowrap gap-x-10 relative">
-        <button type="button" class="carousel-arrow left-2" (click)="prevPage()" [disabled]="pageNumber === 0">
+    <div class="flex relative flex-nowrap gap-x-10 justify-center justify-self-center items-start self-center p-3 w-full align-top 2xl:w-max">
+        <button type="button" class="carousel-arrow responsive-left-arrow" (click)="prevPage()" [disabled]="pageNumber === 0">
             <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
             </svg>
         </button>
         
-        <div class="flex flex-wrap justify-center gap-3">
-            <div *ngFor="let review of reviews" class="flex max-w-sm p-4 bg-white rounded-lg shadow-md text-start lg:max-w-4xl">
+        <div class="flex flex-wrap gap-3 justify-center">
+            <div *ngFor="let review of reviews" class="flex p-4 max-w-sm bg-white rounded-lg shadow-md text-start lg:max-w-4xl">
                 <app-review-card [review]="review" (reviewChange)="propagateReviewChange($event)"></app-review-card>
             </div>
         </div>
 
-        <!-- class="z-40 flex items-center self-center justify-center w-10 h-10 transition rounded-full bg-gray-200/50 hover:bg-gray-300 focus:outline-none"-->
-        <button type="button" class="carousel-arrow right-2" (click)="nextPage()" [disabled]="pageNumber === totalPages - 1">
+        <!-- class="flex z-40 justify-center items-center self-center w-10 h-10 rounded-full transition bg-gray-200/50 hover:bg-gray-300 focus:outline-none"-->
+        <button type="button" class="carousel-arrow responsive-right-arrow" (click)="nextPage()" [disabled]="pageNumber === totalPages - 1">
             <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -22,7 +22,7 @@
         </button>
     </div>
 
-    <div class="flex items-center justify-center space-x-2 lg:px-2"> 
+    <div class="flex justify-center items-center space-x-2 lg:px-2"> 
         <div class="carousel-positions-container">
             <input type="radio" name="pagePosition" class="carousel-position" *ngFor="let _ of [].constructor(totalPages); let n = index" [checked]="n == pageNumber" value="{{n}}" (click)="getPage(n)">
         </div>

@@ -41,8 +41,8 @@
               </svg>
             </button>
     
-            <div *ngIf="isLanguageMenuOpen" class="absolute right-0 top-full z-50 mt-3 w-32 bg-white rounded-xl ring-1 shadow-lg ring-gray-900/5"
-            [ngClass]="{'relative right-auto top-auto w-fit shadow-none ring-none ring-transparent mt-1 bg-inherit': isMenuOpen === true}">
+            <div *ngIf="isLanguageMenuOpen" class="absolute right-0 top-full z-50 mt-3 w-32 rounded-xl ring-1 shadow-lg lg:bg-white ring-gray-900/5"
+            [ngClass]="{'relative right-auto top-auto w-fit shadow-none ring-none ring-transparent mt-1': isMenuOpen === true}">
               <div class="p-2 space-y-1" [ngClass]="{'space-y-0 w-full': isMenuOpen === true}">
                 <button *ngFor="let lang of languages" (click)="changeLanguage(lang.code, $event)" class="flex gap-x-2 items-center px-4 py-2 w-full text-sm text-left text-gray-900 hover:bg-gray-50" 
                 [ngClass]="{'rounded-md hover:ring-2 hover:bg-inherit hover:ring-secondary-light/50 hover:text-secondary-dark': isMenuOpen === true}">
@@ -61,7 +61,7 @@
               </svg>
             </button>
     
-            <div *ngIf="isProfileMenuOpen" class="absolute right-0 top-full z-50 mt-3 w-48 bg-white rounded-xl ring-1 shadow-lg ring-gray-900/5"
+            <div *ngIf="isProfileMenuOpen" class="absolute right-0 top-full z-50 mt-3 w-48 rounded-xl ring-1 shadow-lg lg:bg-white ring-gray-900/5"
             [ngClass]="{'relative right-auto top-auto w-fit shadow-none ring-none ring-transparent mt-0 bg-inherit': isMenuOpen === true}">
               <div class="p-4 space-y-2" [ngClass]="{'py-2 space-y-0 w-full': isMenuOpen === true}">
                 <a routerLink="/profile" (click)="closeMenus()" 

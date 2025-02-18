@@ -1,28 +1,19 @@
-<div class="relative flex flex-col items-center justify-center h-screen">
+<div class="flex relative flex-col justify-center items-center h-screen">
   <img class="absolute top-0 left-0 w-full h-full object-cover opacity-50 z-[-5]" [src]="iconUrl + '/couch.png'" alt="">
   <app-search-bar (searchSubmitted)="search($event)" class="relative z-10" ></app-search-bar>
 </div>
 
-<section class="flex items-center justify-center pt-8 bg-neutral-1">
-  <div class="container p-5 text-center">
-    <h1 class="text-gray-800">{{'home.latest' | translate}}</h1>
+<section class="flex justify-center items-center pt-8 bg-neutral-1">
+  <div class="py-5 w-screen text-center">
+    <h1 class="text-4xl text-gray-800 sm:text-5xl">{{'home.latest' | translate}}</h1>
     <app-accommodation-cards [accommodations$]="latestUploads$" [pageNumber]="latestUploadsPageNumber" [totalPages]="latestUploadsTotalPages" 
       (askForPage)="loadLatestAccommodationsPage($event)"></app-accommodation-cards>
   </div>
 </section>
-<section class="flex items-center justify-center pt-8 bg-neutral-2">
-  <div class="container p-5 text-center">
-    <h1 class="text-gray-800">{{'home.liked' | translate}}</h1>
+<section class="flex justify-center items-center pt-8 bg-neutral-2">
+  <div class="py-5 w-screen text-center">
+    <h1 class="text-4xl text-gray-800 sm:text-5xl">{{'home.liked' | translate}}</h1>
     <app-accommodation-cards [accommodations$]="mostLiked$" [pageNumber]="mostLikedPageNumber" [totalPages]="mostLikedTotalPages" 
       (askForPage)="loadMostLikedAccommodationsPage($event)"></app-accommodation-cards>
   </div>
-</section>
-<section class="flex items-center justify-center pt-8 bg-neutral-1">
-  <div class="container p-5 text-center">
-    <h1 class="text-gray-800 ">{{'home.review' | translate}}</h1>
-    <app-review-cards class="flex flex-col"></app-review-cards>
-    <!--app-review-cards class="flex flex-col" [reviews]="reviews" [pageNumber]="reviewsPageNumber" [totalPages]="reviewsTotalPages" 
-    (askForPage)="loadUserReviewsPage($event)"></app-review-cards-->
-  </div>
-</section>
-  
+</section>  
