@@ -114,6 +114,12 @@ public class MotoreService {
             else userDestinazioneEntityList.remove(userPresente);   //SE PRESENTE --> REMOVE DALLA LISTA
         }
 
+        if (!userDestinazioneEntityList.isEmpty()) {
+            for (UserDestinazioneEntity userDestinazione : userDestinazioneEntityList) {
+                userDestinazioneRepository.delete(userDestinazione);
+            }
+        }
+
         return "Update Completato";
     }
 }
