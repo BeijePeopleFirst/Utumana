@@ -11,12 +11,17 @@ public class SearchAccomodationCriteria {
     private Integer numberOfGuests;
     private Boolean freeOnly;
     private List<Long> serviceIds;
+    private Integer minRating;
+    private Integer maxRating;
+    private Double minPrice;
+    private Double maxPrice;
     private String orderBy;
     private String orderDirection;
     private Long userId;
 
     public SearchAccomodationCriteria(String destination, LocalDate checkInDate, LocalDate checkOutDate,
-                                      Integer numberOfGuests, Boolean freeOnly, List<Long> serviceIds, String orderBy,
+                                      Integer numberOfGuests, Boolean freeOnly, List<Long> serviceIds, Integer minRating, Integer maxRating,
+                                      Double minPrice, Double maxPrice, String orderBy,
                                       String orderDirection, Long userId) {
         this.destination = destination;
         this.checkInDate = checkInDate;
@@ -24,6 +29,10 @@ public class SearchAccomodationCriteria {
         this.numberOfGuests = numberOfGuests;
         this.freeOnly = freeOnly;
         this.serviceIds = serviceIds;
+        this.minRating = minRating;
+        this.maxRating = maxRating;
+        this.minPrice = minPrice;
+        this.maxPrice = maxPrice;
         this.orderBy = orderBy;
         this.orderDirection = orderDirection;
         this.userId = userId;
@@ -75,6 +84,40 @@ public class SearchAccomodationCriteria {
 
     public void setServiceIds(List<Long> serviceIds) {
         this.serviceIds = serviceIds;
+    }
+
+    public Integer getMinRating() {
+        return minRating;
+    }
+
+    public void setMinRating(Integer minRating) {
+        this.minRating = minRating;
+    }
+    
+    public Integer getMaxRating() {
+        return maxRating;
+    }
+
+    public void setMaxRating(Integer maxRating) {
+        this.maxRating = maxRating;
+    }
+
+    public Double getMinPrice() {
+        return minPrice;
+    }
+    
+    public void setMinPrice(Double minPrice) {
+        this.minPrice = minPrice;
+    }
+    
+
+
+    public Double getMaxPrice() {
+        return maxPrice;
+    }
+
+    public void setMaxPrice(Double maxPrice) {
+        this.maxPrice = maxPrice;
     }
 
     public String getOrderBy() {

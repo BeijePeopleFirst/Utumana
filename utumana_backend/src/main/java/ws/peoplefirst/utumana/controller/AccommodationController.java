@@ -508,6 +508,10 @@ public class AccommodationController {
 			@RequestParam(name = "number_of_guests", required = false, defaultValue = "1") Integer numberOfGuests,
 			@RequestParam(name = "free_only", required = false, defaultValue = "false") boolean freeOnly,
 			@RequestParam(name = "services", required = false) List<Long> serviceIds,
+			@RequestParam(name = "min_rating", required = false) Integer minRating,
+			@RequestParam(name = "max_rating", required = false) Integer maxRating,
+			@RequestParam(name = "min_price", required = false) Double minPrice,
+			@RequestParam(name = "max_price", required = false) Double maxPrice,
 			@RequestParam(name = "order_by", required = false, defaultValue = "id") String orderBy,
 			@RequestParam(name = "order_direction", required = false, defaultValue = "desc") String oderDirection,
 			Authentication auth) {
@@ -546,12 +550,24 @@ public class AccommodationController {
 			throw new ForbiddenException("The number of guest must be a number greater than zero.");
 		}
 
+		if (minRating != null && maxRating != null && minRating > maxRating) {
+			logger.error("The minimum rating must be lower than the maximum rating.");
+			logger.trace("Invalid min rating = " + minRating + ", max rating = " + maxRating);
+			throw new InvalidJSONException("The minimum rating must be lower than the maximum rating.");
+		}
+
+		if (minPrice != null && maxPrice != null && minPrice > maxPrice) {
+			logger.error("The minimum price must be lower than the maximum price.");
+			logger.trace("Invalid min price = " + minPrice + ", max price = " + maxPrice);
+			throw new InvalidJSONException("The minimum price must be lower than the maximum price.");
+		}
+
 		logger.trace("Searching accommodations with params: dest = " + destination +
 				", check-in = " + checkInDate + ", check-out = " + checkOutDate +
-				", number of guests = " + numberOfGuests + ", freeOnly = " + freeOnly + ", services = " + serviceIds + ", order by " + orderBy);
+				", number of guests = " + numberOfGuests + ", freeOnly = " + freeOnly + ", services = " + serviceIds + ", order by " + orderBy + ", order direction = " + oderDirection);
 
 		Long userId = AuthorizationUtility.getUserFromAuthentication(auth).getId();
-		return accommodationService.findByUserInputDTO(destination, checkInDate, checkOutDate, numberOfGuests, freeOnly, serviceIds, orderBy, oderDirection, userId);
+		return accommodationService.findByUserInputDTO(destination, checkInDate, checkOutDate, numberOfGuests, freeOnly, serviceIds, minRating, maxRating, minPrice, maxPrice, orderBy, oderDirection, userId);
 	}
 
 

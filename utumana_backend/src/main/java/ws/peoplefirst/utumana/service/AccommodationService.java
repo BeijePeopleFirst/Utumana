@@ -203,7 +203,7 @@ public class AccommodationService {
         userRepository.save(user);
     }
 
-    private Sort getSortFromOrderByParam(String orderBy, String orderDirection) {
+/*     private Sort getSortFromOrderByParam(String orderBy, String orderDirection) {
 
         if (!orderDirection.equalsIgnoreCase("asc") && !orderDirection.equalsIgnoreCase("desc"))
             throw new TheJBeansException("Error: unknown order direction for accommodations: " + orderDirection);
@@ -218,16 +218,18 @@ public class AccommodationService {
         }
 
         return orderDirection.equals("asc") ? Sort.by(Sort.Direction.ASC, orderBy) : Sort.by(Sort.Direction.DESC, orderBy);
-    }
+    } */
 
     public List<AccommodationDTO> findByUserInputDTO(String destination, LocalDate checkInDate, LocalDate checkOutDate,
-                                                     Integer numberOfGuests, boolean freeOnly, List<Long> serviceIds,
+                                                     Integer numberOfGuests, boolean freeOnly, List<Long> serviceIds, 
+                                                     Integer minRating, Integer maxRating, 
+                                                     Double minPrice, Double maxPrice,
                                                      String orderBy, String orderDirection, Long userId) {
         System.out.println("service ids = " + serviceIds);
 
         SearchAccomodationCriteria searchAccomodationCriteria =
                 new SearchAccomodationCriteria(destination, checkInDate, checkOutDate, numberOfGuests, freeOnly,
-                        serviceIds, orderBy, orderDirection, userId);
+                        serviceIds, minRating, maxRating, minPrice, maxPrice, orderBy, orderDirection, userId);
 
         List<AccommodationDTO> results = accommodationRepository.searchAccomodation(searchAccomodationCriteria);
 

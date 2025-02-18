@@ -98,6 +98,33 @@ public class QAccommodationRepositoryImpl implements QAccommodationRepository {
             accomodationBuilder.and(serviceCountExpr.eq((long) serviceIds.size()));
         }
 
+        if (searchAccomodationCriteria.getMinRating() != null) {
+            accomodationBuilder.and(accommodationRating.rating.goe(searchAccomodationCriteria.getMinRating()));
+        }
+
+        if (searchAccomodationCriteria.getMaxRating() != null) {
+            accomodationBuilder.and(accommodationRating.rating.loe(searchAccomodationCriteria.getMaxRating()));
+        }
+
+        if (searchAccomodationCriteria.getMinPrice() != null) {
+            accomodationBuilder.and(JPAExpressions
+                .select(availability)
+                .from(availability)
+                .where(availabilityBuilder)
+                .where(availability.accommodation.eq(accommodation))
+                .where(availability.pricePerNight.goe(searchAccomodationCriteria.getMinPrice()))
+                .exists());
+        }
+
+        if (searchAccomodationCriteria.getMaxPrice() != null) {
+            accomodationBuilder.and(JPAExpressions
+                .select(availability)
+                .from(availability)
+                .where(availabilityBuilder)
+                .where(availability.accommodation.eq(accommodation))
+                .where(availability.pricePerNight.loe(searchAccomodationCriteria.getMaxPrice()))
+                .exists());
+        }
 
         // Building main query
         JPAQuery<AccommodationDTO> query = new JPAQuery<>(entityManager)
