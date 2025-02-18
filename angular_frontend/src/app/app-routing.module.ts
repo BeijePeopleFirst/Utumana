@@ -18,21 +18,19 @@ import { FavouritesComponent } from './components/favourites/favourites.componen
 import { MyAccommodationsComponent } from './components/my-accommodations/my-accommodations.component';
 
 const routes: Routes = [
-  {path: 'login', component: LoginComponent},
-  {path: '', component: HomeComponent},
-  {path: 'review/:id', component: ReviewCardComponent},
-  {path: 'write_review/:bookingId', component: WriteReviewComponent},
-  {path: 'profile', component: ProfileComponent},
-  {path: 'favourites', component: FavouritesComponent},
-  {path: 'create', component: CreateAccommodationAddressComponent},
-  {path: 'my_bookings', component: MyBookingsComponent},
-  {path: 'my_accommodations', component: MyAccommodationsComponent},
-  {path: 'host_dashboard', component: HostDashboardComponent},
-  {path: 'accommodation/:id', component: AccommodationDetailsComponent},
-  {path: 'search_page', component: SearchPageComponent},
+  {path: 'login', title: "Login", component: LoginComponent},
+  {path: '', title: "Utumana",  component: HomeComponent},
+  {path: 'profile', title: "Profile", component: ProfileComponent},
+  {path: 'favourites', title: "Favourites", component: FavouritesComponent},
+  {path: 'create', title: "Create a new accommodation", component: CreateAccommodationAddressComponent},
+  {path: 'my_bookings', title: "My Bookings", component: MyBookingsComponent},
+  {path: 'my_accommodations', title: "My Accommodations", component: MyAccommodationsComponent},
+  {path: 'host_dashboard', title: "Host Dashboard", component: HostDashboardComponent},
+  {path: 'accommodation/:id', title: "Accommodation Details", component: AccommodationDetailsComponent},
+  {path: 'search_page', title: "Search", component: SearchPageComponent},
   {path: 'book/:id', component: BookConfirmComponent},
   {path: 'confirm_booking_on_creation', component: ConfirmBookingBooknowComponent}
-  // { path: '**', component: PageNotFoundComponent }
+  // { path: '**', title: "Error", component: PageNotFoundComponent }
 ];
 
 @NgModule({

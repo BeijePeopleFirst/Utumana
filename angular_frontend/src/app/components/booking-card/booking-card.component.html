@@ -1,9 +1,11 @@
 <div *ngIf="booking">
-    <div class="flex w-fit">
-        <app-accommodation-card [accommodation]="booking.accommodation"></app-accommodation-card>
+    <div class="flex w-fit md:flex-row flex-col sm:flex-col">
+        <div class="flex w-fit">
+            <app-accommodation-card [accommodation]="booking.accommodation"></app-accommodation-card>
+        </div>
+
         <div class="flex flex-col justify-between p-4 ml-3 bg-white rounded-lg ">
-            
-            <div class="text-lg font-semibold text-start">
+            <div class="text-lg font-semibold text-center md:text-start pb-2">
                 <p> {{'bookings.checkIn' | translate}}:</p>
                 <p class="text-gray-700">{{ booking.checkIn | date: 'short':undefined:locale}}</p>
                 <p> {{'bookings.checkOut' | translate}}:</p>
