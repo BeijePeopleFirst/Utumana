@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, Subscription, map } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { AccommodationDTO } from 'src/app/dtos/accommodationDTO';
 import { params } from 'src/app/models/searchParams';
 import { AccommodationService } from 'src/app/services/accommodation.service';
@@ -12,20 +12,20 @@ import { iconURL } from 'src/costants';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class HomeComponent implements OnInit {
   iconUrl = iconURL;
 
-  latestUploads$!: Observable<AccommodationDTO[]> ;
+  latestUploads$!: Observable<AccommodationDTO[]>;
+  allLatestUploads!: AccommodationDTO[];
   latestUploadsPageSize!: number;
   latestUploadsPageNumber!: number;
   latestUploadsTotalPages!: number;
 
-  mostLiked$!: Observable<AccommodationDTO[]> ;
+  mostLiked$!: Observable<AccommodationDTO[]>;
+  allMostLiked!: AccommodationDTO[];
   mostLikedPageSize!: number;
   mostLikedPageNumber!: number;
   mostLikedTotalPages!: number;
-
-  subscriptions: Subscription = new Subscription();
 
   constructor(
     private router: Router,
@@ -34,37 +34,37 @@ export class HomeComponent implements OnInit, OnDestroy {
   ){ }
   
   ngOnInit(): void {
-    this.latestUploads$ = this.accommodationService.latestAccommodations$;
     this.latestUploadsPageSize = 4;
     this.latestUploadsPageNumber = 0;
-    this.subscriptions.add(
-      this.accommodationService.latestAccommodationsTotalNumber.subscribe(
-        number => this.latestUploadsTotalPages = Math.ceil(number/this.latestUploadsPageSize))
-    );
-    this.loadLatestAccommodationsPage(0);
+    this.accommodationService.getLatestUploads().subscribe(accommodations => {
+      this.latestUploadsTotalPages = Math.ceil( accommodations.length / this.latestUploadsPageSize );
+      this.accommodationService.getPrices(accommodations).subscribe(updatedAccommodations => {
+        this.allLatestUploads = updatedAccommodations;
+        this.latestUploads$ = of(updatedAccommodations.slice(0, this.latestUploadsPageSize));
+      });
+    });
 
-    this.mostLiked$ = this.accommodationService.mostLikedAccommodations$;
     this.mostLikedPageSize = 4;
     this.mostLikedPageNumber = 0;
-    this.subscriptions.add(
-      this.accommodationService.mostLikedAccommodationsTotalNumber.subscribe(
-        number => this.mostLikedTotalPages = Math.ceil(number/this.mostLikedPageSize))
-    );
-    this.loadMostLikedAccommodationsPage(0);
-  }
-
-  ngOnDestroy(): void {
-      this.subscriptions.unsubscribe();
+    this.accommodationService.getMostLikedAccommodations().subscribe(accommodations => {
+      this.mostLikedTotalPages = Math.ceil( accommodations.length / this.mostLikedPageSize );
+      this.accommodationService.getPrices(accommodations).subscribe(updatedAccommodations => {
+        this.allMostLiked = updatedAccommodations;
+        this.mostLiked$ = of(updatedAccommodations.slice(0, this.mostLikedPageSize));
+      });
+    });
   }
 
   loadLatestAccommodationsPage(pageNumber: number): void {
     this.latestUploadsPageNumber = pageNumber;
-    this.accommodationService.getLatestUploads(this.latestUploadsPageNumber * this.latestUploadsPageSize, this.latestUploadsPageSize);
+    const offset = this.latestUploadsPageNumber * this.latestUploadsPageSize;
+    this.latestUploads$ = of(this.allLatestUploads.slice(offset, offset + this.latestUploadsPageSize));
   }
 
   loadMostLikedAccommodationsPage(pageNumber: number): void {
     this.mostLikedPageNumber = pageNumber;
-    this.accommodationService.getMostLikedAccommodations(this.mostLikedPageNumber * this.mostLikedPageSize, this.mostLikedPageSize);
+    const offset = this.mostLikedPageNumber * this.mostLikedPageSize;
+    this.mostLiked$ = of(this.allMostLiked.slice(offset, offset + this.mostLikedPageSize));
   }
 
   search(params: params) {

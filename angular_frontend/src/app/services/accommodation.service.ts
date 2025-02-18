@@ -15,18 +15,11 @@ import { SearchService } from './search.service';
   providedIn: 'root'
 })
 export class AccommodationService {
-  
-  private allLatestAccommodations: boolean = false;
-  private allLatestAccommodationsSubject = new BehaviorSubject<AccommodationDTO[]>([]);
   private latestAccommodationsSubject = new BehaviorSubject<AccommodationDTO[]>([]);
   public latestAccommodations$ = this.latestAccommodationsSubject.asObservable();
-  public latestAccommodationsTotalNumber = new BehaviorSubject<number>(0);
   
-  private allMostLikedAccommodations: boolean = false;
-  private allMostLikedAccommodationsSubject = new BehaviorSubject<AccommodationDTO[]>([]);
   private mostLikedAccommodationsSubject = new BehaviorSubject<AccommodationDTO[]>([]);
   public mostLikedAccommodations$ = this.mostLikedAccommodationsSubject.asObservable();
-  public mostLikedAccommodationsTotalNumber = new BehaviorSubject<number>(0);
 
   private favouritesSubject = new BehaviorSubject<AccommodationDTO[]>([]);
   public favourites$ = this.favouritesSubject.asObservable();
@@ -38,26 +31,12 @@ export class AccommodationService {
 
   constructor(private http: HttpClient,private searchService: SearchService ) { }
 
-  public getLatestUploads(offset: number, pageSize: number): void {
-    if(!this.allLatestAccommodations){
-      this.getAccommodationsDTOToSubject(`${BACKEND_URL_PREFIX}/api/accommodation/latest_uploads`, 0, LATEST_UPLOADS_LIMIT, this.allLatestAccommodationsSubject);
-    }
-    this.allLatestAccommodationsSubject.asObservable().subscribe(accommodations =>{ 
-      this.latestAccommodationsSubject.next(accommodations.slice(offset, offset + pageSize));
-      this.latestAccommodationsTotalNumber.next(accommodations.length);
-      this.allLatestAccommodations = true;
-    });
+  public getLatestUploads(): Observable<AccommodationDTO[]> {
+    return this.getAccommodationsDTO(`${BACKEND_URL_PREFIX}/api/accommodation/latest_uploads`);
   }
 
-  getMostLikedAccommodations(offset: number, pageSize: number): void {
-    if(!this.allMostLikedAccommodations){
-      this.getAccommodationsDTOToSubject(`${BACKEND_URL_PREFIX}/api/accommodation/most_liked`, 0, LATEST_UPLOADS_LIMIT, this.allMostLikedAccommodationsSubject);
-    }
-    this.allMostLikedAccommodationsSubject.asObservable().subscribe(accommodations =>{ 
-      this.mostLikedAccommodationsSubject.next(accommodations.slice(offset, offset + pageSize));
-      this.mostLikedAccommodationsTotalNumber.next(accommodations.length);
-      this.allMostLikedAccommodations = true;
-    });
+  getMostLikedAccommodations(): Observable<AccommodationDTO[]> {
+    return this.getAccommodationsDTO(`${BACKEND_URL_PREFIX}/api/accommodation/most_liked`);
   }
 
   getFavourites(): Observable<AccommodationDTO[]> {
