@@ -1,6 +1,6 @@
 <ng-container *ngIf="reviews && reviews.length > 0">
-    <div class="flex items-start self-center justify-center p-3 align-top justify-self-center w-fit 2xl:w-max flex-nowrap gap-x-10">
-        <button type="button" class="carousel-arrow" (click)="prevPage()" [disabled]="pageNumber === 0">
+    <div class="flex items-start self-center justify-center p-3 align-top justify-self-center w-fit 2xl:w-max flex-nowrap gap-x-10 relative">
+        <button type="button" class="carousel-arrow left-2" (click)="prevPage()" [disabled]="pageNumber === 0">
             <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
@@ -14,7 +14,7 @@
         </div>
 
         <!-- class="z-40 flex items-center self-center justify-center w-10 h-10 transition rounded-full bg-gray-200/50 hover:bg-gray-300 focus:outline-none"-->
-        <button type="button" class="carousel-arrow" (click)="nextPage()" [disabled]="pageNumber === totalPages - 1">
+        <button type="button" class="carousel-arrow right-2" (click)="nextPage()" [disabled]="pageNumber === totalPages - 1">
             <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
