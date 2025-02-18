@@ -81,8 +81,11 @@
     @apply z-30 flex pt-3 pb-2 space-x-2;
   }
   .carousel-arrow {
-    @apply z-40 flex items-center md:self-center md:relative absolute -bottom-8 justify-center md:w-10 md:h-10 w-8 h-8 transition rounded-full bg-gray-200/50 hover:bg-gray-300 focus:outline-none disabled:bg-gray-200/50;
+    @apply z-40 flex items-center self-center justify-center md:w-10 md:h-10 w-8 h-8 mx-2 transition rounded-full bg-gray-200/50 hover:bg-gray-300 focus:outline-none disabled:bg-gray-200/50;
   }
+  .responsive-arrow { @apply md:self-center md:relative md:bottom-auto absolute -bottom-8; }
+  .responsive-left-arrow { @apply responsive-arrow left-2; }
+  .responsive-right-arrow { @apply responsive-arrow right-2; }
 
   .modal { @apply fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50; }
   .close-modal { @apply absolute p-2 text-3xl -top-0.5 text-secondary hover:text-secondary-dark right-2; }
