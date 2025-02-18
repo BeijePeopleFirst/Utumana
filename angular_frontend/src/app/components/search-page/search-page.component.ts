@@ -26,8 +26,8 @@ export class SearchPageComponent implements OnInit {
   
   services$ = this.filterService.services$;
   searchParams$ = this.searchService.searchData$;
-  //currentOrderBySelected$ = new BehaviorSubject<string>('');
-  //translatedOrderText$: Observable<string>;
+  currentOrderBySelected$ = new BehaviorSubject<string[]>(['approvalTimestamp', 'desc']);
+  translatedOrderText$: Observable<string>;
 
   showFilters: boolean = false;
   isOrderByOpen: boolean = false;
@@ -40,9 +40,9 @@ export class SearchPageComponent implements OnInit {
     private searchService: SearchService,
     private translate: TranslateService
   ) {
-/*     this.translatedOrderText$ = this.currentOrderBySelected$.pipe(
-      switchMap(order => this.translate.get(`search.${order}`))
-    ); */
+    this.translatedOrderText$ = this.currentOrderBySelected$.pipe(
+      map(order => this.translate.instant(`search.${order[0]}-${order[1].toLowerCase()}`))
+    );
   }
 
   ngOnInit() {
@@ -53,16 +53,6 @@ export class SearchPageComponent implements OnInit {
     
     this.route.queryParams.subscribe(queryParams => {
       const searchParams: params = {
-/*         destination: queryParams['destination'] || '',
-        ['check-in']: queryParams['check-in'] || '',
-        ['check-out']: queryParams['check-out'] || '',
-        number_of_guests: queryParams['number_of_guests'] || 1,
-        free_only: queryParams['free_only'] || false,
-        services: queryParams['services'] 
-        ? (Array.isArray(queryParams['services']) ? queryParams['services'] : [queryParams['services']]) 
-        : [''],
-        order_by: queryParams['order_by'] || '' */
-
         destination: queryParams['destination'],
         ['check-in']: queryParams['check-in'] ?? '',
         ['check-out']: queryParams['check-out'] ?? '',
@@ -72,7 +62,7 @@ export class SearchPageComponent implements OnInit {
         order_by: queryParams['order_by'],
         order_direction: queryParams['order_direction'],
       };
-      //this.currentOrderBySelected$.next(searchParams.order_by);
+      this.currentOrderBySelected$.next([searchParams.order_by ?? 'approvalTimestamp', searchParams.order_direction ?? 'desc']);
       this.searchService.setSearchData(searchParams);
       this.loadFoundResearchPage(0);
       this.filterService.getAllServices();
@@ -120,7 +110,7 @@ export class SearchPageComponent implements OnInit {
     const curr = this.searchService.getSearchData();
     curr.order_by = orderBy;
     curr.order_direction = orderDirection;
-    //this.currentOrderBySelected$.next(orderBy); 
+    this.currentOrderBySelected$.next([orderBy, orderDirection]); 
     this.isOrderByOpen = false;
     this.search(curr);
   }
