@@ -111,4 +111,28 @@ export class FilterModalComponent implements OnInit {
     this.apply.emit(cleanedFilters);
     this.close.emit();
   }
+
+  handleMinRatingClick(event: MouseEvent) {
+    const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const width = rect.width;
+    const rating = Math.ceil((x / width) * 5);
+    this.filterForm.patchValue({ minRating: rating });
+  }
+  
+  handleMaxRatingClick(event: MouseEvent) {
+    const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const width = rect.width;
+    const rating = Math.ceil((x / width) * 5);
+    this.filterForm.patchValue({ maxRating: rating });
+  }
+
+  setMinRating(value: number) {
+    this.filterForm.patchValue({ minRating: value });
+  }
+  
+  setMaxRating(value: number) {
+    this.filterForm.patchValue({ maxRating: value });
+  }
 }

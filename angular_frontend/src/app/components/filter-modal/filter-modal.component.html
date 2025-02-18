@@ -55,39 +55,54 @@
       </div>
 
       <h3 class="mb-6">{{ 'filters.rating' | translate }}</h3>
-      <div class="grid grid-cols-2 gap-4 mb-6">
-        <div class="flex flex-col">
-          <label for="min_rating" class="text-sm font-medium select-none text-primary-dark">
-            {{ 'filters.min_rating' | translate }}
-          </label>
-          <input 
-            id="min_rating" 
-            type="number" 
-            formControlName="minRating" 
-            class="input-primary"
-            min="0" 
-            max="5" 
-            step="1"
+<div class="grid grid-cols-2 gap-4 mb-6">
+  <div class="flex flex-col">
+    <label class="text-sm font-medium select-none text-primary-dark">
+      {{ 'filters.min_rating' | translate }}
+    </label>
+    <div class="flex gap-2">
+      <div class="mt-1 text-2xl stars-container">
+        <ng-container *ngFor="let star of [1,2,3,4,5]; let i = index">
+          <div 
+            class="cursor-pointer star-container"
+            (click)="setMinRating(i + 1)"
+            [ngClass]="{
+              'star-full': filterForm.get('minRating')?.value > i,
+              'star-empty': filterForm.get('minRating')?.value <= i
+            }"
           >
-        </div>
-        <div class="flex flex-col">
-          <label for="max_rating" class="text-sm font-medium select-none text-primary-dark">
-            {{ 'filters.max_rating' | translate }}
-          </label>
-          <input 
-            id="max_rating" 
-            type="number" 
-            formControlName="maxRating" 
-            class="input-primary"
-            min="0" 
-            max="5" 
-            step="1"
-          >
-        </div>
-        <div *ngIf="filterForm.errors?.['ratingInvalid']" class="text-red-500 text-sm">
-          {{ 'filters.invalid_rating_range' | translate }}
-        </div>
+            &#x2605;
+          </div>
+        </ng-container>
       </div>
+    </div>
+  </div>
+  <div class="flex flex-col">
+    <label class="text-sm font-medium select-none text-primary-dark">
+      {{ 'filters.max_rating' | translate }}
+    </label>
+    <div class="flex gap-2">
+      <div class="mt-1 text-2xl stars-container">
+        <ng-container *ngFor="let star of [1,2,3,4,5]; let i = index">
+          <div 
+            class="cursor-pointer star-container"
+            (click)="setMaxRating(i + 1)"
+            [ngClass]="{
+              'star-full': filterForm.get('maxRating')?.value > i,
+              'star-empty': filterForm.get('maxRating')?.value <= i
+            }"
+          >
+            &#x2605;
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="filterForm.errors?.['ratingInvalid']" class="text-red-500 text-sm">
+    {{ 'filters.invalid_rating_range' | translate }}
+  </div>
+</div>
+
     </form>
 
     <div class="flex justify-end gap-4 pt-4 border-t">

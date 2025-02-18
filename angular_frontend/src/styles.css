@@ -86,4 +86,10 @@
 
   .modal { @apply fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50; }
   .close-modal { @apply absolute p-2 text-3xl -top-0.5 text-secondary hover:text-secondary-dark right-2; }
+
+  .stars-container { @apply flex flex-row justify-start gap-0 align-middle; }
+  .star-container { @apply leading-5 text-center align-middle fill-current; }
+  .star-half-container { @apply bg-gradient-to-r from-yellow-500 to-gray-300 from-50% to-50% bg-clip-text text-transparent; }
+  .star-full { @apply text-yellow-500; }
+  .star-empty { @apply text-gray-300; }
 }
