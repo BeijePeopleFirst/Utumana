@@ -2,6 +2,7 @@ package com.peoplefirst.motorino.controller;
 
 import com.peoplefirst.motorino.service.MotoreService;
 import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,6 +44,7 @@ public class MotoreController {
      */
     @Operation(summary="TEST: insert user origine")
     @PostMapping("/inserisci/origine/{counter}")
+    @Transactional(transactionManager = "origineTransactionManager")
     public void insericiOrigine(@PathVariable(value="counter") int counter) {
         motoreService.inserisciOrigine(counter);
     }

@@ -18,7 +18,7 @@ import java.sql.Timestamp;
 @Data
 @Builder
 @Entity
-@Table(schema = "user")
+@Table(name = "user",schema = "user")
 public class UserDestinazioneEntity implements Serializable {
 
     /**
@@ -30,7 +30,7 @@ public class UserDestinazioneEntity implements Serializable {
     }
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String surname;

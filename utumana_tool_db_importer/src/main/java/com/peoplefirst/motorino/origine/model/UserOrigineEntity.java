@@ -17,11 +17,11 @@ import java.sql.Timestamp;
 @Data
 @Builder
 @Entity
-@Table(schema = "user")
+@Table(name = "user",schema = "user")
 public class UserOrigineEntity implements Serializable {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String first_name;
     private String last_name;

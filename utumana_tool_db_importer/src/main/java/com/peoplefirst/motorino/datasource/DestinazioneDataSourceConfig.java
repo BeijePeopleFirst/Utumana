@@ -20,48 +20,80 @@ import javax.sql.DataSource;
  * @author Mattia Pagani
  * Data source del DB di destinazione
  */
+//@Configuration
+//@EnableTransactionManagement
+//@EnableJpaRepositories(
+//        basePackages = "com.peoplefirst.motorino.destinazione.repository",
+//        entityManagerFactoryRef = "destinazioneEntityManagerFactory",
+//        transactionManagerRef = "destinazioneTransactionManager"
+//)
+//public class DestinazioneDataSourceConfig {
+//
+//    /**
+//     * Recupera dall'application.properties i dati giusti per il db
+//     * @return DataSource autogenerato basato sulla property inserita
+//     */
+//    @Bean(name = "destinazioneDataSource")
+//    @ConfigurationProperties(prefix = "spring.datasource.destinazione")
+//    public DataSource dataSource() {
+//        return DataSourceBuilder.create().build();
+//    }
+//
+//    /**
+//     * Genera il destinazioneEntityManagerFactory basandosi sul dataSource precedentemente creato,
+//     * sui model di esso (indicati tramite i packages) e il nome del db
+//     * @param builder builder per l'entity manager factory
+//     * @param dataSource DataSource generato dal metodo precedente
+//     * @return destinazioneEntityManagerFactory
+//     */
+//    @Bean(name = "destinazioneEntityManagerFactory")
+//    public LocalContainerEntityManagerFactoryBean entityManagerFactory(
+//            EntityManagerFactoryBuilder builder,
+//            @Qualifier("destinazioneDataSource") DataSource dataSource) {
+//        return builder
+//                .dataSource(dataSource)
+//                .packages("com.peoplefirst.motorino.destinazione.model")
+//                .persistenceUnit("destinazione")
+//                .build();
+//    }
+//
+//    /**
+//     * Crea un transaction manager per il db di destinazione
+//     * @param entityManagerFactory bean generato precedentemente
+//     * @return destinazioneTransactionManager
+//     */
+//    @Bean(name = "destinazioneTransactionManager")
+//    public PlatformTransactionManager transactionManager(
+//            @Qualifier("destinazioneEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
+//        return new JpaTransactionManager(entityManagerFactory);
+//    }
+//}
+
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-        basePackages = "com.peoplefirst.motorino.destinazione.repository",
+        basePackages = "com.peoplefirst.motorino.destinazione.repository",  // Aggiunto per trovare il repository
         entityManagerFactoryRef = "destinazioneEntityManagerFactory",
         transactionManagerRef = "destinazioneTransactionManager"
 )
 public class DestinazioneDataSourceConfig {
 
-    /**
-     * Recupera dall'application.properties i dati giusti per il db
-     * @return DataSource autogenerato basato sulla property inserita
-     */
     @Bean(name = "destinazioneDataSource")
     @ConfigurationProperties(prefix = "spring.datasource.destinazione")
     public DataSource dataSource() {
         return DataSourceBuilder.create().build();
     }
 
-    /**
-     * Genera il destinazioneEntityManagerFactory basandosi sul dataSource precedentemente creato,
-     * sui model di esso (indicati tramite i packages) e il nome del db
-     * @param builder builder per l'entity manager factory
-     * @param dataSource DataSource generato dal metodo precedente
-     * @return destinazioneEntityManagerFactory
-     */
     @Bean(name = "destinazioneEntityManagerFactory")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(
-            EntityManagerFactoryBuilder builder,
-            @Qualifier("destinazioneDataSource") DataSource dataSource) {
+            EntityManagerFactoryBuilder builder, @Qualifier("destinazioneDataSource") DataSource dataSource) {
         return builder
                 .dataSource(dataSource)
-                .packages("com.peoplefirst.motorino.destinazione.model")
+                .packages("com.peoplefirst.motorino.destinazione.model") // Package corretto delle entità
                 .persistenceUnit("destinazione")
                 .build();
     }
 
-    /**
-     * Crea un transaction manager per il db di destinazione
-     * @param entityManagerFactory bean generato precedentemente
-     * @return destinazioneTransactionManager
-     */
     @Bean(name = "destinazioneTransactionManager")
     public PlatformTransactionManager transactionManager(
             @Qualifier("destinazioneEntityManagerFactory") EntityManagerFactory entityManagerFactory) {

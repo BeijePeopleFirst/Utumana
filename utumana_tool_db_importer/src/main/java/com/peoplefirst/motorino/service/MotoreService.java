@@ -30,7 +30,6 @@ public class MotoreService {
      */
     @Autowired
     private UserDestinazioneRepository userDestinazioneRepository;
-
     /**
      * Test method used to create an user hardcoded, inside the origin db
      * @param counter Simple counter used to create different users
