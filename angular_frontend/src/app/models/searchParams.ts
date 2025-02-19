@@ -5,7 +5,6 @@ export interface params {
     "check-out"?: Date,
     "number_of_guests"?: number,
     "free_only"?: boolean,
-    "services"?: string[],
     "order_by"?: string,
     "order_direction"?: string
 }

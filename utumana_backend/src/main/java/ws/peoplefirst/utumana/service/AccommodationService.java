@@ -203,15 +203,16 @@ public class AccommodationService {
         userRepository.save(user);
     }
 
-
     public Page<AccommodationDTO> findByUserInputDTO(String destination, LocalDate checkInDate, LocalDate checkOutDate,
                                                      Integer numberOfGuests, boolean freeOnly, List<Long> serviceIds,
+                                                     Integer minRating, Integer maxRating,
+                                                     Double minPrice, Double maxPrice,
                                                      String orderBy, String orderDirection, Long userId, Pageable pageable) {
         System.out.println("service ids = " + serviceIds);
 
         SearchAccomodationCriteria searchAccomodationCriteria =
                 new SearchAccomodationCriteria(destination, checkInDate, checkOutDate, numberOfGuests, freeOnly,
-                        serviceIds, orderBy, orderDirection, userId, pageable);
+                        serviceIds, minRating, maxRating, minPrice, maxPrice, orderBy, orderDirection, userId, pageable);
 
         Page<AccommodationDTO> results = accommodationRepository.searchAccomodation(searchAccomodationCriteria);
 
