@@ -20,7 +20,7 @@ import org.springframework.stereotype.Repository;
 import ws.peoplefirst.utumana.criteria.SearchAccomodationCriteria;
 import ws.peoplefirst.utumana.dto.AccommodationDTO;
 import ws.peoplefirst.utumana.exception.TheJBeansException;
-import ws.peoplefirst.utumana.model.Accommodation;
+import ws.peoplefirst.utumana.model.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -30,7 +30,6 @@ public class QAccommodationRepositoryImpl implements QAccommodationRepository {
 
     @PersistenceContext
     private EntityManager entityManager;
-
 
     @Override
     public Page<AccommodationDTO> searchAccomodation(SearchAccomodationCriteria criteria) {
@@ -157,6 +156,4 @@ public class QAccommodationRepositoryImpl implements QAccommodationRepository {
         // Restituisci il risultato come Page
         return new PageImpl<>(results, pageable, total);
     }
-
-
 }
