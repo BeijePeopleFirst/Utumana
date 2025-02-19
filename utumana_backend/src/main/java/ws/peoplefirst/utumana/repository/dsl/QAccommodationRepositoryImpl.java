@@ -97,11 +97,11 @@ public class QAccommodationRepositoryImpl implements QAccommodationRepository {
         }
 
         if (criteria.getMinRating() != null) {
-            accomodationBuilder.and(accommodationRating.rating.goe(searchAccomodationCriteria.getMinRating()));
+            accomodationBuilder.and(accommodationRating.rating.goe(criteria.getMinRating()));
         }
 
         if (criteria.getMaxRating() != null) {
-            accomodationBuilder.and(accommodationRating.rating.loe(searchAccomodationCriteria.getMaxRating()));
+            accomodationBuilder.and(accommodationRating.rating.loe(criteria.getMaxRating()));
         }
 
         if (criteria.getMinPrice() != null) {
@@ -110,7 +110,7 @@ public class QAccommodationRepositoryImpl implements QAccommodationRepository {
                     .from(availability)
                     .where(availabilityBuilder)
                     .where(availability.accommodation.eq(accommodation))
-                    .where(availability.pricePerNight.goe(searchAccomodationCriteria.getMinPrice()))
+                    .where(availability.pricePerNight.goe(criteria.getMinPrice()))
                     .exists());
         }
 
@@ -120,7 +120,7 @@ public class QAccommodationRepositoryImpl implements QAccommodationRepository {
                     .from(availability)
                     .where(availabilityBuilder)
                     .where(availability.accommodation.eq(accommodation))
-                    .where(availability.pricePerNight.loe(searchAccomodationCriteria.getMaxPrice()))
+                    .where(availability.pricePerNight.loe(criteria.getMaxPrice()))
                     .exists());
         }
 
