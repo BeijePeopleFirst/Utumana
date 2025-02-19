@@ -1,0 +1,64 @@
+<div class="flex justify-center items-center py-5 mx-2 mb-8 w-full max-w-lg">
+    <div class="flex gap-y-4 items-center w-fit sm:w-full sm:gap-x-8">
+        <!-- Step 1: address -->
+        <div class="flex relative flex-col flex-1 gap-1 items-center scale-50 w-fit sm:scale-100">
+            <div id="indicator-1" class="flex justify-center items-center w-10 h-10 text-white rounded-full transition-colors duration-300 bg-primary"
+            [ngClass]="{'bg-opacity-30' : step != 1}">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF">
+                    <path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/>
+                </svg>
+            </div>
+            <span class="text-sm font-semibold text-primary" [ngClass]="{'text-opacity-30' : step != 1}">{{'create.address' | translate}}</span>
+        </div>
+        <!-- Step 2: Services -->
+        <div class="flex relative flex-col flex-1 gap-1 items-center scale-50 sm:scale-100">
+            <div id="indicator-2" class="flex justify-center items-center w-10 h-10 text-white rounded-full transition-colors duration-300 bg-primary"
+            [ngClass]="{'bg-opacity-30' : step != 2}">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF">
+                    <path d="M480-120q-42 0-71-29t-29-71q0-42 29-71t71-29q42 0 71 29t29 71q0 42-29 71t-71 29ZM254-346l-84-86q59-59 138.5-93.5T480-560q92 0 171.5 35T790-430l-84 84q-44-44-102-69t-124-25q-66 0-124 25t-102 69ZM84-516 0-600q92-94 215-147t265-53q142 0 265 53t215 147l-84 84q-77-77-178.5-120.5T480-680q-116 0-217.5 43.5T84-516Z"/>
+                </svg>
+            </div>
+            <span class="text-sm font-semibold text-primary" [ngClass]="{'text-opacity-30' : step != 2}">{{'create.services' | translate}}</span>
+        </div>
+        <!-- Step 3: availabilities -->
+        <div class="flex relative flex-col flex-1 gap-1 items-center scale-50 sm:scale-100">
+            <div id="indicator-3" class="flex justify-center items-center w-10 h-10 text-white rounded-full transition-colors duration-300 bg-primary"
+            [ngClass]="{'bg-opacity-30' : step != 3}">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF">
+                    <path d="M200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v200h-80v-40H200v400h280v80H200Zm0-560h560v-80H200v80Zm0 0v-80 80ZM560-80v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q8 9 12.5 20t4.5 22q0 11-4 22.5T903-300L683-80H560Zm300-263-37-37 37 37ZM620-140h38l121-122-18-19-19-18-122 121v38Zm141-141-19-18 37 37-18-19Z"/>
+                </svg>
+            </div>
+            <span class="text-sm font-semibold text-primary" [ngClass]="{'text-opacity-30' : step != 3}">{{'create.availabilities' | translate}}</span>
+        </div>
+        <!-- Step 4: description -->
+        <div class="flex relative flex-col flex-1 gap-1 items-center scale-50 sm:scale-100">
+            <div id="indicator-3" class="flex justify-center items-center w-10 h-10 text-white rounded-full transition-colors duration-300 bg-primary"
+            [ngClass]="{'bg-opacity-30' : step != 4}">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF">
+                    <path d="M480-680q-33 0-56.5-23.5T400-760q0-33 23.5-56.5T480-840q33 0 56.5 23.5T560-760q0 33-23.5 56.5T480-680Zm-60 560v-480h120v480H420Z"/>
+                </svg>
+            </div>
+            <span class="text-sm font-semibold text-primary" [ngClass]="{'text-opacity-30' : step != 4}">{{'create.description' | translate}}</span>
+        </div>
+        <!-- Step 5: photos -->
+        <div class="flex relative flex-col flex-1 gap-1 items-center scale-50 sm:scale-100">
+            <div id="indicator-3" class="flex justify-center items-center w-10 h-10 text-white rounded-full transition-colors duration-300 bg-primary"
+            [ngClass]="{'bg-opacity-30' : step != 5}">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF">
+                    <path d="M440-440ZM120-120q-33 0-56.5-23.5T40-200v-480q0-33 23.5-56.5T120-760h126l74-80h240v80H355l-73 80H120v480h640v-360h80v360q0 33-23.5 56.5T760-120H120Zm640-560v-80h-80v-80h80v-80h80v80h80v80h-80v80h-80ZM440-260q75 0 127.5-52.5T620-440q0-75-52.5-127.5T440-620q-75 0-127.5 52.5T260-440q0 75 52.5 127.5T440-260Zm0-80q-42 0-71-29t-29-71q0-42 29-71t71-29q42 0 71 29t29 71q0 42-29 71t-71 29Z"/>
+                </svg>
+            </div>
+            <span class="text-sm font-semibold text-primary" [ngClass]="{'text-opacity-30' : step != 5}">{{'create.photos' | translate}}</span>
+        </div>
+        <!-- Step 6: recap -->
+        <div class="flex relative flex-col flex-1 gap-1 items-center scale-50 sm:scale-100">
+            <div id="indicator-3" class="flex justify-center items-center w-10 h-10 text-white rounded-full transition-colors duration-300 bg-primary"
+            [ngClass]="{'bg-opacity-30' : step != 6}">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF">
+                    <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/>
+                </svg>
+            </div>
+            <span class="text-sm font-semibold text-primary" [ngClass]="{'text-opacity-30' : step != 6}">{{'create.recap' | translate}}</span>
+        </div>
+    </div>
+</div>

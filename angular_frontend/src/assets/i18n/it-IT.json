@@ -97,6 +97,14 @@
 	"redirect-in-few-seconds": "Cambio di Pagina tra qualche secondo...",
 	"created-unavailability-id": "Indisponibilita' Creata"
 	},
+"create": {
+	"address": "Indirizzo",
+	"services": "Servizi",
+	"availabilities": "Disponibilità",
+	"description": "Descrizione",
+	"photos": "Foto",
+	"recap": "Conferma"
+},
 "error": "Errore sconosciuto. Per favore, riprova.",
 "favourites": {
 	"title": "Preferiti"

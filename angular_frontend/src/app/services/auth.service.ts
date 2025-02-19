@@ -6,7 +6,7 @@ import { tap, delay, map, catchError, filter, switchMap } from 'rxjs/operators';
 import { BACKEND_URL_PREFIX } from 'src/costants';
 import { AuthCredentials } from '../dtos/authCredential';
 import { RefreshToken } from '../models/refreshToken';
-import { LoginResponse } from '../utils/LoginResponse';
+import { LoginResponse } from '../utils/loginResponse';
 
 
 @Injectable({

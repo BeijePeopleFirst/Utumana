@@ -98,6 +98,14 @@
 	"redirect-in-few-seconds": "Redirect in few seconds...",
 	"created-unavailability-id": "Unavailability Created"
 	},
+"create": {
+	"address": "Address",
+	"services": "Services",
+	"availabilities": "Availabilities",
+	"description": "Description",
+	"photos": "Photos",
+	"recap": "Confirm"
+},
 "error": "Unexpected error. Please retry.",
 "favourites": {
 	"title": "Favourite accommodations"

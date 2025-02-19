@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { catchError, map, mergeMap, Observable, of } from 'rxjs';
 import { BACKEND_URL_PREFIX } from 'src/costants';
 import { User } from '../models/user';
-import { LoginResponse } from '../utils/LoginResponse';
+import { LoginResponse } from '../utils/loginResponse';
 
 @Injectable({
   providedIn: 'root'

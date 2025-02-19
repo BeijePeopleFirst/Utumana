@@ -17,7 +17,7 @@
       <div id="mobile-menu" class="justify-between items-center w-full align-middle lg:w-auto lg:flex">
         <div class="lg:flex lg:flex-row lg:gap-x-12 lg:pr-12" 
         [hidden]="isMenuOpen === false" [ngClass]="{'flex flex-col py-2 gap-y-2': isMenuOpen === true}">
-          <a routerLink="/create" class="font-semibold select-none text-sm/6 text-primary" 
+          <a routerLink="/create/address" class="font-semibold select-none text-sm/6 text-primary" 
           [ngClass]="{'px-2 rounded-md hover:ring-2 hover:ring-secondary-light/50': isMenuOpen === true}">{{'header.create' | translate}}</a>
           <a routerLink="/my_bookings" class="font-semibold select-none text-sm/6 text-primary" 
           [ngClass]="{'px-2 rounded-md hover:ring-2 hover:ring-secondary-light/50': isMenuOpen === true}">{{'header.bookings'| translate}}</a>
