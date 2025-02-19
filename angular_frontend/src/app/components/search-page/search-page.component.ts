@@ -99,32 +99,29 @@ export class SearchPageComponent implements OnInit {
 
   search(params: CompleteParams): void {
     const currentParams = this.route.snapshot.queryParams;
-    const services = params.services
-      ? (Array.isArray(params.services) ? [...params.services] : [params.services])
-      : [];
-  
+    const filters = this.filterService.getAllFilters();
     const searchParams: CompleteParams = {
       destination: params.destination,
       ['check-in']: params['check-in'] ?? currentParams['check-in'] ?? '',
       ['check-out']: params['check-out'] ?? currentParams['check-out'] ?? '',
       number_of_guests: params.number_of_guests ?? currentParams['number_of_guests'],
       free_only: params.free_only ?? currentParams['free_only'],
-      services: services.length > 0 ? services : undefined,
+      services: filters.services,
       order_by: params.order_by ?? currentParams['order_by'],
       order_direction: params.order_direction ?? currentParams['order_direction'],
-      min_price: params.min_price,
-      max_price: params.max_price,
-      min_rating: params.min_rating,
-      max_rating: params.max_rating,
+      min_price: filters.min_price,
+      max_price: filters.max_price,
+      min_rating: filters.min_rating,
+      max_rating: filters.max_rating,
       page: params.page || 0,
       size: this.foundAccommodationsPageSize
     };
-  
+    this.filterService.setSelectedFilters(filters)
     const cleanedParams: CompleteParams = Object.fromEntries(
       Object.entries(searchParams).filter(([_, value]) => value !== undefined)
     );
   
-    this.searchService.setSearchData(cleanedParams);
+    this.searchService.setSearchData(searchParams);
     this.router.navigate(['/search_page/'], { queryParams: cleanedParams });
   }
   
@@ -187,4 +184,5 @@ export class SearchPageComponent implements OnInit {
       this.isOrderByOpen = false;
     }
   }
+
 }
