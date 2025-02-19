@@ -15,19 +15,19 @@
 
 @layer components {
   .btn-primary {
-    @apply w-1/2 px-4 py-2 font-semibold text-white transition-colors duration-200 rounded shadow-md bg-primary hover:bg-primary-dark focus:outline-none focus:ring focus:ring-primary-light focus:ring-opacity-75;
+    @apply px-4 py-2 w-1/2 font-semibold text-white rounded shadow-md transition-colors duration-200 bg-primary hover:bg-primary-dark focus:outline-none focus:ring focus:ring-primary-light focus:ring-opacity-75;
   }
 
   .btn-secondary {
-    @apply w-1/2 px-4 py-2 font-semibold text-white transition-colors duration-200 rounded shadow-md bg-secondary hover:bg-secondary-dark focus:outline-none focus:ring-2 focus:ring-secondary-light focus:ring-opacity-75;
+    @apply px-4 py-2 w-1/2 font-semibold text-white rounded shadow-md transition-colors duration-200 bg-secondary hover:bg-secondary-dark focus:outline-none focus:ring-2 focus:ring-secondary-light focus:ring-opacity-75;
   }
 
   .btn-cancel {
-    @apply w-1/2 px-4 py-2 font-semibold text-gray-700 transition-colors duration-200 bg-gray-200 rounded shadow-sm hover:bg-gray-300 focus:outline-none;
+    @apply px-4 py-2 w-1/2 font-semibold text-gray-700 bg-gray-200 rounded shadow-sm transition-colors duration-200 hover:bg-gray-300 focus:outline-none;
   }
 
   .btn-danger {
-    @apply w-1/2 px-4 py-2 font-semibold text-white transition-colors duration-200 bg-red-600 rounded shadow-md hover:bg-red-700 focus:outline-none;
+    @apply px-4 py-2 w-1/2 font-semibold text-white bg-red-600 rounded shadow-md transition-colors duration-200 hover:bg-red-700 focus:outline-none;
   }
 
   .btn-success {
@@ -35,11 +35,11 @@
   }
 
   .input-primary {
-    @apply block w-full px-4 py-2 text-gray-700 border border-gray-300 rounded appearance-none bg-neutral-1 focus:outline-none focus:shadow-sm focus:bg-neutral-2 focus:border-secondary;
+    @apply block px-4 py-2 w-full text-gray-700 rounded border border-gray-300 appearance-none bg-neutral-1 focus:outline-none focus:shadow-sm focus:bg-neutral-2 focus:border-secondary;
   }
 
   .alert-danger {
-    @apply border-red-700 bg-red-50;
+    @apply bg-red-50 border-red-700;
   }
 
   .label-primary {
@@ -69,24 +69,25 @@
   nav a {@apply no-underline; }
   .clickable_card {@apply relative no-underline text-inherit; }
 
-  .icon { @apply absolute z-20 inline w-10 h-10 align-middle hover:scale-105; }
+  .icon { @apply inline absolute z-20 w-10 h-10 align-middle hover:scale-105; }
   .icon img { @apply object-contain p-1.5; }
-  .heart { @apply absolute inline align-middle top-4 right-4 hover:opacity-80 hover:scale-105;  }
-  .heart img { @apply object-contain h-6 w-7; }
+  .heart { @apply inline absolute top-4 right-4 align-middle hover:opacity-80 hover:scale-105;  }
+  .heart img { @apply object-contain w-7 h-6; }
 
   .carousel-position {
-    @apply w-3 h-3 transition bg-gray-300 rounded-full appearance-none cursor-pointer checked:bg-gray-400 focus:outline-none focus:bg-gray-400;
+    @apply w-3 h-3 bg-gray-300 rounded-full transition appearance-none cursor-pointer checked:bg-gray-400 focus:outline-none focus:bg-gray-400;
   }
   .carousel-positions-container {
-    @apply z-30 flex pt-3 pb-2 space-x-2;
+    @apply flex z-30 pt-3 pb-2 space-x-2;
   }
   .carousel-arrow {
-    @apply z-40 flex items-center self-center justify-center md:w-10 md:h-10 w-8 h-8 mx-2 transition rounded-full bg-gray-200/50 hover:bg-gray-300 focus:outline-none disabled:bg-gray-200/50;
+    @apply flex z-40 justify-center items-center self-center mx-2 w-8 h-8 rounded-full transition md:w-10 md:h-10 bg-gray-200/50 hover:bg-gray-300 focus:outline-none disabled:bg-gray-200/50;
   }
-  .responsive-arrow { @apply md:self-center md:relative md:bottom-auto absolute -bottom-8; }
-  .responsive-left-arrow { @apply responsive-arrow left-2; }
-  .responsive-right-arrow { @apply responsive-arrow right-2; }
+  .responsive-arrow { @apply absolute -bottom-8 md:self-center md:relative md:bottom-auto; }
+  .responsive-left-arrow { @apply left-2 responsive-arrow; }
+  .responsive-right-arrow { @apply right-2 responsive-arrow; }
 
-  .modal { @apply fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50; }
-  .close-modal { @apply absolute p-2 text-3xl -top-0.5 text-secondary hover:text-secondary-dark right-2; }
+  .modal { @apply flex fixed inset-0 z-40 justify-center items-center bg-black bg-opacity-50; }
+  .modal-dialog { @apply relative w-screen bg-white rounded-lg shadow-lg sm:w-full md:max-w-md; }
+  .close-modal { @apply absolute -top-0.5 right-2 p-2 text-3xl text-secondary hover:text-secondary-dark; }
 }

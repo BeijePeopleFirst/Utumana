@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { Review } from 'src/app/models/review';
-import { ReviewService } from 'src/app/services/review.service';
 import iconURL from 'src/costants';
 
 @Component({
@@ -19,12 +18,12 @@ export class ReviewCardComponent implements OnInit, OnDestroy {
   expanded: boolean = false;
 
   constructor(
-    private translateService: TranslateService,
-    private reviewService: ReviewService
+    private translateService: TranslateService
   ){ }
 
   ngOnInit(): void {
-    this.localeSubscription = this.translateService.onLangChange.subscribe(event => this.locale = event.lang.slice(0,2));
+    this.localeSubscription = this.translateService.onLangChange.subscribe(
+      event => this.locale = event.lang.slice(0,2));
   }
 
   ngOnDestroy(): void {
@@ -35,14 +34,6 @@ export class ReviewCardComponent implements OnInit, OnDestroy {
   acceptReview(): void {
     if(this.review.id){
       this.reviewChange.emit({ id: this.review.id, action: 'accept' });
-      /*
-      this.reviewService.acceptReview(this.review.id).subscribe(ok => {
-        if(ok === true){
-          this.reviewChange.emit({ id: this.review.id, action: 'accept' });
-        }else{
-          // show error message
-        }
-      });*/
     }
   }
 

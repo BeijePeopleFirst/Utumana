@@ -1,6 +1,6 @@
 
   <div *ngIf="isModalOpen" class="modal">
-    <div class="relative w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
+    <div class="p-6 modal-dialog">
       <h5 class="mb-4 text-xl font-semibold text-gray-700">{{'review.write' | translate}}</h5>
   
       <button (click)="close()" class="close-modal">
@@ -13,7 +13,7 @@
           type="text" 
           formControlName="title" 
           placeholder="{{'review.title_placeholder' | translate}}" 
-          class="w-full p-2 mb-2 border rounded"
+          class="p-2 mb-2 w-full rounded border"
         />
         <div *ngIf="reviewForm.controls['title'].invalid && reviewForm.controls['title'].touched" class="text-red-500">
             {{'review.title_error' | translate}}
@@ -67,7 +67,7 @@
         <textarea 
           formControlName="description" 
           placeholder="{{'review.description_placeholder' | translate}}"
-          class="w-full p-2 border rounded"
+          class="p-2 w-full rounded border"
         ></textarea>
         <div *ngIf="reviewForm.controls['description'].invalid && reviewForm.controls['description'].touched" class="text-red-500">
            {{'review.description_error' | translate}}

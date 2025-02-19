@@ -1,6 +1,6 @@
-<div class="flex relative flex-col justify-center items-center h-screen">
-  <img class="absolute top-0 left-0 w-full h-full object-cover opacity-50 z-[-5]" [src]="iconUrl + '/couch.png'" alt="">
-  <app-search-bar (searchSubmitted)="search($event)" class="relative z-10" ></app-search-bar>
+<div class="flex relative flex-col justify-center items-center sm:h-screen">
+  <img class="hidden sm:block absolute top-0 left-0 w-full h-full object-cover opacity-50 z-[-5]" [src]="iconUrl + '/couch.png'" alt="">
+  <app-search-bar (searchSubmitted)="search($event)" class="relative z-10 w-screen rounded-lg border-t border-x border-slate-300 sm:border-none xl:w-fit" ></app-search-bar>
 </div>
 
 <section class="flex justify-center items-center pt-8 bg-neutral-1">

@@ -1,33 +1,33 @@
-<form [formGroup]="searchForm" (ngSubmit)="search()" class="flex flex-wrap items-center gap-4 px-6 py-3 rounded-lg shadow-md bg-neutral-2">
-    <div class="flex flex-col">
+<form [formGroup]="searchForm" (ngSubmit)="search()" class="flex flex-col flex-wrap gap-4 items-center px-6 py-3 rounded-lg shadow-md bg-neutral-2 md:flex-row">
+    <div class="flex flex-col w-2/3 sm:w-auto">
       <label for="city" class="text-sm font-medium select-none text-primary-dark">{{'search.city' | translate}}</label>
       <input id="city" type="text" formControlName="city" class="input-primary" >
     </div>
   
-    <div class="flex flex-col">
-      <label for="check_in" class="text-sm font-medium select-none text-primary-dark">check_in</label>
+    <div class="flex flex-col w-2/3 sm:w-auto">
+      <label for="check_in" class="text-sm font-medium select-none text-primary-dark">Check-in</label>
       <input id="check_in" type="date" formControlName="check_in" class="input-primary" style="user-select: none;">
         <span *ngIf="searchForm.get('check_in')?.invalid && searchForm.get('check_in')?.touched" class="select-none error-message">{{'search.date-error' | translate}}</span>
         <span *ngIf="searchForm.errors?.['pastDate']" class="select-none error-message">{{'search.check_inError' | translate}}</span>
     </div>
 
-    <div class="flex flex-col">
-      <label for="check_out" class="text-sm font-medium select-none text-primary-dark">check_out</label>
+    <div class="flex flex-col w-2/3 sm:w-auto">
+      <label for="check_out" class="text-sm font-medium select-none text-primary-dark">Check-out</label>
       <input id="check_out" type="date" formControlName="check_out" class="input-primary">
       <span *ngIf="searchForm.get('check_out')?.invalid && searchForm.get('check_out')?.touched" class="select-none error-message">{{'search.date-error' | translate}}</span>
       <span *ngIf="searchForm.errors?.['invalidRange']" class="select-none error-message">{{'search.check_outInconcistency' | translate}}</span>
     </div>
 
-    <div class="flex flex-col">
+    <div class="flex flex-col w-2/3 sm:w-auto">
       <label for="people" class="text-sm font-medium select-none text-primary-dark" >{{'search.people' | translate}}</label>
       <input id="people" type="number" min="1" formControlName="people" class="input-primary">
       <span *ngIf="searchForm.get('people')?.invalid && searchForm.get('people')?.touched" class="select-none error-message">{{'search.min-person' | translate}}</span>
     </div>
     
-    <div class="flex flex-col">
+    <div class="flex flex-col w-2/3 sm:w-auto">
       <label class="text-sm font-medium select-none text-primary-dark">{{ 'search.is_free' | translate }}</label>
       <div (click)="toggleIsFree()"
-           class="flex items-center justify-center w-6 h-6 border-2 rounded-md cursor-pointer select-none"
+           class="flex justify-center items-center w-6 h-6 rounded-md border-2 cursor-pointer select-none"
            [class.bg-primary-light]="searchForm.get('free_only')?.value"
            [class.border-secondary-light]="searchForm.get('free_only')?.value"
            [class.border-primary-light]="!searchForm.get('free_only')?.value"

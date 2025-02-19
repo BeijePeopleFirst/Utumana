@@ -1,11 +1,14 @@
-<div class="flex flex-row items-center justify-center gap-10 m-10">
-  <app-search-bar (searchSubmitted)="search($event)" class="relative z-10" ></app-search-bar>
-  <img 
-    class="w-auto h-12 transition-opacity duration-200 cursor-pointer hover:opacity-80" 
-    [src]="iconUrl + '/filter.png'" 
-    alt="Filter Icon" 
-    (click)="showFilters = true"
-  >
+<div class="flex flex-col gap-10 justify-center items-center mx-0 mt-0 mb-10 sm:flex-row sm:m-10">
+  <app-search-bar (searchSubmitted)="search($event)" class="relative z-10 w-screen rounded-lg border-t border-x border-slate-300 sm:border-none xl:w-fit" ></app-search-bar>
+  <div class="flex flex-row gap-x-5 items-center w-fit sm:block sm:gap-x-0 group hover:cursor-pointer"
+  (click)="showFilters = true">
+    <img 
+      class="w-auto h-12 transition-opacity duration-200 cursor-pointer hover:opacity-80" 
+      [src]="iconUrl + '/filter.png'" 
+      alt="Filter Icon" 
+    >
+    <label class="font-medium text-primary-dark sm:hidden group-hover:text-primary hover:cursor-pointer" >{{'search.filters' | translate}}</label>
+  </div>
 </div>
 
 <app-filter-modal
@@ -17,15 +20,15 @@
 
 <section class="py-8 bg-neutral-2">
   <div class="container px-2 pt-4 pb-12 mx-auto text-gray-800">
-    <div class="flex items-center justify-center gap-x-6">
+    <div class="flex gap-x-6 justify-center items-center">
       <h2 class="text-5xl font-bold text-gray-800">
         {{ 'search.resFound' | translate }}
       </h2>
 
-      <div class="relative flex items-center gap-x-4">
+      <div class="flex relative gap-x-4 items-center">
         <button 
           type="button" 
-          class="flex items-center text-lg font-medium text-primary gap-x-1 input-primary"
+          class="flex gap-x-1 items-center text-lg font-medium text-primary input-primary"
           (click)="toggleOrderByMenu($event)"
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22px">
@@ -36,15 +39,15 @@
 
         <div 
           *ngIf="isOrderByOpen" 
-          class="absolute left-0 z-50 w-48 mt-2 bg-white shadow-lg top-full rounded-xl ring-1 ring-gray-900/5"
+          class="absolute left-0 top-full z-50 mt-2 w-48 bg-white rounded-xl ring-1 shadow-lg ring-gray-900/5"
         >
           <div class="p-4 space-y-2">
-            <button (click)="setOrderParam('minPrice', 'ASC' , $event)" class="block w-full px-4 py-2 text-sm text-gray-900 hover:bg-neutral-2 hover:cursor-pointer hover:text-secondary-dark">{{ 'search.priceAsc' | translate }}</button>
-            <button (click)="setOrderParam('minPrice', 'DESC' , $event)" class="block w-full px-4 py-2 text-sm text-gray-900 hover:bg-neutral-2 hover:cursor-pointer hover:text-secondary-dark">{{ 'search.priceDesc' | translate }}</button>
-            <button (click)="setOrderParam('approvalTimestamp', 'ASC' , $event)" class="block w-full px-4 py-2 text-sm text-gray-900 hover:bg-neutral-2 hover:cursor-pointer hover:text-secondary-dark">{{ 'search.recentAsc' | translate }}</button>
-            <button (click)="setOrderParam('approvalTimestamp', 'DESC' , $event)" class="block w-full px-4 py-2 text-sm text-gray-900 hover:bg-neutral-2 hover:cursor-pointer hover:text-secondary-dark">{{ 'search.recentDesc' | translate }}</button>
-            <button (click)="setOrderParam('rating', 'ASC' , $event)" class="block w-full px-4 py-2 text-sm text-gray-900 hover:bg-neutral-2 hover:cursor-pointer hover:text-secondary-dark">{{ 'search.ratingAsc' | translate }}</button>
-            <button (click)="setOrderParam('rating', 'DESC' , $event)" class="block w-full px-4 py-2 text-sm text-gray-900 hover:bg-neutral-2 hover:cursor-pointer hover:text-secondary-dark">{{ 'search.ratingDesc' | translate }}</button>
+            <button (click)="setOrderParam('minPrice', 'ASC' , $event)" class="block px-4 py-2 w-full text-sm text-gray-900 hover:bg-neutral-2 hover:cursor-pointer hover:text-secondary-dark">{{ 'search.priceAsc' | translate }}</button>
+            <button (click)="setOrderParam('minPrice', 'DESC' , $event)" class="block px-4 py-2 w-full text-sm text-gray-900 hover:bg-neutral-2 hover:cursor-pointer hover:text-secondary-dark">{{ 'search.priceDesc' | translate }}</button>
+            <button (click)="setOrderParam('approvalTimestamp', 'ASC' , $event)" class="block px-4 py-2 w-full text-sm text-gray-900 hover:bg-neutral-2 hover:cursor-pointer hover:text-secondary-dark">{{ 'search.recentAsc' | translate }}</button>
+            <button (click)="setOrderParam('approvalTimestamp', 'DESC' , $event)" class="block px-4 py-2 w-full text-sm text-gray-900 hover:bg-neutral-2 hover:cursor-pointer hover:text-secondary-dark">{{ 'search.recentDesc' | translate }}</button>
+            <button (click)="setOrderParam('rating', 'ASC' , $event)" class="block px-4 py-2 w-full text-sm text-gray-900 hover:bg-neutral-2 hover:cursor-pointer hover:text-secondary-dark">{{ 'search.ratingAsc' | translate }}</button>
+            <button (click)="setOrderParam('rating', 'DESC' , $event)" class="block px-4 py-2 w-full text-sm text-gray-900 hover:bg-neutral-2 hover:cursor-pointer hover:text-secondary-dark">{{ 'search.ratingDesc' | translate }}</button>
           </div>
         </div>
       </div>

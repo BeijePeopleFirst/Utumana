@@ -1,5 +1,5 @@
 <div *ngIf="isModalOpen" class="modal">
-    <div class="relative justify-center w-full max-w-md pb-5 text-center bg-white rounded-lg shadow-lg px-7 pt-7">
+    <div class="justify-center px-7 pt-7 pb-5 text-center modal-dialog">
         <ng-container *ngIf="action=='accept'">
             <h5>{{'review.accept_title' | translate}}</h5>
             <p class="text-sm">{{'review.accept_subtitle' | translate}}</p>
@@ -13,7 +13,7 @@
             &times;
         </button>
 
-        <div class="flex justify-center mt-4 gap-x-5">
+        <div class="flex gap-x-5 justify-center mt-4">
             <ng-container *ngIf="action=='accept'">
                 <button type="button" class="w-1/4 btn-success" (click)="accept()">{{'review.accept_button_label' | translate}}</button>
             </ng-container>
