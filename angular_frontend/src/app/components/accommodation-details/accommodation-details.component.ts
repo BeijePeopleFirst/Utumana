@@ -32,7 +32,11 @@ export class AccommodationDetailsComponent implements OnInit {
   invalidAccommodation: boolean = false;
   isFavourite: boolean = false;
   isAdminOrMe: boolean = false;
+
   accommodationReviews: Review[] = [];
+  filteredAccommodationReviews: Review[] = [];
+  accommodationReviewsPageNumber: number = 0;
+  accommodationReviewsTotalPagesNumber!: number;
 
   accommodationOwner!: User;
 
@@ -127,105 +131,6 @@ export class AccommodationDetailsComponent implements OnInit {
 
     if(localStorage.getItem("created_booking")) localStorage.removeItem("created_booking");
 
-    /*this.accommodationService.getAccommodationById(Number(id)).subscribe(
-      data => {
-        if(!data) {
-          this.invalidAccommodation = true;
-        }
-        else {
-          this.invalidAccommodation = false;
-          this.accommodation = data;
-
-          console.log("STAMPO ACC trovata -> ", this.accommodation);
-
-          for(let s of this.accommodation.services)
-            this.selectedServices.push(new Service(s.id, s.title, s.icon_url));
-
-          this.selectedServicesView$.next(this.selectedServices);
-
-          this.userId = localStorage.getItem("id") ? Number(localStorage.getItem("id")) : undefined;
-          //this.userId = 1;
-
-          if(!this.userId) {
-            this.userNotLogged = true;
-            return;
-          }
-          else {
-            this.userNotLogged = false;
-
-            this.userService.getUserById(this.userId).subscribe(
-              user => {
-                if(!user || "message" in user) {
-                  this.invalidUserId = true;
-                  if(user && "message" in user) this.message = user.message;
-                  return;
-                }
-                else {
-                  this.invalidUserId = false;
-
-                  if(user.isAdmin) this.isAdminOrMe = true;
-                  else {
-                    if(user.id == this.accommodation.owner_id) this.isAdminOrMe = true;
-                    else this.isAdminOrMe = false;
-                  }
-                }
-
-                //Now lets retrieve the Accommodation Owner:
-                if(!this.accommodation.id) {
-                  this.message = "true";
-                  this.accommodationEntityError = true;
-                  this.invalidAccommodation = true;
-                  return;
-                }
-                this.userService.getUserById(this.accommodation.owner_id).subscribe(
-                  foundUser => {
-                    if(!foundUser) {
-                      this.message = "true";
-                      this.accommodationEntityError = true;
-                      this.invalidAccommodation = true;
-                      return;
-                    }
-                    else if("message" in foundUser) {
-                      this.message = foundUser.message;
-                      this.invalidAccommodation = true;
-                      return;
-                    }
-                    else {
-                      this.accommodationOwner = foundUser;
-                    }
-
-                    //Lets configure the search services service:
-                    this.foundServices$ = this.servicesSearchBarInputToken$.pipe(
-                      // wait 300ms after each keystroke before considering the term
-                      debounceTime(300),
-
-                      // ignore new term if same as previous term: need to test this one
-                      //distinctUntilChanged(),
-
-                      // switch to new search observable each time the term changes
-                      switchMap((term: string) =>
-                        this.serviceService.searchServices(term).pipe(
-                          map(res => {
-                            if("message" in res) {
-                              this.message = res.message + ", status: " + res.status;
-                              return [];
-                            }
-                            else return res;
-                          })
-                        )
-                      )
-                    );
-                  }
-                )
-              }
-            );
-
-            return;
-          }
-        }
-      }
-    )*/
-
     //recupero l' accommodation:
     this.accommodationService.getAccommodationById(Number(id)).subscribe(
       result => {
@@ -263,7 +168,7 @@ export class AccommodationDetailsComponent implements OnInit {
               this.errorFetchingAccommodationDetails = true;
               return;
             }
-
+            
             this.invalidUserId = false;
 
             let tmp1: Boolean | undefined;
@@ -273,13 +178,13 @@ export class AccommodationDetailsComponent implements OnInit {
 
             if(!("isAdmin" in info) || !("isOwner" in info) || !("reviews" in info) || !("isFavourite" in info)
               || !(tmp1 = Boolean(info["isAdmin"])) || !(tmp2 = Boolean(info["isOwner"]))
-              || !(tmp3 = info["reviews"]) || !(tmp4 = Boolean(info["isFavourite"]))) {
+              || !(tmp3 = info["reviews"]) || ((tmp4 = Boolean(info["isFavourite"])) == undefined)) {
 
               this.errorFetchingAccommodationDetails = true;
               this.message = "true";
               return;
             }
-
+            
             this.isAdminOrMe = (tmp1.valueOf() || tmp2.valueOf());
             this.isFavourite = tmp4.valueOf();
 
@@ -298,8 +203,20 @@ export class AccommodationDetailsComponent implements OnInit {
                                               )
               } 
             }
-
+            
             console.log("Reviews -> ", this.accommodationReviews);
+
+            //Filtro le review in base al tipo di User loggato:
+            if(!this.isAdminOrMe) this.accommodationReviews = this.accommodationReviews.filter(r => r.approval_timestamp != null);
+
+            //Ordino le Review per ID ascendente:
+            this.accommodationReviews.sort((s1, s2) => s1.id! - s2.id!);
+
+            //Adesso ottengo le review in base al numero di pagina:
+            this.filteredAccommodationReviews = this.getDesiredReviewsByPageNumber(this.accommodationReviewsPageNumber, this.accommodationReviews);
+
+            //Ora calcolo il numero di pagine:
+            this.accommodationReviewsTotalPagesNumber = Math.ceil(this.accommodationReviews.length / 4);
 
             //Ora recupero l' Owner dell' Accommodation:
             this.userService.getUserById(this.accommodation.owner_id).subscribe(
@@ -631,6 +548,24 @@ export class AccommodationDetailsComponent implements OnInit {
         }
       }
     )
+  }
+
+  //TODO:
+  //PageSize === 4
+  getDesiredReviewsByPageNumber(pageNumber: number, reviews: Review[]): Review[] {
+
+  }
+
+  //TODO: prendo n elementi dalla lista delle review in base all' offset specificato
+  consumeAskForPageEvent($event: number) {
+
+  }
+
+  //TODO:
+  //this.reviewChange.emit({ id: this.review.id, action: 'reject' });
+  //this.reviewChange.emit({ id: this.review.id, action: 'accept' });
+  consumeReviewActionEvent($event: { id:number, action:string }) {
+
   }
 
   clearMessage() {

@@ -133,7 +133,11 @@
       </div>
       <!-------------------------------------------------------------------------------------------------------------------------------------------------->
       <div class="mt-14">
-        <app-review-cards></app-review-cards>
+        <app-review-cards [reviews]="filteredAccommodationReviews" 
+        [pageNumber]="accommodationReviewsPageNumber" 
+        [totalPages]="accommodationReviewsTotalPagesNumber"
+        (askForPage)="consumeAskForPageEvent($event)"
+        (reviewAction)="consumeReviewActionEvent($event)"></app-review-cards>
       </div>
     </div>
   </ng-container>
