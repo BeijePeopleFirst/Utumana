@@ -67,10 +67,7 @@ export class SearchBarComponent implements OnInit{
       const selectedServices = this.filtersService.getSelectedFilters();
       if (selectedServices.length > 0) {
         params.services = selectedServices.map(id => id.toString());
-      } else {
-        params.services = ['']
-      }
-      console.log("search bar params:", params);
+      } 
       this.searchService.setSearchData(params);
       this.searchSubmitted.emit(params);
     } else {

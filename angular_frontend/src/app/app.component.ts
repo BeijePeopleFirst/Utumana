@@ -15,6 +15,7 @@ export class AppComponent implements DoCheck {
   isLogin: boolean = false;
   isProfileMenuOpen = false;
   isLanguageMenuOpen = false;
+  isMenuOpen = false;
   selectedLanguage = 'en-US'; 
   iconUrl = iconURL
   title= 'Utumana'; 
@@ -53,11 +54,21 @@ export class AppComponent implements DoCheck {
     this.isProfileMenuOpen = false;
   }
 
+  toggleMobileMenu(event: Event) {
+    event.stopPropagation();
+    this.isMenuOpen = !this.isMenuOpen;
+    if(this.isMenuOpen === false){
+      this.isProfileMenuOpen = false;
+      this.isLanguageMenuOpen = false;
+    }
+  }
+
   changeLanguage(langCode: string, event: Event) {
     event.stopPropagation(); 
     this.selectedLanguage = langCode;
     this.translate.use(langCode);
     this.isLanguageMenuOpen = false;
+    this.isMenuOpen = false;
     localStorage.setItem("currLan", langCode);
   }
 
@@ -65,5 +76,6 @@ export class AppComponent implements DoCheck {
   closeMenus() {
       this.isProfileMenuOpen = false;
       this.isLanguageMenuOpen = false;
+      this.isMenuOpen = false;
     }
 }

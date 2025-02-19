@@ -45,7 +45,7 @@ export class FiltersService {
   }
   
   getSelectedFilters(): string[] {
-    return this.selectedFiltersSubject.getValue().filter(s => s != '');
+    return this.selectedFiltersSubject.getValue();
   }
 }
 

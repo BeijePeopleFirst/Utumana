@@ -1,9 +1,9 @@
-<section class="flex items-center justify-center pt-6 pb-4 bg-neutral-1">
+<section class="flex justify-center items-center pt-6 pb-4 bg-neutral-1">
     <ng-container *ngIf="user">
-        <div class="container flex flex-wrap items-center justify-center gap-x-20">
+        <div class="container flex flex-wrap gap-x-20 justify-center items-center">
             <div class="relative">
-                <div class="relative overflow-hidden rounded-full shadow-md w-44 h-44">
-                    <img class="absolute top-0 left-0 object-cover w-full h-full bg-cover object-fit" src="{{pictureUrl}}" (error)="pictureUrl = defaultPictureUrl" alt="Profile picture">
+                <div class="overflow-hidden relative w-44 h-44 rounded-full shadow-md">
+                    <img class="object-cover absolute top-0 left-0 w-full h-full bg-cover object-fit" src="{{pictureUrl}}" (error)="pictureUrl = defaultPictureUrl" alt="Profile picture">
                 </div>
                 <button class="top-0 right-0 rounded-full shadow-md bg-neutral-2 icon" aria-label="edit picture" (click)="editPicture()">
                     <img src="{{iconsUrl}}\\pencil.png" alt="edit">
@@ -31,7 +31,7 @@
                         <img src="{{iconsUrl}}\\pencil.png" alt="edit">
                     </button>
                 
-                    <table class="pr-8 ml-4 border-separate rounded-lg table-fixed peer-hover:text-primary-dark border-spacing-x-5" [ngClass]="{'w-96': user.bio}">
+                    <table class="pr-8 ml-4 rounded-lg border-separate table-fixed peer-hover:text-primary-dark border-spacing-x-5" [ngClass]="{'w-96': user.bio}">
                         <tr>
                             <td class="font-bold text-primary" [ngClass]="{'w-20': user.bio}">{{'profile.bio' | translate}}</td>
                             <td>{{user.bio}}</td>
@@ -45,16 +45,16 @@
 
 <app-settings class="bg-neutral-2"></app-settings>
 
-<section class="flex items-center justify-center pt-8 bg-neutral-1">
-    <div class="container p-5 text-center">
+<section class="flex justify-center items-center pt-6 w-screen bg-neutral-1">
+    <div class="py-5 text-center">
         <h2>{{'profile.reviews_to_accept' | translate}}</h2>
         <app-review-cards [reviews]="waitingReviews" [pageNumber]="waitingReviewsPageNumber" [totalPages]="waitingReviewsTotalPages" 
         (askForPage)="loadWaitingReviewsPage($event)" (reviewAction)="showReviewModal($event.id, $event.action)"></app-review-cards>
     </div>
 </section>
 
-<section class="flex items-center justify-center pt-8 bg-neutral-2">
-    <div class="container p-5 text-center">
+<section class="flex justify-center items-center pt-6 w-screen bg-neutral-2">
+    <div class="py-5 text-center">
         <h2>{{'profile.reviews_title' | translate}}</h2>
         <app-review-cards [reviews]="reviews" [pageNumber]="reviewsPageNumber" [totalPages]="reviewsTotalPages" 
         (askForPage)="loadUserReviewsPage($event)"></app-review-cards>

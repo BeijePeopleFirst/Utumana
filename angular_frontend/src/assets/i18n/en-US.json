@@ -116,7 +116,8 @@
 	"logout": "Logout",
 	"create": "Create",
 	"bookings": "My bookings",
-	"host-dashboard": "Host Dashboard"
+	"host-dashboard": "Host Dashboard",
+	"notifications": "Notifications"
 	},
 "home":{
 	"latest":"Latest uploads",
@@ -150,7 +151,6 @@
 	"bio": "Bio",
 	"change_password": "Change password",
 	"edit_bio": "Edit your bio",
-	"edit_bio_button_label": "Save",
 	"edit_bio_placeholder": "Write a short introduction about yourself..."
 	},
 "review": {
@@ -173,6 +173,7 @@
 	"accept_button_label": "Accept",
 	"reject_button_label": "Reject"
 },
+"save_button_label": "Save",
 "search": {
 	"city": "City",
 	"date-error": "Date is mandatory",
@@ -199,7 +200,11 @@
 	},
 "settings": {
 	"title": "Settings",
-	"change_password": "Change password"
+	"change_password": "Change password",
+	"old_password": "Current password",
+	"new_password": "New password",
+	"new_password_confirm": "Confirm new password",
+	"password_confirm_different": "Confirm password and new password are different"
 },
 "timer":{
 		"label":"Left to depart"

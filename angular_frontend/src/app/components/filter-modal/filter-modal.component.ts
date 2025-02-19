@@ -39,7 +39,8 @@ export class FilterModalComponent implements OnInit {
   }
 
   applyFilters(): void {
-    const selected = this.selectedServices.length > 0 ? Array.from(this.selectedServices) : [''];
+    const selected = this.selectedServices.length > 0 ? Array.from(this.selectedServices) :[];
+    console.log("selected: ", selected)
     this.apply.emit(selected);
     this.close.emit();
   }

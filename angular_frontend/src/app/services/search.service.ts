@@ -7,15 +7,7 @@ import { params } from '../models/searchParams';
 })
 export class SearchService {
   
-  private searchDataSubject = new BehaviorSubject<params>({
-    destination: '',
-    'check-in': undefined,
-    'check-out': undefined,
-    number_of_guests: 0,
-    free_only: false,
-    services: [''],
-    order_by: ''
-  });
+  private searchDataSubject = new BehaviorSubject<params>({});
 
   public searchData$ = this.searchDataSubject.asObservable();
 

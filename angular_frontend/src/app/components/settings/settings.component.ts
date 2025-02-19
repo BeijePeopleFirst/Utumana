@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-settings',
@@ -6,5 +6,15 @@ import { Component } from '@angular/core';
   styleUrls: ['./settings.component.css']
 })
 export class SettingsComponent {
+  isPasswordModalOpen: boolean = false;
 
+  closePasswordModal(): void {
+    this.isPasswordModalOpen = false;
+    document.body.style.overflow = 'auto';
+  }
+
+  showPasswordModal(): void {
+    this.isPasswordModalOpen = true;
+    document.body.style.overflow = 'hidden';
+  }
 }
