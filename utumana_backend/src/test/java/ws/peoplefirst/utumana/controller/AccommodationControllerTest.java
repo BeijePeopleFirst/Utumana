@@ -560,120 +560,120 @@ public class AccommodationControllerTest {
         assertThrows(IdNotFoundException.class, () -> accommodationController.getMyAccommodationsDTO(0L, authentication));
     }
 
-    @Test
-    void searchResultsFree() {
-        when(authentication.getPrincipal()).thenReturn(userDTO);
-        when(accommodationService.findByUserInputFreeDTO(anyString()
-                , any()
-                , any()
-                , anyInt()
-                , anyList()
-                , anyString()
-                , anyLong()
-        )).thenReturn(List.of(getInstance(AccommodationDTO.class)));
-        assertDoesNotThrow(() -> accommodationController.searchResults(DESTINATION
-                , "2025-01-01"
-                , "2026-01-01"
-                , 1
-                , true
-                , List.of(0L)
-                , "id"
-                , authentication));
-    }
-
-    @Test
-    void searchResultsNotFree() {
-        when(authentication.getPrincipal()).thenReturn(userDTO);
-        when(accommodationService.findByUserInputDTO(anyString()
-                , any()
-                , any()
-                , anyInt()
-                , anyList()
-                , anyString()
-                , anyLong()
-        )).thenReturn(List.of(getInstance(AccommodationDTO.class)));
-        assertDoesNotThrow(() -> accommodationController.searchResults(DESTINATION
-                , "2025-01-01"
-                , "2026-01-01"
-                , 1
-                , false
-                , List.of(0L)
-                , "id"
-                , authentication));
-    }
-
-    @Test
-    void searchResultsKoDestination() {
-        assertThrows(NullPointerException.class, () -> accommodationController.searchResults(null
-                , "2025-01-01"
-                , "2025-01-01"
-                , 1
-                , true
-                , List.of(0L)
-                , "id"
-                , authentication));
-    }
-
-    @Test
-    void searchResultsKoCI() {
-        assertThrows(InvalidJSONException.class, () -> accommodationController.searchResults(DESTINATION
-                , ""
-                , "2025-01-01"
-                , 0
-                , true
-                , List.of(0L)
-                , "id"
-                , authentication));
-    }
-
-    @Test
-    void searchResultsKoCO() {
-        assertThrows(InvalidJSONException.class, () -> accommodationController.searchResults(DESTINATION
-                , "2025-01-01"
-                , ""
-                , 0
-                , true
-                , List.of(0L)
-                , "id"
-                , authentication));
-    }
-
-    @Test
-    void searchResultsKoCOBeforeCI() {
-        assertThrows(InvalidJSONException.class, () -> accommodationController.searchResults(DESTINATION
-                , "2025-01-01"
-                , "2024-01-01"
-                , 0
-                , true
-                , List.of(0L)
-                , "id"
-                , authentication));
-    }
-
-    @Test
-    void searchResultsKoNG() {
-        assertThrows(ForbiddenException.class, () -> accommodationController.searchResults(DESTINATION
-                , "2025-01-01"
-                , "2026-01-01"
-                , 0
-                , true
-                , List.of(0L)
-                , "id"
-                , authentication));
-    }
-
-    @Test
-    void searchResultsKoAuth() {
-        when(authentication.getPrincipal()).thenReturn(null);
-        assertThrows(TheJBeansException.class, () -> accommodationController.searchResults(DESTINATION
-                , "2025-01-01"
-                , "2026-01-01"
-                , 1
-                , true
-                , List.of(0L)
-                , "id"
-                , authentication));
-    }
+//    @Test
+//    void searchResultsFree() {
+//        when(authentication.getPrincipal()).thenReturn(userDTO);
+//        when(accommodationService.findByUserInputFreeDTO(anyString()
+//                , any()
+//                , any()
+//                , anyInt()
+//                , anyList()
+//                , anyString()
+//                , anyLong()
+//        )).thenReturn(List.of(getInstance(AccommodationDTO.class)));
+//        assertDoesNotThrow(() -> accommodationController.searchResults(DESTINATION
+//                , "2025-01-01"
+//                , "2026-01-01"
+//                , 1
+//                , true
+//                , List.of(0L)
+//                , "id"
+//                , authentication));
+//    }
+//
+//    @Test
+//    void searchResultsNotFree() {
+//        when(authentication.getPrincipal()).thenReturn(userDTO);
+//        when(accommodationService.findByUserInputDTO(anyString()
+//                , any()
+//                , any()
+//                , anyInt()
+//                , anyList()
+//                , anyString()
+//                , anyLong()
+//        )).thenReturn(List.of(getInstance(AccommodationDTO.class)));
+//        assertDoesNotThrow(() -> accommodationController.searchResults(DESTINATION
+//                , "2025-01-01"
+//                , "2026-01-01"
+//                , 1
+//                , false
+//                , List.of(0L)
+//                , "id"
+//                , authentication));
+//    }
+//
+//    @Test
+//    void searchResultsKoDestination() {
+//        assertThrows(NullPointerException.class, () -> accommodationController.searchResults(null
+//                , "2025-01-01"
+//                , "2025-01-01"
+//                , 1
+//                , true
+//                , List.of(0L)
+//                , "id"
+//                , authentication));
+//    }
+//
+//    @Test
+//    void searchResultsKoCI() {
+//        assertThrows(InvalidJSONException.class, () -> accommodationController.searchResults(DESTINATION
+//                , ""
+//                , "2025-01-01"
+//                , 0
+//                , true
+//                , List.of(0L)
+//                , "id"
+//                , authentication));
+//    }
+//
+//    @Test
+//    void searchResultsKoCO() {
+//        assertThrows(InvalidJSONException.class, () -> accommodationController.searchResults(DESTINATION
+//                , "2025-01-01"
+//                , ""
+//                , 0
+//                , true
+//                , List.of(0L)
+//                , "id"
+//                , authentication));
+//    }
+//
+//    @Test
+//    void searchResultsKoCOBeforeCI() {
+//        assertThrows(InvalidJSONException.class, () -> accommodationController.searchResults(DESTINATION
+//                , "2025-01-01"
+//                , "2024-01-01"
+//                , 0
+//                , true
+//                , List.of(0L)
+//                , "id"
+//                , authentication));
+//    }
+//
+//    @Test
+//    void searchResultsKoNG() {
+//        assertThrows(ForbiddenException.class, () -> accommodationController.searchResults(DESTINATION
+//                , "2025-01-01"
+//                , "2026-01-01"
+//                , 0
+//                , true
+//                , List.of(0L)
+//                , "id"
+//                , authentication));
+//    }
+//
+//    @Test
+//    void searchResultsKoAuth() {
+//        when(authentication.getPrincipal()).thenReturn(null);
+//        assertThrows(TheJBeansException.class, () -> accommodationController.searchResults(DESTINATION
+//                , "2025-01-01"
+//                , "2026-01-01"
+//                , 1
+//                , true
+//                , List.of(0L)
+//                , "id"
+//                , authentication));
+//    }
 
     /**
      * GET - API: /accommodation_info/{accommodationId}

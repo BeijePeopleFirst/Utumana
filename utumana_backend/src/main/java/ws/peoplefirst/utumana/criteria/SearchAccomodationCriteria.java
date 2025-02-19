@@ -1,5 +1,7 @@
 package ws.peoplefirst.utumana.criteria;
 
+import org.springframework.data.domain.Pageable;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -14,10 +16,11 @@ public class SearchAccomodationCriteria {
     private String orderBy;
     private String orderDirection;
     private Long userId;
+    private Pageable pageable;
 
     public SearchAccomodationCriteria(String destination, LocalDate checkInDate, LocalDate checkOutDate,
                                       Integer numberOfGuests, Boolean freeOnly, List<Long> serviceIds, String orderBy,
-                                      String orderDirection, Long userId) {
+                                      String orderDirection, Long userId, Pageable pageable) {
         this.destination = destination;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
@@ -27,6 +30,7 @@ public class SearchAccomodationCriteria {
         this.orderBy = orderBy;
         this.orderDirection = orderDirection;
         this.userId = userId;
+        this.pageable = pageable;
     }
 
     public String getDestination() {
@@ -99,5 +103,13 @@ public class SearchAccomodationCriteria {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public Pageable getPageable() {
+        return pageable;
+    }
+
+    public void setPageable(Pageable pageable) {
+        this.pageable = pageable;
     }
 }

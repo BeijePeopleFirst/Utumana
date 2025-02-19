@@ -3,9 +3,9 @@ package ws.peoplefirst.utumana.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ws.peoplefirst.utumana.criteria.SearchAccomodationCriteria;
 import ws.peoplefirst.utumana.dto.AccommodationDTO;
@@ -203,33 +203,17 @@ public class AccommodationService {
         userRepository.save(user);
     }
 
-    private Sort getSortFromOrderByParam(String orderBy, String orderDirection) {
 
-        if (!orderDirection.equalsIgnoreCase("asc") && !orderDirection.equalsIgnoreCase("desc"))
-            throw new TheJBeansException("Error: unknown order direction for accommodations: " + orderDirection);
-
-        switch (orderBy) {
-            case "minPrice":
-                orderBy = "approvalTimestamp";
-                break;
-            case "rating":
-                orderBy = "rating.rating";
-                break;
-        }
-
-        return orderDirection.equals("asc") ? Sort.by(Sort.Direction.ASC, orderBy) : Sort.by(Sort.Direction.DESC, orderBy);
-    }
-
-    public List<AccommodationDTO> findByUserInputDTO(String destination, LocalDate checkInDate, LocalDate checkOutDate,
+    public Page<AccommodationDTO> findByUserInputDTO(String destination, LocalDate checkInDate, LocalDate checkOutDate,
                                                      Integer numberOfGuests, boolean freeOnly, List<Long> serviceIds,
-                                                     String orderBy, String orderDirection, Long userId) {
+                                                     String orderBy, String orderDirection, Long userId, Pageable pageable) {
         System.out.println("service ids = " + serviceIds);
 
         SearchAccomodationCriteria searchAccomodationCriteria =
                 new SearchAccomodationCriteria(destination, checkInDate, checkOutDate, numberOfGuests, freeOnly,
-                        serviceIds, orderBy, orderDirection, userId);
+                        serviceIds, orderBy, orderDirection, userId, pageable);
 
-        List<AccommodationDTO> results = accommodationRepository.searchAccomodation(searchAccomodationCriteria);
+        Page<AccommodationDTO> results = accommodationRepository.searchAccomodation(searchAccomodationCriteria);
 
         for (AccommodationDTO accommodationDTO : results) {
             accommodationDTO.setIsFavourite(isFavourite(accommodationDTO.getId(), userId));

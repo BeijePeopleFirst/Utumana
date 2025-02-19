@@ -3,6 +3,9 @@ package ws.peoplefirst.utumana.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -501,7 +504,7 @@ public class AccommodationController {
 
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value = "/search")
-	public List<AccommodationDTO> searchResults(
+	public Page<AccommodationDTO> searchResults(
 			@RequestParam(name = "destination", required = false) String destination,
 			@RequestParam(name = "check-in") String checkIn,
 			@RequestParam(name = "check-out") String checkOut,
@@ -510,6 +513,8 @@ public class AccommodationController {
 			@RequestParam(name = "services", required = false) List<Long> serviceIds,
 			@RequestParam(name = "order_by", required = false, defaultValue = "id") String orderBy,
 			@RequestParam(name = "oder_direction", required = false, defaultValue = "desc") String oderDirection,
+			@RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
+			@RequestParam(name = "size", required = false, defaultValue = "10") Integer size,
 			Authentication auth) {
 		logger.debug("GET /search");
 
@@ -551,7 +556,8 @@ public class AccommodationController {
 				", number of guests = " + numberOfGuests + ", freeOnly = " + freeOnly + ", services = " + serviceIds + ", order by " + orderBy);
 
 		Long userId = AuthorizationUtility.getUserFromAuthentication(auth).getId();
-		return accommodationService.findByUserInputDTO(destination, checkInDate, checkOutDate, numberOfGuests, freeOnly, serviceIds, orderBy, oderDirection, userId);
+		Pageable pageable = PageRequest.of(page, size);
+		return accommodationService.findByUserInputDTO(destination, checkInDate, checkOutDate, numberOfGuests, freeOnly, serviceIds, orderBy, oderDirection, userId, pageable);
 	}
 
 
