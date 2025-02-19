@@ -516,7 +516,7 @@ public class AccommodationController {
 			@RequestParam(name = "min_price", required = false) Double minPrice,
 			@RequestParam(name = "max_price", required = false) Double maxPrice,
 			@RequestParam(name = "order_by", required = false, defaultValue = "id") String orderBy,
-			@RequestParam(name = "oder_direction", required = false, defaultValue = "desc") String oderDirection,
+			@RequestParam(name = "order_direction", required = false, defaultValue = "desc") String oderDirection,
 			@RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
 			@RequestParam(name = "size", required = false, defaultValue = "10") Integer size,
 			Authentication auth) {
