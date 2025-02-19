@@ -19,9 +19,9 @@ export class SearchPageComponent implements OnInit {
   iconUrl = iconURL;
   
   foundAccommodations$!: Observable<AccommodationDTO[] | null>;
-  foundAccommodationsPageSize!: number;
-  foundAccommodationsPageNumber!: number;
-  foundAccommodationsTotalPages!: number;
+  foundAccommodationsPageNumber: number = 0;
+  foundAccommodationsTotalPages: number = 0;
+  foundAccommodationsPageSize: number = 8;
   
   services$ = this.filterService.services$;
   searchParams$ = this.searchService.searchData$;
@@ -43,10 +43,16 @@ export class SearchPageComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.foundAccommodationsPageSize = 8;
     this.foundAccommodationsPageNumber = 0;
-    this.foundAccommodationsTotalPages = 2;
+    this.foundAccommodationsTotalPages = 0;
     this.foundAccommodations$ = this.accommodationService.foundAccommodations$;
+
+    this.accommodationService.paginationInfo$.subscribe(info => {
+      if (info) {
+        this.foundAccommodationsPageNumber = info.number;
+        this.foundAccommodationsTotalPages = info.totalPages;
+      }
+    });
 
     this.route.queryParams.subscribe(queryParams => {
       const services = queryParams['services']
@@ -67,7 +73,9 @@ export class SearchPageComponent implements OnInit {
         min_price: queryParams['min_price'],
         max_price: queryParams['max_price'],
         min_rating: queryParams['min_rating'],
-        max_rating: queryParams['max_rating']
+        max_rating: queryParams['max_rating'],
+        page: queryParams['page'] ? parseInt(queryParams['page']) : 0,
+        size: this.foundAccommodationsPageSize
       };
 
       this.currentOrderBySelected$.next([
@@ -85,7 +93,7 @@ export class SearchPageComponent implements OnInit {
         max_rating: searchParams.max_rating
       };
       this.filterService.setSelectedFilters(filterParams);
-      this.loadFoundResearchPage(0);
+      this.loadFoundResearchPage(searchParams.page || 0);
     });
   }
 
@@ -95,7 +103,6 @@ export class SearchPageComponent implements OnInit {
       ? (Array.isArray(params.services) ? [...params.services] : [params.services])
       : [];
   
-    console.log("services:", services);
     const searchParams: CompleteParams = {
       destination: params.destination,
       ['check-in']: params['check-in'] ?? currentParams['check-in'] ?? '',
@@ -108,20 +115,19 @@ export class SearchPageComponent implements OnInit {
       min_price: params.min_price,
       max_price: params.max_price,
       min_rating: params.min_rating,
-      max_rating: params.max_rating
+      max_rating: params.max_rating,
+      page: params.page || 0,
+      size: this.foundAccommodationsPageSize
     };
   
     const cleanedParams: CompleteParams = Object.fromEntries(
       Object.entries(searchParams).filter(([_, value]) => value !== undefined)
     );
   
-    //console.log("params search:", cleanedParams);
-  
     this.searchService.setSearchData(cleanedParams);
     this.router.navigate(['/search_page/'], { queryParams: cleanedParams });
   }
   
-
   onApplyFilters(filters: FilterParams): void {
     this.filterService.setSelectedFilters(filters);
     const currentSearchParams = this.searchService.getSearchData();
@@ -131,17 +137,32 @@ export class SearchPageComponent implements OnInit {
       min_price: filters.min_price,
       max_price: filters.max_price,
       min_rating: filters.min_rating,
-      max_rating: filters.max_rating
+      max_rating: filters.max_rating,
+      page: 0 
     };
     this.search(updatedParams);
   }
 
   loadFoundResearchPage(pageNumber: number): void {
     this.foundAccommodationsPageNumber = pageNumber;
-    this.accommodationService.getSearchResults(
-      this.foundAccommodationsPageNumber * this.foundAccommodationsPageSize,
-      this.foundAccommodationsPageSize
-    );
+    const currentParams = this.searchService.getSearchData();
+    
+    const updatedParams = {
+      ...currentParams,
+      page: pageNumber
+    };
+    this.searchService.setSearchData(updatedParams);
+    
+    this.accommodationService.getSearchResults(pageNumber, this.foundAccommodationsPageSize);
+  }
+
+  changePage(page: number): void {
+    const currentParams = this.searchService.getSearchData();
+    const updatedParams = {
+      ...currentParams,
+      page: page
+    };
+    this.search(updatedParams);
   }
 
   toggleOrderByMenu(event: MouseEvent): void {

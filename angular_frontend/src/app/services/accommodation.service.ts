@@ -10,6 +10,7 @@ import { Availability } from '../models/availability';
 import { PriceDTO } from '../dtos/priceDTO';
 import { Service } from '../models/service';
 import { SearchService } from './search.service';
+import { PageResponse} from '../models/paginatedResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -27,9 +28,15 @@ export class AccommodationService {
   private foundAccommodationsSubject = new BehaviorSubject<AccommodationDTO[]>([]);
   public foundAccommodations$ = this.foundAccommodationsSubject.asObservable();
 
-  //private searchParamsSubject = new BehaviorSubject<any>(null);
+  private paginationInfoSubject = new BehaviorSubject<{
+    number: number;
+    totalPages: number;
+    totalElements: number;
+    size: number;
+  } | null>(null);
+  public paginationInfo$ = this.paginationInfoSubject.asObservable();
 
-  constructor(private http: HttpClient,private searchService: SearchService ) { }
+  constructor(private http: HttpClient, private searchService: SearchService) { }
 
   public getLatestUploads(): Observable<AccommodationDTO[]> {
     return this.getAccommodationsDTO(`${BACKEND_URL_PREFIX}/api/accommodation/latest_uploads`);
@@ -133,20 +140,65 @@ export class AccommodationService {
       subject.next(accommodations);
     })
   }
-
-  public getSearchResults(offset: number, pageSize: number): void{
+  public getSearchResults(pageNumber: number, pageSize: number): void {
     const currentParams = this.searchService.getSearchData();
-    console.log("current params: ",currentParams)
     if (!currentParams) return;
-      let httpParams = new HttpParams();
-      Object.keys(currentParams).forEach(key => {
-        if ((currentParams as any)[key] != null) {
-          httpParams = httpParams.set(key, (currentParams as any)[key]);
-        }
+      
+    let httpParams = new HttpParams()
+      .set('page', pageNumber.toString())
+      .set('size', pageSize.toString());
+      
+    Object.keys(currentParams).forEach(key => {
+      if ((currentParams as any)[key] != null && key !== 'page' && key !== 'size') {
+        httpParams = httpParams.set(key, (currentParams as any)[key]);
+      }
+    });
+      
+    const url = `${BACKEND_URL_PREFIX}/api/search?${httpParams.toString()}`;
+    
+    this.http.get<PageResponse<AccommodationDTO>>(url).pipe(
+      catchError(error => {
+        console.error("Error fetching search results:", error);
+        return of({
+          content: [],
+          pageable: {
+            pageNumber: 0,
+            pageSize: pageSize,
+            sort: { empty: true, sorted: false, unsorted: true },
+            offset: 0,
+            paged: true,
+            unpaged: false
+          },
+          totalPages: 0,
+          totalElements: 0,
+          last: true,
+          size: pageSize,
+          number: 0,
+          sort: { empty: true, sorted: false, unsorted: true },
+          first: true,
+          numberOfElements: 0,
+          empty: true
+        });
       })
-      const url = `${BACKEND_URL_PREFIX}/api/search?${httpParams.toString()}`;
-      this.getAccommodationsDTOToSubject(url, offset, pageSize, this.foundAccommodationsSubject);
-    }
+    ).subscribe(response => {
+      console.log("Search results with pagination:", response);
+      
+      // Update pagination info
+      this.paginationInfoSubject.next({
+        number: response.number,
+        totalPages: response.totalPages,
+        totalElements: response.totalElements,
+        size: response.size
+      });
+      
+      // If we have results, fetch prices
+      if (response.content && response.content.length > 0) {
+        this.getPricesToSubject(response.content, this.foundAccommodationsSubject);
+      } else {
+        this.foundAccommodationsSubject.next([]);
+      }
+    });
+  }
 
   getParams(form: any): params {
     console.log(form)
