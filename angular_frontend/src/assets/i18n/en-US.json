@@ -54,8 +54,9 @@
 	"updated-accommodation": "Updated Accommodation",
 	"rooms-beds-required": "Rooms number and Beds number are both required",
 	"booking-values-missing": "Some values for Booking are Missing!",
-	"updated-accommodation-services": "Successfully updated Accommodation Services"
-	
+	"updated-accommodation-services": "Successfully updated Accommodation Services",
+	"error-fetching-accommodation-details": "An Error occurred while fetching Accommodation details",
+	"error-fetching-accommodation-owner": "An Error occurred while fetching Accommodation' s owner Informations"
 	},
 "bookings": {
 	"checkIn":"Check-in",

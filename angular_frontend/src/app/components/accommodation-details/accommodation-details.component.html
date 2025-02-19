@@ -186,6 +186,14 @@
     <h1 class="text-xl text-blue-800" *ngIf="updatedAccommodationServices">
       {{"accommodation-card-details.updated-accommodation-services" | translate}}
     </h1>
+
+    <h1 class="text-xl text-blue-800" *ngIf="errorFetchingAccommodationDetails">
+      {{"accommodation-card-details.error-fetching-accommodation-details" | translate}}
+    </h1>
+
+    <h1 class="text-xl text-blue-800" *ngIf="errorFetchingAccommodationOwner">
+      {{"accommodation-card-details.error-fetching-accommodation-owner" | translate}}
+    </h1>
     
   </ng-container>
   <!-------------------------------------------------------------------------------------------------------------------------------------------------->

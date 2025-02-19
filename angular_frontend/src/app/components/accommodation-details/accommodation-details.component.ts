@@ -4,6 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, debounceTime, distinctUntilChanged, map, Observable, of, Subject, switchMap } from 'rxjs';
 import { Accommodation } from 'src/app/models/accommodation';
 import { Booking } from 'src/app/models/booking';
+import { Review } from 'src/app/models/review';
 import { Service } from 'src/app/models/service';
 import { User } from 'src/app/models/user';
 import { AccommodationService } from 'src/app/services/accommodation.service';
@@ -31,6 +32,7 @@ export class AccommodationDetailsComponent implements OnInit {
   invalidAccommodation: boolean = false;
   isFavourite: boolean = false;
   isAdminOrMe: boolean = false;
+  accommodationReviews: Review[] = [];
 
   accommodationOwner!: User;
 
@@ -75,6 +77,8 @@ export class AccommodationDetailsComponent implements OnInit {
   roomsBedsRequired: boolean = false;
   bookingValuesMissing: boolean = false;
   updatedAccommodationServices: boolean = false;
+  errorFetchingAccommodationDetails: boolean = false;
+  errorFetchingAccommodationOwner: boolean = false;
   //-------------------------------------------------------------------------------------
 
 
@@ -123,7 +127,7 @@ export class AccommodationDetailsComponent implements OnInit {
 
     if(localStorage.getItem("created_booking")) localStorage.removeItem("created_booking");
 
-    this.accommodationService.getAccommodationById(Number(id)).subscribe(
+    /*this.accommodationService.getAccommodationById(Number(id)).subscribe(
       data => {
         if(!data) {
           this.invalidAccommodation = true;
@@ -219,6 +223,128 @@ export class AccommodationDetailsComponent implements OnInit {
             return;
           }
         }
+      }
+    )*/
+
+    //recupero l' accommodation:
+    this.accommodationService.getAccommodationById(Number(id)).subscribe(
+      result => {
+        if(!result) {
+          this.invalidAccommodation = true;
+          return;
+        }
+        this.invalidAccommodation = false;
+        this.accommodation = result;
+
+        console.log("STAMPO ACC trovata -> ", this.accommodation);
+
+        //Recupero i Servizi dell' Accommodation:
+        for (let s of this.accommodation.services)
+          this.selectedServices.push(new Service(s.id, s.title, s.icon_url));
+
+        this.selectedServicesView$.next(this.selectedServices);
+
+        //Verifico se lo User è loggato:
+        this.userId = localStorage.getItem("id") ? Number(localStorage.getItem("id")) : undefined;
+
+        if (!this.userId) {
+          this.userNotLogged = true;
+          return;
+        }
+
+        this.userNotLogged = false;   
+
+        //Recupero informazioni associate all' Accommodation:
+        this.accommodationService.getAccommodationInfo(this.accommodation.id!).subscribe(
+          info => {
+            if("message" in info) {
+              this.message = info.message;
+              console.error(info.message);
+              this.errorFetchingAccommodationDetails = true;
+              return;
+            }
+
+            this.invalidUserId = false;
+
+            let tmp1: Boolean | undefined;
+            let tmp2: Boolean | undefined;
+            let tmp3: any;
+            let tmp4: Boolean | undefined;
+
+            if(!("isAdmin" in info) || !("isOwner" in info) || !("reviews" in info) || !("isFavourite" in info)
+              || !(tmp1 = Boolean(info["isAdmin"])) || !(tmp2 = Boolean(info["isOwner"]))
+              || !(tmp3 = info["reviews"]) || !(tmp4 = Boolean(info["isFavourite"]))) {
+
+              this.errorFetchingAccommodationDetails = true;
+              this.message = "true";
+              return;
+            }
+
+            this.isAdminOrMe = (tmp1.valueOf() || tmp2.valueOf());
+            this.isFavourite = tmp4.valueOf();
+
+            if(!(Array.isArray(tmp3))) {
+              this.errorFetchingAccommodationDetails = true;
+              this.message = "true";
+              return;
+            }
+            else {
+              
+              //Recupero le Review
+              for(let r of tmp3) {
+                this.accommodationReviews.push(new Review(r.title, r.description, r.overall_rating, r.comfort,
+                                                r.convenience, r.position, r.id, r.approval_timestamp, r.booking_id
+                                                )
+                                              )
+              } 
+            }
+
+            console.log("Reviews -> ", this.accommodationReviews);
+
+            //Ora recupero l' Owner dell' Accommodation:
+            this.userService.getUserById(this.accommodation.owner_id).subscribe(
+              foundUser => {
+                if(!foundUser) {
+                  this.message = "true";
+                  this.accommodationEntityError = true;
+                  this.invalidAccommodation = true;
+                  return;
+                }
+                else if("message" in foundUser) {
+                  this.message = foundUser.message;
+                  this.invalidAccommodation = true;
+                  this.errorFetchingAccommodationOwner = true;
+                  return;
+                }
+                else {
+                  this.accommodationOwner = foundUser;
+                }
+
+                //Lets configure the search services service:
+                this.foundServices$ = this.servicesSearchBarInputToken$.pipe(
+                  // wait 300ms after each keystroke before considering the term
+                  debounceTime(300),
+
+                  // ignore new term if same as previous term: need to test this one
+                  //distinctUntilChanged(),
+
+                  // switch to new search observable each time the term changes
+                  switchMap((term: string) =>
+                    this.serviceService.searchServices(term).pipe(
+                      map(res => {
+                        if("message" in res) {
+                          this.message = res.message + ", status: " + res.status;
+                          return [];
+                        }
+                        else return res;
+                      })
+                    )
+                  )
+                )
+              }
+            )
+          }
+        )
       }
     )
   }
@@ -521,6 +647,8 @@ export class AccommodationDetailsComponent implements OnInit {
     this.roomsBedsRequired = false;
     this.bookingValuesMissing = false;
     this.updatedAccommodationServices = false;
+    this.errorFetchingAccommodationDetails = false;
+    this.errorFetchingAccommodationOwner = false;
 
   }
 
