@@ -1,12 +1,11 @@
 package ws.peoplefirst.utumana.repository.dsl;
 
+import org.springframework.data.domain.Page;
 import ws.peoplefirst.utumana.criteria.SearchAccomodationCriteria;
 import ws.peoplefirst.utumana.dto.AccommodationDTO;
 
-import java.util.List;
-
 public interface QAccommodationRepository {
 
-    List<AccommodationDTO> searchAccomodation(SearchAccomodationCriteria searchAccomodationCriteria);
+    Page<AccommodationDTO> searchAccomodation(SearchAccomodationCriteria searchAccomodationCriteria);
 
 }

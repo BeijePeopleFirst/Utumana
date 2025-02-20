@@ -122,7 +122,17 @@
 	"title": "Filtri",
 	"cancel": "Cancella",
 	"apply": "Applica",
-	"services": "Servizi"
+	"services": "Servizi",
+	"price": "Prezzo",
+	"rating": "Voto",
+	"min_price": "Prezzo minimo per notte",
+	"max_price": "Prezzo massimo per notte",
+	"min_rating": "Voto minimo",
+	"max_rating": "Voto massimo",
+	"invalid_price_range": "Intervallo di prezzo non valido",
+	"invalid_rating_range": "Intervallo di voto non valido",
+	"min_reset": "Reimposta Voto Minimo",
+	"max_reset": "Reimposta Voto Massimo"
 	},
 "header" : {
 	"profile": "Profilo",
