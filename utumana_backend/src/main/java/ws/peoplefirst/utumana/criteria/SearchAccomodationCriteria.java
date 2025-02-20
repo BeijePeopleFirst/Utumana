@@ -155,4 +155,24 @@ public class SearchAccomodationCriteria {
     public void setPageable(Pageable pageable) {
         this.pageable = pageable;
     }
+
+    @Override
+    public String toString() {
+        return "SearchAccomodationCriteria{" +
+                "destination='" + destination + '\'' +
+                ", checkInDate=" + checkInDate +
+                ", checkOutDate=" + checkOutDate +
+                ", numberOfGuests=" + numberOfGuests +
+                ", freeOnly=" + freeOnly +
+                ", serviceIds=" + serviceIds +
+                ", minRating=" + minRating +
+                ", maxRating=" + maxRating +
+                ", minPrice=" + minPrice +
+                ", maxPrice=" + maxPrice +
+                ", orderBy='" + orderBy + '\'' +
+                ", orderDirection='" + orderDirection + '\'' +
+                ", userId=" + userId +
+                ", pageable=" + pageable +
+                '}';
+    }
 }

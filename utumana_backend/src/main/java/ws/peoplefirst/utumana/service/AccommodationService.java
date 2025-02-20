@@ -210,11 +210,12 @@ public class AccommodationService {
                                                      String orderBy, String orderDirection, Long userId, Pageable pageable) {
         System.out.println("service ids = " + serviceIds);
 
-        SearchAccomodationCriteria searchAccomodationCriteria =
+        SearchAccomodationCriteria criteria =
                 new SearchAccomodationCriteria(destination, checkInDate, checkOutDate, numberOfGuests, freeOnly,
                         serviceIds, minRating, maxRating, minPrice, maxPrice, orderBy, orderDirection, userId, pageable);
 
-        Page<AccommodationDTO> results = accommodationRepository.searchAccomodation(searchAccomodationCriteria);
+        logger.debug(criteria.toString());
+        Page<AccommodationDTO> results = accommodationRepository.searchAccomodation(criteria);
 
         for (AccommodationDTO accommodationDTO : results) {
             accommodationDTO.setIsFavourite(isFavourite(accommodationDTO.getId(), userId));

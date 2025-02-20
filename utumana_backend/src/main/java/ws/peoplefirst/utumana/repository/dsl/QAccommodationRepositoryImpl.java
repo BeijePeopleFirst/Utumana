@@ -24,6 +24,7 @@ import ws.peoplefirst.utumana.model.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class QAccommodationRepositoryImpl implements QAccommodationRepository {
@@ -101,7 +102,8 @@ public class QAccommodationRepositoryImpl implements QAccommodationRepository {
         }
 
         if (criteria.getMaxRating() != null) {
-            accomodationBuilder.and(accommodationRating.rating.loe(criteria.getMaxRating()));
+            // criteria.getMaxRating() + 1 beacause in DB we have decimal so if i have 3 i can't get 3.1
+            accomodationBuilder.and(accommodationRating.rating.lt(criteria.getMaxRating() + 1));
         }
 
         if (criteria.getMinPrice() != null) {
@@ -174,14 +176,14 @@ public class QAccommodationRepositoryImpl implements QAccommodationRepository {
         // Esecuzione della query per ottenere i risultati paginati
         List<AccommodationDTO> results = query.fetch();
 
-        // Esecuzione di una query separata per ottenere il conteggio totale
-        long total = new JPAQuery<>(entityManager)
-                .select(accommodation.id)
+        Long total = Objects.requireNonNullElse(new JPAQuery<>(entityManager)
+                        .select(accommodation.id.count())
                 .from(accommodation)
+                        .join(accommodation.rating, accommodationRating)
                 .where(accomodationBuilder)
-                .fetchCount();
+                        .fetchOne()
+                , 0L);
 
-        // Restituisci il risultato come Page
         return new PageImpl<>(results, pageable, total);
     }
 }
