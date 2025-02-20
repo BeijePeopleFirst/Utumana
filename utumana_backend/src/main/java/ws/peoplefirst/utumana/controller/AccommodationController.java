@@ -1,22 +1,11 @@
 package ws.peoplefirst.utumana.controller;
 
-import static org.springframework.http.ResponseEntity.ok;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,28 +16,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import ws.peoplefirst.utumana.dto.AccommodationDTO;
 import ws.peoplefirst.utumana.dto.PriceDTO;
 import ws.peoplefirst.utumana.dto.UnavailabilityDTO;
 import ws.peoplefirst.utumana.dto.UserDTO;
-import ws.peoplefirst.utumana.exception.ErrorMessage;
-import ws.peoplefirst.utumana.exception.ForbiddenException;
-import ws.peoplefirst.utumana.exception.IdNotFoundException;
-import ws.peoplefirst.utumana.exception.InvalidJSONException;
-import ws.peoplefirst.utumana.exception.TheJBeansException;
+import ws.peoplefirst.utumana.exception.*;
 import ws.peoplefirst.utumana.model.*;
 import ws.peoplefirst.utumana.service.*;
 import ws.peoplefirst.utumana.utility.AuthorizationUtility;
@@ -415,17 +387,16 @@ public class AccommodationController {
 		return accommodationService.setAccommodationAvailabilities(id, availabilities, userId);
 	}
 
-//TODO: Need doc
-	@PreAuthorize("hasAuthority('USER')")
-	@PatchMapping(value = "/accommodation/{id}/unavailabilities")
-	public Accommodation setAccommodationUnavailabilities(@PathVariable Long id,
-														  @RequestBody List<Booking> unavailabilities, Authentication auth) {
-		logger.debug("PATCH /accommodation/" + id + "/unavailabilities");
-
-		Long userId = AuthorizationUtility.getUserFromAuthentication(auth).getId();
-
-		return accommodationService.setAccommodationUnavailabilities(id, unavailabilities, userId);
-	}
+//	@PreAuthorize("hasAuthority('USER')")
+//	@PatchMapping(value = "/accommodation/{id}/unavailabilities")
+//	public Accommodation setAccommodationUnavailabilities(@PathVariable Long id,
+//														  @RequestBody List<Booking> unavailabilities, Authentication auth) {
+//		logger.debug("PATCH /accommodation/" + id + "/unavailabilities");
+//
+//		Long userId = AuthorizationUtility.getUserFromAuthentication(auth).getId();
+//
+//		return accommodationService.setAccommodationUnavailabilities(id, unavailabilities, userId);
+//	}
 
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Accommodation successfully updated"),
