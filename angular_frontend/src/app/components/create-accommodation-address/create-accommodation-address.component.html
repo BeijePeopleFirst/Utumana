@@ -1,5 +1,114 @@
-<div class="flex flex-col justify-center items-center">
+<div class="flex flex-col justify-center items-center w-screen sm:w-auto">
     <app-create-progress [step] = 1></app-create-progress>
 
-    <p>create-accommodation-address works!</p>
+    <form class="my-4 md:w-screen-md" (ngSubmit)="saveAndContinue()" #addressForm="ngForm">
+        <div class="flex flex-row gap-x-5 justify-between">
+            <div class="w-2/3">
+                <label class="label-primary">{{'accommodation-card-details.street-word' | translate}}</label>
+                <input class="input-primary" [ngClass]="{'alert-danger': street.invalid}" 
+                type="text" id="address_street" name="address_street" autocomplete="street-address" 
+                pattern="[a-zA-Z0-9. /\-,]+"   
+                [(ngModel)]="address.street" #street="ngModel"/>
+            </div>
+            <ng-container *ngIf="street.invalid">
+                <div *ngIf="street.errors?.['pattern']" class="error-message">
+                    {{'create.invalid_street' | translate}}
+                </div>
+            </ng-container>
+
+            <div class="flex flex-col w-1/3">
+                <label class="label-primary w-fit">{{'accommodation-card-details.street-number-word' | translate}}</label>
+                <input class="input-primary" [ngClass]="{'alert-danger': street_number.invalid}" 
+                type="text" id="street_number" name="street_number"
+                pattern="[0-9]+[/]?[a-zA-Z]?"   
+                [(ngModel)]="address.street_number" #street_number="ngModel"/>
+                <ng-container *ngIf="street_number.invalid">
+                    <div *ngIf="street_number.errors?.['pattern']" class="error-message">
+                        {{'create.invalid_street_number' | translate}}
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <label class="label-primary">{{'accommodation-card-details.city-word' | translate}}</label>
+            <input class="input-primary" [ngClass]="{'alert-danger': city.invalid}" 
+            type="text" id="city" name="city" autocomplete="address-level3" 
+            pattern="[a-zA-Z]+[a-zA-Z \'\-]*"   
+            [(ngModel)]="address.city" #city="ngModel"/>
+        </div>
+        <ng-container *ngIf="city.invalid">
+            <div *ngIf="city.errors?.['pattern']" class="error-message">
+                {{'create.invalid_city' | translate}}
+            </div>
+        </ng-container>
+
+        <div class="flex flex-row gap-x-10 justify-between mt-4">
+            <div class="w-1/3">
+                <label class="label-primary">{{'accommodation-card-details.province-word' | translate}}</label>
+                <input class="input-primary" [ngClass]="{'alert-danger': province.invalid}" 
+                type="text" id="province" name="province" autocomplete="address-level2" 
+                pattern="[a-zA-Z]+"   
+                [(ngModel)]="address.province" #province="ngModel"/>
+            </div>
+            <ng-container *ngIf="province.invalid">
+                <div *ngIf="province.errors?.['pattern']" class="error-message">
+                    {{'create.invalid_province' | translate}}
+                </div>
+            </ng-container>
+
+            <div class="flex flex-col w-2/3">
+                <label class="label-primary">{{'accommodation-card-details.cap-word' | translate}}</label>
+                <input class="input-primary" [ngClass]="{'alert-danger': addressForm.submitted && cap.invalid}" 
+                type="text" id="cap" name="cap" 
+                required pattern="[0-9]+"   
+                [(ngModel)]="address.cap" #cap="ngModel"/>
+                <ng-container *ngIf="addressForm.submitted && cap.invalid">
+                    <div *ngIf="cap.errors?.['required']" class="mb-0 w-full error-message">
+                        {{'accommodation-card-details.cap-required' | translate}}
+                    </div>
+                    <div *ngIf="cap.errors?.['pattern']" class="mb-0 w-full error-message">
+                        {{'create.invalid_cap' | translate}}
+                    </div>
+                </ng-container>
+            </div>
+            
+        </div>
+
+        <div class="mt-4">
+            <label class="label-primary">{{'accommodation-card-details.country-word' | translate}}</label>
+            <input class="input-primary" [ngClass]="{'alert-danger': addressForm.submitted && country.invalid}" 
+            type="text" id="country" name="country" autocomplete="address-level1" 
+            required pattern="[a-zA-Z ,]+"   
+            [(ngModel)]="address.country" #country="ngModel"/>
+        </div>
+        <ng-container *ngIf="addressForm.submitted && country.invalid">
+            <div *ngIf="country.errors?.['required']" class="error-message">
+                {{'accommodation-card-details.country-required' | translate}}
+            </div>
+            <div *ngIf="country.errors?.['pattern']" class="error-message">
+                {{'create.invalid_country' | translate}}
+            </div>
+        </ng-container>
+        
+        <div class="mt-4">
+            <label class="label-primary">{{'create.address_notes' | translate}}</label>
+            <input class="input-primary" [ngClass]="{'alert-danger': notes.invalid}" 
+            type="text" id="notes" name="notes" autocomplete="address-level3" 
+            pattern="[a-zA-Z \-\',\#\.\+]+"   
+            [(ngModel)]="address.notes" #notes="ngModel"/>
+        </div>
+        <ng-container *ngIf="notes.invalid">
+            <div *ngIf="notes.errors?.['pattern']" class="error-message">
+                {{'create.invalid_notes' | translate}}
+            </div>
+        </ng-container>
+
+        <ng-container *ngIf="genericError">
+            <div class="error-message">{{'error' | translate}}</div>
+        </ng-container>
+        <div class="grid justify-items-center mt-8">
+            <button type="submit" class="btn-primary w-fit">{{'create.continue' | translate}}</button>
+        </div>
+    </form>
 </div>
