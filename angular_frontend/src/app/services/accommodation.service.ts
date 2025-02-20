@@ -11,6 +11,7 @@ import { PriceDTO } from '../dtos/priceDTO';
 import { Service } from '../models/service';
 import { SearchService } from './search.service';
 import { PageResponse} from '../models/paginatedResponse';
+import { PaginationInfo } from '../models/paginationInfo';
 
 @Injectable({
   providedIn: 'root'
@@ -137,12 +138,13 @@ export class AccommodationService {
         accommodations[i].min_price = prices[i].min_price;
         accommodations[i].max_price = prices[i].max_price;
       }
+      console.log("Accommodation Service - Fetched prices:", prices);
       subject.next(accommodations);
     })
   }
-  public getSearchResults(pageNumber: number, pageSize: number): void {
+  public getSearchResults(pageNumber: number, pageSize: number): Observable<PageResponse<AccommodationDTO>> {
     const currentParams = this.searchService.getSearchData();
-    if (!currentParams) return;
+    if (!currentParams) return of({} as PageResponse<AccommodationDTO>);
       
     let httpParams = new HttpParams()
       .set('page', pageNumber.toString())
@@ -156,7 +158,7 @@ export class AccommodationService {
       
     const url = `${BACKEND_URL_PREFIX}/api/search?${httpParams.toString()}`;
     
-    this.http.get<PageResponse<AccommodationDTO>>(url).pipe(
+    return this.http.get<PageResponse<AccommodationDTO>>(url).pipe(
       catchError(error => {
         console.error("Error fetching search results:", error);
         return of({
@@ -180,24 +182,7 @@ export class AccommodationService {
           empty: true
         });
       })
-    ).subscribe(response => {
-      console.log("Search results with pagination:", response);
-      
-      // Update pagination info
-      this.paginationInfoSubject.next({
-        number: response.number,
-        totalPages: response.totalPages,
-        totalElements: response.totalElements,
-        size: response.size
-      });
-      
-      // If we have results, fetch prices
-      if (response.content && response.content.length > 0) {
-        this.getPricesToSubject(response.content, this.foundAccommodationsSubject);
-      } else {
-        this.foundAccommodationsSubject.next([]);
-      }
-    });
+    )
   }
 
   getParams(form: any): params {
@@ -360,6 +345,18 @@ export class AccommodationService {
         return of();
       })
     );
+  }
+
+  updatePaginationInfoSubject(info : PaginationInfo | null) {
+    this.paginationInfoSubject.next(info);
+  }
+
+  getFoundAccommodationsSubject(): BehaviorSubject<AccommodationDTO[]> {
+    return this.foundAccommodationsSubject;
+  }
+
+  updateFoundAccommodationsSubject(accs : AccommodationDTO[]) {
+    this.foundAccommodationsSubject.next(accs);
   }
 
   /*private getAuth(): HttpHeaders {

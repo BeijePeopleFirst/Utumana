@@ -16,6 +16,7 @@ import { ConfirmBookingBooknowComponent } from './components/confirm-booking-boo
 import { WriteReviewComponent } from './components/write-review/write-review.component';
 import { FavouritesComponent } from './components/favourites/favourites.component';
 import { MyAccommodationsComponent } from './components/my-accommodations/my-accommodations.component';
+import { LoadSearchAccommodationResolver } from './resolvers/load-search-accommodation.resolver';
 
 const routes: Routes = [
   {path: 'login', title: "Login", component: LoginComponent},
@@ -27,7 +28,7 @@ const routes: Routes = [
   {path: 'my_accommodations', title: "My Accommodations", component: MyAccommodationsComponent},
   {path: 'host_dashboard', title: "Host Dashboard", component: HostDashboardComponent},
   {path: 'accommodation/:id', title: "Accommodation Details", component: AccommodationDetailsComponent},
-  {path: 'search_page', title: "Search", component: SearchPageComponent},
+  {path: 'search_page', title: "Search", component: SearchPageComponent, resolve: {loadSearchAccommodations: LoadSearchAccommodationResolver}, runGuardsAndResolvers: 'always'},
   {path: 'book/:id', component: BookConfirmComponent},
   {path: 'confirm_booking_on_creation', component: ConfirmBookingBooknowComponent}
   // { path: '**', title: "Error", component: PageNotFoundComponent }

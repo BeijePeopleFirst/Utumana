@@ -1,6 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, Observable, switchMap } from 'rxjs';
+import { BehaviorSubject, Observable, of, switchMap } from 'rxjs';
 import { AccommodationDTO } from 'src/app/dtos/accommodationDTO';
 import { AccommodationService } from 'src/app/services/accommodation.service';
 import { FiltersService} from 'src/app/services/filters.service';
@@ -43,57 +43,18 @@ export class SearchPageComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.foundAccommodationsPageNumber = 0;
-    this.foundAccommodationsTotalPages = 0;
-    this.foundAccommodations$ = this.accommodationService.foundAccommodations$;
-
-    this.accommodationService.paginationInfo$.subscribe(info => {
-      if (info) {
-        this.foundAccommodationsPageNumber = info.number;
-        this.foundAccommodationsTotalPages = info.totalPages;
-      }
-    });
-
-    this.route.queryParams.subscribe(queryParams => {
-      const services = queryParams['services']
-        ? (Array.isArray(queryParams['services'])
-            ? [...queryParams['services']]
-            : [queryParams['services']])
-        : [];
-
-      const searchParams: CompleteParams = {
-        destination: queryParams['destination'],
-        ['check-in']: queryParams['check-in'] ?? '',
-        ['check-out']: queryParams['check-out'] ?? '',
-        number_of_guests: queryParams['number_of_guests'],
-        free_only: queryParams['free_only'],
-        services: services,
-        order_by: queryParams['order_by'],
-        order_direction: queryParams['order_direction'],
-        min_price: queryParams['min_price'],
-        max_price: queryParams['max_price'],
-        min_rating: queryParams['min_rating'],
-        max_rating: queryParams['max_rating'],
-        page: queryParams['page'] ? parseInt(queryParams['page']) : 0,
-        size: this.foundAccommodationsPageSize
-      };
-
-      this.currentOrderBySelected$.next([
-        searchParams.order_by ?? 'approvalTimestamp',
-        searchParams.order_direction ?? 'desc'
-      ]);
-
-      this.searchService.setSearchData(searchParams);
-      this.filterService.getAllServices();
-      const filterParams: FilterParams = {
-        services: services,
-        min_price: searchParams.min_price,
-        max_price: searchParams.max_price,
-        min_rating: searchParams.min_rating,
-        max_rating: searchParams.max_rating
-      };
-      this.filterService.setSelectedFilters(filterParams);
-      this.loadFoundResearchPage(searchParams.page || 0);
+    this.route.data.subscribe(data => {
+      console.log("data", data);
+      const accommodations = data['loadSearchAccommodations'].content;
+      
+      this.accommodationService.getPrices(accommodations).subscribe(
+        updatedAccommodations => {
+          this.foundAccommodations$ = of(updatedAccommodations || []);
+          this.foundAccommodationsPageNumber = data['loadSearchAccommodations'].pageable.pageNumber;
+          this.foundAccommodationsTotalPages = data['loadSearchAccommodations'].totalPages;
+          this.foundAccommodationsPageSize = data['loadSearchAccommodations'].size;
+        }
+      );
     });
   }
 
@@ -150,7 +111,26 @@ export class SearchPageComponent implements OnInit {
     };
     this.searchService.setSearchData(updatedParams);
     
-    this.accommodationService.getSearchResults(pageNumber, this.foundAccommodationsPageSize);
+    this.accommodationService.getSearchResults(pageNumber, this.foundAccommodationsPageSize).subscribe(data => {
+      this.foundAccommodations$ = of(data.content);
+      this.foundAccommodationsPageNumber = data.pageable.pageNumber;
+      this.foundAccommodationsTotalPages = data.totalPages;
+
+      // Update pagination info
+      this.accommodationService.updatePaginationInfoSubject({
+        number: data.pageable.pageNumber,
+        totalPages: data.totalPages,
+        totalElements: data.totalElements,
+        size: data.size
+      });
+      
+      // If we have results, fetch prices
+      if (data.content && data.content.length > 0) {
+        this.accommodationService.getPricesToSubject(data.content, this.accommodationService.getFoundAccommodationsSubject());
+      } else {
+        this.accommodationService.updateFoundAccommodationsSubject([]);
+      }
+    }); 
   }
 
   changePage(page: number): void {
