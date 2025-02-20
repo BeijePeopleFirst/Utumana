@@ -99,7 +99,8 @@
 	"created-unavailability-id": "Unavailability Created"
 	},
 "create": {
-	"continue": "Continue",
+	"continue": "Next",
+	"back": "Back",
 	"address": "Address",
 	"address_notes": "Address notes",
 	"invalid_street": "Invalid street/square",
@@ -110,6 +111,9 @@
 	"invalid_cap": "Invalid CAP",
 	"invalid_address_notes": "Invalid address notes",
 	"services": "Services",
+	"no_services": "No Services",
+	"no_services_found": "No services found",
+	"search_services": "Search services",
 	"availabilities": "Availabilities",
 	"description": "Description",
 	"photos": "Photos",

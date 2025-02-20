@@ -13,6 +13,6 @@ export class ServiceService {
   constructor(private http: HttpClient) { }
 
   searchServices(term: string): Observable<Service[] | {message: string, status: string, time: string}> {
-    return this.http.get<Service[] | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/services/search?title=" + term);
+    return this.http.get<Service[]>(BACKEND_URL_PREFIX + "/api/services/search?title=" + term);
   }
 }

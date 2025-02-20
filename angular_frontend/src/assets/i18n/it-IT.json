@@ -99,6 +99,7 @@
 	},
 "create": {
 	"continue": "Continua",
+	"back": "Indietro",
 	"address": "Indirizzo",
 	"address_notes": "Note sull'indirizzo",
 	"invalid_street": "Via/piazza non valida",
@@ -109,6 +110,9 @@
 	"invalid_cap": "CAP non valido",
 	"invalid_address_notes": "Note sull'indirizzo non valide",
 	"services": "Servizi",
+	"no_services": "Nessun Servizio",
+	"no_services_found": "Nessun servizio trovato",
+	"search_services": "Cerca servizi",
 	"availabilities": "Disponibilità",
 	"description": "Descrizione",
 	"photos": "Foto",

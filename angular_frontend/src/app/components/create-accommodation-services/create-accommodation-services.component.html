@@ -1,1 +1,50 @@
-<p>create-accommodation-services works!</p>
+<div class="flex flex-col justify-center items-center mb-4 w-screen">
+    <app-create-progress [step] = 2></app-create-progress>
+
+    <div class="flex flex-row gap-x-5 justify-center w-full">
+        <form action="/search" class="px-4 w-screen sm:w-1/3">
+            <div class="relative justify-self-end sm:w-80">
+                <input type="text" name="q" #searchBox (input)="search(searchBox.value)" 
+                class="p-4 w-full h-12 rounded-full border shadow bg-neutral-1 focus:outline-secondary" placeholder="{{'create.search_services' | translate}}">
+                <button type="submit">
+                    <svg class="absolute right-3 top-3.5 w-5 h-5 fill-current text-secondary"
+                        xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                        x="0px" y="0px" viewBox="0 0 56.966 56.966"
+                        style="enable-background:new 0 0 56.966 56.966;" xml:space="preserve">
+                        <path
+                            d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23  s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92  c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17  s-17-7.626-17-17S14.61,6,23.984,6z">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+            <ul class="sm:pl-32" *ngIf="(foundServices$ | async) as foundServices">
+                <ng-container *ngIf="foundServices && foundServices.length > 0">
+                    <li class="flex items-center px-3 py-1 align-middle rounded-lg first:pt-2 last:pb-2 hover:font-medium hover:text-secondary-dark hover:bg-neutral-2 hover:cursor-pointer" *ngFor="let found of foundServices" #foundElement (click)="foundElement.remove(); addService(found);">
+                        <img [src]="iconUrl + '/services/' + found.icon_url" class="mr-2 w-6 h-6" [alt]="found.title">
+                        <span class="text-sm">{{ found.title }}</span>
+                    </li>
+                </ng-container>
+                <li class="px-3 py-2" *ngIf="!foundServices || foundServices.length === 0">
+                    {{'create.no_services_found' | translate}}
+                </li>
+              </ul>
+        </form>
+        
+        <div class="py-4 w-screen text-center rounded-lg shadow-md sm:w-1/2 bg-neutral-2">
+            <ng-container *ngIf="services.length > 0">
+                <div *ngFor="let service of services" class="flex items-center p-3 rounded-lg border transition-colors duration-200 cursor-pointer w-fit">
+                    <img [src]="iconUrl + '/services/' + service.icon_url" class="mr-2 w-6 h-6" [alt]="service.title">
+                    <span class="text-sm">{{ service.title }}</span>
+                </div>
+            </ng-container>
+            <div class="py-10" *ngIf="services.length == 0">
+                {{'create.no_services' | translate}}
+            </div>
+        </div>
+    </div>
+
+    <div class="flex gap-x-5 justify-center mt-6 h-fit">
+        <button type="button" (click)="goBack()" class="btn-cancel w-fit">{{'create.back' | translate}}</button>
+        <button type="button" (click)="saveAndContinue()" class="btn-primary w-fit">{{'create.continue' | translate}}</button>
+    </div>
+</div>
