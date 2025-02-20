@@ -1,14 +1,14 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, Observable, switchMap } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of, switchMap } from 'rxjs';
 import { AccommodationDTO } from 'src/app/dtos/accommodationDTO';
 import { AccommodationService } from 'src/app/services/accommodation.service';
-import { FiltersService } from 'src/app/services/filters.service';
+import { FiltersService} from 'src/app/services/filters.service';
 import { SearchService } from 'src/app/services/search.service';
-import { params } from 'src/app/models/searchParams';
 import iconURL from 'src/costants';
 import { TranslateService } from '@ngx-translate/core';
+import { CompleteParams } from 'src/app/models/completeParams';
+import { FilterParams } from 'src/app/models/filterParams';
 
 @Component({
   selector: 'app-search-page',
@@ -16,13 +16,12 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./search-page.component.css']
 })
 export class SearchPageComponent implements OnInit {
-
   iconUrl = iconURL;
   
   foundAccommodations$!: Observable<AccommodationDTO[] | null>;
-  foundAccommodationsPageSize!: number;
-  foundAccommodationsPageNumber!: number;
-  foundAccommodationsTotalPages!: number;
+  foundAccommodationsPageNumber: number = 0;
+  foundAccommodationsTotalPages: number = 0;
+  foundAccommodationsPageSize: number = 8;
   
   services$ = this.filterService.services$;
   searchParams$ = this.searchService.searchData$;
@@ -44,80 +43,103 @@ export class SearchPageComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.foundAccommodationsPageSize = 8;
-    this.foundAccommodationsPageNumber = 0;
-    this.foundAccommodationsTotalPages = 2;
-    this.foundAccommodations$ = this.accommodationService.foundAccommodations$;
-
-    this.route.queryParams.subscribe(queryParams => {
-      const services = queryParams['services']
-        ? (Array.isArray(queryParams['services'])
-            ? [...queryParams['services']]
-            : [queryParams['services']])
-        : [];
-      console.log("servizi init :", services);
-
-      const searchParams: params = {
-        destination: queryParams['destination'],
-        ['check-in']: queryParams['check-in'] ?? '',
-        ['check-out']: queryParams['check-out'] ?? '',
-        number_of_guests: queryParams['number_of_guests'],
-        free_only: queryParams['free_only'],
-        services: services,
-        order_by: queryParams['order_by'],
-        order_direction: queryParams['order_direction'],
-      };
-
-      this.currentOrderBySelected$.next([
-        searchParams.order_by ?? 'approvalTimestamp',
-        searchParams.order_direction ?? 'desc'
-      ]);
-
-      this.searchService.setSearchData(searchParams);
-      this.filterService.getAllServices();
-      const currServices = searchParams.services ?? [];
-      this.filterService.setSelectedFilters(currServices);
-      this.loadFoundResearchPage(0);
+    this.route.data.subscribe(data => {
+      console.log("data", data);
+      const accommodations = data['loadSearchAccommodations'].content;
+      
+      this.accommodationService.getPrices(accommodations).subscribe(
+        updatedAccommodations => {
+          this.foundAccommodations$ = of(updatedAccommodations || []);
+          this.foundAccommodationsPageNumber = data['loadSearchAccommodations'].pageable.pageNumber;
+          this.foundAccommodationsTotalPages = data['loadSearchAccommodations'].totalPages;
+          this.foundAccommodationsPageSize = data['loadSearchAccommodations'].size;
+        }
+      );
     });
   }
 
-  search(params: params): void {
+  search(params: CompleteParams): void {
     const currentParams = this.route.snapshot.queryParams;
-    const services = params.services
-      ? (Array.isArray(params.services) ? [...params.services] : [params.services])
-      : currentParams['services']
-      ? (Array.isArray(currentParams['services']) ? [...currentParams['services']] : [currentParams['services']])
-      : [];
-    
-    const searchParams: params = {
+    const filters = this.filterService.getAllFilters();
+    const searchParams: CompleteParams = {
       destination: params.destination,
       ['check-in']: params['check-in'] ?? currentParams['check-in'] ?? '',
       ['check-out']: params['check-out'] ?? currentParams['check-out'] ?? '',
       number_of_guests: params.number_of_guests ?? currentParams['number_of_guests'],
       free_only: params.free_only ?? currentParams['free_only'],
-      services: services,
+      services: filters.services,
       order_by: params.order_by ?? currentParams['order_by'],
       order_direction: params.order_direction ?? currentParams['order_direction'],
+      min_price: filters.min_price,
+      max_price: filters.max_price,
+      min_rating: filters.min_rating,
+      max_rating: filters.max_rating,
+      page: params.page || 0,
+      size: this.foundAccommodationsPageSize
     };
-
+    this.filterService.setSelectedFilters(filters)
+    const cleanedParams: CompleteParams = Object.fromEntries(
+      Object.entries(searchParams).filter(([_, value]) => value !== undefined)
+    );
+  
     this.searchService.setSearchData(searchParams);
-    this.router.navigate(['/search_page/'], { queryParams: searchParams });
+    this.router.navigate(['/search_page/'], { queryParams: cleanedParams });
   }
-
-  onApplyFilters(selectedServices: string[]): void {
-    console.log(selectedServices);
-    this.filterService.setSelectedFilters(selectedServices);
-    const curr = this.searchService.getSearchData();
-    curr.services = selectedServices ?? [];
-    this.search(curr);
+  
+  onApplyFilters(filters: FilterParams): void {
+    this.filterService.setSelectedFilters(filters);
+    const currentSearchParams = this.searchService.getSearchData();
+    const updatedParams: CompleteParams = {
+      ...currentSearchParams,
+      services: filters.services,
+      min_price: filters.min_price,
+      max_price: filters.max_price,
+      min_rating: filters.min_rating,
+      max_rating: filters.max_rating,
+      page: 0 
+    };
+    this.search(updatedParams);
   }
 
   loadFoundResearchPage(pageNumber: number): void {
     this.foundAccommodationsPageNumber = pageNumber;
-    this.accommodationService.getSearchResults(
-      this.foundAccommodationsPageNumber * this.foundAccommodationsPageSize,
-      this.foundAccommodationsPageSize
-    );
+    const currentParams = this.searchService.getSearchData();
+    
+    const updatedParams = {
+      ...currentParams,
+      page: pageNumber
+    };
+    this.searchService.setSearchData(updatedParams);
+    
+    this.accommodationService.getSearchResults(pageNumber, this.foundAccommodationsPageSize).subscribe(data => {
+      this.foundAccommodations$ = of(data.content);
+      this.foundAccommodationsPageNumber = data.pageable.pageNumber;
+      this.foundAccommodationsTotalPages = data.totalPages;
+
+      // Update pagination info
+      this.accommodationService.updatePaginationInfoSubject({
+        number: data.pageable.pageNumber,
+        totalPages: data.totalPages,
+        totalElements: data.totalElements,
+        size: data.size
+      });
+      
+      // If we have results, fetch prices
+      if (data.content && data.content.length > 0) {
+        this.accommodationService.getPricesToSubject(data.content, this.accommodationService.getFoundAccommodationsSubject());
+      } else {
+        this.accommodationService.updateFoundAccommodationsSubject([]);
+      }
+    }); 
+  }
+
+  changePage(page: number): void {
+    const currentParams = this.searchService.getSearchData();
+    const updatedParams = {
+      ...currentParams,
+      page: page
+    };
+    this.search(updatedParams);
   }
 
   toggleOrderByMenu(event: MouseEvent): void {
@@ -142,4 +164,5 @@ export class SearchPageComponent implements OnInit {
       this.isOrderByOpen = false;
     }
   }
+
 }

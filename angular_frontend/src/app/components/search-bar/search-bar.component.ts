@@ -13,7 +13,7 @@ import { params } from 'src/app/models/searchParams';
   styleUrls: ['./search-bar.component.css']
 })
 export class SearchBarComponent implements OnInit{
-  searchForm: FormGroup;
+  searchForm: FormGroup | any;
   @Output() searchSubmitted = new EventEmitter<params>();
 
   constructor(
@@ -21,24 +21,7 @@ export class SearchBarComponent implements OnInit{
     private searchService: SearchService,
     private accommodationService: AccommodationService,
     private filtersService: FiltersService
-  ) {
-    const savedData = this.searchService.getSearchData();
-    
-    this.searchForm = this.fb.group({
-      city: [savedData?.destination || ''],
-      check_in: [savedData?.['check-in'] || null, Validators.required],
-      check_out: [savedData?.['check-out'] || null, Validators.required],
-      people: [savedData?.number_of_guests || 1, [Validators.required, Validators.min(1)]],
-      free_only: [savedData?.free_only || false],
-    }, {
-      validators: [(formGroup: AbstractControl): ValidationErrors | null => {
-        return DateValidators.dateRange(
-          formGroup.get('check_in')!,
-          formGroup.get('check_out')!
-        );
-      }]
-    });
-  }
+  ) {} 
 
   ngOnInit(): void {
     const savedData = this.searchService.getSearchData();
@@ -49,7 +32,7 @@ export class SearchBarComponent implements OnInit{
       check_in: [savedData?.['check-in'] || null, Validators.required],
       check_out: [savedData?.['check-out'] || null, Validators.required],
       people: [savedData?.number_of_guests || 1, [Validators.required, Validators.min(1)]],
-      free_only: [savedData?.free_only],
+      free_only: [savedData?.free_only === true],
     }, {
       validators: [(formGroup: AbstractControl): ValidationErrors | null => {
         return DateValidators.dateRange(
@@ -65,9 +48,9 @@ export class SearchBarComponent implements OnInit{
     if (this.searchForm.valid) {
       const params = this.accommodationService.getParams(this.searchForm.value);
       const selectedServices = this.filtersService.getSelectedFilters();
-      if (selectedServices.length > 0) {
+/*       if (selectedServices.length > 0) {
         params.services = selectedServices.map(id => id.toString());
-      } 
+      }  */
       this.searchService.setSearchData(params);
       this.searchSubmitted.emit(params);
     } else {

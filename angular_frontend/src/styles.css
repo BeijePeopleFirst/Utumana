@@ -87,7 +87,15 @@
   .responsive-left-arrow { @apply left-2 responsive-arrow; }
   .responsive-right-arrow { @apply right-2 responsive-arrow; }
 
-  .modal { @apply flex fixed inset-0 z-40 justify-center items-center bg-black bg-opacity-50; }
+  .modal { @apply fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50; }
+  .close-modal { @apply absolute p-2 text-3xl -top-0.5 text-secondary hover:text-secondary-dark right-2; }
   .modal-dialog { @apply relative w-screen bg-white rounded-lg shadow-lg sm:w-full md:max-w-md; }
-  .close-modal { @apply absolute -top-0.5 right-2 p-2 text-3xl text-secondary hover:text-secondary-dark; }
+
+  .stars-container { @apply flex flex-row justify-start gap-0 align-middle; }
+  .star-container { @apply leading-5 text-center align-middle fill-current; }
+  .star-half-container { @apply bg-gradient-to-r from-yellow-500 to-gray-300 from-50% to-50% bg-clip-text text-transparent; }
+  .star-full { @apply text-yellow-500; }
+  .star-empty { @apply text-gray-300; }
+
+
 }

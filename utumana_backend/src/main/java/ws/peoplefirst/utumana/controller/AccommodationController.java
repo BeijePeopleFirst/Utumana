@@ -3,6 +3,9 @@ package ws.peoplefirst.utumana.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -501,15 +504,21 @@ public class AccommodationController {
 
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value = "/search")
-	public List<AccommodationDTO> searchResults(
+	public Page<AccommodationDTO> searchResults(
 			@RequestParam(name = "destination", required = false) String destination,
 			@RequestParam(name = "check-in") String checkIn,
 			@RequestParam(name = "check-out") String checkOut,
 			@RequestParam(name = "number_of_guests", required = false, defaultValue = "1") Integer numberOfGuests,
 			@RequestParam(name = "free_only", required = false, defaultValue = "false") boolean freeOnly,
 			@RequestParam(name = "services", required = false) List<Long> serviceIds,
+			@RequestParam(name = "min_rating", required = false) Integer minRating,
+			@RequestParam(name = "max_rating", required = false) Integer maxRating,
+			@RequestParam(name = "min_price", required = false) Double minPrice,
+			@RequestParam(name = "max_price", required = false) Double maxPrice,
 			@RequestParam(name = "order_by", required = false, defaultValue = "id") String orderBy,
 			@RequestParam(name = "order_direction", required = false, defaultValue = "desc") String oderDirection,
+			@RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
+			@RequestParam(name = "size", required = false, defaultValue = "10") Integer size,
 			Authentication auth) {
 		logger.debug("GET /search");
 
@@ -546,12 +555,25 @@ public class AccommodationController {
 			throw new ForbiddenException("The number of guest must be a number greater than zero.");
 		}
 
+		if (minRating != null && maxRating != null && minRating > maxRating) {
+			logger.error("The minimum rating must be lower than the maximum rating.");
+			logger.trace("Invalid min rating = " + minRating + ", max rating = " + maxRating);
+			throw new InvalidJSONException("The minimum rating must be lower than the maximum rating.");
+		}
+
+		if (minPrice != null && maxPrice != null && minPrice > maxPrice) {
+			logger.error("The minimum price must be lower than the maximum price.");
+			logger.trace("Invalid min price = " + minPrice + ", max price = " + maxPrice);
+			throw new InvalidJSONException("The minimum price must be lower than the maximum price.");
+		}
+
 		logger.trace("Searching accommodations with params: dest = " + destination +
 				", check-in = " + checkInDate + ", check-out = " + checkOutDate +
-				", number of guests = " + numberOfGuests + ", freeOnly = " + freeOnly + ", services = " + serviceIds + ", order by " + orderBy);
+				", number of guests = " + numberOfGuests + ", freeOnly = " + freeOnly + ", services = " + serviceIds + ", order by " + orderBy + ", order direction = " + oderDirection);
 
 		Long userId = AuthorizationUtility.getUserFromAuthentication(auth).getId();
-		return accommodationService.findByUserInputDTO(destination, checkInDate, checkOutDate, numberOfGuests, freeOnly, serviceIds, orderBy, oderDirection, userId);
+        Pageable pageable = PageRequest.of(page, size);
+        return accommodationService.findByUserInputDTO(destination, checkInDate, checkOutDate, numberOfGuests, freeOnly, serviceIds, minRating, maxRating, minPrice, maxPrice, orderBy, oderDirection, userId, pageable);
 	}
 
 
