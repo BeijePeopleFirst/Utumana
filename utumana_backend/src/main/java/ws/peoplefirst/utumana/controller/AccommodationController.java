@@ -20,14 +20,19 @@ import ws.peoplefirst.utumana.dto.AccommodationDTO;
 import ws.peoplefirst.utumana.dto.PriceDTO;
 import ws.peoplefirst.utumana.dto.UnavailabilityDTO;
 import ws.peoplefirst.utumana.dto.UserDTO;
-import ws.peoplefirst.utumana.exception.*;
-import ws.peoplefirst.utumana.model.*;
+import ws.peoplefirst.utumana.exception.ErrorMessage;
+import ws.peoplefirst.utumana.exception.ForbiddenException;
+import ws.peoplefirst.utumana.exception.IdNotFoundException;
+import ws.peoplefirst.utumana.exception.InvalidJSONException;
+import ws.peoplefirst.utumana.model.Accommodation;
+import ws.peoplefirst.utumana.model.Availability;
+import ws.peoplefirst.utumana.model.Review;
+import ws.peoplefirst.utumana.model.Service;
 import ws.peoplefirst.utumana.service.*;
 import ws.peoplefirst.utumana.utility.AuthorizationUtility;
 import ws.peoplefirst.utumana.utility.Constants;
 import ws.peoplefirst.utumana.utility.JsonFormatter;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
@@ -41,7 +46,7 @@ import static org.springframework.http.ResponseEntity.ok;
 @RequestMapping(value = "/api")
 public class AccommodationController {
 
-	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private AccommodationService accommodationService;
@@ -743,11 +748,7 @@ public class AccommodationController {
 		logger.debug("GET /search");
 
 		// decode destination
-		try {
-			destination = URLDecoder.decode(destination, StandardCharsets.UTF_8.toString());
-		} catch (UnsupportedEncodingException e) {
-			throw new TheJBeansException("Error decoding destination string from search URL: " + destination);
-		}
+		destination = URLDecoder.decode(destination, StandardCharsets.UTF_8);
 
 		// get check-in and check-out dates
 		if (checkIn.isBlank()) {
