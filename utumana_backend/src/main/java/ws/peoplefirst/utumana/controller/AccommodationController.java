@@ -821,7 +821,8 @@ public class AccommodationController {
 			String approval = accommodation.getApprovalTimestamp().format(formatter);
 			res.put("approval", approval);
 
-			List<Review> reviews = accommodationService.getAccommodationReviews(accommodationId);
+			//List<Review> reviews = accommodationService.getAccommodationReviews(accommodationId);
+			List<Review> reviews = accommodationService.getAllAccommodationReviews(accommodationId);
 			res.put("reviews", reviews);
 
 			boolean hasPendingBooking = bookingService.hasPendingBooking(user.getId(), accommodationId);

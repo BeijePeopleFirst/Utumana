@@ -213,6 +213,10 @@ export class AccommodationService {
                       )
   }
 
+  public getAccommodationInfo(accId: number): Observable<Map<string, object> | {message: string, status: string, time: string}> {
+    return this.http.get<Map<string, object> | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/accommodation_info/" + accId);
+  }
+
   deleteAccommodation(id: number): Observable<Accommodation | {message: string, status: string, time: string} | null> {
     //let headers = this.getAuth();
 
