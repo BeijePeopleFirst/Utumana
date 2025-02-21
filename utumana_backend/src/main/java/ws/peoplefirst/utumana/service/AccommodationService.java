@@ -153,6 +153,10 @@ public class AccommodationService {
         return bookingRepository.getApprovedAccommodationReviews(accommodationId);
     }
 
+    public List<Review> getAllAccommodationReviews(Long accommodationId) {
+        return bookingRepository.getAllAccommodationReviews(accommodationId);
+    }
+
     public List<AccommodationDTO> getFavouritesDTO(Long userId) {
         if (userId != null) {
             List<AccommodationDTO> results = accommodationRepository.getFavouritesDTO(userId);

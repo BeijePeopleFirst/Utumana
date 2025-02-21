@@ -56,7 +56,11 @@
 	"booking-values-missing": "Some values for Booking are Missing!",
 	"updated-accommodation-services": "Successfully updated Accommodation Services",
 	"error-fetching-accommodation-details": "An Error occurred while fetching Accommodation details",
-	"error-fetching-accommodation-owner": "An Error occurred while fetching Accommodation' s owner Informations"
+	"error-fetching-accommodation-owner": "An Error occurred while fetching Accommodation' s owner Informations",
+	"error-accepting-review": "Error while accepting Review",
+	"error-rejecting-review": "Error while rejecting Review",
+	"success-accepting-review": "Review accepted Successfully",
+	"success-rejecting-review": "Review rejected Successfully"
 	},
 "bookings": {
 	"checkIn":"Check-in",

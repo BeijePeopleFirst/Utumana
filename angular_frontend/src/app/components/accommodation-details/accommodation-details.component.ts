@@ -8,6 +8,7 @@ import { Review } from 'src/app/models/review';
 import { Service } from 'src/app/models/service';
 import { User } from 'src/app/models/user';
 import { AccommodationService } from 'src/app/services/accommodation.service';
+import { ReviewService } from 'src/app/services/review.service';
 import { ServiceService } from 'src/app/services/service.service';
 import { UserService } from 'src/app/services/user.service';
 import { BookingStatus } from 'src/app/utils/enums';
@@ -23,10 +24,10 @@ export class AccommodationDetailsComponent implements OnInit {
   userId?: number;
 
   //A User ID was not provided:
-  userNotLogged: boolean = true;
+  userNotLogged: boolean = false;
 
   //Is the provided User ID lecit?
-  invalidUserId: boolean = true;
+  //invalidUserId: boolean = true;
 
   accommodation!: Accommodation;
   invalidAccommodation: boolean = false;
@@ -37,6 +38,10 @@ export class AccommodationDetailsComponent implements OnInit {
   filteredAccommodationReviews: Review[] = [];
   accommodationReviewsPageNumber: number = 0;
   accommodationReviewsTotalPagesNumber!: number;
+  errorAcceptingReview: boolean = false;
+  errorRejectingReview: boolean = false;
+  successAcceptingReview: boolean = false;
+  successRejectingReview: boolean = false;
 
   accommodationOwner!: User;
 
@@ -98,11 +103,14 @@ export class AccommodationDetailsComponent implements OnInit {
     private userService: UserService,
     private serviceService: ServiceService,
     private route: ActivatedRoute,
+    private reviewService: ReviewService,
     private translateService: TranslateService,
     private router: Router
   ) 
   {}
 
+  //IMPORTANT NOTE: check that the Accommodation has both main photo url in accommodation table
+  //AND associated photos in the photo table
   ngOnInit(): void {
 
     this.queryParams = this.route.snapshot.queryParams;
@@ -169,15 +177,15 @@ export class AccommodationDetailsComponent implements OnInit {
               return;
             }
             
-            this.invalidUserId = false;
+            //this.invalidUserId = false;
 
             let tmp1: Boolean | undefined;
             let tmp2: Boolean | undefined;
             let tmp3: any;
-            let tmp4: Boolean | undefined;
+            let tmp4: Boolean | undefined;console.log("INFO -> ", info);
 
             if(!("isAdmin" in info) || !("isOwner" in info) || !("reviews" in info) || !("isFavourite" in info)
-              || !(tmp1 = Boolean(info["isAdmin"])) || !(tmp2 = Boolean(info["isOwner"]))
+              || ((tmp1 = Boolean(info["isAdmin"])) == undefined) || ((tmp2 = Boolean(info["isOwner"])) == undefined)
               || !(tmp3 = info["reviews"]) || ((tmp4 = Boolean(info["isFavourite"])) == undefined)) {
 
               this.errorFetchingAccommodationDetails = true;
@@ -187,7 +195,7 @@ export class AccommodationDetailsComponent implements OnInit {
             
             this.isAdminOrMe = (tmp1.valueOf() || tmp2.valueOf());
             this.isFavourite = tmp4.valueOf();
-
+            
             if(!(Array.isArray(tmp3))) {
               this.errorFetchingAccommodationDetails = true;
               this.message = "true";
@@ -209,8 +217,8 @@ export class AccommodationDetailsComponent implements OnInit {
             //Filtro le review in base al tipo di User loggato:
             if(!this.isAdminOrMe) this.accommodationReviews = this.accommodationReviews.filter(r => r.approval_timestamp != null);
 
-            //Ordino le Review per ID ascendente:
-            this.accommodationReviews.sort((s1, s2) => s1.id! - s2.id!);
+            //Ordino le Review per ID discendente (in questo modo avrò per prime le accommodation più recenti):
+            this.accommodationReviews.sort((s1, s2) => s2.id! - s1.id!);
 
             //Adesso ottengo le review in base al numero di pagina:
             this.filteredAccommodationReviews = this.getDesiredReviewsByPageNumber(this.accommodationReviewsPageNumber, this.accommodationReviews);
@@ -233,7 +241,7 @@ export class AccommodationDetailsComponent implements OnInit {
                   this.errorFetchingAccommodationOwner = true;
                   return;
                 }
-                else {
+                else {console.log("found user -> ", foundUser);
                   this.accommodationOwner = foundUser;
                 }
 
@@ -550,22 +558,93 @@ export class AccommodationDetailsComponent implements OnInit {
     )
   }
 
-  //TODO:
   //PageSize === 4
   getDesiredReviewsByPageNumber(pageNumber: number, reviews: Review[]): Review[] {
+    let reviewPages: Map<Number, Review[]> = this.buildPagesMap(pageNumber, reviews);
 
+    return reviewPages.get(pageNumber)!;
   }
 
-  //TODO: prendo n elementi dalla lista delle review in base all' offset specificato
+  //PageSize === 4
+  private buildPagesMap(pageNumber: number, reviews: Review[]): Map<Number, Review[]> {
+    let reviewPages: Map<Number, Review[]> = new Map<Number, Review[]>();
+
+    let pageNumberIndex: number = 0;
+    let tmp: number = 0;
+    let counter: number = 0;
+
+    while(pageNumberIndex <= pageNumber) {
+
+      reviewPages.set(pageNumberIndex, []);
+
+      counter = 0;
+      while(counter < 4) {
+        
+        if(!reviews[tmp]) break;
+
+        reviewPages.get(pageNumberIndex)?.push(reviews[tmp]);
+        tmp++;
+        counter++;
+      }
+
+      pageNumberIndex++;
+    }
+
+    return reviewPages;
+  }
+
+  //Prendo n elementi dalla lista delle review in base all' offset specificato
+  //PageSize === 4
   consumeAskForPageEvent($event: number) {
+    console.log($event, this.accommodationReviewsTotalPagesNumber);
+    if($event < 0) return;
+    if($event > this.accommodationReviewsTotalPagesNumber) return;
+    console.log("eccomi");
 
+    this.accommodationReviews.sort((a, b) => b.id! - a.id!);
+    let map: Map<Number, Review[]> = this.buildPagesMap($event, this.accommodationReviews);
+    console.log(map);
+
+    this.accommodationReviewsPageNumber = $event;
+
+    this.filteredAccommodationReviews = map.get($event)!;
   }
 
-  //TODO:
   //this.reviewChange.emit({ id: this.review.id, action: 'reject' });
   //this.reviewChange.emit({ id: this.review.id, action: 'accept' });
   consumeReviewActionEvent($event: { id:number, action:string }) {
+    let action: string = $event.action;
+    let rId: number = $event.id;
 
+    if(action === "reject") {
+      this.reviewService.rejectReview(rId).subscribe(
+        result => {
+          this.message = "true";
+          if(!result) this.errorRejectingReview = true;
+          else {
+            this.successRejectingReview = true;
+            this.accommodationReviews = this.accommodationReviews.filter(r => r.id !== rId);
+            this.accommodationReviewsTotalPagesNumber = Math.ceil(this.accommodationReviews.length / 4);
+            this.accommodationReviewsPageNumber = 0;
+            this.filteredAccommodationReviews = this.getDesiredReviewsByPageNumber(this.accommodationReviewsPageNumber, this.accommodationReviews);
+          }
+        }
+      )
+    }
+    else {
+      this.reviewService.acceptReview(rId).subscribe(
+        result => {
+          this.message = "true";
+          if(!result) this.errorAcceptingReview = true;
+          else {
+            this.successAcceptingReview = true;
+            this.filteredAccommodationReviews.forEach(r => {
+              if(r.id === rId) r.approval_timestamp = new Date(Date.now()).toISOString();
+            })
+          }
+        }
+      )
+    }
   }
 
   clearMessage() {
@@ -584,6 +663,10 @@ export class AccommodationDetailsComponent implements OnInit {
     this.updatedAccommodationServices = false;
     this.errorFetchingAccommodationDetails = false;
     this.errorFetchingAccommodationOwner = false;
+    this.errorAcceptingReview = false;
+    this.errorRejectingReview = false;
+    this.successAcceptingReview = false;
+    this.successRejectingReview = false;
 
   }
 

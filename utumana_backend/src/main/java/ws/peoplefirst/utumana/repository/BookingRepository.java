@@ -22,6 +22,9 @@ public interface BookingRepository extends JpaRepository<Booking,Long>{
 
 	@Query(value = "SELECT b.review FROM Booking as b WHERE b.accommodation.id = :accommodationId AND b.review.approvalTimestamp IS NOT NULL")
 	List<Review> getApprovedAccommodationReviews(@Param(value = "accommodationId") Long accommodationId);
+
+	@Query("SELECT b.review FROM Booking as b where b.accommodation.id = :accommodationId")
+	List<Review> getAllAccommodationReviews(@Param(value = "accommodationId") Long accommodationId);
 	
 	public List<Booking> findAllByUserIdAndIsUnavailabilityIsFalseOrderByCheckInDesc(Long userId);
 	

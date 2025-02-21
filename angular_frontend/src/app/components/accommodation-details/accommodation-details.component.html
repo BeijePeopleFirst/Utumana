@@ -2,11 +2,11 @@
     <h1 class="text-3xl text-orange-700">{{"accommodation-card-details.accommodation-error" | translate}}</h1>
   </ng-container>
   
-  <ng-container *ngIf="invalidUserId || userNotLogged">
+  <ng-container *ngIf="userNotLogged">
     <h1 class="text-3xl text-orange-700">{{"accommodation-card-details.user-error" | translate}}</h1>
   </ng-container>
   
-  <ng-container *ngIf="!invalidAccommodation && !invalidUserId && !userNotLogged" id="accommodation-details-container">
+  <ng-container *ngIf="!invalidAccommodation && !userNotLogged" id="accommodation-details-container">
     <div class="flex flex-col items-center justify-center">
       <div class="flex flex-row">
         <div class="mx-2 text-5xl">{{accommodation.title}}</div>
@@ -197,6 +197,22 @@
 
     <h1 class="text-xl text-blue-800" *ngIf="errorFetchingAccommodationOwner">
       {{"accommodation-card-details.error-fetching-accommodation-owner" | translate}}
+    </h1>
+
+    <h1 class="text-xl text-blue-800" *ngIf="errorAcceptingReview">
+      {{"accommodation-card-details.error-accepting-review" | translate}}
+    </h1>
+
+    <h1 class="text-xl text-blue-800" *ngIf="errorRejectingReview">
+      {{"accommodation-card-details.error-rejecting-review" | translate}}
+    </h1>
+
+    <h1 class="text-xl text-blue-800" *ngIf="successAcceptingReview">
+      {{"accommodation-card-details.success-accepting-review" | translate}}
+    </h1>
+
+    <h1 class="text-xl text-blue-800" *ngIf="successRejectingReview">
+      {{"accommodation-card-details.success-rejecting-review" | translate}}
     </h1>
     
   </ng-container>
