@@ -3,32 +3,45 @@ package ws.peoplefirst.utumana.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class AccommodationDTO {
-	
-	private Long id;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-	private String title;
-	
-	private String city;
-	
-	private String province;
-	
-	private String country;
-	
-	@JsonProperty(value = "main_photo_url")
-	private String mainPhotoUrl;	
-	
-	@JsonProperty(value = "min_price")
-	private Double minPrice;
-	
-	@JsonProperty(value = "max_price")
-	private Double maxPrice;
-	
-	@JsonProperty(value = "is_favourite")
-	private Boolean isFavourite;
-	
-	private Double rating;
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+@Schema(description = "DTO representing an accommodation")
+public class AccommodationDTO {
+
+    @Schema(description = "Unique identifier of the accommodation", example = "1001")
+    private Long id;
+
+    @Schema(description = "Title or name of the accommodation", example = "Luxury Beach Resort")
+    private String title;
+
+    @Schema(description = "City where the accommodation is located", example = "Barcelona")
+    private String city;
+
+    @Schema(description = "Province where the accommodation is located", example = "Catalonia")
+    private String province;
+
+    @Schema(description = "Country where the accommodation is located", example = "Spain")
+    private String country;
+
+    @JsonProperty(value = "main_photo_url")
+    @Schema(description = "URL of the main photo of the accommodation", example = "https://example.com/images/hotel1.jpg")
+    private String mainPhotoUrl;
+
+    @JsonProperty(value = "min_price")
+    @Schema(description = "Minimum price per night", example = "50.0")
+    private Double minPrice;
+
+    @JsonProperty(value = "max_price")
+    @Schema(description = "Maximum price per night", example = "300.0")
+    private Double maxPrice;
+
+    @JsonProperty(value = "is_favourite")
+    @Schema(description = "Indicates if the accommodation is marked as favorite", example = "true")
+    private Boolean isFavourite;
+
+    @Schema(description = "Average rating of the accommodation", example = "4.5")
+    private Double rating;
 	
 	
 	public AccommodationDTO() {}

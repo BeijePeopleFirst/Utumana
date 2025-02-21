@@ -6,8 +6,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import ws.peoplefirst.utumana.dto.UserDTO;
 import ws.peoplefirst.utumana.exception.DBException;
+import ws.peoplefirst.utumana.exception.ErrorMessage;
 import ws.peoplefirst.utumana.exception.ForbiddenException;
 import ws.peoplefirst.utumana.exception.IdNotFoundException;
 import ws.peoplefirst.utumana.exception.InvalidJSONException;
@@ -24,6 +34,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api")
+@Tag(name = "Users", description = "Users entry point")
 public class UserController {
 	
 	private Logger log = LoggerFactory.getLogger(this.getClass());
@@ -34,6 +45,11 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
+    @Operation(summary = "Get all users as DTOs")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "List of user DTOs fetched successfully"),
+        @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+    })
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@GetMapping(value = "/users")
 	public List<UserDTO> getUsersDTO(){
@@ -41,13 +57,25 @@ public class UserController {
 		
 		return userService.getUsersDTO();
 	}
-	
+    
+    @Operation(summary = "Get all users with full details")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "List of complete users successfully fetched"),
+        @ApiResponse(responseCode = "500", description = "Internal server error", content=@Content(mediaType = "application/json",
+			schema=@Schema(implementation=ErrorMessage.class)))
+    })
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@GetMapping(value = "/users_full_obj")
 	public List<User> getAllUsersFullObj(Authentication auth){
 		return userService.findAllUsers();
 	}
 	
+    @Operation(summary = "Get user by ID")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "User found"),
+        @ApiResponse(responseCode = "404", description = "IdNotFoundException(\"User with id \" + id + \" not found.\")", content=@Content(mediaType = "application/json",
+		schema=@Schema(implementation=ErrorMessage.class)))
+    })
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value = "/user/{id}")
 	public User getUser(@PathVariable Long id, Authentication auth){
@@ -65,19 +93,37 @@ public class UserController {
 		}
 	}
 	
+    @Operation(summary = "Create a new user")
+    @ApiResponses({
+        @ApiResponse(responseCode = "201", description = "User created successfully"),
+        @ApiResponse(responseCode = "400", description = "InvalidJSONException(\"Error: could not create new user. Invalid user.\")", content=@Content(mediaType = "application/json",
+		schema=@Schema(implementation=ErrorMessage.class)))
+    })
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping(value = "/user")
-	public User insertUser(@RequestBody User user){
+	public User insertUser(@Parameter(description = "the user to insert", schema = @Schema(implementation = User.class)) @RequestBody User user){
 		log.debug("POST /user");
 		log.debug("User to insert: " + user);		
 		
 		return userService.insertUser(user);
 	}
 	
-	
+    @Operation(summary = "Change user password")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Password updated successfully"),
+        @ApiResponse(responseCode = "404", description = "IdNotFoundException(\"user with email \"+email+\" not found\")", content=@Content(mediaType = "application/json",
+		schema=@Schema(implementation=ErrorMessage.class))),
+        @ApiResponse(responseCode = "503", description = "DBException(\"cannot change current user\")", content=@Content(mediaType = "application/json",
+		schema=@Schema(implementation=ErrorMessage.class)))
+    })
 	@PreAuthorize("permitAll()")
 	@PatchMapping(value = "/change_password")
-	public User modifyPassword(@RequestBody Map<String, Object> body) {
+	public User modifyPassword(@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "the map containing email and the new password", content = @Content( mediaType = "application/json",
+            schema = @Schema(implementation = Map.class),
+            examples = @ExampleObject(
+                name = "Example request",
+                value = "{ \"email\": \"john.doe@gmail.com\", \"password\": \"password123\" }"
+            ))) @RequestBody Map<String, Object> body) {
 		String email= ""+body.get("email");
 		
 		User user = userService.getUserByEmail(email);
@@ -99,10 +145,23 @@ public class UserController {
 		}
 				
 	}
-	
+    
+    @Operation(summary = "Update user information")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "User updated successfully"),
+        @ApiResponse(responseCode = "403", description = "Forbidden action", content=@Content(mediaType = "application/json",
+		schema=@Schema(implementation=ErrorMessage.class))),
+        @ApiResponse(responseCode = "400", description = "InvalidJSONException(\"Invalid key: \" + key)", content=@Content(mediaType = "application/json",
+		schema=@Schema(implementation=ErrorMessage.class)))
+    })
 	@PreAuthorize("hasAuthority('USER')")
 	@PatchMapping(value = "/user")
-	public User modifyUser(@RequestBody Map<String, Object> body, Authentication auth) //@PathVariable Long id, 
+	public User modifyUser(@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "the map containing user's field to change", content = @Content( mediaType = "application/json",
+	schema = @Schema(implementation = Map.class),
+	examples = @ExampleObject(
+		name = "Example request",
+		value = "{ \"id\": \"1\", \"name\": \"Mario\", \"bio\": \"I like travelling\" }"
+	)))@RequestBody Map<String, Object> body, Authentication auth) 
 	{	
 		log.debug("PATCH /user");
 		
@@ -200,6 +259,12 @@ public class UserController {
 		return user;
 	}
 	
+    @Operation(summary = "Get user badges")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "List of user badges retrieved successfully"),
+        @ApiResponse(responseCode = "404", description = "IdNotFoundException(\"user not found\")", content=@Content(mediaType = "application/json",
+		schema=@Schema(implementation=ErrorMessage.class))),
+    })
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value = "/user/badges/{userId}")
 	public List<BadgeAward> getAllUserBadges(@PathVariable Long userId) {

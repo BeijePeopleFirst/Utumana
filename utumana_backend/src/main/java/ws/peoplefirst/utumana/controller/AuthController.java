@@ -26,9 +26,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import ws.peoplefirst.utumana.dto.AuthCredentials;
 import ws.peoplefirst.utumana.dto.UserDTO;
+import ws.peoplefirst.utumana.exception.ErrorMessage;
 import ws.peoplefirst.utumana.model.RefreshToken;
 import ws.peoplefirst.utumana.model.User;
 import ws.peoplefirst.utumana.security.JwtTokenProvider;
@@ -39,6 +46,7 @@ import ws.peoplefirst.utumana.utility.AuthorizationUtility;
 
 @RestController
 @RequestMapping(value="/api")
+@Tag(name = "Authentication", description = "Endpoints for user authentication and authorization")
 public class AuthController {
 
 	private Logger log = LoggerFactory.getLogger(this.getClass());
@@ -54,10 +62,8 @@ public class AuthController {
 
 	@Autowired
 	private RefreshTokenService refreshTokenService;
-
-
 	
-
+	@Operation(summary = "Test endpoint for USER role")
 	@PreAuthorize("hasAuthority('USER')")
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	public @ResponseBody String test(Authentication auth) {
@@ -72,6 +78,7 @@ public class AuthController {
 		return "OK!";
 	}
 
+	@Operation(summary = "Test endpoint for ADMIN role")
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@RequestMapping(value = "/testadmin", method = RequestMethod.GET)
 	public @ResponseBody String testAdmin() throws UnknownHostException {
@@ -82,6 +89,12 @@ public class AuthController {
 		return "OK!";
 	}
 
+    @Operation(summary = "User sign-in", description = "Authenticates a user and returns a JWT token")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "User authenticated successfully"),
+        @ApiResponse(responseCode = "401", description = "Invalid credentials", content=@Content(mediaType = "application/json",
+			schema=@Schema(implementation=ErrorMessage.class)))
+    })
 	@PreAuthorize("permitAll()")
 	@PostMapping("/signin")
 	public ResponseEntity<Map<String, Object>> signin(@RequestBody AuthCredentials credentials, HttpServletResponse response) throws RuntimeException {
@@ -125,6 +138,7 @@ public class AuthController {
 	}
 	
 	//used into creation of users and accept houses as on load fetch
+    @Operation(summary = "Check if user is an admin")
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping("/testIsAdmin")
 	public ResponseEntity<Map<String, Object>> isAdmin(Authentication auth) {
@@ -138,6 +152,7 @@ public class AuthController {
 		return ok(res);
 	}
 	
+    @Operation(summary = "Check if user is an admin or the owner")
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@GetMapping("/isAdmin")
 	public ResponseEntity<Map<String, Object>> isAdminOrOwner(Authentication auth, @PathVariable Long ownerId) {
@@ -159,7 +174,13 @@ public class AuthController {
 		
 		return ok(res);
 	}
-
+	
+    @Operation(summary = "Refresh JWT token")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Token refreshed successfully"),
+        @ApiResponse(responseCode = "401", description = "Invalid refresh token",content=@Content(mediaType = "application/json",
+		schema=@Schema(implementation=ErrorMessage.class)))
+    })
 	@PreAuthorize("permitAll()")
 	@PostMapping("/refresh_token")
 	public ResponseEntity<Map<String, Object>> refreshToken(@RequestBody RefreshToken refreshToken, HttpServletResponse response){

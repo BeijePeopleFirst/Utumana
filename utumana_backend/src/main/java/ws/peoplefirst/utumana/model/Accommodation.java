@@ -8,90 +8,139 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.OrderBy;
+import jakarta.persistence.OrderColumn;
+import jakarta.persistence.PrimaryKeyJoinColumn;
+import jakarta.persistence.Table;
+import ws.peoplefirst.utumana.utility.JsonFormatter;
+
+
 
 @Entity
 @Table(name = "accommodation")
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Schema(description = "Model representing an accommodation")
 public class Accommodation {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "id")
+	@Schema(description = "Unique identifier of the accommodation", example = "1")
     private Long id;
 
-    @JsonProperty(value = "owner_id")
-    @Column(name = "owner_id")
+	@JsonProperty(value = "owner_id")
+	@Column(name = "owner_id")
+	@Schema(description = "ID of the owner of the accommodation", example = "123")
     private Long ownerId;
 
-    @Column(name = "title")
+	@Column(name = "title")
+	@Schema(description = "Title of the accommodation", example = "Cozy Apartment in the City")
     private String title;
 
-    @Column(name = "description")
-    private String description;
+	@Column(name = "description")
+	@Schema(description = "Description of the accommodation", example = "A beautiful apartment located in the heart of the city.")
+	private String description;
 
-    //@JsonInclude(JsonInclude.Include.NON_EMPTY)
-    @JsonIgnore
-    @Column(name = "approval_timestamp")
+	//@JsonInclude(JsonInclude.Include.NON_EMPTY)
+	@JsonIgnore
+	@Column(name = "approval_timestamp")
+	@Schema(description = "Timestamp when the accommodation was approved", example = "2023-10-01T12:00:00")
     private LocalDateTime approvalTimestamp;
 
-    @JsonIgnore
-    @Column(name = "hiding_timestamp")
+	@JsonIgnore
+	@Column(name = "hiding_timestamp")
+	@Schema(description = "Timestamp when the accommodation was hidden", example = "2023-10-01T12:00:00")
     private LocalDateTime hidingTimestamp;
 
-    @Column(name = "beds")
+	@Column(name = "beds")
+	@Schema(description = "Number of beds in the accommodation", example = "2")
     private Integer beds;
 
-    @Column(name = "rooms")
+	@Column(name = "rooms")
+	@Schema(description = "Number of rooms in the accommodation", example = "3")
     private Integer rooms;
 
-    @Column(name = "street")
-    private String street;
+	@Column(name = "street")
+	@Schema(description = "Street name of the accommodation's address", example = "Main Street")
+	private String street;
 
-    @JsonProperty(value = "street_number")
-    @Column(name = "street_number")
-    private String streetNumber;
+	@JsonProperty(value = "street_number")
+	@Column(name = "street_number")
+	@Schema(description = "Street number of the accommodation's address", example = "123")
+	private String streetNumber;
 
-    @JsonProperty(value = "address_notes")
-    @Column(name = "address_notes")
+	@JsonProperty(value = "address_notes")
+	@Column(name = "address_notes")
+	@Schema(description = "Additional notes for the address", example = "Near the central park")
     private String addressNotes;
 
-    @Column(name = "city")
-    private String city;
+	@Column(name = "city")
+	@Schema(description = "City of the accommodation", example = "New York")
+	private String city;
 
-    @Column(name = "cap")
+	@Column(name = "cap")
+	@Schema(description = "Postal code of the accommodation", example = "10001")
     private String cap;
 
-    @Column(name = "province")
+	@Column(name = "province")
+	@Schema(description = "Province of the accommodation", example = "NY")
     private String province;
 
-    @Column(name = "country")
+	@Column(name = "country")
+	@Schema(description = "Country of the accommodation", example = "USA")
     private String country;
 
-    @Column(name = "coordinates")
-    private String coordinates;
+	@Column(name = "coordinates")
+	@Schema(description = "Geographical coordinates of the accommodation", example = "40.7128,-74.0060")
+	private String coordinates;
 
-    @JsonProperty(value = "main_photo_url")
-    @Column(name = "main_photo_url")
-    private String mainPhotoUrl;
+	@JsonProperty(value = "main_photo_url")
+	@Column(name = "main_photo_url")
+	@Schema(description = "URL of the main photo of the accommodation", example = "https://example.com/photo.jpg")
+	private String mainPhotoUrl;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @OrderColumn(name = "service_order")
-    @JoinTable(name = "service_availability", joinColumns = {
-            @JoinColumn(name = "accommodation_id", referencedColumnName = "id", insertable = true, nullable = false, updatable = true)}, inverseJoinColumns = {
-            @JoinColumn(name = "service_id", referencedColumnName = "id", insertable = true, nullable = false, updatable = true)})
-    private Set<Service> services;
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OrderColumn(name="service_order")
+	@JoinTable(name = "service_availability", joinColumns = {
+            @JoinColumn(name = "accommodation_id", referencedColumnName = "id", insertable = true, nullable = false, updatable = true) }, inverseJoinColumns = {
+                    @JoinColumn(name = "service_id", referencedColumnName = "id", insertable = true, nullable = false, updatable = true) })
+	@Schema(description = "Set of services available in the accommodation")
+	private Set<Service> services;
 
-    @OneToMany(mappedBy = "accommodation", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @OrderColumn(name = "order")
-    private List<Photo> photos;
+	@OneToMany(mappedBy = "accommodation", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OrderColumn(name = "order")
+	@Schema(description = "List of photos of the accommodation")
+	private List<Photo> photos;
 
 
-    @OneToMany(mappedBy = "accommodation", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @OrderBy("startDate")
+	@OneToMany(mappedBy = "accommodation", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OrderBy("startDate")
+	@Schema(description = "List of availabilities of the accommodation")
     private List<Availability> availabilities;
 
-    @OneToOne(mappedBy = "accommodation", fetch = FetchType.LAZY)
-    @PrimaryKeyJoinColumn
+	@OneToOne(mappedBy = "accommodation", fetch = FetchType.LAZY)
+	@PrimaryKeyJoinColumn
+	@Schema(description = "Rating of the accommodation")
     private AccommodationRating rating;
+	
 
 
     public Long getId() {

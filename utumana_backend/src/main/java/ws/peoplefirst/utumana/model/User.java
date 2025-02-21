@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -42,6 +43,7 @@ import ws.peoplefirst.utumana.utility.Constants;
 @Entity
 @Table(name = "user")
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Schema(description = "User representation")
 public class User implements Serializable, UserDetails {
 	
 	private static final long serialVersionUID = -6221103912480752901L;
@@ -50,34 +52,44 @@ public class User implements Serializable, UserDetails {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "id")
+	@Schema(description = "Unique id of the user", example = "1")
 	private Long id;
 	
 	@Column(name = "name")
+	@Schema(description = "User name", example = "Mario")
 	private String name;
 	
 	@Column(name = "surname")
+	@Schema(description = "User surname", example = "Rossi")
 	private String surname;
 	
 	@Column(name = "email")
+	@Schema(description = "User email", example = "mario.rossi@example.com")
 	private String email;
 	
 	@Column(name = "password")
+	@Schema(description = "User password", example = "password123")
 	private String password;
 	
 	@Column(name = "is_admin")
+	@Schema(description = "Keep the information about the admin role", example = "false")
 	private Boolean isAdmin;
 	
 	@Column(name = "bio")
+	@Schema(description = "User biography", example = "I like travelling")
 	private String bio;
 	
 	@Column(name = "profile_picture_url")
+	@Schema(description = "User profile picture url", example = "https://example.com/profile.jpg")
 	private String profilePictureUrl;
 	
 	@Column(name = "rating")
+	@Schema(description = "Avarage rating of all user accommodations", example = "4.5")
 	private Double rating;
 	
 	@Column(name = "archived_timestamp")
 	@JsonProperty(value = "archived_timestamp" )
+	@Schema(description = "Archived timestamp", example = "2024-05-01T10:15:30")
 	private LocalDateTime archivedTimestamp;
 	
 //	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
@@ -90,6 +102,7 @@ public class User implements Serializable, UserDetails {
 	@OneToMany(mappedBy = "user")
 	@OrderBy("awardDate DESC")
 	//@Embedded
+	@Schema(description = "Badges the user won")
 	private List<BadgeAward> badges;
 	
 	@JsonIgnore
@@ -97,9 +110,11 @@ public class User implements Serializable, UserDetails {
 	@JoinTable(name = "favourite", joinColumns = {
             @JoinColumn(name = "user_id", referencedColumnName = "id", insertable = true, nullable = false, updatable = true) }, inverseJoinColumns = {
                     @JoinColumn(name = "accommodation_id", referencedColumnName = "id", insertable = true, nullable = false, updatable = true) })
+	@Schema(description = "List of favorite accommodations")
 	private List<Accommodation> favourites;
 	
 	@Transient
+	@Schema(description = "Review list of the user")
 	private List<ReviewDTO> reviews;
 	
 	

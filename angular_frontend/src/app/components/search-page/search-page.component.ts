@@ -44,7 +44,6 @@ export class SearchPageComponent implements OnInit {
 
   ngOnInit() {
     this.route.data.subscribe(data => {
-      console.log("data", data);
       const accommodations = data['loadSearchAccommodations'].content;
       
       this.accommodationService.getPrices(accommodations).subscribe(
@@ -77,7 +76,6 @@ export class SearchPageComponent implements OnInit {
       page: params.page || 0,
       size: this.foundAccommodationsPageSize
     };
-    this.filterService.setSelectedFilters(filters)
     const cleanedParams: CompleteParams = Object.fromEntries(
       Object.entries(searchParams).filter(([_, value]) => value !== undefined)
     );
@@ -87,7 +85,6 @@ export class SearchPageComponent implements OnInit {
   }
   
   onApplyFilters(filters: FilterParams): void {
-    this.filterService.setSelectedFilters(filters);
     const currentSearchParams = this.searchService.getSearchData();
     const updatedParams: CompleteParams = {
       ...currentSearchParams,
@@ -103,34 +100,13 @@ export class SearchPageComponent implements OnInit {
 
   loadFoundResearchPage(pageNumber: number): void {
     this.foundAccommodationsPageNumber = pageNumber;
-    const currentParams = this.searchService.getSearchData();
-    
+    const currentParams = this.searchService.getSearchData(); 
     const updatedParams = {
       ...currentParams,
       page: pageNumber
     };
     this.searchService.setSearchData(updatedParams);
-    
-    this.accommodationService.getSearchResults(pageNumber, this.foundAccommodationsPageSize).subscribe(data => {
-      this.foundAccommodations$ = of(data.content);
-      this.foundAccommodationsPageNumber = data.pageable.pageNumber;
-      this.foundAccommodationsTotalPages = data.totalPages;
-
-      // Update pagination info
-      this.accommodationService.updatePaginationInfoSubject({
-        number: data.pageable.pageNumber,
-        totalPages: data.totalPages,
-        totalElements: data.totalElements,
-        size: data.size
-      });
-      
-      // If we have results, fetch prices
-      if (data.content && data.content.length > 0) {
-        this.accommodationService.getPricesToSubject(data.content, this.accommodationService.getFoundAccommodationsSubject());
-      } else {
-        this.accommodationService.updateFoundAccommodationsSubject([]);
-      }
-    }); 
+    this.router.navigate(['/search_page/'], { queryParams: updatedParams });
   }
 
   changePage(page: number): void {
@@ -139,6 +115,7 @@ export class SearchPageComponent implements OnInit {
       ...currentParams,
       page: page
     };
+    this.searchService.setSearchData(updatedParams);
     this.search(updatedParams);
   }
 
