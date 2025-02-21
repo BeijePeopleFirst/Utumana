@@ -5,17 +5,23 @@ import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import ws.peoplefirst.utumana.utility.JsonFormatter;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Schema(description = "DTO representing an unavailability period for an accommodation")
 public class UnavailabilityDTO {
-	private Long id;
+
+	@Schema(description = "Unique identifier of the unavailability period", example = "123")
+    private Long id;
 	
 	@JsonProperty(value = "check_in")
-	private String checkIn;
+	@Schema(description = "Check-in date in YYYY-MM-DD format", example = "2025-06-15")
+    private String checkIn;
 	
 	@JsonProperty(value = "check_out")
-	private String checkOut;
+	@Schema(description = "Check-out date in YYYY-MM-DD format", example = "2025-06-20")
+    private String checkOut;
 	
 	
 	public UnavailabilityDTO() {}

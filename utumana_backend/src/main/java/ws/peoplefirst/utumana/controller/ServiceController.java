@@ -16,18 +16,38 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.models.media.MediaType;
+import ws.peoplefirst.utumana.exception.ErrorMessage;
 import ws.peoplefirst.utumana.exception.TheJBeansException;
 import ws.peoplefirst.utumana.model.Service;
 import ws.peoplefirst.utumana.service.ServiceService;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @RestController
 @RequestMapping("/api")
+@Tag(name = "Service", description = "Service management APIs")
 public class ServiceController {
 	Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
 	private ServiceService serviceService;
 	
+	@Operation(
+	        summary = "Get all services or services by IDs",
+	        description = "Retrieves either all services or specific services by their IDs if provided"
+	    )
+	    @ApiResponses(value = {
+	        @ApiResponse(responseCode = "200", description = "Services retrieved successfully", content = @Content),
+	        @ApiResponse(responseCode = "403", description = "Unauthorized access - requires USER role", content=@Content(mediaType = "application/json",
+			schema=@Schema(implementation=ErrorMessage.class))),
+	        @ApiResponse(responseCode = "500",description = "Internal server error", content=@Content(mediaType = "application/json",
+			schema=@Schema(implementation=ErrorMessage.class)))
+			})
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping("/services")
 	public Set<Service> getAllServices(Authentication auth,
@@ -39,6 +59,15 @@ public class ServiceController {
 		}
 	}
 	
+	@Operation(summary = "Search services by title", description = "Searches for services using a title search string")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Search completed successfully", content = @Content), 
+			@ApiResponse(responseCode = "400", description = "Invalid title encoding", content=@Content(mediaType = "application/json",
+			schema=@Schema(implementation=ErrorMessage.class))), 
+			@ApiResponse(responseCode = "403", description = "Unauthorized access - requires USER role", content=@Content(mediaType = "application/json",
+			schema=@Schema(implementation=ErrorMessage.class))),
+			@ApiResponse(responseCode = "500", description = "Internal server error", content=@Content(mediaType = "application/json",
+			schema=@Schema(implementation=ErrorMessage.class)))})
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping("/services/search")
 	public List<Service> searchServicesByTitle(Authentication auth,
