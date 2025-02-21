@@ -1,11 +1,11 @@
 <div class="flex flex-col justify-center items-center mb-4 w-screen">
     <app-create-progress [step] = 2></app-create-progress>
-
-    <div class="flex flex-row gap-x-5 justify-center w-full">
-        <form action="/search" class="px-4 w-screen sm:w-1/3">
-            <div class="relative justify-self-end sm:w-80">
+    
+    <div class="flex flex-row flex-wrap gap-5 justify-center w-full sm:flex-nowrap">
+        <form action="search(searchBox.value)" class="px-4 w-screen sm:w-1/3">
+            <div class="relative justify-self-end w-full sm:w-1/2">
                 <input type="text" name="q" #searchBox (input)="search(searchBox.value)" 
-                class="p-4 w-full h-12 rounded-full border shadow bg-neutral-1 focus:outline-secondary" placeholder="{{'create.search_services' | translate}}">
+                class="p-4 w-full h-12 rounded-full border shadow bg-neutral-1 focus:outline-secondary focus:outline-offset-1" placeholder="{{'create.search_services' | translate}}">
                 <button type="submit">
                     <svg class="absolute right-3 top-3.5 w-5 h-5 fill-current text-secondary"
                         xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
@@ -17,7 +17,7 @@
                     </svg>
                 </button>
             </div>
-            <ul class="sm:pl-32" *ngIf="(foundServices$ | async) as foundServices">
+            <ul class="justify-self-end w-full sm:pl-4 sm:w-1/2" *ngIf="(foundServices$ | async) as foundServices">
                 <ng-container *ngIf="foundServices && foundServices.length > 0">
                     <li class="flex items-center px-3 py-1 align-middle rounded-lg first:pt-2 last:pb-2 hover:font-medium hover:text-secondary-dark hover:bg-neutral-2 hover:cursor-pointer" *ngFor="let found of foundServices" #foundElement (click)="foundElement.remove(); addService(found);">
                         <img [src]="iconUrl + '/services/' + found.icon_url" class="mr-2 w-6 h-6" [alt]="found.title">
@@ -30,14 +30,15 @@
               </ul>
         </form>
         
-        <div class="py-4 w-screen text-center rounded-lg shadow-md sm:w-1/2 bg-neutral-2">
+        <div class="flex flex-row flex-wrap gap-2 p-4 w-screen text-center rounded-lg shadow-md sm:w-1/3 bg-neutral-2">
             <ng-container *ngIf="services.length > 0">
-                <div *ngFor="let service of services" class="flex items-center p-3 rounded-lg border transition-colors duration-200 cursor-pointer w-fit">
-                    <img [src]="iconUrl + '/services/' + service.icon_url" class="mr-2 w-6 h-6" [alt]="service.title">
+                <div *ngFor="let service of services" class="flex relative items-center px-5 pt-4 pb-3 rounded-lg outline outline-1 outline-gray-200 has-[button:hover]:bg-neutral-50 transition-colors duration-100 has-[button:hover]:text-gray-400 w-fit h-fit group">
+                    <button (click)="removeService(service)" class="-top-1 right-1 p-0 w-fit h-min scale-80 close-modal peer"> &times; </button>
+                    <img [src]="iconUrl + '/services/' + service.icon_url" class="mr-2 w-6 h-6 peer-hover:scale105 peer-hover:opacity-50" [alt]="service.title">
                     <span class="text-sm">{{ service.title }}</span>
                 </div>
             </ng-container>
-            <div class="py-10" *ngIf="services.length == 0">
+            <div class="self-center py-10 w-full" *ngIf="services.length == 0">
                 {{'create.no_services' | translate}}
             </div>
         </div>

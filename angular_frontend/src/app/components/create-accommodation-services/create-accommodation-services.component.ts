@@ -51,7 +51,7 @@ export class CreateAccommodationServicesComponent implements OnInit, OnDestroy {
   saveServices(): void{
     localStorage.setItem('new_acc_services', JSON.stringify(this.services));
     // TODO
-    // save services in accommodation draft in db ??
+    // save services in accommodation draft in db 
   }
 
   saveAndContinue(): void{
@@ -64,6 +64,12 @@ export class CreateAccommodationServicesComponent implements OnInit, OnDestroy {
 
   addService(found: Service): void{
     this.services.push(found);
+    localStorage.setItem('new_acc_services', JSON.stringify(this.services));
+  }
+
+  removeService(service: Service): void{
+    this.services = this.services.filter((s: Service) => s.id !== service.id);
+    localStorage.setItem('new_acc_services', JSON.stringify(this.services));
   }
 
   search(searchText: string): void{
