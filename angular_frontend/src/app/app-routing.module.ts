@@ -22,16 +22,8 @@ import { CreateAccommodationRecapComponent } from './components/create-accommoda
 
 const routes: Routes = [
   {path: 'login', title: "Login", component: LoginComponent},
-  {path: 'profile', title: "Profile", component: ProfileComponent},
-  {path: 'favourites', title: "Favourites", component: FavouritesComponent},
   {path: 'create', title: "Create a new accommodation", component: CreateAccommodationAddressComponent},
-  {path: 'my_bookings', title: "My Bookings", component: MyBookingsComponent},
-  {path: 'my_accommodations', title: "My Accommodations", component: MyAccommodationsComponent},
-  {path: 'host_dashboard', title: "Host Dashboard", component: HostDashboardComponent},
-  {path: 'accommodation/:id', title: "Accommodation Details", component: AccommodationDetailsComponent},
   {path: 'search_page', title: "Search", component: SearchPageComponent, resolve: {loadSearchAccommodations: LoadSearchAccommodationResolver}, runGuardsAndResolvers: 'always'},
-  {path: 'book/:id', component: BookConfirmComponent},
-  {path: 'confirm_booking_on_creation', component: ConfirmBookingBooknowComponent},
   {path: '', title: "Utumana",  component: HomeComponent, canActivate: [authGuard]},
   {path: 'profile', title: "Profile", component: ProfileComponent, canActivate: [authGuard]},
   {path: 'favourites', title: "Favourites", component: FavouritesComponent, canActivate: [authGuard]},
