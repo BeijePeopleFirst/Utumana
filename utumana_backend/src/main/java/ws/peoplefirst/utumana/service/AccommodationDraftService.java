@@ -48,7 +48,7 @@ public class AccommodationDraftService {
 
     public AddressDTO getAccommodationDraftAddressInfoById(Long id) {
         AccommodationDraft draft = getAccommodationDraftById(id);
-        return new AddressDTO(draft.getStreet(), draft.getStreetNumber(), draft.getCity(), draft.getProvince(), draft.getCap(), draft.getCountry());
+        return new AddressDTO(draft.getStreet(), draft.getStreetNumber(), draft.getCity(), draft.getProvince(), draft.getCap(), draft.getCountry(), draft.getAddressNotes());
     }
 
     public  GeneralAccommodationInfoDTO getAccommodationDraftAccommodationInfoById(Long id) {

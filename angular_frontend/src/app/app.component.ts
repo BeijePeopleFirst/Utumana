@@ -4,6 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { iconURL } from 'src/costants';
 import { Location } from '@angular/common';
 import { AuthService } from './services/auth.service';
+import { DraftService } from './services/draft.service';
 
 
 @Component({
@@ -29,7 +30,9 @@ export class AppComponent implements DoCheck {
   constructor(
     private translate: TranslateService,
     private location: Location,
-    public authService: AuthService
+    public authService: AuthService,
+    private draftService: DraftService,
+    private router: Router
   ) {
     this.selectedLanguage = this.translate.currentLang || 'en-US';
     //this.translate.use(this.selectedLanguage);
@@ -78,4 +81,14 @@ export class AppComponent implements DoCheck {
       this.isLanguageMenuOpen = false;
       this.isMenuOpen = false;
     }
+
+  createAccommodationDraft(){
+    this.draftService.createAccommodationDraft().subscribe(draftId => {
+      if(draftId >= 0){
+        this.router.navigate([`/create/address/${draftId}`]);
+      }else{
+        alert("Error creating draft");
+      }
+    });
+  }
 }

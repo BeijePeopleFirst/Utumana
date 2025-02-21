@@ -44,6 +44,10 @@
         </div>
     </div>
 
+    <ng-container *ngIf="genericError">
+        <div class="text-center error-message">{{'error' | translate}}</div>
+    </ng-container>
+
     <div class="flex gap-x-5 justify-center mt-6 h-fit">
         <button type="button" (click)="goBack()" class="btn-cancel w-fit">{{'create.back' | translate}}</button>
         <button type="button" (click)="saveAndContinue()" class="btn-primary w-fit">{{'create.continue' | translate}}</button>
