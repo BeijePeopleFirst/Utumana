@@ -5,7 +5,7 @@
         ⬅️
       </button>
       <h2 class="text-xl font-semibold text-primary">
-        {{ currentMonth | titlecase }} {{ currentYear }}
+        {{("book-now-component-from-accommodation-card." + getMonthName()) | translate}} {{ currentYear }}
       </h2>
       <button (click)="nextMonth()" class="text-2xl text-primary-dark hover:text-primary">
         ➡️
@@ -16,7 +16,7 @@
       <!-- Calendario del mese corrente -->
       <div class="p-2 rounded shadow bg-neutral-2">
         <h3 class="mb-2 text-lg font-medium text-center text-secondary">
-          {{ currentMonth | titlecase }}
+            {{("book-now-component-from-accommodation-card." + getMonthName()) | translate}}
         </h3>
         <table class="w-full text-center">
           <thead>
@@ -33,7 +33,15 @@
           <tbody>
             <tr *ngFor="let week of calendarLeft">
               <td *ngFor="let day of week">
-                {{ day || '' }}
+                <div *ngIf="isAnAvailability(currentYear, getMonthName(), day) && !isSelected(currentYear, getMonthName(), day)" class="w-full bg-green-500 cursor-pointer" (click)="selectDay(currentYear, getMonthName(), day)">
+                    {{ day || '' }}
+                </div>
+                <div *ngIf="isSelected(currentYear, getMonthName(), day)" class="w-full bg-blue-800 cursor-pointer">
+                    {{ day || '' }}
+                </div>
+                <div *ngIf="!isAnAvailability(currentYear, getMonthName(), day)">
+                    {{ day || '' }}
+                </div>
               </td>
             </tr>
           </tbody>
@@ -42,7 +50,7 @@
       <!-- Calendario del mese successivo -->
       <div class="p-2 rounded shadow bg-neutral-2">
         <h3 class="mb-2 text-lg font-medium text-center text-secondary">
-          {{ getNextMonthName() | titlecase }}
+          {{ ("book-now-component-from-accommodation-card." + getNextMonthName()) | translate }}
         </h3>
         <table class="w-full text-center">
           <thead>
@@ -59,12 +67,24 @@
           <tbody>
             <tr *ngFor="let week of calendarRight">
               <td *ngFor="let day of week">
-                {{ day || '' }}
+                <div *ngIf="isAnAvailability(nextMonthYear, nextMonthName(), day) && !isSelected(nextMonthYear, nextMonthName(), day)" class="w-full bg-green-500 cursor-pointer" (click)="selectDay(nextMonthYear, nextMonthName(), day)">
+                    {{ day || '' }}
+                </div>
+                <div *ngIf="isSelected(nextMonthYear, nextMonthName(), day)" class="w-full bg-blue-800 cursor-pointer">
+                    {{ day || '' }}
+                </div>
+                <div *ngIf="!isAnAvailability(nextMonthYear, nextMonthName(), day)">
+                    {{ day || '' }}
+                </div>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
+    </div>
+    <div id="btn-container" class="flex flex-row items-center justify-center">
+        <button type="button" class="mt-5 btn-primary" (click)="resetSelectedDates()">{{"book-now-component-from-accommodation-card.reset-choices-word" | translate}}</button>
+        <button type="button" [disabled]="!selectedCheckIn || !selectedCheckoout" class="mt-5 btn-success" (click)="confirmSelectedDates()">{{"book-now-component-from-accommodation-card.confirm-choices-word" | translate}}</button>
     </div>
   </div>
 
@@ -77,6 +97,14 @@
 
     <h1 class="text-xl text-blue-800" *ngIf="noAccommodationIdWasProvidedError">
         {{"book-now-component-from-accommodation-card.no-accommodation-id-or-invalid-was-provided-error" | translate}}
+    </h1>
+
+    <h1 class="text-xl text-blue-800" *ngIf="errorOccurredWhileFetchingMonthNameOrIndexError">
+        {{"book-now-component-from-accommodation-card.error-occurred-while-fetching-month-name-or-number-error" | translate}}
+    </h1>
+
+    <h1 class="text-xl text-blue-800" *ngIf="invalidChosenDayError">
+        {{"book-now-component-from-accommodation-card.invalid-chosen-day-error" | translate}}
     </h1>
 
   </ng-container>
