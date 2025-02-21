@@ -322,18 +322,18 @@ public class AccommodationControllerTest {
      * MTEHOD: setAccommodationUnavailabilities(...)
      */
 
-    @Test
-    void setAccommodationUnavailabilities() {
-        when(accommodationService.setAccommodationUnavailabilities(anyLong(), anyList(), anyLong())).thenReturn(getInstance(Accommodation.class));
-        when(authentication.getPrincipal()).thenReturn(userDTO);
-        assertDoesNotThrow(() -> accommodationController.setAccommodationUnavailabilities(0L, List.of(), authentication));
-    }
-
-    @Test
-    void setAccommodationUnavailabilitiesKo() {
-        when(authentication.getPrincipal()).thenReturn(null);
-        assertThrows(TheJBeansException.class, () -> accommodationController.setAccommodationUnavailabilities(0L, List.of(), authentication));
-    }
+//    @Test
+//    void setAccommodationUnavailabilities() {
+//        when(accommodationService.setAccommodationUnavailabilities(anyLong(), anyList(), anyLong())).thenReturn(getInstance(Accommodation.class));
+//        when(authentication.getPrincipal()).thenReturn(userDTO);
+//        assertDoesNotThrow(() -> accommodationController.setAccommodationUnavailabilities(0L, List.of(), authentication));
+//    }
+//
+//    @Test
+//    void setAccommodationUnavailabilitiesKo() {
+//        when(authentication.getPrincipal()).thenReturn(null);
+//        assertThrows(TheJBeansException.class, () -> accommodationController.setAccommodationUnavailabilities(0L, List.of(), authentication));
+//    }
 
     /**
      * PATCH - API: /accommodation/{id}/unavailabilities

@@ -1,21 +1,21 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { params } from '../models/searchParams';
+import { CompleteParams } from '../models/completeParams';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SearchService {
   
-  private searchDataSubject = new BehaviorSubject<params>({});
+  private searchDataSubject = new BehaviorSubject<CompleteParams>({});
 
   public searchData$ = this.searchDataSubject.asObservable();
 
-  setSearchData(data: params) {
+  setSearchData(data: CompleteParams): void {
     this.searchDataSubject.next(data);
   }
 
-  getSearchData(): params {
+  getSearchData(): CompleteParams {
     return this.searchDataSubject.value;
   }
 }

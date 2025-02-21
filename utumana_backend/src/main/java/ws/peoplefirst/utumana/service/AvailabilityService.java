@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ws.peoplefirst.utumana.exception.ForbiddenException;
+import ws.peoplefirst.utumana.exception.IdNotFoundException;
 import ws.peoplefirst.utumana.model.Accommodation;
 import ws.peoplefirst.utumana.model.Availability;
 import ws.peoplefirst.utumana.model.Booking;
@@ -62,6 +63,9 @@ public class AvailabilityService {
 	
 	public List<Availability> findAvailabilities(Long accommodationId, LocalDate checkIn, LocalDate checkOut) {
 		Accommodation accommodation = accommodationRepository.findById(accommodationId).orElse(null);
+		if(accommodation == null){
+			throw new IdNotFoundException("Accommodation with id " + accommodationId + " doesn't exist");
+		}
 		LocalDate checkInCopy = checkIn;
 		List<Availability> availabilities = new ArrayList<Availability>();
 		for(Availability availability : accommodation.getAvailabilities()) {
