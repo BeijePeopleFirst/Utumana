@@ -43,8 +43,8 @@ export class LoadSearchAccommodationResolver implements Resolve<any> {
       max_rating: queryParams['max_rating'],
       page: queryParams['page'] ? parseInt(queryParams['page']) : 0,
       size: queryParams['size'] ?? 8,
-    };
-
+    }
+    
     this.searchService.setSearchData(searchParams);
     this.filterService.getAllServices();
     const filterParams: FilterParams = {

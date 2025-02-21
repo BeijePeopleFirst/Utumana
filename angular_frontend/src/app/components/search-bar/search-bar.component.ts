@@ -28,11 +28,11 @@ export class SearchBarComponent implements OnInit{
     console.log("saved: ", savedData);
     
     this.searchForm = this.fb.group({
-      city: [savedData?.destination || ''],
+      city: savedData?.destination || '',
       check_in: [savedData?.['check-in'] || null, Validators.required],
       check_out: [savedData?.['check-out'] || null, Validators.required],
       people: [savedData?.number_of_guests || 1, [Validators.required, Validators.min(1)]],
-      free_only: [savedData?.free_only === true],
+      free_only: Boolean(savedData?.free_only ? savedData?.free_only.toString() === 'true' : false)
     }, {
       validators: [(formGroup: AbstractControl): ValidationErrors | null => {
         return DateValidators.dateRange(
@@ -41,16 +41,11 @@ export class SearchBarComponent implements OnInit{
         );
       }]
     });
-
   }
 
   search() {
     if (this.searchForm.valid) {
       const params = this.accommodationService.getParams(this.searchForm.value);
-      const selectedServices = this.filtersService.getSelectedFilters();
-/*       if (selectedServices.length > 0) {
-        params.services = selectedServices.map(id => id.toString());
-      }  */
       this.searchService.setSearchData(params);
       this.searchSubmitted.emit(params);
     } else {
