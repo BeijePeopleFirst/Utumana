@@ -1,1 +1,83 @@
-<p>book-now works!</p>
+<div class="p-4 bg-neutral-1">
+    <!-- Header principale con le frecce per navigare -->
+    <div class="flex items-center justify-between mb-4">
+      <button (click)="prevMonth()" class="text-2xl text-primary-dark hover:text-primary">
+        ⬅️
+      </button>
+      <h2 class="text-xl font-semibold text-primary">
+        {{ currentMonth | titlecase }} {{ currentYear }}
+      </h2>
+      <button (click)="nextMonth()" class="text-2xl text-primary-dark hover:text-primary">
+        ➡️
+      </button>
+    </div>
+    <!-- Calendari affiancati con il nome del mese sopra ciascuno -->
+    <div class="flex space-x-4">
+      <!-- Calendario del mese corrente -->
+      <div class="p-2 rounded shadow bg-neutral-2">
+        <h3 class="mb-2 text-lg font-medium text-center text-secondary">
+          {{ currentMonth | titlecase }}
+        </h3>
+        <table class="w-full text-center">
+          <thead>
+            <tr class="text-sm font-bold">
+              <th>{{"book-now-component-from-accommodation-card.sunday" | translate}}</th>
+              <th>{{"book-now-component-from-accommodation-card.monday" | translate}}</th>
+              <th>{{"book-now-component-from-accommodation-card.tuesday" | translate}}</th>
+              <th>{{"book-now-component-from-accommodation-card.wednesday" | translate}}</th>
+              <th>{{"book-now-component-from-accommodation-card.thursday" | translate}}</th>
+              <th>{{"book-now-component-from-accommodation-card.friday" | translate}}</th>
+              <th>{{"book-now-component-from-accommodation-card.saturday" | translate}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let week of calendarLeft">
+              <td *ngFor="let day of week">
+                {{ day || '' }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- Calendario del mese successivo -->
+      <div class="p-2 rounded shadow bg-neutral-2">
+        <h3 class="mb-2 text-lg font-medium text-center text-secondary">
+          {{ getNextMonthName() | titlecase }}
+        </h3>
+        <table class="w-full text-center">
+          <thead>
+            <tr class="text-sm font-bold">
+                <th>{{"book-now-component-from-accommodation-card.sunday" | translate}}</th>
+                <th>{{"book-now-component-from-accommodation-card.monday" | translate}}</th>
+                <th>{{"book-now-component-from-accommodation-card.tuesday" | translate}}</th>
+                <th>{{"book-now-component-from-accommodation-card.wednesday" | translate}}</th>
+                <th>{{"book-now-component-from-accommodation-card.thursday" | translate}}</th>
+                <th>{{"book-now-component-from-accommodation-card.friday" | translate}}</th>
+                <th>{{"book-now-component-from-accommodation-card.saturday" | translate}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let week of calendarRight">
+              <td *ngFor="let day of week">
+                {{ day || '' }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <ng-container *ngIf="thereAreMessagesToDiplay">
+    <button class="btn-primary mt-14" (click)="clearMessages()">{{"book-now-component-from-accommodation-card.clear-word" | translate}}</button>
+
+    <h1 class="text-xl text-blue-800" *ngIf="invalidAccommodationError">
+        {{"book-now-component-from-accommodation-card.invalid-accommodation-error" | translate}}
+    </h1>
+
+    <h1 class="text-xl text-blue-800" *ngIf="noAccommodationIdWasProvidedError">
+        {{"book-now-component-from-accommodation-card.no-accommodation-id-or-invalid-was-provided-error" | translate}}
+    </h1>
+
+  </ng-container>
+  

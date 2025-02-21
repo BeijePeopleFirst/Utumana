@@ -76,6 +76,18 @@
 	"rejected":"Prenotazioni rifiutate",
 	"no_bookings": "Nessuna prenotazione"
 	},
+"book-now-component-from-accommodation-card": {
+	"invalid-accommodation-error": "Accomodation non valida",
+	"no-accommodation-id-or-invalid-was-provided-error": "Non è stato fornito alcun Accommodation ID valido",
+	"clear-word": "Cancella Messaggi",
+	"sunday": "Domenica",
+	"monday": "Lunedi'",
+	"tuesday": "Martedi'",
+	"wednesday": "Mercoledi'",
+	"thursday": "Giovedi'",
+	"friday": "Venerdi'",
+	"saturday": "Sabato"
+},
 "cancel_button_label": "Annulla",
 "choose-book-period-from-acc-details": {
 	"reset-btn": "Reimposta Scelte",

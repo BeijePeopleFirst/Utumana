@@ -76,6 +76,18 @@
 	"rejected":"Rejected bookings",
 	"no_bookings": "No bookings"
 	},
+"book-now-component-from-accommodation-card": {
+	"invalid-accommodation-error": "Invalid Accommodation was provided",
+	"no-accommodation-id-or-invalid-was-provided-error": "No lecit Accommodation ID was provided",
+	"clear-word": "Clear",
+	"sunday": "Sunday",
+	"monday": "Monday",
+	"tuesday": "Tuesday",
+	"wednesday": "Wednesday",
+	"thursday": "Thursday",
+	"friday": "Friday",
+	"saturday": "Saturday"
+},
 "cancel_button_label": "Cancel",
 "choose-book-period-from-acc-details": {
 	"reset-btn": "Reset Choices",

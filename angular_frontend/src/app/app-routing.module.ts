@@ -19,6 +19,7 @@ import { CreateAccommodationAvailabilityComponent } from './components/create-ac
 import { CreateAccommodationInfoComponent } from './components/create-accommodation-info/create-accommodation-info.component';
 import { CreateAccommodationPhotosComponent } from './components/create-accommodation-photos/create-accommodation-photos.component';
 import { CreateAccommodationRecapComponent } from './components/create-accommodation-recap/create-accommodation-recap.component';
+import { BookNowComponent } from './components/book-now/book-now.component';
 
 const routes: Routes = [
   {path: 'login', title: "Login", component: LoginComponent},
@@ -37,7 +38,7 @@ const routes: Routes = [
   {path: 'my_accommodations', title: "My Accommodations", component: MyAccommodationsComponent, canActivate: [authGuard]},
   {path: 'host_dashboard', title: "Host Dashboard", component: HostDashboardComponent, canActivate: [authGuard]},
   {path: 'accommodation/:id', title: "Accommodation Details", component: AccommodationDetailsComponent, canActivate: [authGuard]},
-  {path: 'book/:id', component: BookConfirmComponent, canActivate: [authGuard]},
+  {path: 'book/:id', component: BookNowComponent, canActivate: [authGuard]},
   {path: 'confirm_booking_on_creation', component: ConfirmBookingBooknowComponent, canActivate: [authGuard]}
   // { path: '**', title: "Error", component: PageNotFoundComponent }
 ];
