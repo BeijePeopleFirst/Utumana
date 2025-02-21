@@ -1,15 +1,22 @@
 package com.peoplefirst.motorino.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.peoplefirst.motorino.destinazione.model.UserDestinazioneEntity;
 import com.peoplefirst.motorino.origine.model.UserOrigineEntity;
 import com.peoplefirst.motorino.destinazione.repository.UserDestinazioneRepository;
 import com.peoplefirst.motorino.origine.repository.UserOrigineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author Mattia Pagani
@@ -109,16 +116,58 @@ public class MotoreService {
                 }
             }
 
-            if (userPresente == null) userDestinazioneRepository.save(new UserDestinazioneEntity(userOrigine)); //SE NON PRESENTE --> INSERT
+            if (Objects.isNull(userPresente)) userDestinazioneRepository.save(new UserDestinazioneEntity(userOrigine)); //SE NON PRESENTE --> INSERT
             else userDestinazioneEntityList.remove(userPresente);   //SE PRESENTE --> REMOVE DALLA LISTA
         }
 
         if (!userDestinazioneEntityList.isEmpty()) {    //CHECK CHE NON CI SIANO PIU' UTENTI IN DESTINAZIONE
-            for (UserDestinazioneEntity userDestinazione : userDestinazioneEntityList) {
-                userDestinazioneRepository.delete(userDestinazione);    //SE PRESENTI --> RIMUOVERLI A DB
-            }
+            userDestinazioneRepository.deleteAll(userDestinazioneEntityList);
         }
 
         return "Update Completato";
+    }
+
+    public void importUsers(MultipartFile fileUsers, MultipartFile mappingFile) {
+        try {
+            // Legge il file JSON di mapping
+            String mappingJson = new String(mappingFile.getBytes(), StandardCharsets.UTF_8);
+            Map<String, String> fieldMapping = new ObjectMapper().readValue(mappingJson, new TypeReference<>() {});
+
+            // Legge i dati degli utenti dal file (fileUsers è un file JSON)
+            String usersJson = new String(fileUsers.getBytes(), StandardCharsets.UTF_8);
+            List<Map<String, Object>> users = new ObjectMapper().readValue(usersJson, new TypeReference<>() {});
+
+            // Itera sugli utenti e mappa i dati utilizzando il mapping
+            for (Map<String, Object> user : users) {
+                UserDestinazioneEntity userDestinazione = new UserDestinazioneEntity();
+                mapFields(user, fieldMapping, userDestinazione);
+                userDestinazioneRepository.save(userDestinazione);
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    private void mapFields(Map<String, Object> row, Map<String, String> fieldMapping, UserDestinazioneEntity userDestinazione) {
+        try {
+            // Itera attraverso ogni campo del JSON ricevuto dal cliente
+            for (Map.Entry<String, Object> entry : row.entrySet()) {
+                String clientField = entry.getKey();
+                Object value = entry.getValue();
+
+                // Usa la mappatura per trovare il campo di destinazione
+                String destinationFieldName = fieldMapping.get(clientField);
+
+                if (destinationFieldName != null) {
+                    // Trova il campo corrispondente nel modello di destinazione usando reflection
+                    Field destinationField = UserDestinazioneEntity.class.getDeclaredField(destinationFieldName);
+                    destinationField.setAccessible(true);
+                    destinationField.set(userDestinazione, value);
+                }
+            }
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 }
