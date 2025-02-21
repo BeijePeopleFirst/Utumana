@@ -96,11 +96,11 @@ public class AccommodationDraftController {
 
     @PostMapping("/new/{ownerId}")
     @PreAuthorize("hasAuthority('USER')")
-    public AccommodationDraft createNewDraft(@PathVariable("ownerId") Long ownerId, Authentication auth) {
+    public Long createNewDraft(@PathVariable("ownerId") Long ownerId, Authentication auth) {
         if (!AuthorizationUtility.getUserFromAuthentication(auth).getId().equals(ownerId)) {
             throw new ForbiddenException("Only owners can get their accommodation draft");
         }
-        return accommodationDraftService.createNewDraft(ownerId);
+        return accommodationDraftService.createNewDraft(ownerId).getId();
     }
 
     @PostMapping("/save-address-info/{draftId}")
