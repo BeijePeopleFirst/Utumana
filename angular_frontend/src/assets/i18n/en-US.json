@@ -54,8 +54,13 @@
 	"updated-accommodation": "Updated Accommodation",
 	"rooms-beds-required": "Rooms number and Beds number are both required",
 	"booking-values-missing": "Some values for Booking are Missing!",
-	"updated-accommodation-services": "Successfully updated Accommodation Services"
-	
+	"updated-accommodation-services": "Successfully updated Accommodation Services",
+	"error-fetching-accommodation-details": "An Error occurred while fetching Accommodation details",
+	"error-fetching-accommodation-owner": "An Error occurred while fetching Accommodation' s owner Informations",
+	"error-accepting-review": "Error while accepting Review",
+	"error-rejecting-review": "Error while rejecting Review",
+	"success-accepting-review": "Review accepted Successfully",
+	"success-rejecting-review": "Review rejected Successfully"
 	},
 "bookings": {
 	"checkIn":"Check-in",
@@ -114,7 +119,21 @@
 	"no_services": "No Services",
 	"no_services_found": "No services found",
 	"search_services": "Search services",
+	"availabilities_step": "Availabilities",
 	"availabilities": "Availabilities",
+	"unavailabilities": "Unavailabilities",
+	"no_availabilities": "No availabilities",
+	"no_unavailabilities": "No unavailabilities",
+	"start_date": "Start date",
+	"invalid_start_date": "Invalid start date",
+	"end_date": "End date",
+	"invalid_end_date": "Invalid end date",
+	"price": "Price per night",
+	"invalid_price": "Invalid price",
+	"add_availability": "Add availability",
+	"availability_overlaps": "Error: availability overlaps with existing availabilities",
+	"availability_reversed_dates": "Error: start date cannot be after end date",
+	"add_unavailability": "Add unavailability",
 	"description": "Description",
 	"photos": "Photos",
 	"recap": "Confirm"
