@@ -1,6 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, Observable, of, switchMap } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, of, switchMap } from 'rxjs';
 import { AccommodationDTO } from 'src/app/dtos/accommodationDTO';
 import { AccommodationService } from 'src/app/services/accommodation.service';
 import { FiltersService} from 'src/app/services/filters.service';
@@ -25,7 +25,7 @@ export class SearchPageComponent implements OnInit {
   
   services$ = this.filterService.services$;
   searchParams$ = this.searchService.searchData$;
-  currentOrderBySelected$ = new BehaviorSubject<string[]>(['approvalTimestamp', 'desc']);
+  currentOrderBySelected$ = new BehaviorSubject<string[]>(['price', 'asc']);
   translatedOrderText$: Observable<string> = this.currentOrderBySelected$.pipe(
     switchMap(order => this.translate.get(`search.${order[0]}-${order[1].toLowerCase()}`))
   );
@@ -55,6 +55,11 @@ export class SearchPageComponent implements OnInit {
         }
       );
     });
+  
+    const queryParams = this.route.snapshot.queryParams;
+    const queryOrderBy = queryParams['order_by'] && queryParams['order_direction'] ? [queryParams['order_by'], queryParams['order_direction']] : ['price', 'asc'];
+
+    this.currentOrderBySelected$.next(queryOrderBy);
   }
 
   search(params: CompleteParams): void {
@@ -126,12 +131,14 @@ export class SearchPageComponent implements OnInit {
 
   setOrderParam(orderBy: string, orderDirection: string, event: MouseEvent): void {
     event.stopPropagation();
-    const curr = this.searchService.getSearchData();
-    curr.order_by = orderBy;
-    curr.order_direction = orderDirection;
     this.currentOrderBySelected$.next([orderBy, orderDirection]);
     this.isOrderByOpen = false;
-    this.search(curr);
+    
+    const currentParams = this.searchService.getSearchData();
+    currentParams.order_by = orderBy;
+    currentParams.order_direction = orderDirection;
+    
+    this.search(currentParams);
   }
 
   @HostListener('document:click', ['$event'])
@@ -141,5 +148,4 @@ export class SearchPageComponent implements OnInit {
       this.isOrderByOpen = false;
     }
   }
-
 }
