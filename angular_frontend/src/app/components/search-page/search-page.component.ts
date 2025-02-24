@@ -25,7 +25,7 @@ export class SearchPageComponent implements OnInit {
   
   services$ = this.filterService.services$;
   searchParams$ = this.searchService.searchData$;
-  currentOrderBySelected$ = new BehaviorSubject<string[]>(['price', 'asc']);
+  currentOrderBySelected$ = new BehaviorSubject<string[]>(['minPrice', 'asc']);
   translatedOrderText$: Observable<string> = this.currentOrderBySelected$.pipe(
     switchMap(order => this.translate.get(`search.${order[0]}-${order[1].toLowerCase()}`))
   );
@@ -45,7 +45,9 @@ export class SearchPageComponent implements OnInit {
   ngOnInit() {
     this.route.data.subscribe(data => {
       const accommodations = data['loadSearchAccommodations'].content;
-      
+
+      this.currentOrderBySelected$.next([this.searchService.getSearchData().order_by ?? 'minPrice', this.searchService.getSearchData().order_direction ?? 'asc']);
+
       this.accommodationService.getPrices(accommodations).subscribe(
         updatedAccommodations => {
           this.foundAccommodations$ = of(updatedAccommodations || []);
@@ -55,11 +57,7 @@ export class SearchPageComponent implements OnInit {
         }
       );
     });
-  
-    const queryParams = this.route.snapshot.queryParams;
-    const queryOrderBy = queryParams['order_by'] && queryParams['order_direction'] ? [queryParams['order_by'], queryParams['order_direction']] : ['price', 'asc'];
 
-    this.currentOrderBySelected$.next(queryOrderBy);
   }
 
   search(params: CompleteParams): void {
@@ -133,7 +131,7 @@ export class SearchPageComponent implements OnInit {
     event.stopPropagation();
     this.currentOrderBySelected$.next([orderBy, orderDirection]);
     this.isOrderByOpen = false;
-    
+
     const currentParams = this.searchService.getSearchData();
     currentParams.order_by = orderBy;
     currentParams.order_direction = orderDirection;

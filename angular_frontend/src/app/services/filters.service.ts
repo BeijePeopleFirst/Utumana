@@ -13,7 +13,7 @@ import { FilterParams } from '../models/filterParams';
 export class FiltersService {
   private servicesSubject = new BehaviorSubject<Service[]>([]);
   private selectedFiltersSubject = new BehaviorSubject<FilterParams>({
-/*     services: [],
+    /*     services: [],
     minPrice: null,
     maxPrice: null,
     minRating: null,
@@ -24,7 +24,7 @@ export class FiltersService {
   selectedFilters$ = this.selectedFiltersSubject.asObservable();
 
   private filters: FilterParams = {
-/*     destination: '',
+    /*     destination: '',
     number_of_guests: 0,
     free_only: false,
     services: [],
@@ -54,7 +54,7 @@ export class FiltersService {
   }
 
   setSelectedFilters(filters: FilterParams): void {
-/*     // Merge i nuovi filtri con quelli esistenti
+    /*     // Merge i nuovi filtri con quelli esistenti
     const currentFilters = this.selectedFiltersSubject.getValue();
     const updatedFilters = { ...currentFilters, ...filters };
     
@@ -62,24 +62,24 @@ export class FiltersService {
     (Object.keys(updatedFilters) as Array<keyof FilterParams>).forEach(key => {
       if (updatedFilters[key] === null || updatedFilters[key] === undefined) {
         delete updatedFilters[key];
-      }
+        }
     });
-     */
-    this.selectedFiltersSubject.next(filters);
+    */
+   this.selectedFiltersSubject.next(filters);
   }
   
   getSelectedFilters(): string[] {
     return this.selectedFiltersSubject.getValue().services || [];
   }
-
+  
   getAllFilters(): FilterParams {
     return this.selectedFiltersSubject.getValue();
   }
-
+  
   saveAllFilters(filters: FilterParams): void {
     this.setSelectedFilters(filters);
   }
-
+  
   clearFilters(): void {
     this.selectedFiltersSubject.next({
       services: [],
@@ -88,5 +88,8 @@ export class FiltersService {
       min_rating: undefined,
       max_rating: undefined
     });
+  }
+  resetAllFilters() {
+    this.clearFilters();
   }
 }
