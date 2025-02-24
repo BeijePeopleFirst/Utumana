@@ -15,6 +15,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 @Configuration
 @EnableTransactionManagement
@@ -30,6 +32,10 @@ public class OrigineDataSourceConfig {
     @ConfigurationProperties(prefix = "spring.datasource.origine")
     public DataSource dataSource() {
         return DataSourceBuilder.create().build();
+    }
+
+    public Connection getConnection() throws SQLException, SQLException {
+        return dataSource().getConnection();
     }
 
     @Primary

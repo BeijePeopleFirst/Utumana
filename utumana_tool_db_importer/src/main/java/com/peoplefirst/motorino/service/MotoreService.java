@@ -1,22 +1,29 @@
 package com.peoplefirst.motorino.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.peoplefirst.motorino.datasource.OrigineDataSourceConfig;
 import com.peoplefirst.motorino.destinazione.model.UserDestinazioneEntity;
 import com.peoplefirst.motorino.origine.model.UserOrigineEntity;
 import com.peoplefirst.motorino.destinazione.repository.UserDestinazioneRepository;
 import com.peoplefirst.motorino.origine.repository.UserOrigineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author Mattia Pagani
@@ -41,6 +48,8 @@ public class MotoreService {
      * Test method used to create an user hardcoded, inside the origin db
      * @param counter Simple counter used to create different users
      */
+    @Autowired
+    private OrigineDataSourceConfig origineDataSourceConfig;
     public void inserisciOrigine(int counter) {
         UserOrigineEntity user = new UserOrigineEntity();
         user.setFirst_name("Name" + counter);
@@ -95,79 +104,100 @@ public class MotoreService {
      * If they are equals it just skips it and remove it from the destination list to not elaborate it again.
      * If the user is not present in the destination list (the first check was false), the origin users will be inserted in the destination db directly.
      */
-    public String updateDestinationDatabase() {
-        List<UserOrigineEntity> userOrigineEntityList = (List<UserOrigineEntity>) userOrigineRepository.findAll();
-        List<UserDestinazioneEntity> userDestinazioneEntityList = (List<UserDestinazioneEntity>) userDestinazioneRepository.findAll();
+//    public String updateDestinationDatabase() {
+//        List<UserOrigineEntity> userOrigineEntityList = (List<UserOrigineEntity>) userOrigineRepository.findAll();
+//        List<UserDestinazioneEntity> userDestinazioneEntityList = (List<UserDestinazioneEntity>) userDestinazioneRepository.findAll();
+//
+//        for (UserOrigineEntity userOrigine : userOrigineEntityList) {
+//            UserDestinazioneEntity userPresente = null;
+//
+//            for (UserDestinazioneEntity userDestinazione : userDestinazioneEntityList) {
+//                if (userDestinazione.getEmail().equals(userOrigine.getEmail())) {   //SE UTENTE PRESENTE IN DB DESTINAZIONE
+//                    if (!userDestinazione.equals(userOrigine)) { //CHECK CHE NON SONO UGUALI
+//                        //SE NON UGUALI --> UPDATE A DB
+//                        userDestinazione.updateUser(userOrigine);
+//                        userDestinazioneRepository.save(userDestinazione);
+//                    }
+//
+//                    //SALVO USER IN VARIABILE PER NON RIELABORARLO
+//                    userPresente = userDestinazione;
+//                    break;
+//                }
+//            }
+//
+//            if (Objects.isNull(userPresente)) userDestinazioneRepository.save(new UserDestinazioneEntity(userOrigine)); //SE NON PRESENTE --> INSERT
+//            else userDestinazioneEntityList.remove(userPresente);   //SE PRESENTE --> REMOVE DALLA LISTA
+//        }
+//
+//        if (!userDestinazioneEntityList.isEmpty()) {    //CHECK CHE NON CI SIANO PIU' UTENTI IN DESTINAZIONE
+//            userDestinazioneRepository.deleteAll(userDestinazioneEntityList);
+//        }
+//
+//        return "Update Completato";
+//    }
 
-        for (UserOrigineEntity userOrigine : userOrigineEntityList) {
-            UserDestinazioneEntity userPresente = null;
 
-            for (UserDestinazioneEntity userDestinazione : userDestinazioneEntityList) {
-                if (userDestinazione.getEmail().equals(userOrigine.getEmail())) {   //SE UTENTE PRESENTE IN DB DESTINAZIONE
-                    if (!userDestinazione.equals(userOrigine)) { //CHECK CHE NON SONO UGUALI
-                        //SE NON UGUALI --> UPDATE A DB
-                        userDestinazione.updateUser(userOrigine);
-                        userDestinazioneRepository.save(userDestinazione);
-                    }
-
-                    //SALVO USER IN VARIABILE PER NON RIELABORARLO
-                    userPresente = userDestinazione;
-                    break;
-                }
-            }
-
-            if (Objects.isNull(userPresente)) userDestinazioneRepository.save(new UserDestinazioneEntity(userOrigine)); //SE NON PRESENTE --> INSERT
-            else userDestinazioneEntityList.remove(userPresente);   //SE PRESENTE --> REMOVE DALLA LISTA
-        }
-
-        if (!userDestinazioneEntityList.isEmpty()) {    //CHECK CHE NON CI SIANO PIU' UTENTI IN DESTINAZIONE
-            userDestinazioneRepository.deleteAll(userDestinazioneEntityList);
-        }
-
-        return "Update Completato";
-    }
-
-    public void importUsers(MultipartFile fileUsers, MultipartFile mappingFile) {
-        try {
-            // Legge il file JSON di mapping
+    public void updateDestinationDatabase(MultipartFile mappingFile) throws SQLException, IOException {
+        try (Connection sourceConn = origineDataSourceConfig.getConnection()) {
             String mappingJson = new String(mappingFile.getBytes(), StandardCharsets.UTF_8);
             Map<String, String> fieldMapping = new ObjectMapper().readValue(mappingJson, new TypeReference<>() {});
 
-            // Legge i dati degli utenti dal file (fileUsers è un file JSON)
-            String usersJson = new String(fileUsers.getBytes(), StandardCharsets.UTF_8);
-            List<Map<String, Object>> users = new ObjectMapper().readValue(usersJson, new TypeReference<>() {});
+            String sql = "SELECT * FROM user"; // Migliorabile con query parametrizzate, se necessario.
 
-            // Itera sugli utenti e mappa i dati utilizzando il mapping
-            for (Map<String, Object> user : users) {
-                UserDestinazioneEntity userDestinazione = new UserDestinazioneEntity();
-                mapFields(user, fieldMapping, userDestinazione);
-                userDestinazioneRepository.save(userDestinazione);
-            }
+            // Ottieni tutti gli utenti già presenti nel DB di destinazione
+            List<UserDestinazioneEntity> userDestinazioneEntityList = (List<UserDestinazioneEntity>) userDestinazioneRepository.findAll();
+            Map<String, UserDestinazioneEntity> userMap = userDestinazioneEntityList.stream()
+                    .collect(Collectors.toMap(UserDestinazioneEntity::getEmail, Function.identity()));
 
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
-    }
+            try (Statement stmt = sourceConn.createStatement();
+                 ResultSet rs = stmt.executeQuery(sql)) {
 
-    private void mapFields(Map<String, Object> row, Map<String, String> fieldMapping, UserDestinazioneEntity userDestinazione) {
-        try {
-            // Itera attraverso ogni campo del JSON ricevuto dal cliente
-            for (Map.Entry<String, Object> entry : row.entrySet()) {
-                String clientField = entry.getKey();
-                Object value = entry.getValue();
+                ResultSetMetaData metaData = rs.getMetaData();
+                int columnCount = metaData.getColumnCount();
 
-                // Usa la mappatura per trovare il campo di destinazione
-                String destinationFieldName = fieldMapping.get(clientField);
+                while (rs.next()) {
+                    UserDestinazioneEntity userOrigine = new UserDestinazioneEntity();
 
-                if (destinationFieldName != null) {
-                    // Trova il campo corrispondente nel modello di destinazione usando reflection
-                    Field destinationField = UserDestinazioneEntity.class.getDeclaredField(destinationFieldName);
-                    destinationField.setAccessible(true);
-                    destinationField.set(userDestinazione, value);
+                    for (int i = 1; i <= columnCount; i++) {
+                        String sourceColumn = metaData.getColumnName(i);
+                        Object value = rs.getObject(i);
+
+                        String mappedField = fieldMapping.get(sourceColumn);
+                        if (mappedField != null) {
+                            setFieldIfExists(userOrigine, mappedField, value);
+                        }
+                    }
+
+                    // Verifica se l'utente è già presente nel database di destinazione
+                    UserDestinazioneEntity userDestinazione = userMap.get(userOrigine.getEmail());
+                    if (userDestinazione != null) {
+                        // Se l'utente è presente, aggiorna
+                        userOrigine.setId(userDestinazione.getId());
+                        userDestinazioneRepository.save(userOrigine);
+                        userMap.remove(userOrigine.getEmail()); // Rimuovi dalla lista per evitare duplicati
+                    } else {
+                        // Se l'utente non è presente, inserisci
+                        userDestinazioneRepository.save(userOrigine);
+                    }
                 }
             }
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e.getMessage());
+
+            // Elimina gli utenti che non sono stati aggiornati (non sono stati trovati nel DB di origine)
+            if (!userMap.isEmpty()) {
+                userDestinazioneRepository.deleteAll(userMap.values());
+            }
         }
     }
+
+    private void setFieldIfExists(Object obj, String fieldName, Object value) {
+        try {
+            Field field = UserDestinazioneEntity.class.getDeclaredField(fieldName);
+            field.setAccessible(true);
+            field.set(obj, value);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            // Ignora il campo se non esiste nella destinazione
+            e.printStackTrace();
+        }
+    }
+
 }
