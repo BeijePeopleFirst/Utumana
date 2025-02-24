@@ -59,6 +59,18 @@ export class AuthInterceptor implements HttpInterceptor {
 
   private handle401Error(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     console.log("401 error request", request);
+    if(request.headers.get('IsRetry') === 'true'){
+      return throwError(() => new Error("Request failed a second time"));
+    }
+    let retryRequest = request.clone({
+      setHeaders: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        ContentType: 'application/json',
+        AcceptType: 'application/json',
+        IsRetry: 'true'
+      }
+    });
+
 
     if (!this.isRefreshing) {
       this.isRefreshing = true;
@@ -79,7 +91,7 @@ export class AuthInterceptor implements HttpInterceptor {
         switchMap((tokenData: any) => {
           this.isRefreshing = false;
           this.refreshTokenSubject.next(tokenData.token);
-          return this.intercept(request,next);
+          return this.intercept(retryRequest,next);
         }),
         catchError(error => {
           this.isRefreshing = false;
@@ -93,7 +105,7 @@ export class AuthInterceptor implements HttpInterceptor {
       return this.refreshTokenSubject.pipe(
         filter(token => token !== null),
         take(1),
-        switchMap(token => this.intercept(request,next))
+        switchMap(token => this.intercept(retryRequest,next))
       );
     }
   }
