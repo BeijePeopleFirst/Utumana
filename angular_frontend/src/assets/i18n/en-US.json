@@ -107,7 +107,8 @@
 	"completed-booking": "Period Successfully booked! Redirecting in few seconds...",
 	"booking-procedure-error": "An Error occurred during the booking procedure",
 	"completed-unavailability-setting": "Unavailability Successfully set! Redirecting in few seconds...",
-	"user-not-logged-error": "Error: no lecit user is currently logged"
+	"user-not-logged-error": "Error: no lecit user is currently logged",
+	"accommodation-info-error": "An Error occurred while fetching the Accommodation details"
 },
 "cancel_button_label": "Cancel",
 "choose-book-period-from-acc-details": {

@@ -90,4 +90,6 @@ public interface BookingRepository extends JpaRepository<Booking,Long>{
 	@Query("SELECT b FROM Booking as b WHERE b.status = 'PENDING' AND b.accommodation.id = :id")
 	List<Booking> findPendingBookingsByAccommodationID(@Param("id") Long id);
 
+	public List<Booking> findByStatusInAndAccommodationId(List<BookingStatus> list, Long accId);
+
 }
