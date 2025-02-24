@@ -335,6 +335,11 @@ public class BookingService {
 		if(startDate.isAfter(checkIn) && startDate.isBefore(checkOut)) return true;
 		
 		if(endDate.isAfter(checkIn) && endDate.isBefore(checkOut)) return true;
+
+		if(startDate.isBefore(checkIn) && endDate.isAfter(checkOut)) return true;
+
+		//Because there should be at least one day dedicated to set the Accommodation up for the new Guest:
+		if(startDate.isEqual(checkOut) || endDate.isEqual(checkIn)) return true;
 		
 		return false;
 	}
@@ -389,6 +394,7 @@ public class BookingService {
 			else if(checkIn.isAfter(bChkIn) && checkIn.isBefore(bChkOut) && checkOut.isAfter(bChkIn) && checkOut.isBefore(bChkOut)) {
 				return true;
 			}
+			else if(checkIn.isBefore(bChkIn) && checkOut.isAfter(bChkOut)) return true;
 			else {};
 		}
 		
