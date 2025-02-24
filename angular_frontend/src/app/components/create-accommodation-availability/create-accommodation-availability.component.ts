@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { BookingDTO } from 'src/app/dtos/bookingDTO';
+import { UnavailabilityDTO, UnavailabilityInterface } from 'src/app/dtos/unavailabilityDTO';
 import { Availability, AvailabilityInterface } from 'src/app/models/availability';
 import { DraftService } from 'src/app/services/draft.service';
 
@@ -16,14 +17,17 @@ export class CreateAccommodationAvailabilityComponent implements OnInit, OnDestr
   draftId: number;
   genericError: boolean = false;
   availabilities!: AvailabilityInterface[];
-  unavailabilities: BookingDTO[] = JSON.parse(localStorage.getItem('new_acc_unavail') || '[]');
+  unavailabilities!: UnavailabilityInterface[];
 
   invalidAvailability: boolean = false;
   invalidDates: boolean = false;
   availForm: FormGroup;
   isAvailSubmitted: boolean = false;
-  unavailForm: FormGroup;
-  isUnavailSubmitted: boolean = false;
+
+  invalidUnavailability: boolean = false;
+  invalidUnavDates: boolean = false;
+  unavForm: FormGroup;
+  isUnavSubmitted: boolean = false;
 
   locale: string = 'en';
   localeSubscription?: Subscription;
@@ -41,21 +45,30 @@ export class CreateAccommodationAvailabilityComponent implements OnInit, OnDestr
       end_avail: ['', Validators.required],
       price: ['0.00', Validators.required],
     });
-    this.unavailForm = this.fb.group({
-      check_in: ['', Validators.required],
-      check_out: ['', Validators.required],
+    this.unavForm = this.fb.group({
+      start_unav: ['', Validators.required],
+      end_unav: ['', Validators.required],
     });
   }
 
   ngOnInit(): void {
     this.localeSubscription = this.translateService.onLangChange.subscribe(
       event => this.locale = event.lang.slice(0,2));
+
     this.draftService.getAvailabilities(this.draftId).subscribe(availabilities => {
       if(!availabilities){
         this.genericError = true;
         return;
       }
       this.availabilities = availabilities;
+    });
+
+    this.draftService.getUnavailabilities(this.draftId).subscribe(unavailabilities => {
+      if(!unavailabilities){
+        this.genericError = true;
+        return;
+      }
+      this.unavailabilities = unavailabilities;
     })
   }
 
@@ -66,7 +79,6 @@ export class CreateAccommodationAvailabilityComponent implements OnInit, OnDestr
   }
 
   save(): void {
-    //localStorage.setItem('new_acc_avail', JSON.stringify(this.availabilities));
     localStorage.setItem('new_acc_unavail', JSON.stringify(this.unavailabilities));
 
     // save availabilities and unavailabilities in draft in db
@@ -86,8 +98,6 @@ export class CreateAccommodationAvailabilityComponent implements OnInit, OnDestr
     if(!start || !end){
       return false;
     }
-    console.log(start, "->", Date.parse(start));
-    console.log(end, "->", Date.parse(end));
     return Date.parse(start) < Date.parse(end);
   }
 
@@ -95,8 +105,6 @@ export class CreateAccommodationAvailabilityComponent implements OnInit, OnDestr
     if(!start || !end){
       return false;
     }
-    console.log(start, "->", Date.parse(start));
-    console.log(end, "->", Date.parse(end));
     return Date.parse(start) <= Date.parse(end);
   }
 
@@ -139,7 +147,6 @@ export class CreateAccommodationAvailabilityComponent implements OnInit, OnDestr
 
     this.availabilities.push(new_acc_avail);
     this.availabilities.sort((a, b) => a.start_date.localeCompare(b.start_date));
-    //localStorage.setItem('new_acc_avail', JSON.stringify(this.availabilities));
     this.draftService.setAvailabilities(this.availabilities, this.draftId);
     
     this.availForm.reset();
@@ -149,7 +156,55 @@ export class CreateAccommodationAvailabilityComponent implements OnInit, OnDestr
 
   removeAvailability(availability: AvailabilityInterface): void{
     this.availabilities = this.availabilities.filter(a => a.start_date !== availability.start_date);
-    //localStorage.setItem('new_acc_avail', JSON.stringify(this.availabilities));
     this.draftService.setAvailabilities(this.availabilities, this.draftId);
+  }
+
+  isLatestUnavailabilityOk(unavailability: UnavailabilityInterface): boolean {
+    // check that start date is before end date
+    this.invalidUnavDates = !this.areDatesInOrder(unavailability.check_in, unavailability.check_out);
+    if(this.invalidUnavDates === true){
+      return false;
+    }
+
+    // check that new unavailability period doesn't overlap with existing unavailabilities
+    for(let u of this.unavailabilities){
+      if((this.areDatesInOrderOrEqual(u.check_in, unavailability.check_in) && this.areDatesInOrder(unavailability.check_in, u.check_out)) // new unav start is inside existing unavailability
+        || (this.areDatesInOrder(u.check_in, unavailability.check_out) && this.areDatesInOrderOrEqual(unavailability.check_out, u.check_out)) // new unav end is inside existing unavailability
+        || (this.areDatesInOrder(unavailability.check_in, u.check_in) && this.areDatesInOrder(u.check_out, unavailability.check_out)) // existing unav is inside new unav
+      ){
+        this.invalidUnavailability = true;
+        break;
+      }
+    }
+
+    return !this.invalidUnavDates && !this.invalidUnavailability;
+  }
+
+  addUnavailability(): void{
+    if(this.unavForm.invalid){
+      this.isUnavSubmitted = true;
+      return;
+    }
+
+    let new_acc_unav: UnavailabilityInterface = {
+      check_in: this.unavForm.value.start_unav + "T14:00:00", 
+      check_out: this.unavForm.value.end_unav + "T10:00:00"
+    };
+    if(!this.isLatestUnavailabilityOk(new_acc_unav)){
+      return;
+    }
+    console.log("Adding unavailability:", new_acc_unav);
+
+    this.unavailabilities.push(new_acc_unav);
+    this.unavailabilities.sort((a, b) => a.check_in.localeCompare(b.check_in));
+    this.draftService.setUnavailabilities(this.unavailabilities, this.draftId);
+    
+    this.unavForm.reset();
+    this.isUnavSubmitted = false;
+  }
+
+  removeUnavailability(unavailability: UnavailabilityInterface): void{
+    this.unavailabilities = this.unavailabilities.filter(u => u.check_in !== unavailability.check_in);
+    this.draftService.setUnavailabilities(this.unavailabilities, this.draftId);
   }
 }

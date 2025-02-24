@@ -168,7 +168,7 @@ public class AccommodationDraftService {
         }
 
         draft.setUnavailabilities(unavailabilities);
-        return draft;
+        return accommodationDraftRepository.save(draft);
     }
 
     @Transactional

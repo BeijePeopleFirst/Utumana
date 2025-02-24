@@ -7,6 +7,7 @@ import { Accommodation } from '../models/accommodation';
 import { Service } from '../models/service';
 import { AccommodationDTO } from '../dtos/accommodationDTO';
 import { Availability, AvailabilityInterface } from '../models/availability';
+import { UnavailabilityDTO, UnavailabilityInterface } from '../dtos/unavailabilityDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -100,6 +101,31 @@ export class DraftService {
     ).subscribe({
       next: () => {
         console.log("Availabilities saved");
+      },
+      error: error => {
+        console.error(error);
+      }
+    });
+  }
+
+  getUnavailabilities(draftId: number): Observable<UnavailabilityInterface[] | null> {
+    return this.http.get<UnavailabilityInterface[]>(`${BACKEND_URL_PREFIX}/api/accommodation-draft/unavailabilities/${draftId}`, {}).pipe(
+      catchError(error => {
+        console.error(error);
+        return of(null);
+      })
+    );
+  }
+
+  setUnavailabilities(unavailabilities: UnavailabilityInterface[] | UnavailabilityDTO[], draftId: number): void {
+    this.http.post<any>(`${BACKEND_URL_PREFIX}/api/accommodation-draft/save-unavailabilities/${draftId}`, unavailabilities).pipe(
+      catchError(error => {
+        console.error(error);
+        return of(null);
+      })
+    ).subscribe({
+      next: () => {
+        console.log("Unavailabilities saved");
       },
       error: error => {
         console.error(error);

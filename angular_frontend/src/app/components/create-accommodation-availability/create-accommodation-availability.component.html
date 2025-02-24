@@ -1,6 +1,7 @@
 <div class="flex flex-col justify-center items-center w-screen sm:w-auto">
     <app-create-progress [step] = 3></app-create-progress>
 
+    <!-- availabilities-->
     <div class="justify-self-center px-2 mb-5 w-screen xl:w-1/2">
     <p>{{'create.availability_info' | translate}}</p> 
     </div>
@@ -65,7 +66,7 @@
                     <button (click)="removeAvailability(avail)" class="-top-1 right-1 p-0 w-fit h-min scale-80 close-modal peer"> &times; </button>
                     <div class="w-1/3">{{ avail.start_date | date:'E d MMM yyyy':undefined:this.locale }}</div>
                     <div class="w-1/3">{{ avail.end_date | date:'E d MMM yyyy':undefined:this.locale }}</div>
-                    <div class="w-1/3">{{ avail.price_per_night }}</div>
+                    <div class="w-1/3">{{ avail.price_per_night | currency:'EUR':'symbol-narrow':'1.2-2':'it-IT'}}</div>
                 </div>
             </ng-container>
             <div class="self-center py-10 w-full" *ngIf="!availabilities || availabilities.length == 0">
@@ -74,9 +75,67 @@
         </div>
     </div>
 
+    <!-- unavailabilities-->
     <div class="justify-self-center px-2 my-5 w-screen xl:w-1/2">
         <p>{{'create.unavailability_info' | translate}}</p>
     </div>
+
+    <div class="flex flex-row flex-wrap gap-5 justify-center w-full sm:flex-nowrap">
+        <form (ngSubmit)="addUnavailability()" class="px-4 w-screen sm:w-1/3" [formGroup]="unavForm">
+            <div class="justify-self-end w-full sm:w-1/2">
+                <label class="label-primary" for="start_unav">{{'create.start_date' | translate}}</label>
+                <input class="input-primary" [ngClass]="{'alert-danger': (unavForm.controls['start_unav'].invalid && isUnavSubmitted) || invalidUnavDates}" 
+                required type="date" id="start_unav" name="start_unav" (input)="invalidUnavDates = false; invalidUnavailability = false"
+                formControlName="start_unav"/>
+
+                <div *ngIf="unavForm.controls['start_unav'].invalid && isUnavSubmitted" class="error-message">
+                    {{'create.invalid_start_date' | translate}}
+                </div>
+            </div>           
+
+            <div class="justify-self-end mt-2 w-full sm:w-1/2">
+                <label class="label-primary" for="end_unav">{{'create.end_date' | translate}}</label>
+                <input class="input-primary" [ngClass]="{'alert-danger': (unavForm.controls['end_unav'].invalid && isUnavSubmitted) || invalidUnavDates}" 
+                required type="date" id="end_unav" name="end_unav" (input)="invalidUnavDates = false; invalidUnavailability = false" 
+                formControlName="end_unav"/>
+
+                <div *ngIf="unavForm.controls['end_unav'].invalid && isUnavSubmitted" class="error-message"> 
+                    {{'create.invalid_end_date' | translate}}
+                </div>
+            </div>            
+           
+            <div *ngIf="invalidUnavailability == true" class="justify-self-end mt-2 w-full error-message sm:w-1/2">
+                {{'create.availability_overlaps' | translate}}
+            </div>
+
+            <div *ngIf="invalidUnavDates == true" class="justify-self-end mt-2 w-full error-message sm:w-1/2">
+                {{'create.availability_reversed_dates' | translate}}
+            </div>
+
+            <div class="flex justify-center justify-self-end mt-4 w-full sm:w-1/2">
+                <button type="submit" class="btn-primary w-fit">{{'create.add_unavailability' | translate}}</button>
+            </div>
+        </form>
+        
+        <div class="flex flex-col p-4 w-screen max-w-lg text-center rounded-lg shadow-md h-fit bg-neutral-2">
+            <h4>{{'create.unavailabilities' | translate}}</h4>
+            <ng-container *ngIf="unavailabilities && unavailabilities.length > 0">
+                <div class="flex relative flex-row justify-evenly">
+                    <h6 class="w-1/2">{{'create.start_date' | translate}}</h6>
+                    <h6 class="w-1/2">{{'create.end_date' | translate}}</h6>
+                </div>
+                <div *ngFor="let unav of unavailabilities" class="flex relative flex-row justify-evenly p-1 rounded-lg has-[button:hover]:outline has-[button:hover]:outline-1 has-[button:hover]:outline-gray-200 has-[button:hover]:bg-neutral-50 transition-colors duration-100 has-[button:hover]:text-gray-400">
+                    <button (click)="removeUnavailability(unav)" class="-top-1 right-1 p-0 w-fit h-min scale-80 close-modal peer"> &times; </button>
+                    <div class="w-1/2">{{ unav.check_in | date:'E d MMM yyyy':undefined:this.locale }}</div>
+                    <div class="w-1/2">{{ unav.check_out | date:'E d MMM yyyy':undefined:this.locale }}</div>
+                </div>
+            </ng-container>
+            <div class="self-center py-10 w-full" *ngIf="!unavailabilities || unavailabilities.length == 0">
+                {{'create.no_unavailabilities' | translate}}
+            </div>
+        </div>
+    </div>
+
 
     <div class="flex gap-x-5 justify-center my-6 h-fit">
         <button type="button" (click)="goBack()" class="btn-cancel w-fit">{{'create.back' | translate}}</button>

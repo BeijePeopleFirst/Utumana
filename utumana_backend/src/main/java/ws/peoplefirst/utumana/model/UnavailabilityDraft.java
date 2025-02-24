@@ -34,12 +34,12 @@ public class UnavailabilityDraft {
 
     @JsonProperty(value = "check_in")
 	@Column(name = "check_in")
-	@Schema(description = "check-in's timestamp", example = "2024-11-18T14:00:00")
+	@Schema(description = "unavailability start's timestamp", example = "2024-11-18T14:00:00")
 	private LocalDateTime checkIn;
 	
 	@JsonProperty(value = "check_out")
 	@Column(name = "check_out")
-	@Schema(description = "check-out's timestamp", example = "2024-11-25T10:00:00")
+	@Schema(description = "unavailability end's timestamp", example = "2024-11-25T10:00:00")
 	private LocalDateTime checkOut;
 
     @JsonProperty(value = "accommodation_draft_id")
