@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { AccommodationDTO } from 'src/app/dtos/accommodationDTO';
 import { AccommodationService } from 'src/app/services/accommodation.service';
+import { DraftService } from 'src/app/services/draft.service';
 
 @Component({
   selector: 'app-my-accommodations',
@@ -27,9 +28,20 @@ export class MyAccommodationsComponent implements OnInit {
   rejectedAccommodationsPageNumber!: number;
   rejectedAccommodationsTotalPages!: number;
 
+  myDrafts$!: Observable<AccommodationDTO[]> ;
+  allMyDrafts!: AccommodationDTO[];
+  myDraftsPageSize!: number;
+  myDraftsPageNumber!: number;
+  myDraftsTotalPages!: number;
+
+  ownerId: number;
+
   constructor(
-      private accommodationService: AccommodationService
-    ){ }
+      private accommodationService: AccommodationService,
+      private draftService: DraftService
+    ){
+      this.ownerId = this.draftService.getOwnerId();
+  }
 
   ngOnInit(): void {
     this.accommodationsPageSize = 4;
@@ -61,6 +73,14 @@ export class MyAccommodationsComponent implements OnInit {
         this.rejectedAccommodations$ = of(updated.slice(0, this.rejectedAccommodationsPageSize));
       });
     });
+
+    this.myDraftsPageSize = 4;
+    this.myDraftsPageNumber = 0;
+    this.draftService.getDraftsByOwnerId(this.ownerId).subscribe(accommodations => {
+      this.myDraftsTotalPages = Math.ceil( accommodations.length / this.myDraftsPageSize );
+      this.allMyDrafts = accommodations;
+      this.myDrafts$ = of(accommodations.slice(0, this.myDraftsPageSize));
+    });
   }
 
   loadAccommodationsPage(pageNumber: number): void {
@@ -79,5 +99,11 @@ export class MyAccommodationsComponent implements OnInit {
     this.rejectedAccommodationsPageNumber = pageNumber;
     let offset = this.rejectedAccommodationsPageNumber * this.rejectedAccommodationsPageSize;
     this.rejectedAccommodations$ = of(this.allRejectedAccommodations.slice(offset, offset + this.rejectedAccommodationsPageSize));
+  }
+
+  loadMyDraftsPage(pageNumber: number): void {
+    this.myDraftsPageNumber = pageNumber;
+    let offset = this.myDraftsPageNumber * this.myDraftsPageSize;
+    this.myDrafts$ = of(this.allMyDrafts.slice(offset, offset + this.myDraftsPageSize));
   }
 }

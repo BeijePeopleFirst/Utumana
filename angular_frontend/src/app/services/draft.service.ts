@@ -5,11 +5,13 @@ import { BACKEND_URL_PREFIX } from 'src/costants';
 import { catchError, Observable, of, tap } from 'rxjs';
 import { Accommodation } from '../models/accommodation';
 import { Service } from '../models/service';
+import { AccommodationDTO } from '../dtos/accommodationDTO';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DraftService {
+
   constructor(
     private http: HttpClient
   ) { }
@@ -57,5 +59,20 @@ export class DraftService {
   getServices(draftId: number): Observable<Service[] | null> {
     console.log("TODO");
     return of([]);
+  }
+
+  getOwnerId(): number {
+    const userId = localStorage.getItem("id");
+    if(!userId) return -1;
+    return Number(userId);
+  }
+
+  public getDraftsByOwnerId(ownerId: number): Observable<AccommodationDTO[]> {
+    return this.http.get<AccommodationDTO[]>(`${BACKEND_URL_PREFIX}/api/accommodation-draft/owner/${ownerId}`, {}).pipe(
+      catchError(error => {
+        console.error(error);
+        return of([]);
+      })
+    );
   }
 }

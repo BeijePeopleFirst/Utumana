@@ -20,3 +20,11 @@
       (askForPage)="loadRejectedAccommodationsPage($event)"></app-accommodation-cards>
   </div>
 </section>
+
+<section *ngIf="allMyDrafts.length > 0" class="flex items-center justify-center pt-8 bg-neutral-1">
+  <div class="container p-5 text-center">
+    <h2>{{'my_accommodations.drafts' | translate}}</h2>
+    <app-draft-cards [accommodations$]="myDrafts$" [pageNumber]="myDraftsPageNumber" [totalPages]="myDraftsTotalPages" 
+      (askForPage)="loadMyDraftsPage($event)"></app-draft-cards>
+  </div>
+</section>
