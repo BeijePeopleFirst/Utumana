@@ -128,4 +128,53 @@ public class AvailabilityDraft {
 		return "Availability [startDate=" + startDate + ", endDate=" + endDate + ", pricePerNight=" + pricePerNight
 				+ ", accommodationDraftId=" + accommodationDraftId + "]";
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((startDate == null) ? 0 : startDate.hashCode());
+		result = prime * result + ((endDate == null) ? 0 : endDate.hashCode());
+		result = prime * result + ((pricePerNight == null) ? 0 : pricePerNight.hashCode());
+		result = prime * result + ((accommodationDraftId == null) ? 0 : accommodationDraftId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AvailabilityDraft other = (AvailabilityDraft) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (startDate == null) {
+			if (other.startDate != null)
+				return false;
+		} else if (!startDate.equals(other.startDate))
+			return false;
+		if (endDate == null) {
+			if (other.endDate != null)
+				return false;
+		} else if (!endDate.equals(other.endDate))
+			return false;
+		if (pricePerNight == null) {
+			if (other.pricePerNight != null)
+				return false;
+		} else if (!pricePerNight.equals(other.pricePerNight))
+			return false;
+		if (accommodationDraftId == null) {
+			if (other.accommodationDraftId != null)
+				return false;
+		} else if (!accommodationDraftId.equals(other.accommodationDraftId))
+			return false;
+		return true;
+	}
 }

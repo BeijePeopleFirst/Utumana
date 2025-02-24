@@ -1,12 +1,16 @@
 <div class="flex flex-col justify-center items-center w-screen sm:w-auto">
     <app-create-progress [step] = 3></app-create-progress>
 
+    <div class="justify-self-center px-2 mb-5 w-screen xl:w-1/2">
+    <p>{{'create.availability_info' | translate}}</p> 
+    </div>
+
     <div class="flex flex-row flex-wrap gap-5 justify-center w-full sm:flex-nowrap">
         <form (ngSubmit)="addAvailability()" class="px-4 w-screen sm:w-1/3" [formGroup]="availForm">
             <div class="justify-self-end w-full sm:w-1/2">
                 <label class="label-primary" for="start_avail">{{'create.start_date' | translate}}</label>
                 <input class="input-primary" [ngClass]="{'alert-danger': (availForm.controls['start_avail'].invalid && isAvailSubmitted) || invalidDates}" 
-                required type="date" id="start_avail" name="start_avail" (input)="invalidDates = false"
+                required type="date" id="start_avail" name="start_avail" (input)="invalidDates = false; invalidAvailability = false"
                 formControlName="start_avail"/>
 
                 <div *ngIf="availForm.controls['start_avail'].invalid && isAvailSubmitted" class="error-message">
@@ -17,7 +21,7 @@
             <div class="justify-self-end mt-2 w-full sm:w-1/2">
                 <label class="label-primary" for="end_avail">{{'create.end_date' | translate}}</label>
                 <input class="input-primary" [ngClass]="{'alert-danger': (availForm.controls['end_avail'].invalid && isAvailSubmitted) || invalidDates}" 
-                required type="date" id="end_avail" name="end_avail" (input)="invalidDates = false" 
+                required type="date" id="end_avail" name="end_avail" (input)="invalidDates = false; invalidAvailability = false" 
                 formControlName="end_avail"/>
 
                 <div *ngIf="availForm.controls['end_avail'].invalid && isAvailSubmitted" class="error-message"> 
@@ -51,7 +55,7 @@
         
         <div class="flex flex-col p-4 w-screen max-w-lg text-center rounded-lg shadow-md h-fit bg-neutral-2">
             <h4>{{'create.availabilities' | translate}}</h4>
-            <ng-container *ngIf="availabilities.length > 0">
+            <ng-container *ngIf="availabilities && availabilities.length > 0">
                 <div class="flex relative flex-row justify-evenly">
                     <h6 class="w-1/3">{{'create.start_date' | translate}}</h6>
                     <h6 class="w-1/3">{{'create.end_date' | translate}}</h6>
@@ -64,13 +68,17 @@
                     <div class="w-1/3">{{ avail.price_per_night }}</div>
                 </div>
             </ng-container>
-            <div class="self-center py-10 w-full" *ngIf="availabilities.length == 0">
+            <div class="self-center py-10 w-full" *ngIf="!availabilities || availabilities.length == 0">
                 {{'create.no_availabilities' | translate}}
             </div>
         </div>
     </div>
 
-    <div class="flex gap-x-5 justify-center mt-6 h-fit">
+    <div class="justify-self-center px-2 my-5 w-screen xl:w-1/2">
+        <p>{{'create.unavailability_info' | translate}}</p>
+    </div>
+
+    <div class="flex gap-x-5 justify-center my-6 h-fit">
         <button type="button" (click)="goBack()" class="btn-cancel w-fit">{{'create.back' | translate}}</button>
         <button type="button" (click)="saveAndContinue()" class="btn-primary w-fit">{{'create.continue' | translate}}</button>
     </div>

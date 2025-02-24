@@ -5,6 +5,7 @@ import { BACKEND_URL_PREFIX } from 'src/costants';
 import { catchError, Observable, of, tap } from 'rxjs';
 import { Accommodation } from '../models/accommodation';
 import { Service } from '../models/service';
+import { Availability, AvailabilityInterface } from '../models/availability';
 
 @Injectable({
   providedIn: 'root'
@@ -72,6 +73,31 @@ export class DraftService {
     ).subscribe({
       next: () => {
         console.log("Services saved");
+      },
+      error: error => {
+        console.error(error);
+      }
+    });
+  }
+
+  getAvailabilities(draftId: number): Observable<Availability[] | null> {
+    return this.http.get<Availability[]>(`${BACKEND_URL_PREFIX}/api/accommodation-draft/availabilities/${draftId}`, {}).pipe(
+      catchError(error => {
+        console.error(error);
+        return of(null);
+      })
+    );
+  }
+
+  setAvailabilities(availabilities: AvailabilityInterface[] | Availability[], draftId: number): void {
+    this.http.post<any>(`${BACKEND_URL_PREFIX}/api/accommodation-draft/save-availabilities/${draftId}`, availabilities).pipe(
+      catchError(error => {
+        console.error(error);
+        return of(null);
+      })
+    ).subscribe({
+      next: () => {
+        console.log("Availabilities saved");
       },
       error: error => {
         console.error(error);

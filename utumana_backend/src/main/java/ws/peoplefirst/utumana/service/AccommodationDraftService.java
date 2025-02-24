@@ -1,5 +1,6 @@
 package ws.peoplefirst.utumana.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -12,15 +13,21 @@ import ws.peoplefirst.utumana.dto.AddressDTO;
 import ws.peoplefirst.utumana.dto.GeneralAccommodationInfoDTO;
 import ws.peoplefirst.utumana.exception.IdNotFoundException;
 import ws.peoplefirst.utumana.model.AccommodationDraft;
+import ws.peoplefirst.utumana.model.Availability;
 import ws.peoplefirst.utumana.model.AvailabilityDraft;
 import ws.peoplefirst.utumana.model.PhotoDraft;
 import ws.peoplefirst.utumana.repository.AccommodationDraftRepository;
+import ws.peoplefirst.utumana.repository.AvailabilityDraftRepository;
 
 @Service
 public class AccommodationDraftService {
 
     @Autowired
     private AccommodationDraftRepository accommodationDraftRepository;
+
+    @Autowired
+    private AvailabilityDraftRepository availabilityDraftRepository;
+
 
     public List<AccommodationDraft> getAccommodationDraftByOwnerId(Long ownerId) {
         return accommodationDraftRepository.findByOwnerId(ownerId);
@@ -96,8 +103,30 @@ public class AccommodationDraftService {
     }
 
     @Transactional
-    public AccommodationDraft saveAvailabilities(Long draftId, List<AvailabilityDraft> availabilities) {
+    public AccommodationDraft saveAvailabilities(Long draftId, List<AvailabilityDraft> availabilities) {       
         AccommodationDraft draft = getDraftById(draftId);
+        if(availabilities.equals(draft.getAvailabilities())){
+            return draft;
+        }
+        
+        List<AvailabilityDraft> savedAvailabilities = new ArrayList<AvailabilityDraft>();
+        AvailabilityDraft saved;
+        for (AvailabilityDraft availability : availabilities) {
+            availability.setAccommodationDraftId(draftId);
+            availability.setAccommodationDraft(draft);
+            saved = availability;
+            if (availability.getId() == null) {
+                saved = availabilityDraftRepository.save(availability);
+            }
+            savedAvailabilities.add(saved);
+        }
+
+        for (AvailabilityDraft oldAvailability : draft.getAvailabilities()) {
+            if (!savedAvailabilities.contains(oldAvailability)) {
+                availabilityDraftRepository.delete(oldAvailability);
+            }
+        }
+
         draft.setAvailabilities(availabilities);
         return accommodationDraftRepository.save(draft);
     }

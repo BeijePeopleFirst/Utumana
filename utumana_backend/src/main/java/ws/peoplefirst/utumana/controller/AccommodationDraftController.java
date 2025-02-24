@@ -3,6 +3,8 @@ package ws.peoplefirst.utumana.controller;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -29,6 +31,8 @@ import ws.peoplefirst.utumana.utility.AuthorizationUtility;
 @RestController
 @RequestMapping(value = "/api/accommodation-draft")
 public class AccommodationDraftController {
+
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
     
     @Autowired
     private AccommodationDraftService accommodationDraftService;
@@ -134,6 +138,8 @@ public class AccommodationDraftController {
     @PostMapping("/save-availabilities/{draftId}")
     @PreAuthorize("hasAuthority('USER')")
     public AccommodationDraft saveAvailabilities(@PathVariable("draftId") Long draftId, @RequestBody List<AvailabilityDraft> availabilities, Authentication auth) {
+        log.debug("POST api/accommodation-draft/save-availabilities/" + draftId);
+        log.trace("availabilities: " + availabilities);
         authenticateCall(auth, draftId);
         return accommodationDraftService.saveAvailabilities(draftId, availabilities);
     }
