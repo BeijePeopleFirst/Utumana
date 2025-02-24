@@ -11,6 +11,7 @@ import ws.peoplefirst.utumana.repository.AccommodationRepository;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -28,7 +29,7 @@ class AccommodationServiceTest {
 
     @Test
     void approveAccommodation() {
-        when(accommodationRepository.findByIdAndHidingTimestampIsNull(0L)).thenReturn(getAccomodation());
+        when(accommodationRepository.findByIdAndHidingTimestampIsNull(anyLong())).thenReturn(getAccomodation());
         assertDoesNotThrow(() -> accommodationService.approveAccommodation(0L));
     }
 
