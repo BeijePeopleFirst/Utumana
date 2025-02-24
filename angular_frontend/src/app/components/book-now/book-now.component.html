@@ -37,7 +37,7 @@
                   <div *ngIf="isAnAvailability(currentYear, getMonthName(), day) && !isSelected(currentYear, getMonthName(), day)" class="w-full bg-green-500 cursor-pointer" (click)="selectDay(currentYear, getMonthName(), day)">
                       {{ day || '' }}
                   </div>
-                  <div *ngIf="isSelected(currentYear, getMonthName(), day)" class="w-full bg-blue-800">
+                  <div *ngIf="isSelected(currentYear, getMonthName(), day) && isAnAvailability(currentYear, getMonthName(), day)" class="w-full bg-blue-800">
                       {{ day || '' }}
                   </div>
                   <div *ngIf="!isAnAvailability(currentYear, getMonthName(), day)">
@@ -71,7 +71,7 @@
                   <div *ngIf="isAnAvailability(nextMonthYear, nextMonthName(), day) && !isSelected(nextMonthYear, nextMonthName(), day)" class="w-full bg-green-500 cursor-pointer" (click)="selectDay(nextMonthYear, nextMonthName(), day)">
                       {{ day || '' }}
                   </div>
-                  <div *ngIf="isSelected(nextMonthYear, nextMonthName(), day)" class="w-full bg-blue-800">
+                  <div *ngIf="isSelected(nextMonthYear, nextMonthName(), day) && isAnAvailability(nextMonthYear, nextMonthName(), day)" class="w-full bg-blue-800">
                       {{ day || '' }}
                   </div>
                   <div *ngIf="!isAnAvailability(nextMonthYear, nextMonthName(), day)">
