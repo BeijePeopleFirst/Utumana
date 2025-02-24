@@ -16,8 +16,10 @@ import ws.peoplefirst.utumana.model.AccommodationDraft;
 import ws.peoplefirst.utumana.model.Availability;
 import ws.peoplefirst.utumana.model.AvailabilityDraft;
 import ws.peoplefirst.utumana.model.PhotoDraft;
+import ws.peoplefirst.utumana.model.UnavailabilityDraft;
 import ws.peoplefirst.utumana.repository.AccommodationDraftRepository;
 import ws.peoplefirst.utumana.repository.AvailabilityDraftRepository;
+import ws.peoplefirst.utumana.repository.UnavailabilityDraftRepository;
 
 @Service
 public class AccommodationDraftService {
@@ -27,6 +29,9 @@ public class AccommodationDraftService {
 
     @Autowired
     private AvailabilityDraftRepository availabilityDraftRepository;
+
+    @Autowired
+    private UnavailabilityDraftRepository unavailabilityDraftRepository;
 
 
     public List<AccommodationDraft> getAccommodationDraftByOwnerId(Long ownerId) {
@@ -47,6 +52,10 @@ public class AccommodationDraftService {
 
     public List<AvailabilityDraft> getAccommodationDraftAvailabilitiesById(Long id) {
         return getAccommodationDraftById(id).getAvailabilities();
+    }
+
+    public List<UnavailabilityDraft> getAccommodationDraftUnavailabilitiesById(Long id){
+        return getAccommodationDraftById(id).getUnavailabilities();
     }
 
     public Set<ws.peoplefirst.utumana.model.Service> getAccommodationDraftServicesById(Long id) {
@@ -102,6 +111,7 @@ public class AccommodationDraftService {
         return accommodationDraftRepository.save(draft);
     }
 
+    // this method makes no checks on availabilities validity: the check is done in frontend and at the moment of draft transformation into accommodation
     @Transactional
     public AccommodationDraft saveAvailabilities(Long draftId, List<AvailabilityDraft> availabilities) {       
         AccommodationDraft draft = getDraftById(draftId);
@@ -129,6 +139,36 @@ public class AccommodationDraftService {
 
         draft.setAvailabilities(availabilities);
         return accommodationDraftRepository.save(draft);
+    }
+
+    // this method makes no checks on unavailabilities validity: the check is done in frontend and at the moment of draft transformation into accommodation
+    @Transactional
+    public AccommodationDraft saveUnavailabilities(Long draftId, List<UnavailabilityDraft> unavailabilities){
+        AccommodationDraft draft = getDraftById(draftId);
+        if(unavailabilities.equals(draft.getUnavailabilities())){
+            return draft;
+        }
+
+        List<UnavailabilityDraft> savedUnavailabilities = new ArrayList<UnavailabilityDraft>();
+        UnavailabilityDraft saved;
+        for (UnavailabilityDraft unavailability : unavailabilities) {
+            unavailability.setAccommodationDraftId(draftId);
+            unavailability.setAccommodationDraft(draft);
+            saved = unavailability;
+            if (unavailability.getId() == null) {
+                saved = unavailabilityDraftRepository.save(unavailability);
+            }
+            savedUnavailabilities.add(saved);
+        }
+
+        for (UnavailabilityDraft oldUnavailability : draft.getUnavailabilities()) {
+            if (!savedUnavailabilities.contains(oldUnavailability)) {
+                unavailabilityDraftRepository.delete(oldUnavailability);
+            }
+        }
+
+        draft.setUnavailabilities(unavailabilities);
+        return draft;
     }
 
     @Transactional

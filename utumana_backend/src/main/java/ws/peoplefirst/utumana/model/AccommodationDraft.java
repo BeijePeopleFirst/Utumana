@@ -112,186 +112,144 @@ public class AccommodationDraft {
 	@Schema(description = "List of availabilities of the accommodation draft")
     private List<AvailabilityDraft> availabilities;
 
+    @OneToMany(mappedBy = "accommodationDraft", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OrderBy("checkIn")
+	@Schema(description = "List of unavailabilities of the accommodation draft")
+    private List<UnavailabilityDraft> unavailabilities;
+
 
     public Long getId() {
         return id;
     }
-
-
     public void setId(Long id) {
         this.id = id;
     }
 
-
     public Long getOwnerId() {
         return ownerId;
     }
-
-
     public void setOwnerId(Long ownerId) {
         this.ownerId = ownerId;
     }
 
-
     public String getTitle() {
         return title;
     }
-
-
     public void setTitle(String title) {
         this.title = title;
     }
 
-
     public String getDescription() {
         return description;
     }
-
-
     public void setDescription(String description) {
         this.description = description;
     }
 
-
     public Integer getBeds() {
         return beds;
     }
-
-
     public void setBeds(Integer beds) {
         this.beds = beds;
     }
 
-
     public Integer getRooms() {
         return rooms;
     }
-
-
     public void setRooms(Integer rooms) {
         this.rooms = rooms;
     }
 
-
     public String getStreet() {
         return street;
     }
-
-
     public void setStreet(String street) {
         this.street = street;
     }
 
-
     public String getStreetNumber() {
         return streetNumber;
     }
-
-
     public void setStreetNumber(String streetNumber) {
         this.streetNumber = streetNumber;
     }
 
-
     public String getAddressNotes() {
         return addressNotes;
     }
-
-
     public void setAddressNotes(String addressNotes) {
         this.addressNotes = addressNotes;
     }
 
-
     public String getCity() {
         return city;
     }
-
-
     public void setCity(String city) {
         this.city = city;
     }
 
-
     public String getCap() {
         return cap;
     }
-
-
     public void setCap(String cap) {
         this.cap = cap;
     }
 
-
     public String getProvince() {
         return province;
     }
-
-
     public void setProvince(String province) {
         this.province = province;
     }
 
-
     public String getCountry() {
         return country;
     }
-
-
     public void setCountry(String country) {
         this.country = country;
     }
 
-
     public String getCoordinates() {
         return coordinates;
     }
-
-
     public void setCoordinates(String coordinates) {
         this.coordinates = coordinates;
     }
 
-
     public String getMainPhotoUrl() {
         return mainPhotoUrl;
     }
-
-
     public void setMainPhotoUrl(String mainPhotoUrl) {
         this.mainPhotoUrl = mainPhotoUrl;
     }
 
-
     public Set<Service> getServices() {
         return services;
     }
-
-
     public void setServices(Set<Service> services) {
         this.services = services;
     }
 
-
     public List<PhotoDraft> getPhotos() {
         return photos;
     }
-
-
     public void setPhotos(List<PhotoDraft> photos) {
         this.photos = photos;
     }
 
-
     public List<AvailabilityDraft> getAvailabilities() {
         return availabilities;
     }
-
-
     public void setAvailabilities(List<AvailabilityDraft> availabilities) {
         this.availabilities = availabilities;
     }
 
+    public List<UnavailabilityDraft> getUnavailabilities() {
+        return unavailabilities;
+    }
+    public void setUnavailabilities(List<UnavailabilityDraft> unavailabilities) {
+        this.unavailabilities = unavailabilities;
+    }
 
     @Override
     public String toString() {

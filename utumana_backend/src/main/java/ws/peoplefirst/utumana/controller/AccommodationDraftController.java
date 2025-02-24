@@ -24,6 +24,7 @@ import ws.peoplefirst.utumana.model.AccommodationDraft;
 import ws.peoplefirst.utumana.model.AvailabilityDraft;
 import ws.peoplefirst.utumana.model.PhotoDraft;
 import ws.peoplefirst.utumana.model.Service;
+import ws.peoplefirst.utumana.model.UnavailabilityDraft;
 import ws.peoplefirst.utumana.service.AccommodationDraftService;
 import ws.peoplefirst.utumana.service.PublishDraftService;
 import ws.peoplefirst.utumana.utility.AuthorizationUtility;
@@ -84,6 +85,13 @@ public class AccommodationDraftController {
         return accommodationDraftService.getAccommodationDraftAvailabilitiesById(draftId);
     }
 
+    @GetMapping("unavailabilities/{id}")
+    @PreAuthorize("hasAuthority('USER')")
+    public List<UnavailabilityDraft> getAccommodationDraftUnavailabilitiesById(@PathVariable("id") Long draftId, Authentication auth) {
+        authenticateCall(auth, draftId);
+        return accommodationDraftService.getAccommodationDraftUnavailabilitiesById(draftId);
+    }
+
     @GetMapping("services/{id}")
     @PreAuthorize("hasAuthority('USER')")
     public Set<Service> getAccommodationDraftServicesById(@PathVariable("id") Long draftId, Authentication auth) {
@@ -142,6 +150,15 @@ public class AccommodationDraftController {
         log.trace("availabilities: " + availabilities);
         authenticateCall(auth, draftId);
         return accommodationDraftService.saveAvailabilities(draftId, availabilities);
+    }
+
+    @PostMapping("/save-unavailabilities/{draftId}")
+    @PreAuthorize("hasAuthority('USER')")
+    public AccommodationDraft saveUnavailabilities(@PathVariable("draftId") Long draftId, @RequestBody List<UnavailabilityDraft> unavailabilities, Authentication auth) {
+        log.debug("POST api/accommodation-draft/save-unavailabilities/" + draftId);
+        log.trace("unavailabilities: " + unavailabilities);
+        authenticateCall(auth, draftId);
+        return accommodationDraftService.saveUnavailabilities(draftId, unavailabilities);
     }
 
     @PostMapping("/save-services/{draftId}")
