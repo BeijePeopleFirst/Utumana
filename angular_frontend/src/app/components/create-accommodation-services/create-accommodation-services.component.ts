@@ -63,27 +63,26 @@ export class CreateAccommodationServicesComponent implements OnInit, OnDestroy {
   }
 
   saveServices(): void{
-    localStorage.setItem('new_acc_services', JSON.stringify(this.services));
-    // TODO
-    // save services in accommodation draft in db 
+    //localStorage.setItem('new_acc_services', JSON.stringify(this.services));
+    this.draftService.setServices(this.services, this.draftId);
   }
 
   saveAndContinue(): void{
-    this.router.navigate(['/create/availabilities']);
+    this.router.navigate([`/create/availabilities/${this.draftId}`]);
   }
 
   goBack(): void{
-    this.router.navigate(['/create/address']);
+    this.router.navigate([`/create/address/${this.draftId}`]);
   }
 
   addService(found: Service): void{
     this.services.push(found);
-    localStorage.setItem('new_acc_services', JSON.stringify(this.services));
+    //localStorage.setItem('new_acc_services', JSON.stringify(this.services));
   }
 
   removeService(service: Service): void{
     this.services = this.services.filter((s: Service) => s.id !== service.id);
-    localStorage.setItem('new_acc_services', JSON.stringify(this.services));
+    //localStorage.setItem('new_acc_services', JSON.stringify(this.services));
   }
 
   search(searchText: string): void{

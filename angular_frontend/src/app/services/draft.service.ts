@@ -55,7 +55,27 @@ export class DraftService {
   }
 
   getServices(draftId: number): Observable<Service[] | null> {
-    console.log("TODO");
-    return of([]);
+    return this.http.get<Service[]>(`${BACKEND_URL_PREFIX}/api/accommodation-draft/services/${draftId}`, {}).pipe(
+      catchError(error => {
+        console.error(error);
+        return of(null);
+      })
+    );
+  }
+
+  setServices(services: Service[], draftId: number): void {
+    this.http.post<any>(`${BACKEND_URL_PREFIX}/api/accommodation-draft/save-services/${draftId}`, services).pipe(
+      catchError(error => {
+        console.error(error);
+        return of(null);
+      })
+    ).subscribe({
+      next: () => {
+        console.log("Services saved");
+      },
+      error: error => {
+        console.error(error);
+      }
+    });
   }
 }
