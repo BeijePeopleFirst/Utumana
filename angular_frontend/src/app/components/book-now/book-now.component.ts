@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { USE_DEFAULT_LANG } from '@ngx-translate/core';
 import { Accommodation } from 'src/app/models/accommodation';
 import { Availability } from 'src/app/models/availability';
+import { Booking } from 'src/app/models/booking';
 import { AccommodationService } from 'src/app/services/accommodation.service';
+import { BookingService } from 'src/app/services/booking.service';
+import { BookingStatus } from 'src/app/utils/enums';
 
 @Component({
   selector: 'app-book-now',
@@ -21,16 +24,21 @@ export class BookNowComponent implements OnInit {
   //Chosen dates:
   //------------------------------------------------------------------------------------------------
   selectedCheckIn?: number;
-  selectedCheckoout?: number;
+  selectedCheckOut?: number;
   //------------------------------------------------------------------------------------------------
 
   //Messagges:
   //------------------------------------------------------------------------------------------------
   thereAreMessagesToDiplay: boolean = false;
+  backendMsg?: string;
   invalidAccommodationError: boolean = false;
   noAccommodationIdWasProvidedError: boolean = false;
   errorOccurredWhileFetchingMonthNameOrIndexError: boolean = false;
   invalidChosenDayError: boolean = false;
+  completedBooking: boolean = false;
+  errorInBookingProcedure: boolean = false;
+  completedUnavailabilitySettingMessage: boolean = false;
+  userNotLoggedError: boolean = false;
   //------------------------------------------------------------------------------------------------
 
   // Data corrente per il calendario principale
@@ -43,7 +51,9 @@ export class BookNowComponent implements OnInit {
 
   constructor(
     private accommodationService: AccommodationService,
-    private route: ActivatedRoute
+    private bookingService: BookingService,
+    private route: ActivatedRoute,
+    private router: Router
   )
   {}
 
@@ -160,21 +170,23 @@ public getNextMonthName(): string {
   if(this.currentDate.getMonth() === 11) return "january";
 
   const nextMonthDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 1);
-  console.log(this.getMonthName(nextMonthDate.getMonth()));
+  //console.log(this.getMonthName(nextMonthDate.getMonth()));
   return this.getMonthName(nextMonthDate.getMonth());
 }
 
 resetSelectedDates() {
   this.selectedCheckIn = undefined;
-  this.selectedCheckoout = undefined;
+  this.selectedCheckOut = undefined;
 }
 
 isSelected(year: number, monthName: string, day: number | null): boolean {
 
-  if(!day) return false;
-  let toTest: number = Date.parse(new Date(year, this.getMonthNumberByName(monthName), day) + "");
+  if(!day || !this.selectedCheckIn) return false;
 
-  return this.checkIfIsBetween(toTest, this.selectedCheckIn!, this.selectedCheckoout!);
+  let test: number = new Date(year, this.getMonthNumberByName(monthName), day).getTime()
+  if(test === this.selectedCheckIn || test === this.selectedCheckOut) return true;
+
+  return this.checkIfIsBetween(test, this.selectedCheckIn!, this.selectedCheckOut!);
 }
 
 nextMonthName(): string {
@@ -191,23 +203,104 @@ selectDay(y: number, monthName: string, day: number | null): void {
     this.thereAreMessagesToDiplay = true;
     return;
   }
-  let chosenDate: number = Date.parse(new Date(y, this.getMonthNumberByName(monthName), day) + "");
+
+  let chosenDate: number = new Date(y, this.getMonthNumberByName(monthName), day).getTime();
 
   if(!this.selectedCheckIn) this.selectedCheckIn = chosenDate;
   else {
-    this.selectedCheckoout = chosenDate;
-    console.log(new Date(this.selectedCheckIn!), new Date(this.selectedCheckoout!));
+    this.selectedCheckOut = chosenDate;
+    console.log(new Date(this.selectedCheckIn!), new Date(this.selectedCheckOut!));
   }
 }
 
-//TODO:
-//Need to keep in mind both "real" booking and unavailability option
-//After the storing procedure you should send a message into the GUI AND then redirect to the Homepage
+isAnUnavailability: boolean = false;
 confirmSelectedDates(): void {
+
+  if(!localStorage.getItem("id")) {
+    this.thereAreMessagesToDiplay = true;
+    this.userNotLoggedError = true;
+    return;
+  }
+
+  let userId: number = Number(localStorage.getItem("id"));
+
+  let selectedCheckInStr: string = this.convertToCompatibleDateFormat(new Date(this.selectedCheckIn!).toLocaleDateString());
+  let selectedCheckOutStr: string = this.convertToCompatibleDateFormat(new Date(this.selectedCheckOut!).toLocaleDateString());
+  
+  //Unavailability:
+  if(this.isAnUnavailability) {
+    let unavailability: Availability = new Availability();
+    unavailability.accommodation_id = this.accommodation.id!;
+    unavailability.start_date = selectedCheckInStr;
+    unavailability.end_date = selectedCheckOutStr;
+    unavailability.price_per_night = 0;
+
+    //Now lets store the Unavailability:
+    this.bookingService.newUnavailability(unavailability).subscribe(
+      response => {
+        if("message" in response) {
+          this.thereAreMessagesToDiplay = true;
+          this.errorInBookingProcedure = true;
+          this.backendMsg = response.message;
+          return;
+        }
+
+        this.completedUnavailabilitySettingMessage = true;
+        this.thereAreMessagesToDiplay = true;
+
+        setTimeout(() => this.goToHomepage(), 3200);
+      }
+    )
+  }
+
+  //Real Booking:
+  else {
+    let booking: Booking = new Booking(this.accommodation, this.convertToCompatibleDateFormat(new Date(Date.now()).toLocaleDateString()), 0, 
+                                          BookingStatus.PENDING, selectedCheckInStr, selectedCheckOutStr, false, userId);
+
+    //Now lets store the Booking:
+    this.bookingService.newBooking(booking).subscribe(
+      response => {
+        if("message" in response) {
+          this.errorInBookingProcedure = true;
+          this.thereAreMessagesToDiplay = true;
+          this.backendMsg = response.message;
+          return;
+        }
+
+        this.completedBooking = true;
+        this.thereAreMessagesToDiplay = true;
+
+        setTimeout(() => this.goToHomepage(), 3200);
+      }
+    )
+  }
 
 }
 
+private goToHomepage(): void {
+  this.router.navigate(["/"]);
+}
+
+//From dd/MM/yyyy TO yyyy/MM/dd:
+private convertToCompatibleDateFormat(s: string): string {
+  //console.log("DEBUG -> ", s);
+  let result: string;
+
+  let tokens: string[] = s.split("/");
+  result = tokens[2] + "-" + tokens[1] + "-" + tokens[0];
+  //console.log("DEBUG2 -> ", result);
+  
+
+  return result;
+}
+
+availabilitiesOrNotKeys: Map<String, Boolean> = new Map<String, Boolean>(); 
 isAnAvailability(y: number, monthName: string, day: number | null): boolean {
+
+  //Se la data c'è già la restituisco:
+  if(this.availabilitiesOrNotKeys.has(y + "-" + monthName + "-" + day)) return this.availabilitiesOrNotKeys.get(y + "-" + monthName + "-" + day)!.valueOf();
+
   let monthNumber: number = this.getMonthNumberByName(monthName);
 
   if(!day) return false;
@@ -226,9 +319,16 @@ isAnAvailability(y: number, monthName: string, day: number | null): boolean {
     start = Date.parse(a.start_date);
     end = Date.parse(a.end_date);
 
-    if(this.checkIfIsBetween(dateToAnalize, start, end)) return true;
+    if(this.checkIfIsBetween(dateToAnalize, start, end)) {
+
+      //Lets add to the cache this availability:
+      this.availabilitiesOrNotKeys.set(y + "-" + monthName + "-" + day, true);
+
+      return true;
+    }
   }
 
+  this.availabilitiesOrNotKeys.set(y + "-" + monthName + "-" + day, false);
   return false;
 }
 
@@ -257,11 +357,16 @@ private getMonthNumberByName(name: string): number {
 
 public clearMessages(): void {
   this.thereAreMessagesToDiplay = false;
+  this.backendMsg = "";
 
   this.invalidAccommodationError = false;
   this.noAccommodationIdWasProvidedError = false;
   this.errorOccurredWhileFetchingMonthNameOrIndexError = false;
   this.invalidChosenDayError = false;
+  this.completedBooking = false;
+  this.errorInBookingProcedure = false;
+  this.completedUnavailabilitySettingMessage = false;
+  this.userNotLoggedError = false;
 }
 
 }

@@ -255,8 +255,6 @@ public class BookingService {
 	}
 
 	public UnavailabilityDTO addUnAvailability(Long userId,Availability unavailability) {
-		System.out.println("AGGIUNGO UNAVAILABLITY \n\n");
-		
 		Booking selfBooking=new Booking();
 		
 		if(unavailability==null) {
