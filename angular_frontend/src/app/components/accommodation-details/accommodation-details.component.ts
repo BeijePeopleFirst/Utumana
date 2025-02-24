@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, debounceTime, distinctUntilChanged, map, Observable, of, Subject, switchMap } from 'rxjs';
+import { AccommodationDTO } from 'src/app/dtos/accommodationDTO';
+import { BookingDTO } from 'src/app/dtos/bookingDTO';
 import { Accommodation } from 'src/app/models/accommodation';
 import { Booking } from 'src/app/models/booking';
 import { Review } from 'src/app/models/review';
@@ -33,6 +35,8 @@ export class AccommodationDetailsComponent implements OnInit {
   invalidAccommodation: boolean = false;
   isFavourite: boolean = false;
   isAdminOrMe: boolean = false;
+
+  accommodationUnavailabilities: string[] = [];
 
   accommodationReviews: Review[] = [];
   filteredAccommodationReviews: Review[] = [];
@@ -183,10 +187,12 @@ export class AccommodationDetailsComponent implements OnInit {
             let tmp2: Boolean | undefined;
             let tmp3: any;
             let tmp4: Boolean | undefined;console.log("INFO -> ", info);
+            let tmp5: any;
 
-            if(!("isAdmin" in info) || !("isOwner" in info) || !("reviews" in info) || !("isFavourite" in info)
+            if(!("isAdmin" in info) || !("isOwner" in info) || !("reviews" in info) || !("isFavourite" in info) || !("pendingByUserOrAcceptedOrDoingBookings" in info)
               || ((tmp1 = Boolean(info["isAdmin"])) == undefined) || ((tmp2 = Boolean(info["isOwner"])) == undefined)
-              || !(tmp3 = info["reviews"]) || ((tmp4 = Boolean(info["isFavourite"])) == undefined)) {
+              || !(tmp3 = info["reviews"]) || ((tmp4 = Boolean(info["isFavourite"])) == undefined)
+              || !(tmp5 = info["pendingByUserOrAcceptedOrDoingBookings"])) {
 
               this.errorFetchingAccommodationDetails = true;
               this.message = "true";
@@ -225,6 +231,72 @@ export class AccommodationDetailsComponent implements OnInit {
 
             //Ora calcolo il numero di pagine:
             this.accommodationReviewsTotalPagesNumber = Math.ceil(this.accommodationReviews.length / 4);
+
+            //Now lets insert values into the unavailabilities Map:
+            let tmp: BookingDTO[] = [];
+            let tempBooking: BookingDTO;
+
+            //Aggiungo i valori alla lista "tmp":
+            for (let v of tmp5) {
+              tempBooking = new BookingDTO(
+                v.checkIn,
+                v.checkOut,
+                0,
+                "",
+                new AccommodationDTO(
+                  this.accommodation.id!,
+                  this.accommodation.title,
+                  this.accommodation.city!,
+                  this.accommodation.main_photo_url,
+                  this.accommodation.country,
+                  this.accommodation.province!,
+                  0,
+                  0,
+                  false,
+                  0
+                )
+              );
+
+              tmp.push(tempBooking);
+            }
+            console.log("STAMPO TMP -> ", tmp);
+
+            let inDateN: number;
+            let outDateN: number;
+
+            let date: Date;
+
+            let monthName: string;
+            let year: number;
+            let day: number;
+
+            let cursor: number;
+
+            for (let b of tmp) {
+              inDateN = Date.parse(b.checkIn);
+              outDateN = Date.parse(b.checkOut);
+
+              cursor = inDateN;
+
+              while (cursor <= outDateN) {
+                date = new Date(cursor);
+
+                monthName = this.getMonthName(date.getMonth());
+                year = date.getFullYear();
+                day = date.getDate();
+
+                if(!this.accommodationUnavailabilities.includes(year + "-" + monthName + "-" + day))
+                this.accommodationUnavailabilities.push(
+                  year + "-" + monthName + "-" + day
+                );
+
+                cursor = new Date(
+                  year,
+                  date.getMonth(),
+                  day + 1
+                ).getTime();
+              }
+            }
 
             //Ora recupero l' Owner dell' Accommodation:
             this.userService.getUserById(this.accommodation.owner_id).subscribe(
@@ -272,6 +344,24 @@ export class AccommodationDetailsComponent implements OnInit {
         )
       }
     )
+  }
+
+  private getMonthName(monthIndexLocal: number): string {
+    switch(monthIndexLocal) {
+      case 0: return "january";
+      case 1: return "february";
+      case 2: return "march";
+      case 3: return "april";
+      case 4: return "may";
+      case 5: return "june";
+      case 6: return "july";
+      case 7: return "august";
+      case 8: return "september";
+      case 9: return "october";
+      case 10: return "november";
+      case 11: return "december";
+      default: return "Error";
+    }
   }
 
   receiveAvailabilityFromChild($event: { start_date: string; end_date: string; price_per_night: number; accommodation_id: number; } | undefined | {message: string}) {

@@ -94,7 +94,7 @@
           <div *ngIf="accommodation.availabilities && accommodation.availabilities.length > 0" id="availabilities-acc" class="mt-3 bg-neutral-1">
             <p class="mb-3 text-lg font-bold text-center text-primary-light">{{("accommodation-card-details.availabilities-word" | translate)}}:</p>
             <div>
-              <app-choose-book-period-from-acc-details [queryParamsFromParent]="queryParams" [accommodation]="accommodation" (sendChosenAvailability)="receiveAvailabilityFromChild($event)"></app-choose-book-period-from-acc-details>
+              <app-choose-book-period-from-acc-details [unavailabilities]="accommodationUnavailabilities" [queryParamsFromParent]="queryParams" [accommodation]="accommodation" (sendChosenAvailability)="receiveAvailabilityFromChild($event)"></app-choose-book-period-from-acc-details>
             </div>
           </div>
         </div>

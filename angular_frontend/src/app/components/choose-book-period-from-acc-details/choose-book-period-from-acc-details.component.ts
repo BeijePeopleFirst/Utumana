@@ -18,6 +18,8 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
 
   @Input() queryParamsFromParent?: Params;
 
+  @Input() unavailabilities!: string[];
+
   chosenOne: Availability = new Availability();
 
   currentMonth!: { name: string; days: number[]; monthIndex: number; year: number };
@@ -42,7 +44,7 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.initializeCalendars(new Date().getFullYear(), new Date().getMonth());
+    
     this.initializeAvailabilityCache();
 
     if(this.queryParamsFromParent && this.queryParamsFromParent["start_date"] && this.queryParamsFromParent["end_date"]) {
@@ -54,6 +56,8 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
       this.chosenOne.start_date = tmp1 + "";
       this.chosenOne.end_date = tmp2 + "";
     }
+
+    this.initializeCalendars(new Date().getFullYear(), new Date().getMonth());
   }
 
   initializeCalendars(year: number, month: number) {
@@ -139,6 +143,7 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
     
   }
 
+  //TODO: Remove dates that are in common with UNAVAILABILITIES
   initializeAvailabilityCache(): void {
     this.accommodationService.getAvailabilities(this.accommodation).subscribe(
       availabilities => {
