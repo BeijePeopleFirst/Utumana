@@ -8,24 +8,55 @@
         </a>
       </div>
 
+      <!-- hamburger menu icon-->
       <button type="button" class="inline-flex items-center self-end p-2 ml-1 align-middle rounded-lg lg:hidden group" aria-controls="mobile-menu" aria-expanded="true" (click)="toggleMobileMenu($event)">
         <svg xmlns="http://www.w3.org/2000/svg" height="28px" viewBox="0 -960 960 960" width="28px" class="fill-secondary hover:fill-secondary-dark group-focus:fill-secondary-dark">
           <path d="M100.78-212.3v-106h758.44v106H100.78Zm0-214.7v-106h758.44v106H100.78Zm0-214.7v-106h758.44v106H100.78Z"/>
         </svg>
 			</button>
   
+      <!-- visible menu links -->
       <div id="mobile-menu" class="justify-between items-center w-full align-middle lg:w-auto lg:flex">
         <div class="lg:flex lg:flex-row lg:gap-x-12 lg:pr-12" 
         [hidden]="isMenuOpen === false" [ngClass]="{'flex flex-col py-2 gap-y-2': isMenuOpen === true}">
-          <a (click)="createAccommodationDraft()" class="font-semibold select-none text-sm/6 text-primary" 
-          [ngClass]="{'px-2 rounded-md hover:ring-2 hover:ring-secondary-light/50': isMenuOpen === true}">{{'header.create' | translate}}</a>
+          <!-- create -->
+          <div class="relative w-fit hover:cursor-pointer" (click)="toggleCreateMenu($event)">
+            <button class="flex relative flex-row font-semibold select-none text-sm/6 text-primary" 
+            [ngClass]="{'px-2 rounded-md hover:ring-2 hover:ring-secondary-light/50': isMenuOpen === true}">
+              <span>{{'header.create' | translate}}</span>
+              <svg class="flex-none ml-1 text-gray-400 select-none size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+              </svg>
+            </button>
+            
+            <div *ngIf="isCreateMenuOpen" class="absolute right-0 top-full z-50 mt-3 w-32 rounded-xl ring-1 shadow-lg lg:bg-white ring-gray-900/5"
+              [ngClass]="{'relative right-auto top-auto w-fit shadow-none ring-none ring-transparent mt-1': isMenuOpen === true}">
+                <div class="p-2 space-y-1" [ngClass]="{'space-y-0 p-0 w-full': isMenuOpen === true}">
+                  <button (click)="createAccommodationDraft()" class="flex gap-x-2 items-center px-4 py-2 w-full text-sm text-left text-gray-900 hover:bg-gray-50" 
+                  [ngClass]="{'py-1 rounded-md hover:ring-2 hover:bg-inherit hover:ring-secondary-light/50 hover:text-secondary-dark': isMenuOpen === true}">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="flex-none text-gray-400 select-none size-5" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
+                    {{ 'header.new_draft' | translate }}
+                  </button>
+                  <button (click)="openDrafts()" class="flex gap-x-2 items-center px-4 py-2 w-full text-sm text-left text-gray-900 hover:bg-gray-50" 
+                  [ngClass]="{'py-1 rounded-md hover:ring-2 hover:bg-inherit hover:ring-secondary-light/50 hover:text-secondary-dark': isMenuOpen === true}">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="flex-none text-gray-400 select-none size-5" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H600v-80h160v-480H200v480h160v80H200Zm240 0v-246l-64 64-56-58 160-160 160 160-56 58-64-64v246h-80Z"/></svg>
+                    {{ 'header.open_draft' | translate }}
+                  </button>
+                </div>
+              </div>
+          </div>
+  
+          <!-- my bookings-->
           <a routerLink="/my_bookings" class="font-semibold select-none text-sm/6 text-primary" 
           [ngClass]="{'px-2 rounded-md hover:ring-2 hover:ring-secondary-light/50': isMenuOpen === true}">{{'header.bookings'| translate}}</a>
+          <!-- host dashboard-->
           <a routerLink="/host_dashboard" class="font-semibold select-none text-sm/6 text-primary" 
           [ngClass]="{'px-2 rounded-md hover:ring-2 hover:ring-secondary-light/50': isMenuOpen === true}">{{'header.host-dashboard' | translate}}</a>
         </div>
-  
+        
+        <!-- menu icons -->
         <div class="justify-center lg:flex lg:flex-1 lg:gap-x-7" [hidden]="isMenuOpen === false">
+          <!-- notifications -->
           <a routerLink="/notifications" class="font-semibold text-sm/6 text-primary" 
           [ngClass]="{'flex flex-row items-center px-2 gap-x-2 rounded-md hover:ring-2 hover:ring-secondary-light/50': isMenuOpen === true}">
             <img class="w-auto h-8 select-none" [ngClass]="{'h-4': isMenuOpen === true}" 
@@ -33,6 +64,7 @@
             <span class="lg:hidden">{{'header.notifications' | translate}}</span>
           </a>
     
+          <!-- language -->
           <div class="relative w-fit" [ngClass]="{'p-2': isMenuOpen === true}" (click)="toggleLanguageMenu($event)">
             <button type="button" class="flex gap-x-1 items-center font-semibold select-none text-sm/6 text-primary">
               <img class="w-auto h-8 select-none" [ngClass]="{'h-4': isMenuOpen === true}" [src]="iconUrl + '/flags/' + selectedLanguage + '.png'" alt="">
@@ -53,6 +85,7 @@
             </div>
           </div>
   
+          <!-- user -->
           <div class="relative w-fit" [ngClass]="{'p-2': isMenuOpen === true}" (click)="toggleProfileMenu($event)">
             <button type="button" class="flex gap-x-1 items-center font-semibold text-sm/6 text-primary">
               <img class="w-auto h-8" [ngClass]="{'h-4': isMenuOpen === true}" [src]="iconUrl + '/profile.png'" alt="">

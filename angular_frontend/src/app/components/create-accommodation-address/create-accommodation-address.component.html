@@ -5,13 +5,13 @@
         <div class="flex flex-row gap-x-5 justify-between">
             <div class="w-2/3">
                 <label class="label-primary">{{'accommodation-card-details.street-word' | translate}}</label>
-                <input class="input-primary" [ngClass]="{'alert-danger': street.invalid}" 
+                <input class="input-primary" [ngClass]="{'alert-danger': address_street.invalid}" 
                 type="text" id="address_street" name="address_street" autocomplete="street-address" 
-                pattern="[a-zA-Z0-9\. /\-,]+"   
-                [(ngModel)]="address.street" #street="ngModel"/>
+                pattern="[a-zA-Z0-9 \-]+"   
+                [(ngModel)]="address.street" #address_street="ngModel" />
             </div>
-            <ng-container *ngIf="street.invalid">
-                <div *ngIf="street.errors?.['pattern']" class="error-message">
+            <ng-container *ngIf="address_street.invalid">
+                <div *ngIf="address_street.errors?.['pattern']" class="error-message">
                     {{'create.invalid_street' | translate}}
                 </div>
             </ng-container>
