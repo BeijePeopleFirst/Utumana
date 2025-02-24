@@ -15,6 +15,7 @@ import ws.peoplefirst.utumana.repository.dsl.QAccommodationRepository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface AccommodationRepository extends JpaRepository<Accommodation, Long>, QAccommodationRepository {
@@ -144,4 +145,7 @@ public interface AccommodationRepository extends JpaRepository<Accommodation, Lo
 	public List<AccommodationDTO> findByOwnerIdDTORejected(@Param(value = "ownerId") Long userId);
 
 	public Accommodation findByIdAndApprovalTimestampIsNullAndHidingTimestampIsNotNull(Long id);
+
+	@Query("SELECT DISTINCT a.city FROM Accommodation as a")
+    public Set<String> getCities();
 }

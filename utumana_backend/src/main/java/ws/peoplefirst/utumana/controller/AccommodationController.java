@@ -869,4 +869,16 @@ public class AccommodationController {
 		return accommodationService.approveAccommodation(accommodationId);
 	}
 
+	@Operation(summary = "Return the set of cities where accommodations are located")
+	@ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "If the list of cities is correctly returned"),
+        @ApiResponse(responseCode = "404", description = "If there is not any city", content=@Content(mediaType = "application/json",
+			schema=@Schema(implementation=ErrorMessage.class)))
+    })
+	@PreAuthorize("hasAuthority('ADMIN')")
+	@GetMapping(value = "/cities")
+	public Set<String> getCities() {
+		return accommodationService.getCities();
+	}
+
 }

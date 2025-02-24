@@ -97,5 +97,8 @@
   .star-full { @apply text-yellow-500; }
   .star-empty { @apply text-gray-300; }
 
-
+  .dropdown-container {@apply absolute right-0 top-full z-50 mt-3 w-48 rounded-xl ring-1 shadow-lg lg:bg-white ring-gray-900/5}
+  .drop-menu-open {@apply relative right-auto top-auto w-fit shadow-none ring-transparent mt-1}
+  .drop-box {@apply block px-4 py-2 text-sm text-gray-900 select-none hover:bg-gray-50}
+  .drop-box-menu-open {@apply px-2 py-1 rounded-md hover:ring-2 hover:bg-inherit hover:ring-secondary-light/50}
 }
