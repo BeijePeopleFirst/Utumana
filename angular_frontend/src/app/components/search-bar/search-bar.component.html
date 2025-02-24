@@ -1,8 +1,28 @@
 <form [formGroup]="searchForm" (ngSubmit)="search()" class="flex flex-col flex-wrap gap-4 items-center px-6 py-3 rounded-lg shadow-md bg-neutral-2 md:flex-row">
-    <div class="flex flex-col w-2/3 sm:w-auto">
-      <label for="city" class="text-sm font-medium select-none text-primary-dark">{{'search.city' | translate}}</label>
-      <input id="city" type="text" formControlName="city" class="input-primary" >
+  <div class="flex flex-col w-2/3 sm:w-auto relative">
+    <div class="relative w-fit">
+      <label for="city" class="text-sm font-medium select-none text-primary-dark">{{ 'search.city' | translate }}</label>
+      <input 
+        id="city" 
+        type="text" 
+        formControlName="city" 
+        class="input-primary"
+        (input)="isDropDownOpen = true">
+      
+      <div 
+        *ngIf="isDropDownOpen" 
+        class="dropdown-container">
+        <div class="p-2 space-y-1">
+          <button 
+            *ngFor="let city of filteredCities" 
+            (click)="searchForm.get('city')?.setValue(city); isDropDownOpen = false" 
+            class="flex items-center px-4 py-2 w-full text-sm text-left text-gray-900 hover:bg-gray-50">
+            {{ city }}
+          </button>
+        </div>
+      </div>
     </div>
+  </div>
   
     <div class="flex flex-col w-2/3 sm:w-auto">
       <label for="check_in" class="text-sm font-medium select-none text-primary-dark">Check-in</label>

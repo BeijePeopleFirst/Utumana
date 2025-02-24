@@ -675,4 +675,8 @@ public class AccommodationService {
     public Accommodation findRejectedAccommodation(Long accommodationId) {
         return accommodationRepository.findByIdAndApprovalTimestampIsNullAndHidingTimestampIsNotNull(accommodationId);
     }
+
+    public Set<String> getCities() {
+        return accommodationRepository.getCities();
+    }
 }
