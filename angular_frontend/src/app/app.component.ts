@@ -16,6 +16,7 @@ export class AppComponent implements DoCheck {
   isLogin: boolean = false;
   isProfileMenuOpen = false;
   isLanguageMenuOpen = false;
+  isCreateMenuOpen = false;
   isMenuOpen = false;
   selectedLanguage = 'en-US'; 
   iconUrl = iconURL
@@ -49,12 +50,14 @@ export class AppComponent implements DoCheck {
     event.stopPropagation();
     this.isProfileMenuOpen = !this.isProfileMenuOpen;
     this.isLanguageMenuOpen = false;
+    this.isCreateMenuOpen = false;
   }
 
   toggleLanguageMenu(event: Event) {
     event.stopPropagation();
     this.isLanguageMenuOpen = !this.isLanguageMenuOpen;
     this.isProfileMenuOpen = false;
+    this.isCreateMenuOpen = false;
   }
 
   toggleMobileMenu(event: Event) {
@@ -63,7 +66,15 @@ export class AppComponent implements DoCheck {
     if(this.isMenuOpen === false){
       this.isProfileMenuOpen = false;
       this.isLanguageMenuOpen = false;
+      this.isCreateMenuOpen = false;
     }
+  }
+
+  toggleCreateMenu(event: Event){
+    event.stopPropagation();
+    this.isCreateMenuOpen = !this.isCreateMenuOpen;
+    this.isProfileMenuOpen = false;
+    this.isLanguageMenuOpen = false;
   }
 
   changeLanguage(langCode: string, event: Event) {
@@ -79,16 +90,23 @@ export class AppComponent implements DoCheck {
   closeMenus() {
       this.isProfileMenuOpen = false;
       this.isLanguageMenuOpen = false;
+      this.isCreateMenuOpen = false;
       this.isMenuOpen = false;
     }
 
   createAccommodationDraft(){
     this.draftService.createAccommodationDraft().subscribe(draftId => {
       if(draftId >= 0){
+        this.isCreateMenuOpen = false;
+        this.isMenuOpen = false;
         this.router.navigate([`/create/address/${draftId}`]);
       }else{
         alert("Error creating draft");
       }
     });
+  }
+
+  openDrafts(){
+    console.log("TODO open drafts");
   }
 }
