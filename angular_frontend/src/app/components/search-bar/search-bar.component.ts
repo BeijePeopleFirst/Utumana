@@ -75,8 +75,13 @@ export class SearchBarComponent implements OnInit {
   search() {
     if (this.searchForm.valid) {
       const params = this.accommodationService.getParams(this.searchForm.value);
-      this.searchService.setSearchData(params);
-      this.searchSubmitted.emit(params);
+      const searchParams = {
+        ...params,
+        order_by: 'minPrice',
+        order_direction: 'asc'
+      };
+      this.searchService.setSearchData(searchParams);
+      this.searchSubmitted.emit(searchParams);
     } else {
       console.log('Il form non è valido!');
     }

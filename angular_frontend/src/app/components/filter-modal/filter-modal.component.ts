@@ -64,9 +64,10 @@ export class FilterModalComponent implements OnInit {
     }
 
   ngOnInit(): void {
-    this.selectedServices = this.filtersService.getSelectedFilters();
+    this.filtersService.selectedFilters$.subscribe(filters => {
+      this.selectedServices = filters.services || [];
+    });
     
-    // Inizializza il form con i valori salvati se esistono
     const savedFilters = this.filtersService.getAllFilters();
     if (savedFilters) {
       this.filterForm.patchValue({
@@ -141,5 +142,10 @@ export class FilterModalComponent implements OnInit {
   
   resetMaxRating() {
     this.filterForm.patchValue({ maxRating: null });
+  }
+  
+  resetFilters() {
+    this.filterForm.reset();
+    this.filtersService.resetAllFilters();
   }
 }

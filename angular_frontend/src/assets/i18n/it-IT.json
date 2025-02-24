@@ -189,7 +189,8 @@
 	"invalid_price_range": "Intervallo di prezzo non valido",
 	"invalid_rating_range": "Intervallo di voto non valido",
 	"min_reset": "Reimposta Voto Minimo",
-	"max_reset": "Reimposta Voto Massimo"
+	"max_reset": "Reimposta Voto Massimo",
+	"reset": "Reset"
 	},
 "header" : {
 	"profile": "Profilo",
