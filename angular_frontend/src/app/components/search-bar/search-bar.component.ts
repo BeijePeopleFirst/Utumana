@@ -98,4 +98,15 @@ export class SearchBarComponent implements OnInit {
   onClick(event: Event) {
     this.isDropDownOpen = false;
   }
+
+  handleKeydown(event: KeyboardEvent) {
+    if (event.key === 'Enter' && this.isDropDownOpen) {
+      event.preventDefault();
+    }
+  }
+
+  selectCity(city: string) {
+    this.searchForm.get('city')?.setValue(city);
+    this.isDropDownOpen = false;
+  }
 }

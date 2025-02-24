@@ -5,11 +5,13 @@ import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.SubQueryExpression;
+import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.ComparableExpressionBase;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -154,6 +156,19 @@ public class QAccommodationRepositoryImpl implements QAccommodationRepository {
                     break;
                 case "title":
                     orderSpecifier = new OrderSpecifier<>(order, accommodation.title);
+                    break;
+                case "minprice":
+                    System.out.println("Sorting by minPrice");
+                    JPQLQuery<Double> minPriceQuery = JPAExpressions
+                            .select(availability.pricePerNight.min())
+                            .from(availability)
+                            .where(availability.accommodation.eq(accommodation))
+                            .where(availability.startDate.loe(checkInDate))
+                            .where(availability.endDate.goe(checkOutDate));
+                            
+                    NumberExpression<Double> minPriceSubquery = Expressions.numberTemplate(Double.class, "({0})", minPriceQuery);
+                    NumberExpression<Double> minPriceExpr = minPriceSubquery.coalesce(Double.MAX_VALUE);
+                    orderSpecifier = new OrderSpecifier<>(order, minPriceExpr);
                     break;
                 default:
                     PathBuilder<Accommodation> pathBuilder = new PathBuilder<>(Accommodation.class, "accommodation");

@@ -7,15 +7,17 @@
         type="text" 
         formControlName="city" 
         class="input-primary"
-        (input)="isDropDownOpen = true">
+        (input)="isDropDownOpen = true"
+        (keydown)="handleKeydown($event)">
       
       <div 
         *ngIf="isDropDownOpen" 
         class="dropdown-container">
         <div class="p-2 space-y-1">
           <button 
+            type="button"
             *ngFor="let city of filteredCities" 
-            (click)="searchForm.get('city')?.setValue(city); isDropDownOpen = false" 
+            (click)="selectCity(city)" 
             class="flex items-center px-4 py-2 w-full text-sm text-left text-gray-900 hover:bg-gray-50">
             {{ city }}
           </button>
