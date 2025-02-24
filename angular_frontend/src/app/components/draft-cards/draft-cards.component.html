@@ -1,0 +1,34 @@
+<ng-container *ngIf="(accommodations$ | async) as accommodations">
+    <div *ngIf="accommodations && accommodations.length > 0" class="justify-self-center">
+        <div class="flex relative flex-nowrap gap-x-5 justify-center items-start self-center p-3 w-full align-top">
+            <button type="button" class="carousel-arrow responsive-left-arrow" (click)="prevPage()" [disabled]="pageNumber === 0">
+                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+            <div id="accommodations" class="flex flex-wrap gap-3 justify-center">
+                <div *ngFor="let accommodation of accommodations" class="flex p-2 max-w-sm rounded-lg text-start lg:max-w-4xl">
+                    <app-draft-card [accommodation]="accommodation"></app-draft-card>
+                </div>
+            </div>
+
+            <button type="button" class="carousel-arrow responsive-right-arrow" (click)="nextPage()" [disabled]="pageNumber === totalPages - 1">
+                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+            </button>
+        </div>
+
+        <div class="flex justify-center items-center space-x-2 lg:px-2"> 
+            <div class="carousel-positions-container">
+                <input type="radio" name="pagePosition" class="carousel-position" *ngFor="let _ of [].constructor(totalPages); let n = index" [checked]="n == pageNumber" value="{{n}}" (click)="getPage(n)">
+            </div>
+        </div>
+    </div>
+    
+    <div *ngIf="!accommodations || accommodations.length === 0" class="text-center">
+        <span>{{"accommodations_cards.notFound" | translate}}</span>
+    </div>
+</ng-container>

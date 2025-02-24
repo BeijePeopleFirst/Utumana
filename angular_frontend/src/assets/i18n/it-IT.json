@@ -194,7 +194,8 @@
 "my_accommodations": {
 	"title": "Le mie sistemazioni",
 	"pending": "Le mie sistemazioni in attesa di conferma",
-	"rejected": "Sistemazioni rifiutate"
+	"rejected": "Sistemazioni rifiutate",
+	"drafts": "Le mie bozze"
 	},
 "profile": {
 	"reviews_title": "Recensioni ricevute",

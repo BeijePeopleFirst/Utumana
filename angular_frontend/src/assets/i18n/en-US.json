@@ -194,7 +194,8 @@
 "my_accommodations": {
 	"title": "My accommodations",
 	"pending": "My accommodations waiting for approval",
-	"rejected": "Rejected accommodations"
+	"rejected": "Rejected accommodations",
+	"drafts": "My drafts"
 	},
 "profile": {
 	"reviews_title": "Reviews received",
