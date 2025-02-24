@@ -403,4 +403,8 @@ public class BookingService {
 	public List<BookingDTO> getAllAcceptedOrDoingBookings(Long accommodationId) {
 		return bookingRepository.findByStatusACCEPTEDOrDOINGAndAccommodationId(accommodationId);
 	}
+
+	public List<Booking> findByStatusInAndAccommodationId(List<BookingStatus> list, Long accId) {
+		return bookingRepository.findByStatusInAndAccommodationId(list, accId);
+	}
 }

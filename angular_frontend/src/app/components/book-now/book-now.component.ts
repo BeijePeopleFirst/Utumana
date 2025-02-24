@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { USE_DEFAULT_LANG } from '@ngx-translate/core';
+import { AccommodationDTO } from 'src/app/dtos/accommodationDTO';
+import { BookingDTO } from 'src/app/dtos/bookingDTO';
 import { Accommodation } from 'src/app/models/accommodation';
 import { Availability } from 'src/app/models/availability';
 import { Booking } from 'src/app/models/booking';
@@ -19,7 +21,8 @@ export class BookNowComponent implements OnInit {
   //------------------------------------------------------------------------------------------------
   accommodation!: Accommodation;
   selectedAccommodationAvailabilities: Availability[] = [];
-  isAdminOrMe!: boolean;
+  isMe!: boolean;
+  private unavailabilities: string[] = [];
   //------------------------------------------------------------------------------------------------
 
   //Chosen dates:
@@ -60,7 +63,7 @@ export class BookNowComponent implements OnInit {
   {}
 
   ngOnInit(): void {
-    this.generateCalendars();
+    //this.generateCalendars();
 
     if(!this.route.snapshot.params["id"]) {
       this.thereAreMessagesToDiplay = true;
@@ -90,14 +93,63 @@ export class BookNowComponent implements OnInit {
               return;
             }
 
-            let responseInfo2 = responseInfo as any;
-            if(responseInfo2["isAdmin"] == null || responseInfo2["isOwner"] == null) {
+            let responseInfo2 = responseInfo as any;console.log("STAMPO il 2 ----> ", responseInfo2);
+            if(responseInfo2["isAdmin"] == null || responseInfo2["isOwner"] == null || responseInfo2["pendingByUserOrAcceptedOrDoingBookings"] == null) {
               this.thereAreMessagesToDiplay = true;
               this.accommodationInfoError = true;
               return;
             }
             
-            this.isAdminOrMe = Boolean(responseInfo2["isAdmin"]).valueOf() || Boolean(responseInfo2["isOwner"]).valueOf();
+            this.isMe = Boolean(responseInfo2["isOwner"]).valueOf();
+
+            //Now lets insert values into the unavailabilities Map:
+            let tmp: BookingDTO[] = [];
+            let tempBooking: BookingDTO;
+
+            //Aggiungo i valori alla lista "tmp":
+            for(let v of responseInfo2["pendingByUserOrAcceptedOrDoingBookings"]) {
+              tempBooking = new BookingDTO(v.checkIn, v.checkOut, 0, "",
+                                            new AccommodationDTO(this.accommodation.id!, this.accommodation.title, this.accommodation.city!,
+                                              this.accommodation.main_photo_url, this.accommodation.country, this.accommodation.province!,
+                                            0, 0, false, 0
+                                            )
+              );
+
+              tmp.push(tempBooking);
+            }console.log("STAMPO TMP -> ", tmp);
+
+            let inDateN: number;
+            let outDateN: number;
+
+            let date: Date;
+
+            let monthName: string;
+            let year: number;
+            let day: number;
+
+            let cursor: number;
+
+            for(let b of tmp) {
+              inDateN = Date.parse(b.checkIn);
+              outDateN = Date.parse(b.checkOut);
+
+              cursor = inDateN;
+
+              while(cursor <= outDateN) {
+                date = new Date(cursor);
+
+                monthName = this.getMonthName(date.getMonth());
+                year = date.getFullYear();
+                day = date.getDate();
+
+                this.unavailabilities.push(year + "-" + monthName + "-" + day);
+
+                cursor = new Date(year, date.getMonth(), day + 1).getTime();
+              }
+              
+            }
+
+            this.generateCalendars();
           }
         )
         
@@ -333,7 +385,19 @@ isAnAvailability(y: number, monthName: string, day: number | null): boolean {
     return false;
   }
 
-  let dateToAnalize: number = Date.parse(new Date(y, monthNumber, day) + "");
+  let dateToAnalize: number = new Date(y, monthNumber, day).getTime();
+
+  //If the day to analize is passed already, then it will not be selectable
+  if(dateToAnalize < Date.now()) {
+    this.availabilitiesOrNotKeys.set(y + "-" + monthName + "-" + day, false);
+    return false;
+  }
+  
+  //Now I check if the date is in the booked already Array: if so then it will not be selectable.
+  if(this.unavailabilities.includes(y + "-" + monthName + "-" + day)) {
+    this.availabilitiesOrNotKeys.set(y + "-" + monthName + "-" + day, false);
+    return false;
+  }
 
   let start: number;
   let end: number;

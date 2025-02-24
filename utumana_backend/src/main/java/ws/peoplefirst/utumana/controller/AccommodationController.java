@@ -17,6 +17,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ws.peoplefirst.utumana.dto.AccommodationDTO;
+import ws.peoplefirst.utumana.dto.BookingDTO;
 import ws.peoplefirst.utumana.dto.PriceDTO;
 import ws.peoplefirst.utumana.dto.UnavailabilityDTO;
 import ws.peoplefirst.utumana.dto.UserDTO;
@@ -26,10 +27,12 @@ import ws.peoplefirst.utumana.exception.IdNotFoundException;
 import ws.peoplefirst.utumana.exception.InvalidJSONException;
 import ws.peoplefirst.utumana.model.Accommodation;
 import ws.peoplefirst.utumana.model.Availability;
+import ws.peoplefirst.utumana.model.Booking;
 import ws.peoplefirst.utumana.model.Review;
 import ws.peoplefirst.utumana.model.Service;
 import ws.peoplefirst.utumana.service.*;
 import ws.peoplefirst.utumana.utility.AuthorizationUtility;
+import ws.peoplefirst.utumana.utility.BookingStatus;
 import ws.peoplefirst.utumana.utility.Constants;
 import ws.peoplefirst.utumana.utility.JsonFormatter;
 
@@ -835,6 +838,20 @@ public class AccommodationController {
 
 		boolean isFavourite = accommodationService.isFavourite(accommodationId, user.getId());
 		res.put("isFavourite", isFavourite);
+
+		//"pendingByUserOrAcceptedOrDoingBookings":
+		List<Booking> values = bookingService.findByStatusInAndAccommodationId(Arrays.asList(
+			BookingStatus.DOING, BookingStatus.ACCEPTED, BookingStatus.PENDING
+		), accommodationId);
+
+		List<BookingDTO> copy = new ArrayList<>();
+
+		for(Booking b: values) {
+			if(b.getStatus().equals(BookingStatus.PENDING) && b.getUser().getId() != user.getId());
+			else copy.add(new BookingDTO(b.getPrice(), b.getStatus(), b.getCheckIn(), b.getCheckOut(), new AccommodationDTO()));
+		}
+
+		res.put("pendingByUserOrAcceptedOrDoingBookings", copy);
 
 		return ok(res);
 	}
