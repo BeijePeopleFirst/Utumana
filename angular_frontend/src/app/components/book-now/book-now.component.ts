@@ -19,6 +19,7 @@ export class BookNowComponent implements OnInit {
   //------------------------------------------------------------------------------------------------
   accommodation!: Accommodation;
   selectedAccommodationAvailabilities: Availability[] = [];
+  isAdminOrMe!: boolean;
   //------------------------------------------------------------------------------------------------
 
   //Chosen dates:
@@ -39,6 +40,7 @@ export class BookNowComponent implements OnInit {
   errorInBookingProcedure: boolean = false;
   completedUnavailabilitySettingMessage: boolean = false;
   userNotLoggedError: boolean = false;
+  accommodationInfoError: boolean = false;
   //------------------------------------------------------------------------------------------------
 
   // Data corrente per il calendario principale
@@ -78,6 +80,26 @@ export class BookNowComponent implements OnInit {
         }
 
         this.accommodation = acc;
+
+        //Now lets check if the current logged User is an Admin or the owner of the accommodation:
+        this.accommodationService.getAccommodationInfo(this.accommodation.id!).subscribe(
+          responseInfo => {
+            if("message" in responseInfo) {
+              this.thereAreMessagesToDiplay = true;
+              this.backendMsg = responseInfo.message;
+              return;
+            }
+
+            let responseInfo2 = responseInfo as any;
+            if(responseInfo2["isAdmin"] == null || responseInfo2["isOwner"] == null) {
+              this.thereAreMessagesToDiplay = true;
+              this.accommodationInfoError = true;
+              return;
+            }
+            
+            this.isAdminOrMe = Boolean(responseInfo2["isAdmin"]).valueOf() || Boolean(responseInfo2["isOwner"]).valueOf();
+          }
+        )
         
       }
     )
@@ -367,6 +389,7 @@ public clearMessages(): void {
   this.errorInBookingProcedure = false;
   this.completedUnavailabilitySettingMessage = false;
   this.userNotLoggedError = false;
+  this.accommodationInfoError = false;
 }
 
 }

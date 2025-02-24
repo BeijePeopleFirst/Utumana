@@ -107,7 +107,8 @@
 	"completed-booking": "Prenotazione completata con Successo! Cambio di pagina tra qualche secondo...",
 	"booking-procedure-error": "Si è verificato un errore durante la fase di prenotazione",
 	"completed-unavailability-setting": "Indisponibilita' impostata correttamente! Cambio di pagina tra qualche secondo...",
-	"user-not-logged-error": "Errore: nessun utente valido connesso"
+	"user-not-logged-error": "Errore: nessun utente valido connesso",
+	"accommodation-info-error": "Si è verificato un errore nel recupero delle informazioni sull' Accommodation"
 },
 "cancel_button_label": "Annulla",
 "choose-book-period-from-acc-details": {
