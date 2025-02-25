@@ -385,7 +385,21 @@ isAnAvailability(y: number, monthName: string, day: number | null): boolean {
     return false;
   }
 
-  let dateToAnalize: number = new Date(y, monthNumber, day).getTime();
+  let dateToAnalize: number = new Date(y, monthNumber, day, 0, 0, 0).getTime();
+
+  //DEBUG:
+  /*if(monthNumber === 3) {
+    console.log(this.accommodation.availabilities)
+    for(let a of this.accommodation.availabilities) {
+      if(new Date(a.start_date).getMonth() === 3 && new Date(a.start_date).getDate() === 1) {
+        console.log("APRIL");
+        console.log("CHECK", "To Analize: " + dateToAnalize, "Start: ", Date.parse(a.start_date));
+        console.log("PROVA -> ", new Date())
+        let tmp = a.start_date.split("-");
+        console.log("RESULT ", new Date(Number(tmp[0]), 3, Number(tmp[2]), 0, 0, 0).getTime(), dateToAnalize);
+      }
+    }
+  }*/
 
   //If the day to analize is passed already, then it will not be selectable
   if(dateToAnalize < Date.now()) {
@@ -401,9 +415,21 @@ isAnAvailability(y: number, monthName: string, day: number | null): boolean {
 
   let start: number;
   let end: number;
+  //let tmpArr: string[];
+  //let tmpDate: Date;
   for(let a of this.accommodation.availabilities) {
-    start = Date.parse(a.start_date);
-    end = Date.parse(a.end_date);
+
+    /*tmpArr = a.start_date.split("-");
+    tmpDate = new Date(Date.parse(a.start_date));
+    tmpDate = new Date(Number(tmpArr[0]), tmpDate.getMonth(), Number(tmpArr[2]), 0, 0, 0);*/
+    
+    start = this.createDateInMilliseconds(a, "start_date");
+
+    /*tmpArr = a.end_date.split("-");
+    tmpDate = new Date(Date.parse(a.end_date));
+    tmpDate = new Date(Number(tmpArr[0]), tmpDate.getMonth(), Number(tmpArr[2]), 0, 0, 0);*/
+    
+    end = this.createDateInMilliseconds(a, "end_date");
 
     if(this.checkIfIsBetween(dateToAnalize, start, end)) {
 
@@ -421,6 +447,21 @@ isAnAvailability(y: number, monthName: string, day: number | null): boolean {
 private checkIfIsBetween(test: number, start: number, end: number): boolean {
   if(test >= start && test <= end) return true;
   return false;
+}
+
+//Example: createDateInMilliseconds(a, "start_date")
+private createDateInMilliseconds(av: Availability, field: string): number {
+
+  let a = av as any;
+
+  let tmpArr: string[];
+  let tmpDate: Date;
+
+  tmpArr = a[field].split("-");
+  tmpDate = new Date(Date.parse(a[field]));
+  tmpDate = new Date(Number(tmpArr[0]), tmpDate.getMonth(), Number(tmpArr[2]), 0, 0, 0);
+
+  return tmpDate.getTime();
 }
 
 private getMonthNumberByName(name: string): number {
