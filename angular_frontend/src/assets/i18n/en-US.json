@@ -147,7 +147,17 @@
 	"description_placeholder": "Enter a description",
 	"beds": "Number of beds",
 	"rooms": "Number of rooms",
+
 	"photos": "Photos",
+	"choose_photos": "Choose Photos",
+	"photos_instructions": "The first photo will be used as the main photo of this accommodation.",
+	"drag_and_drop": "Drag and drop",
+	"files_here": "images here",
+	"or": "or",
+	"select_a_file": "select images",
+	"from_your_device": "from your device",
+	"photos_preview": "Photos Preview",
+	"no_photos": "No photos",
 	"recap": "Confirm"
 },
 "error": "Unexpected error. Please retry.",

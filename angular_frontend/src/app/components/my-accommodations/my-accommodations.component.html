@@ -1,19 +1,19 @@
-<section class="flex items-center justify-center pt-8 bg-neutral-1">
+<section class="flex justify-center items-center pt-8 bg-neutral-1">
     <div class="container p-5 text-center">
       <h2>{{'my_accommodations.title' | translate}}</h2>
       <app-accommodation-cards [accommodations$]="accommodations$" [pageNumber]="accommodationsPageNumber" [totalPages]="accommodationsTotalPages" 
         (askForPage)="loadAccommodationsPage($event)"></app-accommodation-cards>
     </div>
 </section>
-<section *ngIf="allPendingAccommodations.length > 0" class="flex items-center justify-center pt-8 bg-neutral-2">
+<section *ngIf="allPendingAccommodations && allPendingAccommodations.length > 0" class="flex justify-center items-center pt-8 bg-neutral-2">
   <div class="container p-5 text-center">
     <h2>{{'my_accommodations.pending' | translate}}</h2>
     <app-accommodation-cards [accommodations$]="pendingAccommodations$" [pageNumber]="pendingAccommodationsPageNumber" [totalPages]="pendingAccommodationsTotalPages" 
       (askForPage)="loadPendingAccommodationsPage($event)"></app-accommodation-cards>
   </div>
 </section>
-<section *ngIf="allRejectedAccommodations.length > 0" 
-  [ngClass]="{'bg-neutral-1': allPendingAccommodations.length > 0, 'bg-neutral-2': !allPendingAccommodations.length}" class="flex items-center justify-center pt-8">
+<section *ngIf="allRejectedAccommodations && allRejectedAccommodations.length > 0" 
+  [ngClass]="{'bg-neutral-1': allPendingAccommodations.length > 0, 'bg-neutral-2': !allPendingAccommodations.length}" class="flex justify-center items-center pt-8">
   <div class="container p-5 text-center">
     <h2>{{'my_accommodations.rejected' | translate}}</h2>
     <app-accommodation-cards [accommodations$]="rejectedAccommodations$" [pageNumber]="rejectedAccommodationsPageNumber" [totalPages]="rejectedAccommodationsTotalPages" 
@@ -21,7 +21,8 @@
   </div>
 </section>
 
-<section *ngIf="allMyDrafts.length > 0" class="flex items-center justify-center pt-8 bg-neutral-1">
+<div id="drafts"></div>
+<section *ngIf="allMyDrafts && allMyDrafts.length > 0" class="flex justify-center items-center pt-8 bg-neutral-1">
   <div class="container p-5 text-center">
     <h2>{{'my_accommodations.drafts' | translate}}</h2>
     <app-draft-cards [accommodations$]="myDrafts$" [pageNumber]="myDraftsPageNumber" [totalPages]="myDraftsTotalPages" 

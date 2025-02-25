@@ -1,5 +1,6 @@
 package ws.peoplefirst.utumana.service;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -8,6 +9,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import ws.peoplefirst.utumana.dto.AddressDTO;
 import ws.peoplefirst.utumana.dto.GeneralAccommodationInfoDTO;
@@ -109,6 +111,32 @@ public class AccommodationDraftService {
         AccommodationDraft draft = getDraftById(draftId);
         draft.setPhotos(photos);
         return accommodationDraftRepository.save(draft);
+    }
+
+    @Transactional
+    public PhotoDraft uploadPhoto(Long draftId, MultipartFile photo, Integer order) {
+        AccommodationDraft draft = getDraftById(draftId);
+        System.out.println("Photo file: " + photo.getName() + " " + photo.getContentType() + " " + photo.getSize());
+        // save photo file and save PhotoDraft entity in db
+        // if order == 0 then set main photo url
+        return new PhotoDraft();
+    }
+
+    @Transactional
+    public void removePhoto(Long draftId, Long photoDraftId) {
+        AccommodationDraft draft = getDraftById(draftId);
+        if(draft == null){
+            throw new IdNotFoundException("Draft with id " + draftId + " not found");
+        }
+        List<PhotoDraft> photos = draft.getPhotos();
+        for(int i=0; i<photos.size(); i++){
+            if(photos.get(i).getId() == photoDraftId){
+                photos.remove(i);
+                break;
+            }
+        }
+        draft.setPhotos(photos);
+        accommodationDraftRepository.save(draft);
     }
 
     // this method makes no checks on availabilities validity: the check is done in frontend and at the moment of draft transformation into accommodation

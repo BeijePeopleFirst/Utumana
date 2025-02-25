@@ -1,5 +1,6 @@
 package ws.peoplefirst.utumana.controller;
 
+import java.io.File;
 import java.util.List;
 import java.util.Set;
 
@@ -14,11 +15,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import ws.peoplefirst.utumana.dto.AddressDTO;
 import ws.peoplefirst.utumana.dto.GeneralAccommodationInfoDTO;
 import ws.peoplefirst.utumana.exception.ForbiddenException;
+import ws.peoplefirst.utumana.exception.InvalidJSONException;
 import ws.peoplefirst.utumana.model.Accommodation;
 import ws.peoplefirst.utumana.model.AccommodationDraft;
 import ws.peoplefirst.utumana.model.AvailabilityDraft;
@@ -141,6 +145,28 @@ public class AccommodationDraftController {
     public AccommodationDraft savePhotos(@PathVariable("draftId") Long draftId,@RequestBody List<PhotoDraft> photos, Authentication auth) {
         authenticateCall(auth, draftId);
         return accommodationDraftService.savePhotos(draftId, photos);
+    }
+
+    @PostMapping("/add-photo/{draftId}")
+    @PreAuthorize("hasAuthority('USER')")
+    public PhotoDraft uploadPhoto(@PathVariable("draftId") Long draftId, @RequestPart MultipartFile photo, @RequestPart String order, Authentication auth) {
+        log.info("POST api/accommodation-draft/add-photo/" + draftId);
+        authenticateCall(auth, draftId);
+        Integer orderInt = null;
+        try{
+            orderInt = Integer.parseInt(order);
+        } catch (NumberFormatException e) {
+            throw new InvalidJSONException("Order must be a number");
+        }
+        return accommodationDraftService.uploadPhoto(draftId, photo, orderInt);
+    }
+
+    @DeleteMapping("/{draftId}/remove-photo/{photoDraftId}")
+    @PreAuthorize("hasAuthority('USER')")
+    public void removePhoto(@PathVariable("draftId") Long draftId, @PathVariable("photoDraftId") Long photoDraftId, Authentication auth) {
+        log.info("DELETE api/accommodation-draft/" + draftId + "/remove-photo/" + photoDraftId);
+        authenticateCall(auth, draftId);
+        accommodationDraftService.removePhoto(draftId, photoDraftId);
     }
 
     @PostMapping("/save-availabilities/{draftId}")

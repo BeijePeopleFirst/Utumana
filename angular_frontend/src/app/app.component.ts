@@ -107,6 +107,6 @@ export class AppComponent implements DoCheck {
   }
 
   openDrafts(){
-    console.log("TODO open drafts");
+    this.router.navigate(['/my_accommodations'], { fragment: "drafts" });
   }
 }

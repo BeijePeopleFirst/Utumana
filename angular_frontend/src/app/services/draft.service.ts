@@ -9,6 +9,7 @@ import { AccommodationDTO } from '../dtos/accommodationDTO';
 import { Availability, AvailabilityInterface } from '../models/availability';
 import { UnavailabilityDTO, UnavailabilityInterface } from '../dtos/unavailabilityDTO';
 import { GeneralAccommodationInfoDTO } from '../dtos/generalAccommodationInfoDTO';
+import { Photo } from '../models/photo';
 
 @Injectable({
   providedIn: 'root'
@@ -152,6 +153,80 @@ export class DraftService {
     ).subscribe({
       next: () => {
         console.log("Accommodation info saved");
+      },
+      error: error => {
+        console.error(error);
+      }
+    });
+  }
+
+  getPhotos(draftId: number): Observable<Photo[] | null> {
+    const authToken =  localStorage.getItem("token");
+    return this.http.get<Photo[]>(`${BACKEND_URL_PREFIX}/api/accommodation-draft/photos/${draftId}`, { 
+      headers: { 
+        Authorization: `Bearer ${authToken}`, 
+        ContentType: 'application/json',
+        AcceptType: 'application/json' } 
+      }).pipe(
+      catchError(error => {
+        console.error(error);
+        return of(null);
+      })
+    );
+  }
+
+  getPhoto(photoId: number): Observable<Blob | null> {
+    const authToken =  localStorage.getItem("token");
+    return this.http.get<Blob>(`${BACKEND_URL_PREFIX}/api/accommodation-draft/photo/${photoId}`, {
+      headers: { 
+        Authorization: `Bearer ${authToken}`, 
+        ContentType: 'application/json',
+        AcceptType: 'application/octet-stream' } 
+    }).pipe(
+      catchError(error => {
+        console.error(error);
+        return of(null);
+      })
+    );
+  }
+
+  uploadPhoto(draftId: number, photo: File, order: number): Observable<Photo | null> {
+    const authToken =  localStorage.getItem("token");
+    const formData: FormData = new FormData();
+    formData.append('photo', photo);
+    formData.append('order', order.toString());
+
+    return this.http.post<Photo>(`${BACKEND_URL_PREFIX}/api/accommodation-draft/add-photo/${draftId}`, formData, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        ContentType: 'multipart/form-data',
+        AcceptType: 'application/json'
+      }
+    }).pipe(
+      catchError(error => {
+        console.error(error);
+        return of(null);
+      })
+    );
+  }
+
+  removePhoto(draftId: number, photoId: number): void {
+    if(!draftId || draftId < 0 || !photoId || photoId < 0) return;
+    const authToken =  localStorage.getItem("token");
+    this.http.delete<any>(`${BACKEND_URL_PREFIX}/api/accommodation-draft/${draftId}/remove-photo/${photoId}`, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        ContentType: 'application/json',
+        AcceptType: 'application/json'
+      }
+    }).pipe(
+      catchError(error => {
+        console.error(error);
+        return of(null);
+      })
+    ).subscribe({
+      next: () => {
+        console.log("Photo removed");
       },
       error: error => {
         console.error(error);

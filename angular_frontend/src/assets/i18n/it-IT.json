@@ -147,7 +147,17 @@
 	"description_placeholder": "Inserisci una descrizione",
 	"beds": "Numero di letti",
 	"rooms": "Numero di stanze",
+
 	"photos": "Foto",
+	"choose_photos": "Seleziona foto",
+	"photos_instructions": "La prima foto verrà usata come foto principale di questa sistemazione.",
+	"drag_and_drop": "Trascina",
+	"files_here": "qui le immagini",
+	"or": "oppure",
+	"select_a_file": "seleziona immagini",
+	"from_your_device": "dal tuo dispositivo",
+	"photos_preview": "Anteprima foto",
+	"no_photos": "Nessuna foto",
 	"recap": "Conferma"
 },
 "error": "Errore sconosciuto. Per favore, riprova.",
