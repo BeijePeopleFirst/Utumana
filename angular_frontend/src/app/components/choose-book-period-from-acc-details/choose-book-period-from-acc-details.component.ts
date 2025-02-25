@@ -196,6 +196,32 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
               tmp = new Date(tmp.getFullYear(), new Date(tmp).getMonth(), tmp.getDate() + 1);
             }
           }
+
+          //Now lets remove the days that are in comon with unavailabilities array:
+          let support: Map<string, boolean> = new Map<string, boolean>();
+          this.availabilityCacheImproved.forEach((a, b) => support.set(b, a));
+          console.log("Stampo il nuovo Map copiato -> ", support, "Stampo il vecchio -> ", this.availabilityCacheImproved);
+
+          let toAnalize: string;
+          let arrStr: string[];
+          let monthNameToSet: String = "";
+          for(let u of this.unavailabilities) {
+            arrStr = u.split("-"); //yyyy-MM-dd
+            monthNameToSet = "";
+
+            //Inside unavailabilities the month names are all in lowercase characters: I need to convert the first character into uppercase
+            for(let index = 0; index < arrStr[1].length; index++)
+              if(index === 0) monthNameToSet += arrStr[1][index].toUpperCase();
+              else monthNameToSet += arrStr[1][index];
+
+            toAnalize = arrStr[2] + "-" + monthNameToSet + "-" + arrStr[0];
+
+            if(support.has(toAnalize)) this.availabilityCacheImproved.delete(toAnalize);
+          }
+              
+
+          console.log("Stamp unavailabilities -> ", this.unavailabilities);
+          console.log("Stampo il map risultante -> ", this.availabilityCacheImproved);
         }
       }
     )
