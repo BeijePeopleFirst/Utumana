@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Booking } from '../models/booking';
 import { HttpClient } from '@angular/common/http';
 import { BookingDTO } from '../dtos/bookingDTO';
-import { BehaviorSubject, catchError, Observable, of, Subject } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, of, Subject, tap } from 'rxjs';
 import { BACKEND_URL_PREFIX } from 'src/costants';
 import { Availability } from '../models/availability';
 import { UnavailabilityDTO } from '../dtos/unavailabilityDTO';
@@ -11,6 +11,9 @@ import { UnavailabilityDTO } from '../dtos/unavailabilityDTO';
   providedIn: 'root'
 })
 export class BookingService {
+
+  private bookingUpdated = new Subject<void>();
+  bookingUpdated$ = this.bookingUpdated.asObservable();
 
   constructor(private http: HttpClient) { }
 
@@ -68,5 +71,15 @@ export class BookingService {
 
   public getDoingBookings():Observable<BookingDTO[]>{
     return this.getBookings(`${BACKEND_URL_PREFIX}/api/myBookingGuest?status=DOING`);
+  }
+
+  public getAllBookingsHost():Observable<BookingDTO[]>{
+    return this.getBookings(`${BACKEND_URL_PREFIX}/api/myBookingHost`);
+  }
+
+  public manageBooking(bookingId: number, action: string): Observable<BookingDTO>{
+    return this.http.patch<BookingDTO>(`${BACKEND_URL_PREFIX}/api/manage_booking/` + bookingId + `/` + action, {}).pipe(
+      tap(() => this.bookingUpdated.next())
+    );
   }
 }
