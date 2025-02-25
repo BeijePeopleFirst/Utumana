@@ -12,6 +12,7 @@ import { BookingStatus } from 'src/app/utils/enums';
   styleUrls: ['./my-bookings.component.css']
 })
 export class MyBookingsComponent {
+  bgColor = 'bg-neutral-2';
   subscriptions: Subscription = new Subscription();
 
   acceptedBookings$!:Observable<BookingDTO[]>;
@@ -173,5 +174,9 @@ export class MyBookingsComponent {
     let offset = this.rejectedBookingsPageNumber * this.rejectedBookingsPageSize;
     this.rejectedBookings$ = of(this.allRejectedBookings.slice(offset, offset + this.rejectedBookingsPageSize));
   }
-
+  
+  changeBgColor(): string {
+    this.bgColor === 'bg-neutral-1' ? this.bgColor = 'bg-neutral-2' : this.bgColor = 'bg-neutral-1';
+    return this.bgColor;
+  }
 }
