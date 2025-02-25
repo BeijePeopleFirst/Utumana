@@ -40,7 +40,7 @@ public interface BookingRepository extends JpaRepository<Booking,Long>{
 	public List<Booking> findAllByOwnerId(@Param(value="ownerId")Long ownerId);
 	
 	@Query("SELECT new ws.peoplefirst.utumana.dto.BookingDTO(b.id,b.price,b.status,b.checkIn,b.checkOut,b.review.id, new ws.peoplefirst.utumana.dto.AccommodationDTO(b.accommodation.id, b.accommodation.title, b.accommodation.city, b.accommodation.mainPhotoUrl, b.accommodation.country)) "
-			+ "FROM Booking as b, Accommodation as a WHERE b.accommodation.ownerId = :ownerId AND b.isUnavailability  IS false ORDER BY b.checkIn DESC")
+			+ "FROM Booking as b JOIN Accommodation as a ON b.accommodation.id = a.id WHERE b.accommodation.ownerId = :ownerId AND b.isUnavailability  IS false ORDER BY b.checkIn DESC")
 	public List<BookingDTO> findAllDTOByOwnerId(@Param(value="ownerId")Long ownerId);
 	
 	public List<Booking> findByUserIdAndAccommodationIdAndStatus(Long userId, Long accommodationId, BookingStatus status);
