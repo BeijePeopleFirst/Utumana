@@ -468,7 +468,7 @@ export class AccommodationDetailsComponent implements OnInit {
             console.log("Deleted Accommodation -> ", result);
             this.message = "true";
             this.deletedAccommodation = true;
-            setTimeout(() => this.router.navigate(["/"]), 2500)
+            setTimeout(() => this.router.navigate(["/"]), 1850)
             return;
           }
         }

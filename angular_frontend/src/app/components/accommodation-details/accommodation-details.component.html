@@ -121,7 +121,7 @@
       </div>
 
       <!-- 🛠️ Servizi -->
-      <div *ngIf="accommodation.services && accommodation.services.length > 0" class="relative w-full max-w-3xl p-6 rounded-lg shadow-md bg-neutral-1">
+      <div class="relative w-full max-w-3xl p-6 rounded-lg shadow-md bg-neutral-1">
         <!-- Matita per modificare i servizi -->
         <img src="/assets/icons/pencil.png" 
           (click)="toggleEditServicesPerspective()" 
@@ -130,7 +130,7 @@
 
         <h2 class="mb-4 text-2xl font-bold text-primary-light">{{ ("accommodation-card-details.services-word" | translate) }}</h2>
 
-        <div class="flex flex-wrap gap-4">
+        <div *ngIf="accommodation.services && accommodation.services.length > 0" class="flex flex-wrap gap-4">
           <div *ngFor="let s of accommodation.services" class="flex items-center space-x-2">
             <img [src]="iconUrl + '/services/' + s.icon_url" class="w-6 h-6" />
             <p class="text-lg">{{ s.title }}</p>
