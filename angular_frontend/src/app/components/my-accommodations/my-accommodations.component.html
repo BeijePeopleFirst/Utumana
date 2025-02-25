@@ -12,6 +12,7 @@
       (askForPage)="loadPendingAccommodationsPage($event)"></app-accommodation-cards>
   </div>
 </section>
+
 <section *ngIf="allRejectedAccommodations.length > 0" 
   [ngClass]="{'bg-neutral-1': allPendingAccommodations.length > 0, 'bg-neutral-2': !allPendingAccommodations.length}" class="flex items-center justify-center pt-8">
   <div class="container p-5 text-center">
