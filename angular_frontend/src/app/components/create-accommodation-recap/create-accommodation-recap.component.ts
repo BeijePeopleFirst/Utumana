@@ -38,7 +38,11 @@ export class CreateAccommodationRecapComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
+    // load and check address
+    // load services
+    // load availabilities and unavailabilities
+    // load and check info
+    // load photos (?) and check that there is at least one photo
   }
 
   goBack(){

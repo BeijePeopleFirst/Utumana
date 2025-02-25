@@ -152,9 +152,9 @@
 
 	"photos": "Foto",
 	"choose_photos": "Seleziona foto",
-	"photos_instructions": "La prima foto verrà usata come foto principale di questa sistemazione.",
 	"drag_and_drop": "Trascina",
 	"files_here": "qui le immagini",
+	"photos_instructions": "La prima foto verrà usata come foto principale di questa sistemazione. È necessario caricare almeno una foto. I file caricati non possono superare 5 MB.",
 	"or": "oppure",
 	"select_a_file": "seleziona immagini",
 	"from_your_device": "dal tuo dispositivo",
@@ -162,6 +162,9 @@
 	"no_photos": "Nessuna foto",
 
 	"recap": "Conferma",
+	"no_address": "Nessun indirizzo",
+	"no_info": "Nessuna informazione",
+	"missing_required": "Uno o più campi obbligatori non sono compilati",
 	"modal_title": "Confermare la creazione di questa sistemazione?",
 	"modal_subtitle": "Cliccando su 'Conferma', questa sistemazione verrà creata e inviata all'amministratore per essere approvata."
 },

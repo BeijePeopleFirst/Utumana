@@ -3,7 +3,7 @@
 
     <form class="my-4 w-screen md:max-w-md" (ngSubmit)="saveAndContinue()" #infoForm="ngForm">
         <div class="w-full">
-            <label class="label-primary">{{'create.title' | translate}}</label>
+            <label class="label-primary">{{'create.title' | translate}}*</label>
             <input class="input-primary" [ngClass]="{'alert-danger': titleField.invalid}" 
             type="text" id="title" name="title"
             pattern="[a-zA-Z0-9 \-:\.,]+"   
@@ -29,7 +29,7 @@
 
         <div class="flex flex-row gap-x-5 justify-between mt-4">
             <div class="w-1/2">
-                <label class="label-primary">{{'create.beds' | translate}}</label>
+                <label class="label-primary">{{'create.beds' | translate}}*</label>
                 <input class="input-primary" [ngClass]="{'alert-danger': bedsField.invalid}" 
                 type="number" id="beds" name="beds" 
                 pattern="[0-9]+" min="1" step="1"
@@ -42,7 +42,7 @@
             </ng-container>
 
             <div class="flex flex-col w-1/2">
-                <label class="label-primary w-fit">{{'create.rooms' | translate}}</label>
+                <label class="label-primary w-fit">{{'create.rooms' | translate}}*</label>
                 <input class="input-primary" [ngClass]="{'alert-danger': roomsField.invalid}" 
                 type="number" id="rooms" name="rooms"
                 pattern="[0-9]+" min="0" step="1"   
