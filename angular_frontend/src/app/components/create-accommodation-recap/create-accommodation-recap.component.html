@@ -1,1 +1,17 @@
-<p>create-accommodation-recap works!</p>
+<div class="flex flex-col justify-center items-center w-screen sm:w-auto">
+    <app-create-progress [step] = 6></app-create-progress>
+
+    <!-- address -->
+    <div class="flex flex-col flex-wrap gap-2 p-4 w-screen text-center rounded-lg shadow-md sm:w-1/3 bg-neutral-2">
+
+    </div>
+
+    <ng-container *ngIf="genericError">
+        <div class="text-center error-message">{{'error' | translate}}</div>
+    </ng-container>
+    <div class="flex gap-x-5 justify-center my-6 h-fit">
+        <button type="button" (click)="goBack()" class="btn-cancel w-fit">{{'create.back' | translate}}</button>
+        <button type="button" (click)="showConfirmModal()" class="btn-primary w-fit">{{'create.continue' | translate}}</button>
+    </div>
+</div>
+<app-create-accommodation-confirm-modal [draftId]="draftId" [isModalOpen]="isConfirmModalOpen" (closeModal)="closeConfirmModal()"></app-create-accommodation-confirm-modal>

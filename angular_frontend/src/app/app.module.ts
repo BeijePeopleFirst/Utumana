@@ -51,6 +51,7 @@ import { SettingsPasswordModalComponent } from './components/settings-password-m
 import { CreateProgressComponent } from './components/create-progress/create-progress.component';
 import { DraftCardComponent } from './components/draft-card/draft-card.component';
 import { DraftCardsComponent } from './components/draft-cards/draft-cards.component';
+import { CreateAccommodationConfirmModalComponent } from './components/create-accommodation-confirm-modal/create-accommodation-confirm-modal.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -95,7 +96,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     SettingsPasswordModalComponent,
     CreateProgressComponent,
     DraftCardComponent,
-    DraftCardsComponent
+    DraftCardsComponent,
+    CreateAccommodationConfirmModalComponent
   ],
   imports: [
     BrowserModule,
