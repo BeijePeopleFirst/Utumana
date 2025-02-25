@@ -200,7 +200,7 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
           //Now lets remove the days that are in comon with unavailabilities array:
           let support: Map<string, boolean> = new Map<string, boolean>();
           this.availabilityCacheImproved.forEach((a, b) => support.set(b, a));
-          console.log("Stampo il nuovo Map copiato -> ", support, "Stampo il vecchio -> ", this.availabilityCacheImproved);
+          //console.log("Stampo il nuovo Map copiato -> ", support, "Stampo il vecchio -> ", this.availabilityCacheImproved);
 
           let toAnalize: string;
           let arrStr: string[];
@@ -220,8 +220,8 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
           }
               
 
-          console.log("Stamp unavailabilities -> ", this.unavailabilities);
-          console.log("Stampo il map risultante -> ", this.availabilityCacheImproved);
+          //console.log("Stamp unavailabilities -> ", this.unavailabilities);
+          //console.log("Stampo il map risultante -> ", this.availabilityCacheImproved);
         }
       }
     )

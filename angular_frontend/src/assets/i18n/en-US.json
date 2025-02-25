@@ -60,7 +60,10 @@
 	"error-accepting-review": "Error while accepting Review",
 	"error-rejecting-review": "Error while rejecting Review",
 	"success-accepting-review": "Review accepted Successfully",
-	"success-rejecting-review": "Review rejected Successfully"
+	"success-rejecting-review": "Review rejected Successfully",
+	"services-word": "Services",
+	"confirm-acc-deletion-btn-text": "Confirm Deletion",
+	"ABORT-acc-deletion-btn-text": "Cancel Operation"
 	},
 "bookings": {
 	"checkIn":"Check-in",
