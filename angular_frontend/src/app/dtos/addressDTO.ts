@@ -5,5 +5,5 @@ export interface AddressDTO {
     province: string
     country: string
     cap: string
-    notes: string
+    address_notes: string
 }

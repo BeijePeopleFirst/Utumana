@@ -96,7 +96,7 @@
             <input class="input-primary" [ngClass]="{'alert-danger': notes.invalid}" 
             type="text" id="notes" name="notes" autocomplete="address-level3" 
             pattern="[a-zA-Z \-\',\#\.\+]+"   
-            [(ngModel)]="address.notes" #notes="ngModel"/>
+            [(ngModel)]="address.address_notes" #notes="ngModel"/>
         </div>
         <ng-container *ngIf="notes.invalid">
             <div *ngIf="notes.errors?.['pattern']" class="error-message">

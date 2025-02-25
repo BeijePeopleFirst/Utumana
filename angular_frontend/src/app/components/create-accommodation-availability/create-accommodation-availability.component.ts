@@ -79,12 +79,9 @@ export class CreateAccommodationAvailabilityComponent implements OnInit, OnDestr
   }
 
   save(): void {
-    localStorage.setItem('new_acc_unavail', JSON.stringify(this.unavailabilities));
-
     // save availabilities and unavailabilities in draft in db
     this.draftService.setAvailabilities(this.availabilities, this.draftId);
-    // TODO
-    //this.draftService.setUnavailabilities(this.unavailabilities, this.draftId);
+    this.draftService.setUnavailabilities(this.unavailabilities, this.draftId);
   }
 
   saveAndContinue(): void {
