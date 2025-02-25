@@ -12,6 +12,7 @@ export class BookingCardsComponent {
 
   @Input() pageNumber!: number;
   @Input() totalPages!: number;
+  @Input() isOwner?: boolean;
   @Output() askForPage = new EventEmitter<number>();
   @Output() bookingSelected = new EventEmitter<number>();
 

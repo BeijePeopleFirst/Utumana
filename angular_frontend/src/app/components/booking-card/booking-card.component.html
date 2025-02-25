@@ -16,9 +16,18 @@
                 </p>
             </div>
 
-            <div *ngIf="!booking.reviewId && booking.status == 'DONE'" class="flex">
+            <div *ngIf="!booking.reviewId && booking.status == 'DONE' && !isOwner" class="flex">
                 <button type="button" class="w-full btn-primary" (click)="selectCard()">
                     {{'bookings.review' | translate}}
+                </button>
+            </div>
+
+            <div *ngIf="isOwner == true && booking.status == 'PENDING'" class="flex flex-row gap-2">
+                <button type="button" class="w-full btn-primary" (click)="manageBooking('reject')">
+                    {{'bookings.reject' | translate}}
+                </button>
+                <button type="button" class="w-full btn-primary" (click)="manageBooking('approve')">
+                    {{'bookings.accept' | translate}}
                 </button>
             </div>
 
