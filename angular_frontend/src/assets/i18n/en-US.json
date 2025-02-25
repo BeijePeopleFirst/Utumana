@@ -115,10 +115,12 @@
 	"invalid_country": "Invalid country",
 	"invalid_cap": "Invalid CAP",
 	"invalid_address_notes": "Invalid address notes",
+
 	"services": "Services",
 	"no_services": "No Services",
 	"no_services_found": "No services found",
 	"search_services": "Search services",
+
 	"availabilities_step": "Availabilities",
 	"availability_info": "Set the availability periods for your accommodation. Note: the end date's night is not included in the period.",
 	"unavailability_info": "If it is more convenient, you can add unavailability periods too. For example, if your accommodation will be available for six months with the exception of a few weekends, you can set a six months availability period and add unavailability periods for those weekends. Note: the end date's night is not included in the period.",
@@ -136,7 +138,15 @@
 	"availability_overlaps": "Error: availability overlaps with existing availabilities",
 	"availability_reversed_dates": "Error: start date must be before end date",
 	"add_unavailability": "Add unavailability",
+	"unavailability_overlaps": "Error: unavailability overlaps with existing unavailabilities",
+
 	"description": "Description",
+	"title": "Title",
+	"invalid_title": "Invalid title",
+	"invalid_description": "Invalid description",
+	"description_placeholder": "Enter a description",
+	"beds": "Number of beds",
+	"rooms": "Number of rooms",
 	"photos": "Photos",
 	"recap": "Confirm"
 },

@@ -1,1 +1,67 @@
-<p>create-accommodation-info works!</p>
+<div class="flex flex-col justify-center items-center w-screen sm:w-auto">
+    <app-create-progress [step] = 4></app-create-progress>
+
+    <form class="my-4 w-screen md:max-w-md" (ngSubmit)="saveAndContinue()" #infoForm="ngForm">
+        <div class="w-full">
+            <label class="label-primary">{{'create.title' | translate}}</label>
+            <input class="input-primary" [ngClass]="{'alert-danger': titleField.invalid}" 
+            type="text" id="title" name="title"
+            pattern="[a-zA-Z0-9 \-:\.,]+"   
+            [(ngModel)]="title" #titleField="ngModel" />
+        </div>
+        <ng-container *ngIf="titleField.invalid">
+            <div *ngIf="titleField.errors?.['pattern']" class="error-message">
+                {{'create.invalid_title' | translate}}
+            </div>
+        </ng-container>
+
+        <div class="flex flex-col justify-center mt-4 w-full">
+            <label class="label-primary">{{'create.description' | translate}}</label>
+            <textarea class="p-2 w-full rounded-md border border-gray-300 resize-y focus:outline-none" rows="10" placeholder="{{'create.description_placeholder' | translate}}"
+            [ngClass]="{'alert-danger': descriptionField.invalid}" 
+            id="description" name="description" [(ngModel)]="description" #descriptionField="ngModel"></textarea>
+        </div>
+        <!-- <ng-container *ngIf="descriptionField.invalid">
+            <div *ngIf="descriptionField.errors?.['pattern']" class="error-message">
+                {{'create.invalid_description' | translate}}
+            </div>
+        </ng-container> -->
+
+        <div class="flex flex-row gap-x-5 justify-between mt-4">
+            <div class="w-1/2">
+                <label class="label-primary">{{'create.beds' | translate}}</label>
+                <input class="input-primary" [ngClass]="{'alert-danger': bedsField.invalid}" 
+                type="number" id="beds" name="beds" 
+                pattern="[0-9]+" min="1" step="1"
+                [(ngModel)]="beds" #bedsField="ngModel" />
+            </div>
+            <ng-container *ngIf="bedsField.invalid">
+                <div *ngIf="bedsField.errors?.['pattern'] || bedsField.errors?.['min']" class="error-message">
+                    {{'create.invalid_number' | translate}}
+                </div>
+            </ng-container>
+
+            <div class="flex flex-col w-1/2">
+                <label class="label-primary w-fit">{{'create.rooms' | translate}}</label>
+                <input class="input-primary" [ngClass]="{'alert-danger': roomsField.invalid}" 
+                type="number" id="rooms" name="rooms"
+                pattern="[0-9]+" min="0" step="1"   
+                [(ngModel)]="rooms" #roomsField="ngModel"/>
+                <ng-container *ngIf="roomsField.invalid">
+                    <div *ngIf="roomsField.errors?.['pattern'] || roomsField.errors?.['min']" class="error-message">
+                        {{'create.invalid_number' | translate}}
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+
+
+        <ng-container *ngIf="genericError">
+            <div class="text-center error-message">{{'error' | translate}}</div>
+        </ng-container>
+        <div class="flex gap-x-5 justify-center my-6 h-fit">
+            <button type="button" (click)="goBack()" class="btn-cancel w-fit">{{'create.back' | translate}}</button>
+            <button type="button" (click)="saveAndContinue()" class="btn-primary w-fit">{{'create.continue' | translate}}</button>
+        </div>
+    </form>
+</div>

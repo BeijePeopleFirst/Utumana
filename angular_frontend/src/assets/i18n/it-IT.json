@@ -115,10 +115,12 @@
 	"invalid_country": "Paese non valido",
 	"invalid_cap": "CAP non valido",
 	"invalid_address_notes": "Note sull'indirizzo non valide",
+
 	"services": "Servizi",
 	"no_services": "Nessun Servizio",
 	"no_services_found": "Nessun servizio trovato",
 	"search_services": "Cerca servizi",
+
 	"availabilities_step": "Disponibilità",
 	"availability_info": "Inidca i periodi in cui la tua sistemazione sarà disponibile. Nota: la notte della data finale indicata non è compresa nel periodo.",
 	"unavailability_info": "Per comodità, si possono inserire anche periodi di non disponibilità: se ad esempio la tua sistemazione sarà disponibile per sei mesi ad eccezione di qualche weekend, puoi inserire un periodo di disponibilità di sei mesi e aggiungere periodi di non disponibilità per quei weekend. Nota: la notte della data finale indicata non è compresa nel periodo.",
@@ -136,7 +138,15 @@
 	"availability_overlaps": "Errore: questo periodo si sovrappone alle disponibilità esistenti",
 	"availability_reversed_dates": "Errore: la data iniziale deve essere precedente alla data finale",
 	"add_unavailability": "Aggiungi non disponibilità",
+	"unavailability_overlaps": "Errore: questo periodo si sovrappone alle non disponibilità esistenti",
+
 	"description": "Descrizione",
+	"title": "Titolo",
+	"invalid_title": "Titolo non valido",
+	"invalid_description": "Descrizione non valida",
+	"description_placeholder": "Inserisci una descrizione",
+	"beds": "Numero di letti",
+	"rooms": "Numero di stanze",
 	"photos": "Foto",
 	"recap": "Conferma"
 },
