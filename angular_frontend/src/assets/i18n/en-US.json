@@ -74,7 +74,9 @@
 	"done":"Past bookings",
 	"accepted":"Accepted bookings",
 	"rejected":"Rejected bookings",
-	"no_bookings": "No bookings"
+	"no_bookings": "No bookings",
+	"accept": "Accept",
+	"reject": "Reject"
 	},
 "book-now-component-from-accommodation-card": {
 	"invalid-accommodation-error": "Invalid Accommodation was provided",
@@ -208,6 +210,15 @@
 	"latest":"Latest uploads",
 	"liked":"Most liked accommodations",
 	"review":"Reviews"
+	},
+"host-dashboard":{
+	"title": "Dashboard Host",
+	"pending":"Pending bookings",
+	"rejected":"Rejected bookings",
+	"accepted":"Accepted bookings",
+	"doing":"Ongoing booking",
+	"done":"Past bookings",
+	"no_bookings": "No bookings"
 	},
 "login": {
 	"welcome": "Welcome back!",

@@ -74,7 +74,9 @@
 	"done":"Prenotazioni concluse",
 	"accepted":"Prenotazioni accettate",
 	"rejected":"Prenotazioni rifiutate",
-	"no_bookings": "Nessuna prenotazione"
+	"no_bookings": "Nessuna prenotazione",
+	"accept": "Accetta",
+	"reject": "Rifiuta"
 	},
 "book-now-component-from-accommodation-card": {
 	"invalid-accommodation-error": "Accomodation non valida",
@@ -208,6 +210,15 @@
 	"latest":"Caricamenti recenti",
 	"liked":"Le piu consigliate",
 	"review":"Recensioni"
+	},
+"host-dashboard":{
+	"title": "Dashboard Host",
+	"pending":"Prenotazioni in attesa di conferma",
+	"rejected":"Prenotazioni rifiutate",
+	"accepted":"Prenotazioni accettate",
+	"doing":"Prenotazione in corso",
+	"done":"Prenotazioni eseguite",
+	"no_bookings": "Nessuna prenotazione"
 	},
 "login": {
 	"welcome": "Bentornato!",
