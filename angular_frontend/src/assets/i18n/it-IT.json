@@ -60,7 +60,8 @@
 	"error-accepting-review": "Errore imprevisto nell' accettare la Recensione",
 	"error-rejecting-review": "Errore imprevisto nel rifiutare la Recensione",
 	"success-accepting-review": "Recensione accettata con Successo",
-	"success-rejecting-review": "Recensione rifiutata con Successo"
+	"success-rejecting-review": "Recensione rifiutata con Successo",
+	"services-word": "Servizi"
 },
 "bookings":{
 	"checkIn":"Check-in",
