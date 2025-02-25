@@ -61,7 +61,9 @@
 	"error-rejecting-review": "Errore imprevisto nel rifiutare la Recensione",
 	"success-accepting-review": "Recensione accettata con Successo",
 	"success-rejecting-review": "Recensione rifiutata con Successo",
-	"services-word": "Servizi"
+	"services-word": "Servizi",
+	"confirm-acc-deletion-btn-text": "Conferma Eliminazione",
+	"ABORT-acc-deletion-btn-text": "Annulla Operazione"
 },
 "bookings":{
 	"checkIn":"Check-in",

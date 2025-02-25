@@ -49,6 +49,8 @@ export class AccommodationDetailsComponent implements OnInit {
 
   accommodationOwner!: User;
 
+  showDeleteAccommodationConfirmPopup: boolean = false;
+
   showEditCityProvCountry: boolean = false;
   cityInputField?: string;
   provinceInputField?: string;
@@ -441,7 +443,13 @@ export class AccommodationDetailsComponent implements OnInit {
     
   }
 
+  toggleDeleteAccommodation(): void {
+    this.showDeleteAccommodationConfirmPopup = !this.showDeleteAccommodationConfirmPopup;
+  }
+
   deleteAccommodation() {
+    this.toggleDeleteAccommodation();
+
     if(this.accommodation.id) this.accommodationService.deleteAccommodation(this.accommodation.id).subscribe(
       result => 
         {
@@ -460,6 +468,7 @@ export class AccommodationDetailsComponent implements OnInit {
             console.log("Deleted Accommodation -> ", result);
             this.message = "true";
             this.deletedAccommodation = true;
+            setTimeout(() => this.router.navigate(["/"]), 2500)
             return;
           }
         }

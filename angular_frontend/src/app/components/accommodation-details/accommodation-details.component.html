@@ -19,7 +19,7 @@
             (click)="toggleIsFavourite()" />
         </div>
         <div *ngIf="isAdminOrMe" id="bin-icon" class="absolute right-20">
-          <img class="w-10 transition-transform cursor-pointer hover:scale-110" src="/assets/icons/bin.png" (click)="deleteAccommodation()" />
+          <img class="w-10 transition-transform cursor-pointer hover:scale-110" src="/assets/icons/bin.png" (click)="toggleDeleteAccommodation()" />
         </div>
       </div>
   
@@ -415,5 +415,20 @@
 
   <ng-container *ngIf="showEditServicesPerspective">
     <ng-container *ngTemplateOutlet="editServicesPerspective"></ng-container>
+  </ng-container>
+
+  <ng-template #deleteAccommodationConfirmPopup>
+    <div class="absolute flex items-center transform -translate-x-1/2 -translate-y-1/2 border-8 border-solid top-1/2 left-2/4 bg-neutral-1 border-primary-dark">
+      <button (click)="deleteAccommodation()" class="btn-danger" id="confirm-acc-deletion-btn">
+        <div class="flex flex-row items-center align-middle">
+          <img class="w-8 mr-1" src="assets/icons/binBtnIcon.png" />{{"accommodation-card-details.confirm-acc-deletion-btn-text" | translate}}
+        </div>
+      </button>
+      <button (click)="toggleDeleteAccommodation()" class="h-16 btn-cancel" id="ABORT-acc-deletion-btn">{{"accommodation-card-details.ABORT-acc-deletion-btn-text" | translate}}</button>
+    </div>
+  </ng-template>
+
+  <ng-container *ngIf="showDeleteAccommodationConfirmPopup">
+    <ng-container *ngTemplateOutlet="deleteAccommodationConfirmPopup"></ng-container>
   </ng-container>
   
