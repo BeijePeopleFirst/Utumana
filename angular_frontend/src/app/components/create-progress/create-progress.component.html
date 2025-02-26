@@ -1,7 +1,7 @@
-<div class="flex justify-center items-center py-5 mx-2 mb-8 w-full max-w-lg">
-    <div class="flex gap-y-4 items-center w-fit sm:w-full sm:gap-x-8">
+<div class="flex justify-center items-center py-5 mx-2 mb-8 scale-90 md:scale-100 w-fit xl:max-w-lg">
+    <div class="flex flex-row flex-wrap gap-1.5 justify-evenly items-center w-fit sm:w-full sm:gap-x-8 md:flex-nowrap">
         <!-- Step 1: address -->
-        <div class="flex relative flex-col flex-1 gap-1 items-center scale-50 w-fit sm:scale-100">
+        <div class="flex relative flex-col flex-initial gap-1 items-center">
             <div id="indicator-1" class="flex justify-center items-center w-10 h-10 text-white rounded-full transition-colors duration-300 bg-primary"
             [ngClass]="{'bg-opacity-30' : step != 1}">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF">
@@ -11,7 +11,7 @@
             <span class="text-sm font-semibold text-primary" [ngClass]="{'text-opacity-30' : step != 1}">{{'create.address' | translate}}</span>
         </div>
         <!-- Step 2: Services -->
-        <div class="flex relative flex-col flex-1 gap-1 items-center scale-50 sm:scale-100">
+        <div class="flex relative flex-col flex-initial gap-1 items-center">
             <div id="indicator-2" class="flex justify-center items-center w-10 h-10 text-white rounded-full transition-colors duration-300 bg-primary"
             [ngClass]="{'bg-opacity-30' : step != 2}">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF">
@@ -21,7 +21,7 @@
             <span class="text-sm font-semibold text-primary" [ngClass]="{'text-opacity-30' : step != 2}">{{'create.services' | translate}}</span>
         </div>
         <!-- Step 3: availabilities -->
-        <div class="flex relative flex-col flex-1 gap-1 items-center scale-50 sm:scale-100">
+        <div class="flex relative flex-col flex-initial gap-1 items-center">
             <div id="indicator-3" class="flex justify-center items-center w-10 h-10 text-white rounded-full transition-colors duration-300 bg-primary"
             [ngClass]="{'bg-opacity-30' : step != 3}">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF">
@@ -31,7 +31,7 @@
             <span class="text-sm font-semibold text-primary" [ngClass]="{'text-opacity-30' : step != 3}">{{'create.availabilities_step' | translate}}</span>
         </div>
         <!-- Step 4: description -->
-        <div class="flex relative flex-col flex-1 gap-1 items-center scale-50 sm:scale-100">
+        <div class="flex relative flex-col flex-initial gap-1 items-center">
             <div id="indicator-3" class="flex justify-center items-center w-10 h-10 text-white rounded-full transition-colors duration-300 bg-primary"
             [ngClass]="{'bg-opacity-30' : step != 4}">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF">
@@ -41,7 +41,7 @@
             <span class="text-sm font-semibold text-primary" [ngClass]="{'text-opacity-30' : step != 4}">{{'create.description' | translate}}</span>
         </div>
         <!-- Step 5: photos -->
-        <div class="flex relative flex-col flex-1 gap-1 items-center scale-50 sm:scale-100">
+        <div class="flex relative flex-col flex-initial gap-1 items-center">
             <div id="indicator-3" class="flex justify-center items-center w-10 h-10 text-white rounded-full transition-colors duration-300 bg-primary"
             [ngClass]="{'bg-opacity-30' : step != 5}">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF">
@@ -51,7 +51,7 @@
             <span class="text-sm font-semibold text-primary" [ngClass]="{'text-opacity-30' : step != 5}">{{'create.photos' | translate}}</span>
         </div>
         <!-- Step 6: recap -->
-        <div class="flex relative flex-col flex-1 gap-1 items-center scale-50 sm:scale-100">
+        <div class="flex relative flex-col flex-initial gap-1 items-center">
             <div id="indicator-3" class="flex justify-center items-center w-10 h-10 text-white rounded-full transition-colors duration-300 bg-primary"
             [ngClass]="{'bg-opacity-30' : step != 6}">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF">
