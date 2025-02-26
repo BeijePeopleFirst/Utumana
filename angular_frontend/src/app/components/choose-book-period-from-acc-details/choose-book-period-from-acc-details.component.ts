@@ -218,13 +218,49 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
 
             if(support.has(toAnalize)) this.availabilityCacheImproved.delete(toAnalize);
           }
-              
 
           //console.log("Stamp unavailabilities -> ", this.unavailabilities);
           //console.log("Stampo il map risultante -> ", this.availabilityCacheImproved);
+
+          //Now lets remove the dates that are previous than today:
+
+          let tR_splitted: string[];
+          let tR_date: Date;
+          let tR_month: string;
+
+          let tR_support: string[] = [];
+          this.availabilityCacheImproved.forEach((v, k) => tR_support.push(k));
+
+          for(let k of tR_support) {
+            tR_splitted = k.split("-"); //dd-MM-yyyy
+            tR_month = tR_splitted[1];
+            tR_date = new Date(Number(tR_splitted[2]), this.getMonthIndexByName(tR_month), Number(tR_splitted[0]));
+
+            if(Date.now() > tR_date.getTime()) this.availabilityCacheImproved.delete(k);
+          }
         }
       }
     )
+  }
+
+  private getMonthIndexByName(n: string): number {
+    switch(n.toUpperCase()) {
+
+      case "JANUARY": return 0;
+      case "FEBRUARY": return 1;
+      case "MARCH": return 2;
+      case "APRIL": return 3;
+      case "MAY": return 4;
+      case "JUNE": return 5;
+      case "JULY": return 6;
+      case "AUGUST": return 7;
+      case "SEPTEMBER": return 8;
+      case "OCTOBER": return 9;
+      case "NOVEMBER": return 10;
+      case "DECEMBER": return 11;
+      default: return -1;
+
+    }
   }
 
   private getMonthName(m: number): string {
