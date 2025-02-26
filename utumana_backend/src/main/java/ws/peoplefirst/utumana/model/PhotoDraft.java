@@ -90,7 +90,6 @@ public class PhotoDraft {
 
 	@Override
 	public String toString() {
-		return "PhotoDraft [id=" + id + ", photoUrl=" + photoUrl + ", photoOrder=" + photoOrder
-				+ ", accommodationDraft=" + accommodationDraft + "]";
+		return "PhotoDraft [id=" + id + ", photoUrl=" + photoUrl + ", photoOrder=" + photoOrder + "]";
 	}
 }

@@ -49,8 +49,9 @@ export class CreateAccommodationPhotosComponent implements OnInit {
     console.log("Adding photo files:", event.target.files);
     this.photoFiles = event.target.files;
     if(this.photoFiles && this.photoFiles.length > 0){
+      let startingOrderPosition = this.previews.length;
       for (let i = 0; i < this.photoFiles.length; i++) {
-        this.draftService.uploadPhoto(this.draftId, this.photoFiles[i], this.previews.length).subscribe({
+        this.draftService.uploadPhoto(this.draftId, this.photoFiles[i], startingOrderPosition + i).subscribe({
           next: (photo) => {
             if(photo){
               photo.photo_url = imagesPrefix + photo.photo_url;
@@ -62,6 +63,9 @@ export class CreateAccommodationPhotosComponent implements OnInit {
           },
           error: error => {
             console.error(error);
+            if(error.status == 413){  // payload too large
+              // inform user ?
+            }
           }
         });
       }
