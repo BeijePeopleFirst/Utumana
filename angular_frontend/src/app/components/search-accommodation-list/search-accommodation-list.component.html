@@ -18,7 +18,7 @@
         </button>
         <div class="flex items-center justify-center space-x-2 lg:px-2"> 
             <div class="flex flex-row gap-2">
-                <input type="button" name="pagePosition" [ngClass]="{'btn-secondary': n != pageNumber, 'btn-primary': n == pageNumber}" *ngFor="let _ of [].constructor(totalPages); let n = index" value="{{n + 1}}" (click)="getPage(n)">
+                <input type="button" name="pagePosition" class="w-full" [ngClass]="{'btn-secondary': n != pageNumber, 'btn-primary': n == pageNumber}" *ngFor="let _ of [].constructor(totalPages); let n = index" value="{{n + 1}}" (click)="getPage(n)">
             </div>
         </div>
         <button type="button" class="carousel-arrow" (click)="nextPage()" [disabled]="pageNumber === totalPages - 1">
