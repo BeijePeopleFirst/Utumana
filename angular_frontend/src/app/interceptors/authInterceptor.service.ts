@@ -14,10 +14,40 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(private authService: AuthService, private router: Router) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    if(req.url.includes('refresh_token')){
+      // forward request without overwriting headers
+      // logout in case of 401 error 
+      console.log("Asking for refresh of token");
+      return next.handle(req).pipe(
+        catchError(error => {
+          if ( error.status === 401) {
+            this.authService.logout( this.router.routerState.snapshot.url );
+          }
+          return  of(new HttpResponse({status: 400, statusText: "Error trying to refresh token: invalid refresh_token"}));
+          //return throwError(() => error);
+        })
+      );
+    }else if(req.url.includes('photo')){
+      // forward request without overwriting headers
+      // handle 401 error with method handle401Error
+      return next.handle(req).pipe(
+        catchError(error => {
+          if ( error.status === 401) {
+            return this.handle401Error(req, next);
+          }
+          return throwError(() => error);
+        })
+      ); 
 
-    if(!req.url.includes('signin') && !req.url.includes('forgotPassword') && !req.url.includes('refresh_token')){
+    }else if(req.url.includes('signin') || req.url.includes('forgotPassword') || req.url.includes('refresh_token')){
+      // forward request without overwriting headers
+      return next.handle(req);
+    }else{
+      // set request headers
+      // handle 401 error with method handle401Error
       const authToken =  localStorage.getItem("token");
-      let authReq = req.clone({
+      let authReq: HttpRequest<any>;
+      authReq = req.clone({
         setHeaders: {
           Authorization: `Bearer ${authToken}`,
           ContentType: 'application/json',
@@ -33,19 +63,6 @@ export class AuthInterceptor implements HttpInterceptor {
           return throwError(() => error);
         })
       ); 
-    }else if(req.url.includes('refresh_token')){
-      console.log("Asking for refresh of token");
-      return next.handle(req).pipe(
-        catchError(error => {
-          if ( error.status === 401) {
-            this.authService.logout( this.router.routerState.snapshot.url );
-          }
-          return  of(new HttpResponse({status: 400, statusText: "Error trying to refresh token: invalid refresh_token"}));
-          //return throwError(() => error);
-        })
-      );
-    }else{
-      return next.handle(req);
     }
   }
 
@@ -59,6 +76,18 @@ export class AuthInterceptor implements HttpInterceptor {
 
   private handle401Error(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     console.log("401 error request", request);
+    if(request.headers.get('IsRetry') === 'true'){
+      return throwError(() => new Error("Request failed a second time"));
+    }
+    let retryRequest = request.clone({
+      setHeaders: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        ContentType: request.headers.get('ContentType') || 'application/json',
+        AcceptType: request.headers.get('AcceptType') || 'application/json',
+        IsRetry: 'true'
+      }
+    });
+
 
     if (!this.isRefreshing) {
       this.isRefreshing = true;
@@ -79,7 +108,7 @@ export class AuthInterceptor implements HttpInterceptor {
         switchMap((tokenData: any) => {
           this.isRefreshing = false;
           this.refreshTokenSubject.next(tokenData.token);
-          return this.intercept(request,next);
+          return this.intercept(retryRequest,next);
         }),
         catchError(error => {
           this.isRefreshing = false;
@@ -93,7 +122,7 @@ export class AuthInterceptor implements HttpInterceptor {
       return this.refreshTokenSubject.pipe(
         filter(token => token !== null),
         take(1),
-        switchMap(token => this.intercept(request,next))
+        switchMap(token => this.intercept(retryRequest,next))
       );
     }
   }

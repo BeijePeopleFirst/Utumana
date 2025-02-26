@@ -31,18 +31,22 @@
         </form>
         
         <div class="flex flex-row flex-wrap gap-2 p-4 w-screen text-center rounded-lg shadow-md sm:w-1/3 bg-neutral-2">
-            <ng-container *ngIf="services.length > 0">
+            <ng-container *ngIf="services && services.length > 0">
                 <div *ngFor="let service of services" class="flex relative items-center px-5 pt-4 pb-3 rounded-lg outline outline-1 outline-gray-200 has-[button:hover]:bg-neutral-50 transition-colors duration-100 has-[button:hover]:text-gray-400 w-fit h-fit group">
                     <button (click)="removeService(service)" class="-top-1 right-1 p-0 w-fit h-min scale-80 close-modal peer"> &times; </button>
                     <img [src]="iconUrl + '/services/' + service.icon_url" class="mr-2 w-6 h-6 peer-hover:scale105 peer-hover:opacity-50" [alt]="service.title">
                     <span class="text-sm">{{ service.title }}</span>
                 </div>
             </ng-container>
-            <div class="self-center py-10 w-full" *ngIf="services.length == 0">
+            <div class="self-center py-10 w-full" *ngIf="!services || services.length == 0">
                 {{'create.no_services' | translate}}
             </div>
         </div>
     </div>
+
+    <ng-container *ngIf="genericError">
+        <div class="text-center error-message">{{'error' | translate}}</div>
+    </ng-container>
 
     <div class="flex gap-x-5 justify-center mt-6 h-fit">
         <button type="button" (click)="goBack()" class="btn-cancel w-fit">{{'create.back' | translate}}</button>

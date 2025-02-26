@@ -16,9 +16,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "photo")
-public class Photo {
-
+@Table(name = "photo_draft")
+public class PhotoDraft {
+    
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "id")
@@ -34,10 +34,9 @@ public class Photo {
 	
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "accommodation_id")
-    private Accommodation accommodation;
+    @JoinColumn(name = "accommodation_draft_id")
+    private AccommodationDraft accommodationDraft;
 
-	
 	public Long getId() {
 		return id;
 	}
@@ -47,12 +46,12 @@ public class Photo {
 	}
 	
 	
-	public Accommodation getAccommodation() {
-		return accommodation;
+	public AccommodationDraft getAccommodationDraft() {
+		return accommodationDraft;
 	}
 
-	public void setAccommodation(Accommodation accommodation) {
-		this.accommodation = accommodation;
+	public void setAccommodationDraft(AccommodationDraft accommodationDraft) {
+		this.accommodationDraft = accommodationDraft;
 	}
 	
 
@@ -85,12 +84,12 @@ public class Photo {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Photo other = (Photo) obj;
+		PhotoDraft other = (PhotoDraft) obj;
 		return Objects.equals(photoUrl, other.photoUrl);
 	}
 
 	@Override
 	public String toString() {
-		return "Photo [id=" + id + ", photoUrl=" + photoUrl + ", order=" + photoOrder + ",accommodation=" + accommodation.toString() + "]";
-	}	
+		return "PhotoDraft [id=" + id + ", photoUrl=" + photoUrl + ", photoOrder=" + photoOrder + "]";
+	}
 }

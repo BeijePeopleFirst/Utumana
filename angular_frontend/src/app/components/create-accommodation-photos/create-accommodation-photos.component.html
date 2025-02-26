@@ -1,1 +1,49 @@
-<p>create-accommodation-photos works!</p>
+<div class="flex flex-col justify-center items-center w-screen sm:w-auto">
+    <app-create-progress [step] = 5></app-create-progress>
+
+    <form class="my-4 w-screen md:max-w-md" (ngSubmit)="saveAndContinue()" #photoForm="ngForm">
+        <div class="grid grid-cols-1 space-y-2 text-center">
+            <h5>{{'create.choose_photos' | translate}}</h5>
+            <p class="text-sm">{{'create.photos_instructions' | translate}}</p>
+            <div class="flex justify-center items-center w-full">
+                <label class="flex flex-col p-10 w-full h-60 text-center rounded-lg border-4 border-dashed hover:cursor-pointer group">
+                    <div class="flex flex-col justify-center items-center w-full h-full text-center">
+                        <!-- 'upload to cloud' icon -->
+                        <!-- <svg xmlns="http://www.w3.org/2000/svg" class="mb-7 w-10 h-10 text-secondary group-hover:text-secondary-dark" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                        </svg> -->
+                        <div class="flex overflow-hidden flex-auto mx-auto -mt-10 w-2/5 max-h-48">
+                            <img class="object-center h-36" src="https://img.freepik.com/free-vector/image-upload-concept-landing-page_52683-27130.jpg?size=338&ext=jpg" alt="upload files image">
+                        </div>
+                        <p class="text-gray-500 pointer-none">
+                            <span class="text-sm">{{'create.drag_and_drop' | translate}}</span> {{'create.files_here' | translate}} <br /> {{'create.or' | translate}} <a>{{'create.select_a_file' | translate}}</a> {{'create.from_your_device' | translate}}
+                        </p>
+                    </div>
+                    <input type="file" accept="image/*" class="hidden" (change)="addPhotos($event)" multiple>
+                </label>
+            </div>
+        </div>
+    </form>
+
+    <h5>{{'create.photos_preview' | translate}}</h5>
+
+    <div class="flex flex-row flex-wrap gap-5 justify-center w-full text-center lg:px-32">
+        <ng-container *ngIf="previews && previews.length > 0">
+            <div *ngFor="let preview of previews" class="flex relative items-center px-5 pt-4 pb-3 h-40 rounded-lg w-fit">
+                <button (click)="removePhoto(preview)" class="right-0 -top-1 p-0 w-fit h-min scale-80 close-modal peer"> &times; </button>
+                <img [src]="preview.photo_url" class="w-auto max-h-40 peer-hover:scale105 peer-hover:opacity-50" alt="photo_preview">
+            </div>
+        </ng-container>
+        <div class="self-center py-10 w-full" *ngIf="!previews || previews.length == 0">
+            {{'create.no_photos' | translate}}
+        </div>
+    </div>
+    
+    <ng-container *ngIf="genericError">
+        <div class="text-center error-message">{{'error' | translate}}</div>
+    </ng-container>
+    <div class="flex gap-x-5 justify-center my-6 h-fit">
+        <button type="button" (click)="goBack()" class="btn-cancel w-fit">{{'create.back' | translate}}</button>
+        <button type="button" (click)="saveAndContinue()" class="btn-primary w-fit">{{'create.continue' | translate}}</button>
+    </div>
+</div>

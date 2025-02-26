@@ -49,6 +49,9 @@ import { ProfileBioModalComponent } from './components/profile-bio-modal/profile
 import { SettingsComponent } from './components/settings/settings.component';
 import { SettingsPasswordModalComponent } from './components/settings-password-modal/settings-password-modal.component';
 import { CreateProgressComponent } from './components/create-progress/create-progress.component';
+import { DraftCardComponent } from './components/draft-card/draft-card.component';
+import { DraftCardsComponent } from './components/draft-cards/draft-cards.component';
+import { CreateAccommodationConfirmModalComponent } from './components/create-accommodation-confirm-modal/create-accommodation-confirm-modal.component';
 import { MapComponent } from './components/map/map.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -94,6 +97,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     SettingsComponent,
     SettingsPasswordModalComponent,
     CreateProgressComponent,
+    DraftCardComponent,
+    DraftCardsComponent,
+    CreateAccommodationConfirmModalComponent,
     MapComponent
   ],
   imports: [
