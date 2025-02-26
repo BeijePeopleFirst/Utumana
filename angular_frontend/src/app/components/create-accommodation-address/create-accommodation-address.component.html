@@ -1,17 +1,17 @@
 <div class="flex flex-col justify-center items-center w-screen sm:w-auto">
     <app-create-progress [step] = 1></app-create-progress>
 
-    <form class="my-4 md:w-screen-md" (ngSubmit)="saveAndContinue()" #addressForm="ngForm">
+    <form *ngIf="address" class="px-2 my-4 w-screen md:w-auto" (ngSubmit)="saveAndContinue()" #addressForm="ngForm">
         <div class="flex flex-row gap-x-5 justify-between">
             <div class="w-2/3">
                 <label class="label-primary">{{'accommodation-card-details.street-word' | translate}}</label>
-                <input class="input-primary" [ngClass]="{'alert-danger': address_street.invalid}" 
-                type="text" id="address_street" name="address_street" autocomplete="street-address" 
-                pattern="[a-zA-Z0-9 \-]+"   
-                [(ngModel)]="address.street" #address_street="ngModel" />
+                <input class="input-primary" [ngClass]="{'alert-danger': streetField.invalid}" 
+                type="text" id="street" name="street" autocomplete="street-address" 
+                pattern="[a-zA-Z0-9 \-]+"
+                [(ngModel)]="address.street" #streetField="ngModel"/>
             </div>
-            <ng-container *ngIf="address_street.invalid">
-                <div *ngIf="address_street.errors?.['pattern']" class="error-message">
+            <ng-container *ngIf="streetField.invalid">
+                <div *ngIf="streetField.errors?.['pattern']" class="error-message">
                     {{'create.invalid_street' | translate}}
                 </div>
             </ng-container>
