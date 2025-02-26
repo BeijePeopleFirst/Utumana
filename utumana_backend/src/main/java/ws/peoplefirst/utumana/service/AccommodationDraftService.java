@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ws.peoplefirst.utumana.dto.AddressDTO;
 import ws.peoplefirst.utumana.dto.GeneralAccommodationInfoDTO;
 import ws.peoplefirst.utumana.exception.IdNotFoundException;
+import ws.peoplefirst.utumana.exception.InvalidJSONException;
 import ws.peoplefirst.utumana.model.AccommodationDraft;
 import ws.peoplefirst.utumana.model.Availability;
 import ws.peoplefirst.utumana.model.AvailabilityDraft;
@@ -25,6 +28,8 @@ import ws.peoplefirst.utumana.repository.UnavailabilityDraftRepository;
 
 @Service
 public class AccommodationDraftService {
+
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private AccommodationDraftRepository accommodationDraftRepository;
@@ -115,11 +120,37 @@ public class AccommodationDraftService {
 
     @Transactional
     public PhotoDraft uploadPhoto(Long draftId, MultipartFile photo, Integer order) {
+        if(photo == null || photo.isEmpty()){
+            throw new InvalidJSONException("Photo must not be null or empty");
+        }
         AccommodationDraft draft = getDraftById(draftId);
-        System.out.println("Photo file: " + photo.getName() + " " + photo.getContentType() + " " + photo.getSize());
-        // save photo file and save PhotoDraft entity in db
+        System.out.println("Photo file: " + photo.getOriginalFilename() + " " + photo.getContentType() + " " + photo.getSize());
+
+        // save photo file in images/drafts/{draftId}/ 
+        //...
+        String fileExtension = photo.getContentType() != null ? photo.getContentType().split("/")[1] : ".jpg";
+        String savedPhotoUrl = "images/drafts/" + draftId.toString() + "/" + order.toString() + "." + fileExtension;
+
+        // save PhotoDraft entity in db
+        PhotoDraft photoDraft = new PhotoDraft();
+        photoDraft.setPhotoUrl(savedPhotoUrl);
+        photoDraft.setPhotoOrder(order);
+        photoDraft.setAccommodationDraft(draft);
+        
+        List<PhotoDraft> photos = draft.getPhotos();
+        photos.add(photoDraft);
+        draft.setPhotos(photos);
+        draft = accommodationDraftRepository.save(draft);
+
         // if order == 0 then set main photo url
-        return new PhotoDraft();
+        if(order == 0){
+            draft.setMainPhotoUrl(savedPhotoUrl);
+            accommodationDraftRepository.save(draft);
+        }
+
+        log.trace("Accommodation draft after photo upload: " + draft);
+        
+        return draft.getPhotos().get(draft.getPhotos().size() - 1);
     }
 
     @Transactional

@@ -17,12 +17,16 @@ import ws.peoplefirst.utumana.exception.TheJBeansException;
 import ws.peoplefirst.utumana.model.Accommodation;
 import ws.peoplefirst.utumana.model.AccommodationDraft;
 import ws.peoplefirst.utumana.model.Availability;
+import ws.peoplefirst.utumana.model.AvailabilityDraft;
 import ws.peoplefirst.utumana.model.Booking;
 import ws.peoplefirst.utumana.model.Photo;
+import ws.peoplefirst.utumana.model.PhotoDraft;
+import ws.peoplefirst.utumana.model.UnavailabilityDraft;
 import ws.peoplefirst.utumana.model.User;
 import ws.peoplefirst.utumana.repository.AccommodationDraftRepository;
 import ws.peoplefirst.utumana.repository.AccommodationRepository;
 import ws.peoplefirst.utumana.repository.BookingRepository;
+import ws.peoplefirst.utumana.repository.PhotoRepository;
 import ws.peoplefirst.utumana.repository.UserRepository;
 import ws.peoplefirst.utumana.utility.BookingStatus;
 
@@ -39,6 +43,9 @@ public class PublishDraftService {
     private UserRepository userRepository;
 
     @Autowired
+    private PhotoRepository photoRepository;
+
+    @Autowired
     private BookingRepository bookingRepository;
 
     @Autowired
@@ -52,8 +59,6 @@ public class PublishDraftService {
         validateDraftForPublication(draft);
 
         Accommodation accommodation = convertDraftToAccommodation(draft);
-
-        accommodation = accommodationRepository.save(accommodation);
 
         draftRepository.deleteById(draftId);
 
@@ -85,54 +90,58 @@ public class PublishDraftService {
             throw new IdNotFoundException("Owner associated with accommodation draft with id " + draft.getOwnerId() + " not found");
         }
         
+        accommodation = accommodationRepository.save(accommodation);
+        
         if (draft.getServices() != null) {
             accommodation.setServices(new HashSet<>(draft.getServices()));
         }
         
         if (draft.getPhotos() != null) {
-            List<Photo> photos = draft.getPhotos().stream()
-                .map(photoDraft -> {
-                    Photo photo = new Photo();
-                    BeanUtils.copyProperties(photoDraft, photo, "id", "accommodationDraft");
-                    photo.setAccommodation(accommodation);
-                    return photo;
-                })
-                .collect(Collectors.toList());
+            List<Photo> photos = new ArrayList<>();
+            //TODO : move photo files from images/drafts/{draftId}/ to images/accommodations/{accommodationId}/
+            for(PhotoDraft photoDraft : draft.getPhotos()){
+                Photo photo = new Photo();
+                BeanUtils.copyProperties(photoDraft, photo, "id", "accommodationDraft");
+                // photo.setPhotoUrl(photoDraft.getPhotoUrl());
+                // photo.setOrder(photoDraft.getOrder());
+                photo.setAccommodation(accommodation);
+                photo = photoRepository.save(photo);
+                photos.add(photo);
+            }
+            System.out.println("Photos: " + photos);
             accommodation.setPhotos(photos);
         }
         
         if (draft.getAvailabilities() != null) {
-            List<Availability> availabilities = draft.getAvailabilities().stream()
-                .map(availabilityDraft -> {
-                    Availability availability = new Availability();
-                    BeanUtils.copyProperties(availabilityDraft, availability, "id", "accommodationDraft");
-                    availability.setAccommodation(accommodation);
-                    return availability;
-                })
-                .collect(Collectors.toList());
+            List<Availability> availabilities = new ArrayList<>();
+            for(AvailabilityDraft availabilityDraft : draft.getAvailabilities()){
+                Availability availability = new Availability();
+                BeanUtils.copyProperties(availabilityDraft, availability, "id", "accommodationDraft");
+                availability.setAccommodation(accommodation);
+                availabilities.add(availability);
+            }
             accommodationService.checkAvailabilites(availabilities);
             accommodation.setAvailabilities(availabilities);
         }
 
         if (draft.getUnavailabilities() != null) {
-            List<Booking> unavailabilities = draft.getUnavailabilities().stream()
-                .map(unavailabilityDraft -> {
-                    Booking unavailability = new Booking();
-                    BeanUtils.copyProperties(unavailabilityDraft, unavailability, "id", "accommodationDraft");
-                    unavailability.setAccommodation(accommodation);
-                    unavailability.setUser(owner);
-                    unavailability.setTimestamp(LocalDateTime.now());
-                    unavailability.setStatus(BookingStatus.ACCEPTED);
-                    unavailability.setIsUnavailability(true);
-                    return unavailability;
-                })
-                .collect(Collectors.toList());
+            List<Booking> unavailabilities = new ArrayList<>();
+            for(UnavailabilityDraft unavailabilityDraft : draft.getUnavailabilities()){
+                Booking unavailability = new Booking();
+                BeanUtils.copyProperties(unavailabilityDraft, unavailability, "id", "accommodationDraft");
+                unavailability.setAccommodation(accommodation);
+                unavailability.setUser(owner);
+                unavailability.setTimestamp(LocalDateTime.now());
+                unavailability.setStatus(BookingStatus.ACCEPTED);
+                unavailability.setIsUnavailability(true);
+                unavailabilities.add(unavailability);
+            }
             accommodationService.checkUnavailabilities(unavailabilities);
             for(Booking booking : unavailabilities){
                 bookingRepository.save(booking);
             }
         }
         
-        return accommodation;
+        return accommodationRepository.save(accommodation);
     }
 }

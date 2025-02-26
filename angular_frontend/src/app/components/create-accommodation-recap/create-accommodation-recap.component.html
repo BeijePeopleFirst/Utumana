@@ -2,9 +2,10 @@
     <app-create-progress [step] = 6></app-create-progress>
 
     <!-- address -->
-    <div class="flex flex-col flex-wrap gap-2 p-4 w-screen text-center rounded-lg shadow-md sm:w-1/3"
-    [ngClass]="{'border alert-danger': !address, 'bg-neutral-2': address}">
-        <ng-container *ngIf="address">
+    <div class="flex flex-row flex-wrap gap-2 justify-evenly items-center p-4 w-screen rounded-lg shadow-md md:w-2/3 xl:w-1/2"
+    [ngClass]="{'border alert-danger': !address || !isAddressComplete || !isAddressValid, 
+                'bg-neutral-2': address && isAddressComplete && isAddressValid}">
+        <div *ngIf="address">
             <p>
                 <span>{{address.street}}</span> 
                 <span>{{address.street_number}}</span>
@@ -15,15 +16,126 @@
                 <span *ngIf="address.province">{{address.province}}</span> 
             </p>
             <p>
-                <span *ngIf="address.cap">{{address.cap}}</span>
+                <span *ngIf="address.cap">{{address.cap}} &nbsp; </span>
                 <span *ngIf="address.country">{{address.country}}</span>
             </p>
-        </ng-container>
+
+            <p *ngIf="!isAddressComplete" class="text-center error-message">{{'create.missing_required' | translate}}</p>
+            <p *ngIf="!isAddressValid" class="text-center error-message">{{'create.invalid_address' | translate}}</p>
+        </div>
         <p *ngIf="!address">{{'create.no_address' | translate}}</p>
 
-        <p *ngIf="!isAddressOk" class="text-center error-message">{{'create.missing_required' | translate}}</p>
+        
         <div class="flex justify-center my-1 h-fit">
             <button type="button" routerLink="/create/address/{{draftId}}" class="btn-primary w-fit">{{'accommodation-card-details.edit-address-sentence' | translate}}</button>
+        </div>
+    </div>
+
+    <!-- services -->
+    <div class="flex flex-row gap-2 justify-center items-center py-4 pr-8 pl-4 mt-4 w-screen text-center rounded-lg shadow-md sm:justify-evenly md:w-2/3 xl:w-1/2 bg-neutral-2">
+        <div *ngIf="services && services.length > 0" class="flex flex-row flex-wrap gap-2">
+            <div *ngFor="let service of services" class="flex relative items-center px-5 pt-4 pb-3 rounded-lg outline outline-1 outline-gray-200 w-fit h-fit group">
+                <img [src]="iconUrl + '/services/' + service.icon_url" class="mr-2 w-6 h-6" [alt]="service.title">
+                <span class="text-sm">{{ service.title }}</span>
+            </div>
+        </div>
+        <div class="self-center py-10" *ngIf="!services || services.length == 0">
+            {{'create.no_services' | translate}}
+        </div>
+
+        <div class="flex justify-center my-1 w-fit h-fit">
+            <button type="button" routerLink="/create/services/{{draftId}}" class="btn-primary w-fit">{{'accommodation-card-details.edit-services-sentence' | translate}}</button>
+        </div>
+    </div>
+
+    <!-- availabilities and unavailabilities -->
+    <div class="flex flex-row flex-wrap justify-center items-center p-4 mt-4 w-screen text-center rounded-lg shadow-md sm:justify-evenly md:w-2/3 xl:w-1/2 bg-neutral-2">
+        <div class="flex flex-col flex-wrap justify-center items-center w-screen lg:w-2/3">
+            <div class="flex flex-col px-2 py-4 w-screen text-center rounded-lg shadow-md md:w-full xl:px-4 h-fit bg-neutral-1">
+                <h4>{{'create.availabilities' | translate}}</h4>
+                <ng-container *ngIf="availabilities && availabilities.length > 0">
+                    <div class="flex relative flex-row justify-between sm:justify-evenly">
+                        <h6 class="w-5/12 sm:w-1/3">{{'create.start_date' | translate}}</h6>
+                        <h6 class="w-4/12 sm:w-1/3">{{'create.end_date' | translate}}</h6>
+                        <h6 class="w-1/4 sm:w-1/3">{{'create.price' | translate}}</h6>
+                    </div>
+                    <div *ngFor="let avail of availabilities" class="flex relative flex-row justify-evenly p-1 rounded-lg">
+                        <div class="w-5/12 sm:w-1/3">{{ avail.start_date | date:'E d MMM yyyy':undefined:this.locale }}</div>
+                        <div class="w-4/12 sm:w-1/3">{{ avail.end_date | date:'E d MMM yyyy':undefined:this.locale }}</div>
+                        <div class="w-1/4 sm:w-1/3">{{ avail.price_per_night | currency:'EUR':'symbol-narrow':'1.2-2':'it-IT'}}</div>
+                    </div>
+                </ng-container>
+                <div class="self-center py-10 w-full" *ngIf="!availabilities || availabilities.length == 0">
+                    {{'create.no_availabilities' | translate}}
+                </div>
+            </div>
+
+            <div class="flex flex-col px-2 py-4 mt-2 w-screen text-center rounded-lg shadow-md md:w-full xl:px-4 h-fit bg-neutral-1">
+                <h4>{{'create.unavailabilities' | translate}}</h4>
+                <ng-container *ngIf="unavailabilities && unavailabilities.length > 0">
+                    <div class="flex relative flex-row justify-evenly">
+                        <h6 class="w-1/2">{{'create.start_date' | translate}}</h6>
+                        <h6 class="w-1/2">{{'create.end_date' | translate}}</h6>
+                    </div>
+                    <div *ngFor="let unav of unavailabilities" class="flex relative flex-row justify-evenly p-1 rounded-lg">
+                        <div class="w-1/2">{{ unav.check_in | date:'E d MMM yyyy':undefined:this.locale }}</div>
+                        <div class="w-1/2">{{ unav.check_out | date:'E d MMM yyyy':undefined:this.locale }}</div>
+                    </div>
+                </ng-container>
+                <div class="self-center py-10 w-full" *ngIf="!unavailabilities || unavailabilities.length == 0">
+                    {{'create.no_unavailabilities' | translate}}
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-center mt-4 w-fit h-fit">
+            <button type="button" routerLink="/create/availabilities/{{draftId}}" class="btn-primary w-fit">{{'create.edit_availabilities' | translate}}</button>
+        </div>        
+    </div>
+
+    <!-- info -->
+    <div class="flex flex-row flex-wrap gap-2 justify-evenly items-center p-4 mt-4 w-screen rounded-lg shadow-md lg:flex-nowrap lg:px-8 md:w-2/3 lg:w-1/2"
+    [ngClass]="{'border alert-danger': !info || !isInfoComplete || !isInfoValid, 
+                'bg-neutral-2': info && isInfoComplete && isInfoValid}">
+        <div *ngIf="info" class="flex flex-col text-wrap">
+            <h5>{{info.title}}</h5>
+            <p>{{info.description}}</p>
+            <div class="inline-flex gap-x-2 mt-2">
+                <span class="text-base label-primary">{{'create.beds' | translate}}:</span> {{info.beds}}
+            </div>
+            <div class="inline-flex gap-x-2">
+                <span class="text-base label-primary">{{'create.rooms' | translate}}:</span> {{info.rooms}}
+            </div>
+
+            <p *ngIf="!isInfoComplete" class="text-center error-message">{{'create.missing_required' | translate}}</p>
+            <p *ngIf="!isInfoValid" class="text-center error-message">{{'create.invalid_info' | translate}}</p>
+        </div>
+        <p *ngIf="!info">{{'create.no_info' | translate}}</p>
+
+        <div class="flex justify-center my-1 h-fit lg:w-1/3">
+            <button type="button" routerLink="/create/info/{{draftId}}" class="btn-primary w-fit">{{'create.edit_info' | translate}}</button>
+        </div>
+    </div>
+
+    <!-- photos -->
+    <div class="flex flex-row flex-wrap gap-2 justify-evenly items-center p-4 mt-4 w-screen rounded-lg shadow-md lg:flex-nowrap lg:px-8 md:w-2/3 lg:w-1/2"
+    [ngClass]="{'border alert-danger': !photoPreviews || !arePhotosOk, 
+                'bg-neutral-2': photoPreviews && arePhotosOk}">
+        <div class="flex flex-row flex-wrap gap-5 justify-center w-full text-center">
+            <ng-container *ngIf="photoPreviews && photoPreviews.length > 0">
+                <div *ngFor="let preview of photoPreviews" class="flex relative items-center px-5 pt-4 pb-3 h-40 rounded-lg w-fit">
+                    <img [src]="preview.photo_url" class="w-auto max-h-40" alt="photo_preview">
+                </div>
+            </ng-container>
+            <div class="self-center py-10 w-full" *ngIf="!photoPreviews || photoPreviews.length == 0">
+                {{'create.no_photos' | translate}}
+            </div>
+
+            <p *ngIf="!arePhotosOk" class="text-center error-message">{{'create.required_photo' | translate}}</p>
+        </div>
+
+        <div class="flex justify-center my-1 h-fit lg:w-1/3">
+            <button type="button" routerLink="/create/photos/{{draftId}}" class="btn-primary w-fit">{{'create.edit_photos' | translate}}</button>
         </div>
     </div>
 
@@ -33,8 +145,8 @@
     <div class="flex gap-x-5 justify-center my-6 h-fit">
         <button type="button" (click)="goBack()" class="btn-cancel w-fit">{{'create.back' | translate}}</button>
         <button type="button" (click)="showConfirmModal()" class="btn-primary w-fit"
-        [disabled]="!isAddressOk || !isInfoOk || !arePhotosOk" 
-        [ngClass]="{'opacity-50 hover:bg-primary': !isAddressOk || !isInfoOk || !arePhotosOk}">{{'create.continue' | translate}}</button>
+        [disabled]="!isAddressComplete || !isAddressValid || !isInfoComplete || !isInfoValid || !arePhotosOk" 
+        [ngClass]="{'opacity-50 hover:bg-primary': !isAddressComplete || !isAddressValid || !isInfoComplete || !isInfoValid || !arePhotosOk}">{{'create.continue' | translate}}</button>
     </div>
 </div>
 <app-create-accommodation-confirm-modal [draftId]="draftId" [isModalOpen]="isConfirmModalOpen" (closeModal)="closeConfirmModal()"></app-create-accommodation-confirm-modal>

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AddressDTO } from '../dtos/addressDTO';
 import { BACKEND_URL_PREFIX } from 'src/costants';
-import { catchError, Observable, of, tap } from 'rxjs';
+import { catchError, map, Observable, of, tap } from 'rxjs';
 import { Accommodation } from '../models/accommodation';
 import { Service } from '../models/service';
 import { AccommodationDTO } from '../dtos/accommodationDTO';
@@ -245,6 +245,16 @@ export class DraftService {
       catchError(error => {
         console.error(error);
         return of([]);
+      })
+    );
+  }
+
+  publishDraft(draftId: number): Observable<number> {
+    return this.http.post<Accommodation>(`${BACKEND_URL_PREFIX}/api/accommodation-draft/publish/${draftId}`, {}).pipe(
+      map(accommodation => accommodation.id ?? -1),
+      catchError(error => {
+        console.error(error);
+        return of(-1);
       })
     );
   }

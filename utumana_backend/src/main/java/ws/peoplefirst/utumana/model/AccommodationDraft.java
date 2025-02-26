@@ -102,7 +102,7 @@ public class AccommodationDraft {
 	private Set<Service> services;
 
 	@OneToMany(mappedBy = "accommodationDraft", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@OrderColumn(name = "order")
+	@OrderColumn(name = "photo_order")
 	@Schema(description = "List of photos of the accommodation draft")
 	private List<PhotoDraft> photos;
 

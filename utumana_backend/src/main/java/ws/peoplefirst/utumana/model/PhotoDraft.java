@@ -28,8 +28,9 @@ public class PhotoDraft {
 	@JsonProperty(value = "photo_url")
 	private String photoUrl;
 	
-	@Column(name = "order")
-	private Integer order;
+	@Column(name = "photo_order")
+	@JsonProperty(value = "photo_order")
+	private Integer photoOrder;
 	
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -62,12 +63,12 @@ public class PhotoDraft {
 		this.photoUrl = photoUrl;
 	}
 	
-	public Integer getOrder() {
-		return order;
+	public Integer getPhotoOrder() {
+		return photoOrder;
 	}
 
-	public void setOrder(Integer order) {
-		this.order = order;
+	public void setPhotoOrder(Integer order) {
+		this.photoOrder = order;
 	}
 
 	@Override
@@ -85,5 +86,11 @@ public class PhotoDraft {
 			return false;
 		PhotoDraft other = (PhotoDraft) obj;
 		return Objects.equals(photoUrl, other.photoUrl);
+	}
+
+	@Override
+	public String toString() {
+		return "PhotoDraft [id=" + id + ", photoUrl=" + photoUrl + ", photoOrder=" + photoOrder
+				+ ", accommodationDraft=" + accommodationDraft + "]";
 	}
 }

@@ -133,19 +133,19 @@ public class AccommodationDraftController {
         return accommodationDraftService.saveAccommodationInfo(draftId, info);
     }
 
-    @PostMapping("/save-main-photo/{draftId}")
-    @PreAuthorize("hasAuthority('USER')")
-    public AccommodationDraft saveMainPhoto(@PathVariable("draftId") Long draftId,@RequestBody String mainPhotoUrl, Authentication auth) {
-        authenticateCall(auth, draftId);
-        return accommodationDraftService.saveMainPhoto(draftId, mainPhotoUrl);
-    }
+    // @PostMapping("/save-main-photo/{draftId}")
+    // @PreAuthorize("hasAuthority('USER')")
+    // public AccommodationDraft saveMainPhoto(@PathVariable("draftId") Long draftId,@RequestBody String mainPhotoUrl, Authentication auth) {
+    //     authenticateCall(auth, draftId);
+    //     return accommodationDraftService.saveMainPhoto(draftId, mainPhotoUrl);
+    // }
 
-    @PostMapping("/save-photos/{draftId}")
-    @PreAuthorize("hasAuthority('USER')")
-    public AccommodationDraft savePhotos(@PathVariable("draftId") Long draftId,@RequestBody List<PhotoDraft> photos, Authentication auth) {
-        authenticateCall(auth, draftId);
-        return accommodationDraftService.savePhotos(draftId, photos);
-    }
+    // @PostMapping("/save-photos/{draftId}")
+    // @PreAuthorize("hasAuthority('USER')")
+    // public AccommodationDraft savePhotos(@PathVariable("draftId") Long draftId,@RequestBody List<PhotoDraft> photos, Authentication auth) {
+    //     authenticateCall(auth, draftId);
+    //     return accommodationDraftService.savePhotos(draftId, photos);
+    // }
 
     @PostMapping("/add-photo/{draftId}")
     @PreAuthorize("hasAuthority('USER')")
@@ -155,6 +155,9 @@ public class AccommodationDraftController {
         Integer orderInt = null;
         try{
             orderInt = Integer.parseInt(order);
+            if(orderInt < 0){
+                throw new InvalidJSONException("Order must be a non negative number");
+            }
         } catch (NumberFormatException e) {
             throw new InvalidJSONException("Order must be a number");
         }

@@ -25,14 +25,18 @@ export class CreateAccommodationConfirmModalComponent {
   createAccommodation(): void {
     console.log("Creating accommodation...");
     this.error = false;
-    // this.draftService.createAccommodation(this.draftId).subscribe({
-    //   next: () => {
-    //     this.router.navigate(['/create/success']);
-    //   },
-    //   error: error => {
-    //     console.error(error);
-    //     this.error = true;
-    //   }
-    // });
+    this.draftService.publishDraft(this.draftId).subscribe({
+      next: (accommodationId: number) => {
+        if(accommodationId > -1){
+          this.router.navigate(['/accommodation', accommodationId]);
+        }else{
+          this.error = true;
+        }
+      },
+      error: error => {
+        console.error(error);
+        this.error = true;
+      }
+    });
   }
 }
