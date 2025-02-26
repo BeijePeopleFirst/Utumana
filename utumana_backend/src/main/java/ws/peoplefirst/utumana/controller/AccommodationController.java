@@ -881,4 +881,16 @@ public class AccommodationController {
 		return accommodationService.getCities();
 	}
 
+	@Operation(summary = "Set the coordinates of all the accommodations")
+	@ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "If the coordinates are correctly set"),
+        @ApiResponse(responseCode = "403", description = "If the user is not an admin", content=@Content(mediaType = "application/json",
+			schema=@Schema(implementation=ErrorMessage.class)))
+    })
+	@PreAuthorize("hasAuthority('USER')")
+	@PostMapping(value = "/set_coordinates/{accommodationId}")
+	public void setCoordinates(@RequestBody AccommodationDTO accommodationDTO, @PathVariable(name = "accommodationId") Long accommodationId) {
+		System.out.println("set_coordinateees " + accommodationDTO.getCoordinates() + " " + accommodationId);
+		accommodationService.setCoordinates(accommodationDTO.getCoordinates(), accommodationId);
+	}
 }

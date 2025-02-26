@@ -49,6 +49,7 @@ import { ProfileBioModalComponent } from './components/profile-bio-modal/profile
 import { SettingsComponent } from './components/settings/settings.component';
 import { SettingsPasswordModalComponent } from './components/settings-password-modal/settings-password-modal.component';
 import { CreateProgressComponent } from './components/create-progress/create-progress.component';
+import { MapComponent } from './components/map/map.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -91,7 +92,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     ProfileBioModalComponent,
     SettingsComponent,
     SettingsPasswordModalComponent,
-    CreateProgressComponent
+    CreateProgressComponent,
+    MapComponent
   ],
   imports: [
     BrowserModule,

@@ -9,6 +9,7 @@ export class AccommodationDTO{
         public min_price: number,
         public max_price: number,
         public is_favourite:boolean,
-        public rating: number
+        public rating: number,
+        public coordinates?: string
         ) {  }
 }

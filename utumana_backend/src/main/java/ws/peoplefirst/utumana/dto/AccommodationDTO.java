@@ -1,5 +1,7 @@
 package ws.peoplefirst.utumana.dto;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -42,9 +44,22 @@ public class AccommodationDTO {
 
     @Schema(description = "Average rating of the accommodation", example = "4.5")
     private Double rating;
-	
+
+	@Schema(description = "Coordinates of the accommodation", example = "40.7128;74.0060")
+	private String coordinates;
 	
 	public AccommodationDTO() {}
+
+	public AccommodationDTO(Long id, String title, String city, String province, String country, String mainPhotoUrl, Double rating, String coordinates) {
+		this.id = id;
+		this.title = title;
+		this.city = city;
+		this.province = province;
+		this.country = country;
+		this.mainPhotoUrl = mainPhotoUrl;
+		this.rating = rating;
+		this.coordinates = 	coordinates;
+	}
 	
 	public AccommodationDTO(Long id, String title, String city, String province, String country, String mainPhotoUrl, Double rating) {
 		this.id = id;
@@ -63,8 +78,6 @@ public class AccommodationDTO {
 		this.mainPhotoUrl = mainPhotoUrl;
 		this.country = country;
 	}
-	
-	
 	
 	public Long getId() {
 		return id;
@@ -144,6 +157,14 @@ public class AccommodationDTO {
 		this.rating = rating;
 	}
 
+	public String getCoordinates() {
+		return coordinates;
+	}
+	
+	public void setCoordinates(String coordinates) {
+		this.coordinates = coordinates;
+	}
+	
 	@Override
 	public String toString() {
 		return "Accommodation [id=" + id + ", title=" + title +", country=" + country

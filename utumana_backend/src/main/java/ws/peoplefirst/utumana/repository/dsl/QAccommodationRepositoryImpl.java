@@ -137,7 +137,8 @@ public class QAccommodationRepositoryImpl implements QAccommodationRepository {
                         accommodation.province,
                         accommodation.country,
                         accommodation.mainPhotoUrl,
-                        accommodationRating.rating))
+                        accommodationRating.rating,
+                        accommodation.coordinates))
                 .from(accommodation)
                 .join(accommodation.rating, accommodationRating)
                 .where(accomodationBuilder);

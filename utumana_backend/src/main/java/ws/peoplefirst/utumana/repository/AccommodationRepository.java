@@ -148,4 +148,8 @@ public interface AccommodationRepository extends JpaRepository<Accommodation, Lo
 
 	@Query("SELECT DISTINCT a.city FROM Accommodation as a")
     public Set<String> getCities();
+
+	@Modifying
+	@Query("UPDATE Accommodation a SET a.coordinates = :coordinates WHERE a.id = :accommodationId")
+    public void setCoordinates(@Param(value = "coordinates") String coordinates, @Param(value = "accommodationId") Long accommodationId);
 }

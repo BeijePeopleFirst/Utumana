@@ -1,0 +1,8 @@
+#map {
+    transition: opacity 0.3s ease;
+  }
+
+#map.loading {
+    opacity: 0.5;
+    pointer-events: none;
+}

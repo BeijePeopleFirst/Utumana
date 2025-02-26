@@ -53,12 +53,22 @@
       </div>
     </div>
 
-    <app-search-accommodation-list
-      [accommodations$]="foundAccommodations$" 
-      [pageNumber]="foundAccommodationsPageNumber" 
-      [totalPages]="foundAccommodationsTotalPages" 
-      (askForPage)="loadFoundResearchPage($event)">
-    </app-search-accommodation-list>
+    <div class="flex flex-col sm:flex-row gap-6 mt-8">
+      <div class="w-full sm:w-1/2 lg:w-3/5">
+        <app-search-accommodation-list
+          [accommodations$]="foundAccommodations$" 
+          [pageNumber]="foundAccommodationsPageNumber" 
+          [totalPages]="foundAccommodationsTotalPages" 
+          (askForPage)="loadFoundResearchPage($event)">
+        </app-search-accommodation-list>
+      </div>
+
+      <div class="w-full sm:w-1/2 lg:w-1/2 h-[600px] sticky top-4">
+        <div class="border-2 border-black h-full rounded-lg overflow-hidden">
+          <app-map [accommodations$]="foundAccommodations$"></app-map>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 

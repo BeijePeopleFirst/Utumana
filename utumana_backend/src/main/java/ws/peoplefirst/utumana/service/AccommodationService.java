@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import jakarta.transaction.Transactional;
 import ws.peoplefirst.utumana.criteria.SearchAccomodationCriteria;
 import ws.peoplefirst.utumana.dto.AccommodationDTO;
 import ws.peoplefirst.utumana.dto.BookingDTO;
@@ -678,5 +680,10 @@ public class AccommodationService {
 
     public Set<String> getCities() {
         return accommodationRepository.getCities();
+    }
+
+    @Transactional
+    public void setCoordinates(String coordinates, Long accommodationId) {
+        accommodationRepository.setCoordinates(coordinates, accommodationId);
     }
 }
