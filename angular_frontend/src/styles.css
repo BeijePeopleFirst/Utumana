@@ -102,3 +102,5 @@
   .drop-box {@apply block px-4 py-2 text-sm text-gray-900 select-none hover:bg-gray-50}
   .drop-box-menu-open {@apply px-2 py-1 rounded-md hover:ring-2 hover:bg-inherit hover:ring-secondary-light/50}
 }
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

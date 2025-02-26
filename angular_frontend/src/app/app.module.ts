@@ -50,6 +50,7 @@ import { SettingsComponent } from './components/settings/settings.component';
 import { SettingsPasswordModalComponent } from './components/settings-password-modal/settings-password-modal.component';
 import { CreateProgressComponent } from './components/create-progress/create-progress.component';
 import { MapComponent } from './components/map/map.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -107,7 +108,8 @@ export function HttpLoaderFactory(http: HttpClient) {
         useFactory:HttpLoaderFactory,
         deps:[HttpClient]
       }
-    })
+    }),
+    BrowserAnimationsModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
