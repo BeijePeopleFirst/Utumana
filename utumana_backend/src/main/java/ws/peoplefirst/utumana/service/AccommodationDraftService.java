@@ -66,7 +66,7 @@ public class AccommodationDraftService {
 
     public AddressDTO getAccommodationDraftAddressInfoById(Long id) {
         AccommodationDraft draft = getAccommodationDraftById(id);
-        return new AddressDTO(draft.getStreet(), draft.getStreetNumber(), draft.getCity(), draft.getProvince(), draft.getCap(), draft.getCountry(), draft.getAddressNotes());
+        return new AddressDTO(draft.getStreet(), draft.getStreetNumber(), draft.getCity(), draft.getCap(), draft.getProvince(), draft.getCountry(), draft.getAddressNotes());
     }
 
     public  GeneralAccommodationInfoDTO getAccommodationDraftAccommodationInfoById(Long id) {
@@ -84,8 +84,8 @@ public class AccommodationDraftService {
         AccommodationDraft draft = getDraftById(draftId);
         BeanUtils.copyProperties(address, draft);
         System.out.println("AddressDTO values:");
-        System.out.println("Street: " + address.getStreet());
-        System.out.println("City: " + address.getCity());
+        System.out.println("Province: " + address.getProvince());
+        System.out.println("Cap: " + address.getCap());
         System.out.println("Country: " + address.getCountry());
         
         System.out.println("draft: " + draft);
