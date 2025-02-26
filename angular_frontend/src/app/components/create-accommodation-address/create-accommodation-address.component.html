@@ -1,17 +1,17 @@
 <div class="flex flex-col justify-center items-center w-screen sm:w-auto">
     <app-create-progress [step] = 1></app-create-progress>
 
-    <form class="my-4 md:w-screen-md" (ngSubmit)="saveAndContinue()" #addressForm="ngForm">
+    <form *ngIf="address" class="px-2 my-4 w-screen md:w-auto" (ngSubmit)="saveAndContinue()" #addressForm="ngForm">
         <div class="flex flex-row gap-x-5 justify-between">
             <div class="w-2/3">
                 <label class="label-primary">{{'accommodation-card-details.street-word' | translate}}</label>
-                <input class="input-primary" [ngClass]="{'alert-danger': street.invalid}" 
-                type="text" id="address_street" name="address_street" autocomplete="street-address" 
-                pattern="[a-zA-Z0-9. /\-,]+"   
-                [(ngModel)]="address.street" #street="ngModel"/>
+                <input class="input-primary" [ngClass]="{'alert-danger': streetField.invalid}" 
+                type="text" id="street" name="street" autocomplete="street-address" 
+                pattern="[a-zA-Z0-9 \-]+"
+                [(ngModel)]="address.street" #streetField="ngModel"/>
             </div>
-            <ng-container *ngIf="street.invalid">
-                <div *ngIf="street.errors?.['pattern']" class="error-message">
+            <ng-container *ngIf="streetField.invalid">
+                <div *ngIf="streetField.errors?.['pattern']" class="error-message">
                     {{'create.invalid_street' | translate}}
                 </div>
             </ng-container>
@@ -58,15 +58,15 @@
             </ng-container>
 
             <div class="flex flex-col w-2/3">
-                <label class="label-primary">{{'accommodation-card-details.cap-word' | translate}}</label>
+                <label class="label-primary">{{'accommodation-card-details.cap-word' | translate}}*</label>
                 <input class="input-primary" [ngClass]="{'alert-danger': addressForm.submitted && cap.invalid}" 
                 type="text" id="cap" name="cap" 
-                required pattern="[0-9]+"   
+                pattern="[0-9]+"   
                 [(ngModel)]="address.cap" #cap="ngModel"/>
                 <ng-container *ngIf="addressForm.submitted && cap.invalid">
-                    <div *ngIf="cap.errors?.['required']" class="mb-0 w-full error-message">
+                    <!--div *ngIf="cap.errors?.['required']" class="mb-0 w-full error-message">
                         {{'accommodation-card-details.cap-required' | translate}}
-                    </div>
+                    </div-->
                     <div *ngIf="cap.errors?.['pattern']" class="mb-0 w-full error-message">
                         {{'create.invalid_cap' | translate}}
                     </div>
@@ -76,16 +76,16 @@
         </div>
 
         <div class="mt-4">
-            <label class="label-primary">{{'accommodation-card-details.country-word' | translate}}</label>
+            <label class="label-primary">{{'accommodation-card-details.country-word' | translate}}*</label>
             <input class="input-primary" [ngClass]="{'alert-danger': addressForm.submitted && country.invalid}" 
             type="text" id="country" name="country" autocomplete="address-level1" 
-            required pattern="[a-zA-Z ,]+"   
+            pattern="[a-zA-Z ,]+"   
             [(ngModel)]="address.country" #country="ngModel"/>
         </div>
         <ng-container *ngIf="addressForm.submitted && country.invalid">
-            <div *ngIf="country.errors?.['required']" class="error-message">
+            <!--div *ngIf="country.errors?.['required']" class="error-message">
                 {{'accommodation-card-details.country-required' | translate}}
-            </div>
+            </div-->
             <div *ngIf="country.errors?.['pattern']" class="error-message">
                 {{'create.invalid_country' | translate}}
             </div>
@@ -96,7 +96,7 @@
             <input class="input-primary" [ngClass]="{'alert-danger': notes.invalid}" 
             type="text" id="notes" name="notes" autocomplete="address-level3" 
             pattern="[a-zA-Z \-\',\#\.\+]+"   
-            [(ngModel)]="address.notes" #notes="ngModel"/>
+            [(ngModel)]="address.address_notes" #notes="ngModel"/>
         </div>
         <ng-container *ngIf="notes.invalid">
             <div *ngIf="notes.errors?.['pattern']" class="error-message">
@@ -105,7 +105,7 @@
         </ng-container>
 
         <ng-container *ngIf="genericError">
-            <div class="error-message">{{'error' | translate}}</div>
+            <div class="text-center error-message">{{'error' | translate}}</div>
         </ng-container>
         <div class="grid justify-items-center mt-8">
             <button type="submit" class="btn-primary w-fit">{{'create.continue' | translate}}</button>

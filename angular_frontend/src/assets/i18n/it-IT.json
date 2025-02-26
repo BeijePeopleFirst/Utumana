@@ -32,14 +32,14 @@
 	"description-word": "Descrizione",
 	"guests-word": "Ospiti",
 	"nights-word": "Notti",
-	"edit-services-sentence": "Modifica Servizi",
+	"edit-services-sentence": "Modifica servizi",
 	"confirm-services": "Conferma Servizi",
 	"city-word": "Comune",
 	"province-word": "Provincia",
 	"country-word": "Paese",
 	"street-word": "Via/Piazza",
 	"street-number-word": "Numero Civico",
-	"edit-address-sentence": "Modifica Indirizzo",
+	"edit-address-sentence": "Modifica indirizzo",
 	"cap-word": "CAP",
 	"edit-rooms-and-beds-sentence": "Modifica Stanze e Letti",
 	"user-error": "Error 401 Unauthorized: Necessario essere loggati con un profilo valido",
@@ -145,6 +145,8 @@
 "create": {
 	"continue": "Continua",
 	"back": "Indietro",
+	"confirm": "Conferma",
+
 	"address": "Indirizzo",
 	"address_notes": "Note sull'indirizzo",
 	"invalid_street": "Via/piazza non valida",
@@ -154,11 +156,15 @@
 	"invalid_country": "Paese non valido",
 	"invalid_cap": "CAP non valido",
 	"invalid_address_notes": "Note sull'indirizzo non valide",
+
 	"services": "Servizi",
 	"no_services": "Nessun Servizio",
 	"no_services_found": "Nessun servizio trovato",
 	"search_services": "Cerca servizi",
+
 	"availabilities_step": "Disponibilità",
+	"availability_info": "Inidca i periodi in cui la tua sistemazione sarà disponibile. Nota: la notte della data finale indicata non è compresa nel periodo.",
+	"unavailability_info": "Per comodità, si possono inserire anche periodi di non disponibilità: se ad esempio la tua sistemazione sarà disponibile per sei mesi ad eccezione di qualche weekend, puoi inserire un periodo di disponibilità di sei mesi e aggiungere periodi di non disponibilità per quei weekend. Nota: la notte della data finale indicata non è compresa nel periodo.",
 	"availabilities": "Periodi di disponibilità",
 	"unavailabilities": "Periodi di non disponibilità",
 	"no_availabilities": "Nessun periodo di disponibilità",
@@ -171,11 +177,41 @@
 	"invalid_price": "Prezzo non valido",
 	"add_availability": "Aggiungi disponibilità",
 	"availability_overlaps": "Errore: questo periodo si sovrappone alle disponibilità esistenti",
-	"availability_reversed_dates": "Errore: la data iniziale non può essere successiva alla data finale",
+	"availability_reversed_dates": "Errore: la data iniziale deve essere precedente alla data finale",
 	"add_unavailability": "Aggiungi non disponibilità",
+	"unavailability_overlaps": "Errore: questo periodo si sovrappone alle non disponibilità esistenti",
+
 	"description": "Descrizione",
+	"title": "Titolo",
+	"invalid_title": "Titolo non valido",
+	"invalid_description": "Descrizione non valida",
+	"description_placeholder": "Inserisci una descrizione",
+	"beds": "Numero di letti",
+	"rooms": "Numero di stanze",
+
 	"photos": "Foto",
-	"recap": "Conferma"
+	"choose_photos": "Seleziona foto",
+	"drag_and_drop": "Trascina",
+	"files_here": "qui le immagini",
+	"photos_instructions": "La prima foto verrà usata come foto principale di questa sistemazione. È necessario caricare almeno una foto. I file caricati non possono superare 5 MB.",
+	"or": "oppure",
+	"select_a_file": "seleziona immagini",
+	"from_your_device": "dal tuo dispositivo",
+	"photos_preview": "Anteprima foto",
+	"no_photos": "Nessuna foto",
+
+	"recap": "Conferma",
+	"no_address": "Nessun indirizzo",
+	"invalid_address": "Indirizzo non valido",
+	"edit_availabilities": "Modifica disponibilità",
+	"no_info": "Nessuna informazione",
+	"edit_info": "Modifica informazioni",
+	"invalid_info": "Informazioni non valide",
+	"edit_photos": "Modifica foto",
+	"required_photo": "È necessario caricare almeno una foto",
+	"missing_required": "Uno o più campi obbligatori non sono compilati",
+	"modal_title": "Confermare la creazione di questa sistemazione?",
+	"modal_subtitle": "Cliccando su 'Conferma', questa sistemazione verrà creata e inviata all'amministratore per essere approvata."
 },
 "error": "Errore sconosciuto. Per favore, riprova.",
 "favourites": {
@@ -205,6 +241,8 @@
 	"admin": "Admin Dashboard",
 	"logout": "Logout",
 	"create": "Crea",
+	"new_draft": "Nuovo",
+	"open_draft": "Apri...",
 	"bookings": "Le mie prenotazioni",
 	"host-dashboard": "Dashboard Host",
 	"notifications": "Notifiche"
@@ -239,7 +277,8 @@
 "my_accommodations": {
 	"title": "Le mie sistemazioni",
 	"pending": "Le mie sistemazioni in attesa di conferma",
-	"rejected": "Sistemazioni rifiutate"
+	"rejected": "Sistemazioni rifiutate",
+	"drafts": "Le mie bozze"
 	},
 "profile": {
 	"reviews_title": "Recensioni ricevute",

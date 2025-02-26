@@ -1,0 +1,17 @@
+<div *ngIf="isModalOpen" class="modal">
+    <div class="justify-center px-7 pt-7 pb-5 modal-dialog">
+        <h5>{{'create.modal_title' | translate}}</h5>
+        <p class="text-sm">{{'create.modal_subtitle' | translate}}</p>
+
+        <button (click)="close()" class="close-modal">
+            &times;
+        </button>
+
+        <div class="flex gap-x-5 justify-center mt-4">
+            <button type="button" class="w-fit btn-cancel" (click)="close()">{{'cancel_button_label' | translate}}</button>
+            <button type="button" class="w-fit btn-secondary" (click)="createAccommodation()">{{'create.confirm' | translate}}</button>
+        </div>
+
+        <p *ngIf="error" class="mt-4 mb-0 text-center error-message">{{'error' | translate}}</p>
+    </div>
+</div>

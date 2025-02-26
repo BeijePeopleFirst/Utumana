@@ -32,14 +32,14 @@
 	"description-word": "Description",
 	"guests-word": "Guests",
 	"nights-word": "Nights",
-	"edit-services-sentence": "Edit Services",
+	"edit-services-sentence": "Edit services",
 	"confirm-services": "Confirm Services",
 	"city-word": "City",
 	"province-word": "Province",
 	"country-word": "Country",
 	"street-word": "Street",
 	"street-number-word": "Street Number",
-	"edit-address-sentence": "Edit Address",
+	"edit-address-sentence": "Edit address",
 	"edit-rooms-and-beds-sentence": "Edit Rooms and Beds",
 	"cap-word": "CAP",
 	"user-error": "Error 401 Unauthorized: Need to be Logged-in with a lecit account",
@@ -145,6 +145,8 @@
 "create": {
 	"continue": "Next",
 	"back": "Back",
+	"confirm": "Confirm",
+
 	"address": "Address",
 	"address_notes": "Address notes",
 	"invalid_street": "Invalid street/square",
@@ -154,11 +156,15 @@
 	"invalid_country": "Invalid country",
 	"invalid_cap": "Invalid CAP",
 	"invalid_address_notes": "Invalid address notes",
+
 	"services": "Services",
 	"no_services": "No Services",
 	"no_services_found": "No services found",
 	"search_services": "Search services",
+
 	"availabilities_step": "Availabilities",
+	"availability_info": "Set the availability periods for your accommodation. Note: the end date's night is not included in the period.",
+	"unavailability_info": "If it is more convenient, you can add unavailability periods too. For example, if your accommodation will be available for six months with the exception of a few weekends, you can set a six months availability period and add unavailability periods for those weekends. Note: the end date's night is not included in the period.",
 	"availabilities": "Availabilities",
 	"unavailabilities": "Unavailabilities",
 	"no_availabilities": "No availabilities",
@@ -171,11 +177,41 @@
 	"invalid_price": "Invalid price",
 	"add_availability": "Add availability",
 	"availability_overlaps": "Error: availability overlaps with existing availabilities",
-	"availability_reversed_dates": "Error: start date cannot be after end date",
+	"availability_reversed_dates": "Error: start date must be before end date",
 	"add_unavailability": "Add unavailability",
+	"unavailability_overlaps": "Error: unavailability overlaps with existing unavailabilities",
+
 	"description": "Description",
+	"title": "Title",
+	"invalid_title": "Invalid title",
+	"invalid_description": "Invalid description",
+	"description_placeholder": "Enter a description",
+	"beds": "Number of beds",
+	"rooms": "Number of rooms",
+
 	"photos": "Photos",
-	"recap": "Confirm"
+	"choose_photos": "Choose Photos",
+	"photos_instructions": "The first photo will be used as the main photo of this accommodation. At least one photo is required. Files must not exceed 5 MB.",
+	"drag_and_drop": "Drag and drop",
+	"files_here": "images here",
+	"or": "or",
+	"select_a_file": "select images",
+	"from_your_device": "from your device",
+	"photos_preview": "Photos Preview",
+	"no_photos": "No photos",
+
+	"recap": "Confirm",
+	"no_address": "No address",
+	"invalid_address": "Invalid address",
+	"edit_availabilities": "Edit availability",
+	"no_info": "No info",
+	"edit_info": "Edit info",
+	"invalid_info": "Invalid info",
+	"edit_photos": "Edit photos",
+	"required_photo": "At least one photo is required",
+	"missing_required": "One or more required fields haven't been filled",
+	"modal_title": "Confirm and create this accommodation?",
+	"modal_subtitle": "By clicking 'Confirm', this accommodation will be created and sent to the admin for approval."
 },
 "error": "Unexpected error. Please retry.",
 "favourites": {
@@ -205,6 +241,8 @@
 	"admin": "Admin Dashboard",
 	"logout": "Logout",
 	"create": "Create",
+	"new_draft": "New",
+	"open_draft": "Open...",
 	"bookings": "My bookings",
 	"host-dashboard": "Host Dashboard",
 	"notifications": "Notifications"
@@ -239,7 +277,8 @@
 "my_accommodations": {
 	"title": "My accommodations",
 	"pending": "My accommodations waiting for approval",
-	"rejected": "Rejected accommodations"
+	"rejected": "Rejected accommodations",
+	"drafts": "My drafts"
 	},
 "profile": {
 	"reviews_title": "Reviews received",
