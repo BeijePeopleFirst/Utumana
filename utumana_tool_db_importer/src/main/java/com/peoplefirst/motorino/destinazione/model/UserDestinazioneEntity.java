@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 /**
  * Entity dell'user del db di destinazione
@@ -36,11 +37,11 @@ public class UserDestinazioneEntity implements Serializable {
     private String surname;
     private String email;
     private String password;
-    private boolean is_admin;
+    private Boolean is_admin;
     private String bio;
     private String profile_picture_url;
     private Double rating;
-    private Timestamp archived_timestamp;
+    private LocalDateTime archived_timestamp;
 
     /**
      * Mapping per creazione/update dell'user di destinazione basandosi su un user di origine

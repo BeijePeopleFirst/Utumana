@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 /**
  * Entity dell'user del db di destinazione
@@ -37,11 +38,12 @@ public class UserOrigineEntity implements Serializable {
     private String nationality;
     private Integer hr_referent;
     private Integer commercial_referent;
-    private Timestamp archive_date;
+    private LocalDateTime archive_date;
     private String note;
     private String pic_url;
     private String role;
     private Timestamp hire_date;
     private boolean pic_on_site;
     private String thumbnail_url;
+    private Double rating;
 }

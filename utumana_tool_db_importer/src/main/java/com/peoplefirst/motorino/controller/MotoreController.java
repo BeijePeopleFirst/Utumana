@@ -43,9 +43,9 @@ public class MotoreController {
 //    }
 
     @PostMapping("/import")
-    public String importUsers(@RequestParam("mappingFile") MultipartFile mappingFile) throws SQLException, IOException {
-            motoreService.updateDestinationDatabase(mappingFile);
-            return "Ok";
+    public String importUsers(@RequestParam("mappingFile") MultipartFile mappingFile) {
+        motoreService.updateDestinationDatabase(mappingFile);
+        return "Ok";
     }
 
     /**

@@ -66,13 +66,13 @@ public class MotoreService {
         user.setNationality("IT" + counter);
         user.setHr_referent(0);
         user.setCommercial_referent(1);
-        user.setArchive_date(Timestamp.valueOf(LocalDateTime.now()));
         user.setNote("NOTE" + counter);
         user.setPic_url("P" + counter);
-        user.setRole("ROLE" + counter);
+        user.setRole("admin");
         user.setHire_date(Timestamp.valueOf(LocalDateTime.now()));
         user.setPic_on_site(true);
         user.setThumbnail_url("URL" + counter);
+        user.setRating(3.4);
         userOrigineRepository.save(user);
     }
 
@@ -86,7 +86,7 @@ public class MotoreService {
         user.setSurname("SURNAME" + counter);
         user.setEmail("EMAIL" + counter);
         user.setPassword("PASSWORD" + counter);
-        user.set_admin(true);
+        user.setIs_admin(false);
         user.setBio("BIO" + counter);
         user.setProfile_picture_url("PIC" + counter);
         user.setRating(1.0);
@@ -137,14 +137,13 @@ public class MotoreService {
 //    }
 
 
-    public void updateDestinationDatabase(MultipartFile mappingFile) throws SQLException, IOException {
+    public void updateDestinationDatabase(MultipartFile mappingFile) {
         try (Connection sourceConn = origineDataSourceConfig.getConnection()) {
             String mappingJson = new String(mappingFile.getBytes(), StandardCharsets.UTF_8);
             Map<String, String> fieldMapping = new ObjectMapper().readValue(mappingJson, new TypeReference<>() {});
 
             String sql = "SELECT * FROM user"; // Migliorabile con query parametrizzate, se necessario.
 
-            // Ottieni tutti gli utenti già presenti nel DB di destinazione
             List<UserDestinazioneEntity> userDestinazioneEntityList = (List<UserDestinazioneEntity>) userDestinazioneRepository.findAll();
             Map<String, UserDestinazioneEntity> userMap = userDestinazioneEntityList.stream()
                     .collect(Collectors.toMap(UserDestinazioneEntity::getEmail, Function.identity()));
@@ -164,7 +163,16 @@ public class MotoreService {
 
                         String mappedField = fieldMapping.get(sourceColumn);
                         if (mappedField != null) {
-                            setFieldIfExists(userOrigine, mappedField, value);
+                            if ("is_admin".equals(mappedField) && value instanceof String) {
+                                String roleValue = (String) value;
+
+                                // Se il valore è "admin" o simili, imposta is_admin a true
+                                boolean isAdmin = "admin".equalsIgnoreCase(roleValue) || "administrator".equalsIgnoreCase(roleValue);
+                                setFieldIfExists(userOrigine, mappedField, isAdmin);
+                            } else {
+                                // Mappatura standard per gli altri campi
+                                setFieldIfExists(userOrigine, mappedField, value);
+                            }
                         }
                     }
 
@@ -180,12 +188,16 @@ public class MotoreService {
                         userDestinazioneRepository.save(userOrigine);
                     }
                 }
-            }
 
-            // Elimina gli utenti che non sono stati aggiornati (non sono stati trovati nel DB di origine)
-            if (!userMap.isEmpty()) {
-                userDestinazioneRepository.deleteAll(userMap.values());
+                // Elimina gli utenti che non sono stati aggiornati (non sono stati trovati nel DB di origine)
+                if (!userMap.isEmpty()) {
+                    userDestinazioneRepository.deleteAll(userMap.values());
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e.getMessage(), e);
             }
+        } catch (SQLException | IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
@@ -195,7 +207,6 @@ public class MotoreService {
             field.setAccessible(true);
             field.set(obj, value);
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            // Ignora il campo se non esiste nella destinazione
             e.printStackTrace();
         }
     }
