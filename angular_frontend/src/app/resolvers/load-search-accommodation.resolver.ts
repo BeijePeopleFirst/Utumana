@@ -37,6 +37,7 @@ export class LoadSearchAccommodationResolver implements Resolve<any> {
       services: services,
       order_by: queryParams['order_by'],
       order_direction: queryParams['order_direction'],
+      address_name: queryParams['address_name'] ?? '',
       min_price: queryParams['min_price'],
       max_price: queryParams['max_price'],
       min_rating: queryParams['min_rating'],

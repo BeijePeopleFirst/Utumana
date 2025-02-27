@@ -9,6 +9,7 @@ import iconURL from 'src/costants';
 import { TranslateService } from '@ngx-translate/core';
 import { CompleteParams } from 'src/app/models/completeParams';
 import { FilterParams } from 'src/app/models/filterParams';
+import { DefaultAddress } from 'src/app/models/defaultAddress';
 
 @Component({
   selector: 'app-search-page',
@@ -22,6 +23,8 @@ export class SearchPageComponent implements OnInit {
   foundAccommodationsPageNumber: number = 0;
   foundAccommodationsTotalPages: number = 0;
   foundAccommodationsPageSize: number = 8;
+
+  defaultAddresses: DefaultAddress[] = [];
   
   services$ = this.filterService.services$;
   searchParams$ = this.searchService.searchData$;
@@ -58,6 +61,15 @@ export class SearchPageComponent implements OnInit {
       );
     });
 
+    this.loadDefaultAddresses();
+  }
+
+  loadDefaultAddresses() {
+    this.accommodationService.getDefaultAddresses().subscribe(
+      (addresses) => {
+        this.defaultAddresses = addresses;
+      }
+    );
   }
 
   search(params: CompleteParams): void {
@@ -76,6 +88,7 @@ export class SearchPageComponent implements OnInit {
       max_price: filters.max_price,
       min_rating: filters.min_rating,
       max_rating: filters.max_rating,
+      address_name: params.address_name ?? currentParams['address_name'],
       page: params.page || 0,
       size: this.foundAccommodationsPageSize
     };
@@ -137,6 +150,13 @@ export class SearchPageComponent implements OnInit {
     currentParams.order_direction = orderDirection;
     
     this.search(currentParams);
+  }
+
+  setAddressParam(address: string, event: MouseEvent): void {
+    event.stopPropagation();
+    const currentParams = this.searchService.getSearchData();
+    currentParams.address_name = address;
+    this.searchService.setSearchData(currentParams);
   }
 
   @HostListener('document:click', ['$event'])

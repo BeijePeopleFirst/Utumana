@@ -12,6 +12,7 @@ import { Service } from '../models/service';
 import { SearchService } from './search.service';
 import { PageResponse} from '../models/paginatedResponse';
 import { PaginationInfo } from '../models/paginationInfo';
+import { DefaultAddress } from '../models/defaultAddress';
 
 @Injectable({
   providedIn: 'root'
@@ -361,6 +362,10 @@ export class AccommodationService {
 
   updateFoundAccommodationsSubject(accs : AccommodationDTO[]) {
     this.foundAccommodationsSubject.next(accs);
+  }
+
+  getDefaultAddresses(): Observable<DefaultAddress[]> {
+    return this.http.get<DefaultAddress[]>(`${BACKEND_URL_PREFIX}/api/address/default`);
   }
 
   /*private getAuth(): HttpHeaders {

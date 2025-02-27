@@ -48,6 +48,10 @@
             <button (click)="setOrderParam('approvalTimestamp', 'DESC' , $event)" class="block px-4 py-2 w-full text-sm text-gray-900 hover:bg-neutral-2 hover:cursor-pointer hover:text-secondary-dark">{{ 'search.recentDesc' | translate }}</button>
             <button (click)="setOrderParam('rating', 'ASC' , $event)" class="block px-4 py-2 w-full text-sm text-gray-900 hover:bg-neutral-2 hover:cursor-pointer hover:text-secondary-dark">{{ 'search.ratingAsc' | translate }}</button>
             <button (click)="setOrderParam('rating', 'DESC' , $event)" class="block px-4 py-2 w-full text-sm text-gray-900 hover:bg-neutral-2 hover:cursor-pointer hover:text-secondary-dark">{{ 'search.ratingDesc' | translate }}</button>
+            <div *ngFor="let address of defaultAddresses">
+              <button (click)="setAddressParam(address.address, $event); setOrderParam('distance', 'ASC' , $event) " class="block px-4 py-2 w-full text-sm text-gray-900 hover:bg-neutral-2 hover:cursor-pointer hover:text-secondary-dark">{{ 'search.addressASC'| translate }} {{address.name}}</button>
+              <button (click)=" setAddressParam(address.address, $event); setOrderParam('distance', 'DESC' , $event)" class="block px-4 py-2 w-full text-sm text-gray-900 hover:bg-neutral-2 hover:cursor-pointer hover:text-secondary-dark">{{ 'search.addressDESC' | translate }} {{address.name}}</button>
+            </div>
           </div>
         </div>
       </div>
