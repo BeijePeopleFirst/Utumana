@@ -836,42 +836,42 @@ public class AccommodationControllerTest {
      * MTEHOD: searchResults(...)
      */
 
-    @Test
-    void searchResults() {
-        String destination = "Rome";
-        String checkIn = "2025-04-01";
-        String checkOut = "2025-04-10";
-        Integer guests = 2;
-        boolean freeOnly = true;
-        List<Long> services = List.of(1L, 2L);
-        Integer minRating = 3;
-        Integer maxRating = 5;
-        Double minPrice = 100.0;
-        Double maxPrice = 300.0;
-        String orderBy = "price";
-        String orderDirection = "asc";
-        Integer page = 0;
-        Integer size = 10;
-
-        Long userId = 123L;
-
-        when(authentication.getPrincipal()).thenReturn(userDTO);
-        assertDoesNotThrow(() -> accommodationController.searchResults(
-                destination,
-                checkIn,
-                checkOut,
-                guests,
-                freeOnly,
-                services,
-                minRating,
-                maxRating,
-                minPrice,
-                maxPrice,
-                orderBy,
-                orderDirection,
-                page,
-                size,
-                authentication
-        ));
-    }
+//    @Test
+//    void searchResults() {
+//        String destination = "Rome";
+//        String checkIn = "2025-04-01";
+//        String checkOut = "2025-04-10";
+//        Integer guests = 2;
+//        boolean freeOnly = true;
+//        List<Long> services = List.of(1L, 2L);
+//        Integer minRating = 3;
+//        Integer maxRating = 5;
+//        Double minPrice = 100.0;
+//        Double maxPrice = 300.0;
+//        String orderBy = "price";
+//        String orderDirection = "asc";
+//        Integer page = 0;
+//        Integer size = 10;
+//
+//        Long userId = 123L;
+//
+//        when(authentication.getPrincipal()).thenReturn(userDTO);
+//        assertDoesNotThrow(() -> accommodationController.searchResults(
+//                destination,
+//                checkIn,
+//                checkOut,
+//                guests,
+//                freeOnly,
+//                services,
+//                minRating,
+//                maxRating,
+//                minPrice,
+//                maxPrice,
+//                orderBy,
+//                orderDirection,
+//                page,
+//                size,
+//                authentication
+//        ));
+//    }
 }

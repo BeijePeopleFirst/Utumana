@@ -44,6 +44,9 @@ public class AccommodationDraftService {
     @Autowired
     private PhotoDraftRepository photoDraftRepository;
 
+    @Autowired
+    private S3Service s3Service;
+
 
     public List<AccommodationDraft> getAccommodationDraftByOwnerId(Long ownerId) {
         return accommodationDraftRepository.findByOwnerId(ownerId);
@@ -141,6 +144,8 @@ public class AccommodationDraftService {
         String fileExtension = photo.getContentType() != null ? photo.getContentType().split("/")[1] : ".jpg";
         String savedPhotoUrl = "images/drafts/" + draftId.toString() + "/" + photoDraft.getId().toString() + "." + fileExtension;
         // TODO save photo file in s3
+
+        s3Service.uploadFile(savedPhotoUrl, photo);
 
         // update photo url in photo draft
         photoDraft.setPhotoUrl(savedPhotoUrl);
