@@ -330,12 +330,16 @@
 	"recentDesc": "Recent: Desc",
 	"ratingAsc": "Rating: Asc",
 	"ratingDesc": "Rating: Desc",
+	"addressASC": " Distance from: Asc",
+	"addressDESC": " Distance from: Desc",
 	"minPrice-asc": " (Price: Asc)",
 	"minPrice-desc": " (Price: Desc)",
 	"approvalTimestamp-asc": " (Recent: Asc)",
 	"approvalTimestamp-desc": " (Recent: Desc)",
 	"rating-asc": " (Rating: Asc)",
-	"rating-desc": " (Rating: Desc)"
+	"rating-desc": " (Rating: Desc)",
+	"distance-asc": " (Distance : Asc)",
+	"distance-desc": " (Distance : Desc)"
 	},
 "settings": {
 	"title": "Settings",

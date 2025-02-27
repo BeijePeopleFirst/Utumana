@@ -335,7 +335,11 @@
 	"approvalTimestamp-asc": " (Recenti: crescente)",
 	"approvalTimestamp-desc": " (Recenti: decrescente)",
 	"rating-asc": " (Voto: crescente)",
-	"rating-desc": " (Voto: decrescente)"
+	"rating-desc": " (Voto: decrescente)",
+	"addressASC": " Distanza crescente da:",
+	"addressDESC": " Distanza decrescente da:",
+	"distance-asc": " (Distanza crescente)",
+	"distance-desc": " (Distanza decrescente)"
 	},
 "settings": {
 	"title": "Impostazioni",

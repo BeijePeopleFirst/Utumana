@@ -213,12 +213,10 @@ public class AccommodationService {
                                                      Integer numberOfGuests, boolean freeOnly, List<Long> serviceIds,
                                                      Integer minRating, Integer maxRating,
                                                      Double minPrice, Double maxPrice,
-                                                     String orderBy, String orderDirection, Long userId, Pageable pageable) {
-        System.out.println("service ids = " + serviceIds);
-
+                                                     String orderBy, String orderDirection, String addressName, Long userId, Pageable pageable) {
         SearchAccomodationCriteria criteria =
                 new SearchAccomodationCriteria(destination, checkInDate, checkOutDate, numberOfGuests, freeOnly,
-                        serviceIds, minRating, maxRating, minPrice, maxPrice, orderBy, orderDirection, userId, pageable);
+                        serviceIds, minRating, maxRating, minPrice, maxPrice, orderBy, orderDirection, addressName, userId, pageable);
 
         logger.debug(criteria.toString());
         Page<AccommodationDTO> results = accommodationRepository.searchAccomodation(criteria);
