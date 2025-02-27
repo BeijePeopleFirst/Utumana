@@ -142,7 +142,7 @@ public class MotoreService {
             String mappingJson = new String(mappingFile.getBytes(), StandardCharsets.UTF_8);
             Map<String, String> fieldMapping = new ObjectMapper().readValue(mappingJson, new TypeReference<>() {});
 
-            String sql = "SELECT * FROM user"; // Migliorabile con query parametrizzate, se necessario.
+            String sql = "SELECT * FROM user";
 
             List<UserDestinazioneEntity> userDestinazioneEntityList = (List<UserDestinazioneEntity>) userDestinazioneRepository.findAll();
             Map<String, UserDestinazioneEntity> userMap = userDestinazioneEntityList.stream()
@@ -163,14 +163,16 @@ public class MotoreService {
 
                         String mappedField = fieldMapping.get(sourceColumn);
                         if (mappedField != null) {
-                            if ("is_admin".equals(mappedField) && value instanceof String) {
-                                String roleValue = (String) value;
-
-                                // Se il valore è "admin" o simili, imposta is_admin a true
-                                boolean isAdmin = "admin".equalsIgnoreCase(roleValue) || "administrator".equalsIgnoreCase(roleValue);
+                            if ("is_admin".equals(mappedField)) {
+                                boolean isAdmin = false;
+                                if (value instanceof String) {
+                                    String roleValue = ((String) value).trim().toLowerCase();
+                                    isAdmin = roleValue.contains("admin");
+                                } else if (value instanceof Boolean) {
+                                    isAdmin = (Boolean) value;
+                                }
                                 setFieldIfExists(userOrigine, mappedField, isAdmin);
                             } else {
-                                // Mappatura standard per gli altri campi
                                 setFieldIfExists(userOrigine, mappedField, value);
                             }
                         }
