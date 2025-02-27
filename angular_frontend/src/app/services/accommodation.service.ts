@@ -368,6 +368,12 @@ export class AccommodationService {
     return this.http.get<DefaultAddress[]>(`${BACKEND_URL_PREFIX}/api/address/default`);
   }
 
+  setCoordinates(accommodationId: number, coordinates: {lat: number, lon: number}) {
+    const coordinateObj = {"coordinates": coordinates.lat.toString() + "," + coordinates.lon.toString()};
+        
+    this.http.post<Number[]>(BACKEND_URL_PREFIX + "/api/set_coordinates/" + accommodationId, coordinateObj).subscribe();
+  }
+
   /*private getAuth(): HttpHeaders {
     let headers = new HttpHeaders();
     return headers;

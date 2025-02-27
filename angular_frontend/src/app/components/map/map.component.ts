@@ -4,6 +4,8 @@ import * as L from 'leaflet';
 import { Observable, Subscription, debounceTime, of } from 'rxjs';
 import { AccommodationDTO } from 'src/app/dtos/accommodationDTO';
 import { DefaultAddress } from 'src/app/models/defaultAddress';
+import { AccommodationService } from 'src/app/services/accommodation.service';
+import { DraftService } from 'src/app/services/draft.service';
 import { BACKEND_URL_PREFIX } from 'src/costants';
 
 @Component({
@@ -17,6 +19,8 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
   private defaultMarkers: L.Marker[] = [];
   private subscriptions = new Subscription();
   private defaultAddresses: DefaultAddress[] = [];
+  
+  constructor(private httpClient: HttpClient, private draftService: DraftService, private accommodationService: AccommodationService) { }
 
   @Input() set accommodations$(value: Observable<AccommodationDTO[] | null>) {
     if (value) {
@@ -133,9 +137,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
           `${accommodation.city}, ${accommodation.province}, ${accommodation.country}`
         );
         if (!coordinates) return null;
-        const coordinateObj = {"coordinates": coordinates.lat.toString() + "," + coordinates.lon.toString()};
-        
-        this.httpClient.post<Number[]>(BACKEND_URL_PREFIX + "/api/set_coordinates/" + accommodation.id, coordinateObj).subscribe();
+        this.accommodationService.setCoordinates(accommodation.id, coordinates);
       }
       if (!coordinates) return null;
       
@@ -168,7 +170,6 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
     tiles.addTo(this.map);
   }
 
-  constructor(private httpClient: HttpClient) { }
 
   private clearMarkers(): void {
     this.markers.forEach(marker => marker.removeFrom(this.map));
@@ -204,22 +205,6 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   private async getCoordinatesFromAddress(address: string): Promise<{lat: number, lon: number} | null> {
-    try {
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`
-      );
-      const data = await response.json();
-
-      if (data.length > 0) {
-        return {
-          lat: parseFloat(data[0].lat),
-          lon: parseFloat(data[0].lon)
-        };
-      }
-      return null;
-    } catch (error) {
-      console.error('Errore nella ricerca dell\'indirizzo:', error);
-      return null;
-    }
+    return this.draftService.getCoordinates(address);
   }
 }
