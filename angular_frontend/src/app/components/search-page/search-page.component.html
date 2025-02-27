@@ -39,9 +39,9 @@
 
         <div 
           *ngIf="isOrderByOpen" 
-          class="absolute left-0 top-full z-50 mt-2 w-48 bg-white rounded-xl ring-1 shadow-lg ring-gray-900/5"
+          class="absolute left-0 top-full z-50 mt-2 w-full bg-white rounded-xl ring-1 shadow-lg ring-gray-900/5"
         >
-          <div class="p-4 space-y-2">
+          <div class="p-4 space-y-2 w-full">
             <button (click)="setOrderParam('minPrice', 'ASC' , $event)" class="block px-4 py-2 w-full text-sm text-gray-900 hover:bg-neutral-2 hover:cursor-pointer hover:text-secondary-dark">{{ 'search.priceAsc' | translate }}</button>
             <button (click)="setOrderParam('minPrice', 'DESC' , $event)" class="block px-4 py-2 w-full text-sm text-gray-900 hover:bg-neutral-2 hover:cursor-pointer hover:text-secondary-dark">{{ 'search.priceDesc' | translate }}</button>
             <button (click)="setOrderParam('approvalTimestamp', 'ASC' , $event)" class="block px-4 py-2 w-full text-sm text-gray-900 hover:bg-neutral-2 hover:cursor-pointer hover:text-secondary-dark">{{ 'search.recentAsc' | translate }}</button>
