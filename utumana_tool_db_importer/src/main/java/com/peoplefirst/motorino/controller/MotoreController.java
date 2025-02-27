@@ -36,12 +36,6 @@ public class MotoreController {
      * API principale dell'applicatiovo. Serve ad avviare l'operazione di update tra i due DB.
      * @return Semplice stringa di avvenuta operazione
      */
-//    @Operation(summary="Start the Motore synchronization")
-//    @PostMapping("/start")
-//    public String motoreStart() {
-//        return motoreService.updateDestinationDatabase();
-//    }
-
     @PostMapping("/import")
     public String importUsers(@RequestParam("mappingFile") MultipartFile mappingFile) {
         motoreService.updateDestinationDatabase(mappingFile);
