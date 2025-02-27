@@ -211,7 +211,9 @@ export class DraftService {
   }
 
   removePhoto(draftId: number, photoId: number): void {
-    if(!draftId || draftId < 0 || !photoId || photoId < 0) return;
+    if(!draftId || draftId < 0 || !photoId || photoId < 0) 
+      return;
+    
     const authToken =  localStorage.getItem("token");
     this.http.delete<any>(`${BACKEND_URL_PREFIX}/api/accommodation-draft/${draftId}/remove-photo/${photoId}`, {
       headers: {
