@@ -7,6 +7,8 @@
 	"notFound": "No accommodation found"
 	},
 "accommodation-card-details": {
+	"delete": "Delete",
+	"host": "Host",
 	"city-placeholder-input-field": "City",
 	"province-placeholder-input-field": "Province",
 	"country-placeholder-input-field": "Country",

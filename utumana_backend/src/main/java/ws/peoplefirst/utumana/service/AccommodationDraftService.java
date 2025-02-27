@@ -131,9 +131,9 @@ public class AccommodationDraftService {
         System.out.println("Photo file: " + photo.getOriginalFilename() + " " + photo.getContentType() + " " + photo.getSize());
 
         // save photo file in images/drafts/{draftId}/ 
-        //...
         String fileExtension = photo.getContentType() != null ? photo.getContentType().split("/")[1] : ".jpg";
         String savedPhotoUrl = "images/drafts/" + draftId.toString() + "/" + order.toString() + "." + fileExtension;
+        // TODO save photo file in s3
 
         // save PhotoDraft entity in db
         PhotoDraft photoDraft = new PhotoDraft();
@@ -177,15 +177,24 @@ public class AccommodationDraftService {
             }
             if(photos.get(i).getPhotoOrder() > photoDraft.getPhotoOrder()){
                 photos.get(i).setPhotoOrder(photos.get(i).getPhotoOrder() - 1);
+
                 url = photos.get(i).getPhotoUrl();
                 fileExtension = url.split("\\.")[1];
                 url = url.replaceFirst("/[0-9]+\\." + fileExtension, "/" + photos.get(i).getPhotoOrder() + "." + fileExtension);
                 photos.get(i).setPhotoUrl(url);
+
+                // if new photo order == 0, update mainPhotoUrl
+                if(photos.get(i).getPhotoOrder() == 0){
+                    draft.setMainPhotoUrl(photos.get(i).getPhotoUrl());
+                }
+
+                // TODO update photo url in s3
             }
         }
         draft.setPhotos(photos);
         accommodationDraftRepository.save(draft);
         photoDraftRepository.deleteById(photoDraftId);
+        // TODO delete file from s3
     }
 
     // this method makes no checks on availabilities validity: the check is done in frontend and at the moment of draft transformation into accommodation

@@ -7,6 +7,8 @@
 	"notFound": "Nessuna offerta disponibile"
 	},
 "accommodation-card-details": {
+	"delete": "Elimina",
+	"host": "Proprietario",
 	"city-placeholder-input-field": "Comune",
 	"province-placeholder-input-field": "Provincia",
 	"country-placeholder-input-field": "Paese",

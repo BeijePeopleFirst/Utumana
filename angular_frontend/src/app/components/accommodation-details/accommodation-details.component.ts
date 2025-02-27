@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, debounceTime, distinctUntilChanged, map, Observable, of, Subject, switchMap } from 'rxjs';
+import { BehaviorSubject, debounceTime, distinctUntilChanged, map, Observable, of, Subject, Subscription, switchMap } from 'rxjs';
 import { AccommodationDTO } from 'src/app/dtos/accommodationDTO';
 import { BookingDTO } from 'src/app/dtos/bookingDTO';
 import { Accommodation } from 'src/app/models/accommodation';
@@ -21,7 +21,7 @@ import iconURL from 'src/costants';
   templateUrl: './accommodation-details.component.html',
   styleUrls: ['./accommodation-details.component.css']
 })
-export class AccommodationDetailsComponent implements OnInit {
+export class AccommodationDetailsComponent implements OnInit, OnDestroy {
 
   userId?: number;
 
@@ -97,7 +97,9 @@ export class AccommodationDetailsComponent implements OnInit {
   //-------------------------------------------------------------------------------------
 
 
-  iconUrl = iconURL
+  iconUrl = iconURL;
+  locale: string = 'en';
+  localeSubscription?: Subscription;
 
   //Child Communication:
   chosenAvailability?: {start_date: string, end_date: string, price_per_night: number, accommodation_id: number};
@@ -118,7 +120,9 @@ export class AccommodationDetailsComponent implements OnInit {
   //IMPORTANT NOTE: check that the Accommodation has both main photo url in accommodation table
   //AND associated photos in the photo table
   ngOnInit(): void {
-
+    this.localeSubscription = this.translateService.onLangChange.subscribe(
+      event => this.locale = event.lang.slice(0,2));
+    
     this.queryParams = this.route.snapshot.queryParams;
 
     let id: (string | undefined | null) = this.route.snapshot.params["id"];
@@ -348,6 +352,11 @@ export class AccommodationDetailsComponent implements OnInit {
     )
   }
 
+  ngOnDestroy(): void {
+    if(this.localeSubscription)
+      this.localeSubscription.unsubscribe();
+  }
+  
   private getMonthName(monthIndexLocal: number): string {
     switch(monthIndexLocal) {
       case 0: return "january";
