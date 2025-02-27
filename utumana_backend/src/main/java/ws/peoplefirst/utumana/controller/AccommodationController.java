@@ -751,8 +751,10 @@ public class AccommodationController {
 			Authentication auth) {
 		logger.debug("GET /search");
 
-		// decode destination
-		destination = URLDecoder.decode(destination, StandardCharsets.UTF_8);
+		if(destination != null) {
+			// decode destination
+			destination = URLDecoder.decode(destination, StandardCharsets.UTF_8);
+		}
 
 		// get check-in and check-out dates
 		if (checkIn.isBlank()) {
