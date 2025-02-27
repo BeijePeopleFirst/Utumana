@@ -9,7 +9,7 @@ import { AvailabilityInterface } from 'src/app/models/availability';
 import { Photo } from 'src/app/models/photo';
 import { Service } from 'src/app/models/service';
 import { DraftService } from 'src/app/services/draft.service';
-import iconURL, { imagesPrefix } from 'src/costants';
+import iconURL, { s3Prefix } from 'src/costants';
 
 @Component({
   selector: 'app-create-accommodation-recap',
@@ -137,7 +137,7 @@ export class CreateAccommodationRecapComponent implements OnInit, OnDestroy {
       console.log("Photos on init:", photos);
       this.photoPreviews = [];
       for(let photo of photos){
-        photo.photo_url = imagesPrefix + photo.photo_url;
+        photo.photo_url = s3Prefix + photo.photo_url;
         this.photoPreviews.push(photo);
       };
 

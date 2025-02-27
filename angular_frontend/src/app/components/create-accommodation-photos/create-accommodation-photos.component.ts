@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Photo } from 'src/app/models/photo';
 import { DraftService } from 'src/app/services/draft.service';
-import { imagesPrefix } from 'src/costants';
+import { s3Prefix } from 'src/costants';
 
 @Component({
   selector: 'app-create-accommodation-photos',
@@ -33,7 +33,8 @@ export class CreateAccommodationPhotosComponent implements OnInit {
       console.log("Photos on init:", photos);
       this.previews = [];
       for(let photo of photos){
-        photo.photo_url = imagesPrefix + photo.photo_url;
+        //photo.photo_url = s3Prefix + encodeURIComponent(photo.photo_url);
+        photo.photo_url = s3Prefix + photo.photo_url;
         this.previews.push(photo);
       };
     });
@@ -55,7 +56,7 @@ export class CreateAccommodationPhotosComponent implements OnInit {
         this.draftService.uploadPhoto(this.draftId, this.photoFiles[i], startingOrderPosition + i).subscribe({
           next: (photo) => {
             if(photo){
-              photo.photo_url = imagesPrefix + photo.photo_url;
+              photo.photo_url = s3Prefix + photo.photo_url;
               this.previews.push(photo);
               console.log("Photo uploaded", photo);
             }else{
