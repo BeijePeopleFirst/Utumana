@@ -40,6 +40,11 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class AccommodationControllerTest {
 
+    /**
+     * GET - API: /search
+     * MTEHOD: searchResults(...)
+     */
+
     private final String DESTINATION = "Rome";
     @InjectMocks
     private AccommodationController accommodationController;

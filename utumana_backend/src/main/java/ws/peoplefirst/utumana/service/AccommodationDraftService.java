@@ -130,16 +130,21 @@ public class AccommodationDraftService {
         AccommodationDraft draft = getDraftById(draftId);
         System.out.println("Photo file: " + photo.getOriginalFilename() + " " + photo.getContentType() + " " + photo.getSize());
 
-        // save photo file in images/drafts/{draftId}/ 
-        String fileExtension = photo.getContentType() != null ? photo.getContentType().split("/")[1] : ".jpg";
-        String savedPhotoUrl = "images/drafts/" + draftId.toString() + "/" + order.toString() + "." + fileExtension;
-        // TODO save photo file in s3
-
         // save PhotoDraft entity in db
         PhotoDraft photoDraft = new PhotoDraft();
-        photoDraft.setPhotoUrl(savedPhotoUrl);
+        photoDraft.setPhotoUrl("tempUrl");
         photoDraft.setPhotoOrder(order);
         photoDraft.setAccommodationDraft(draft);
+        photoDraft = photoDraftRepository.save(photoDraft);
+
+        // save photo file in images/drafts/{draftId}/ 
+        String fileExtension = photo.getContentType() != null ? photo.getContentType().split("/")[1] : ".jpg";
+        String savedPhotoUrl = "images/drafts/" + draftId.toString() + "/" + photoDraft.getId().toString() + "." + fileExtension;
+        // TODO save photo file in s3
+
+        // update photo url in photo draft
+        photoDraft.setPhotoUrl(savedPhotoUrl);
+        photoDraft = photoDraftRepository.save(photoDraft);
         
         List<PhotoDraft> photos = draft.getPhotos();
         photos.add(photoDraft);
@@ -170,18 +175,12 @@ public class AccommodationDraftService {
         }
 
         List<PhotoDraft> photos = draft.getPhotos();
-        String url, fileExtension;
         for(int i=0; i<photos.size(); i++){
             if(photos.get(i).getId() == photoDraftId){
                 photos.remove(i);
             }
             if(photos.get(i).getPhotoOrder() > photoDraft.getPhotoOrder()){
                 photos.get(i).setPhotoOrder(photos.get(i).getPhotoOrder() - 1);
-
-                url = photos.get(i).getPhotoUrl();
-                fileExtension = url.split("\\.")[1];
-                url = url.replaceFirst("/[0-9]+\\." + fileExtension, "/" + photos.get(i).getPhotoOrder() + "." + fileExtension);
-                photos.get(i).setPhotoUrl(url);
 
                 // if new photo order == 0, update mainPhotoUrl
                 if(photos.get(i).getPhotoOrder() == 0){
