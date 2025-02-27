@@ -21,11 +21,12 @@ public class SearchAccomodationCriteria {
     private String orderDirection;
     private Long userId;
     private Pageable pageable;
+    private String addressName;
 
     public SearchAccomodationCriteria(String destination, LocalDate checkInDate, LocalDate checkOutDate,
                                       Integer numberOfGuests, Boolean freeOnly, List<Long> serviceIds, Integer minRating, Integer maxRating,
                                       Double minPrice, Double maxPrice, String orderBy,
-                                      String orderDirection, Long userId, Pageable pageable) {
+                                      String orderDirection, String addressName, Long userId, Pageable pageable){
         this.destination = destination;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
@@ -38,6 +39,7 @@ public class SearchAccomodationCriteria {
         this.maxPrice = maxPrice;
         this.orderBy = orderBy;
         this.orderDirection = orderDirection;
+        this.addressName = addressName;
         this.userId = userId;
         this.pageable = pageable;
     }
@@ -156,6 +158,14 @@ public class SearchAccomodationCriteria {
         this.pageable = pageable;
     }
 
+    public String getAddressName() {
+        return addressName;
+    }
+
+    public void setAddressName(String addressName) {
+        this.addressName = addressName;
+    }
+
     @Override
     public String toString() {
         return "SearchAccomodationCriteria{" +
@@ -171,6 +181,7 @@ public class SearchAccomodationCriteria {
                 ", maxPrice=" + maxPrice +
                 ", orderBy='" + orderBy + '\'' +
                 ", orderDirection='" + orderDirection + '\'' +
+                ", addressName='" + addressName + '\'' +
                 ", userId=" + userId +
                 ", pageable=" + pageable +
                 '}';

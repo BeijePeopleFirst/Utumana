@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, AfterViewInit, Input, OnDestroy } from '@angular/core';
+import { Component, AfterViewInit, Input, OnDestroy, OnInit } from '@angular/core';
 import * as L from 'leaflet';
-import { Observable, Subscription, debounceTime } from 'rxjs';
+import { Observable, Subscription, debounceTime, of } from 'rxjs';
 import { AccommodationDTO } from 'src/app/dtos/accommodationDTO';
+import { DefaultAddress } from 'src/app/models/defaultAddress';
 import { BACKEND_URL_PREFIX } from 'src/costants';
 
 @Component({
@@ -10,29 +11,85 @@ import { BACKEND_URL_PREFIX } from 'src/costants';
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css']
 })
-export class MapComponent implements AfterViewInit, OnDestroy {
+export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
   private map!: L.Map;
   private markers: L.Marker[] = [];
+  private defaultMarkers: L.Marker[] = [];
   private subscriptions = new Subscription();
+  private defaultAddresses: DefaultAddress[] = [];
 
   @Input() set accommodations$(value: Observable<AccommodationDTO[] | null>) {
-    this.subscriptions.add(
-      value.pipe(debounceTime(50)).subscribe(accommodations => {
-        this.clearMarkers();
-        if (accommodations) {
-          this.processMarkers(accommodations);
-        }
-      })
-    );
+    if (value) {
+      this.subscriptions.add(
+        value.pipe(debounceTime(50)).subscribe(accommodations => {
+          this.clearMarkers();
+          if (accommodations) {
+            this.processMarkers(accommodations);
+          }
+          if (this.map) {
+            this.addDefaultMarkers();
+          }
+        })
+      );
+    }
+  }
+
+  ngOnInit(): void {
+    this.loadDefaultAddresses();
   }
 
   ngAfterViewInit(): void {
     this.initMap();
-    setTimeout(() => this.map.invalidateSize(), 0);
+    setTimeout(() => {
+      this.map.invalidateSize();
+    }, 0);
   }
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+  }
+
+  private loadDefaultAddresses(): void {
+    this.httpClient.get<DefaultAddress[]>(BACKEND_URL_PREFIX + '/api/address/default')
+      .subscribe({
+        next: (addresses) => {
+          this.defaultAddresses = addresses;
+          if (this.map) {
+            this.addDefaultMarkers();
+          }
+        },
+        error: (error) => {
+          console.error('Error in loadDefaultAddresses:', error);
+        }
+      });
+  }
+
+  private async addDefaultMarkers(): Promise<void> {
+    
+    if (!this.defaultAddresses.length || !this.map) {
+      return;
+    }
+
+    const defaultIcon = L.icon({
+      iconUrl: 'assets/icons/office-building.png',
+      iconSize: [32, 32],
+      iconAnchor: [16, 32],
+      popupAnchor: [0, -32]
+    });
+
+    for (const address of this.defaultAddresses) {
+      address.lat && address.lon
+      const marker = L.marker([address.lat, address.lon], { icon: defaultIcon })
+        .addTo(this.map)
+        .bindPopup(`<strong>${address.name}</strong><br>${address.address}`);
+
+      this.defaultMarkers.push(marker)
+    }
+
+    if (this.defaultMarkers.length > 0 && this.markers.length === 0) {
+      const group = L.featureGroup(this.defaultMarkers);
+      this.map.fitBounds(group.getBounds().pad(0.2));
+    }
   }
 
   private async processMarkers(accommodations: AccommodationDTO[]): Promise<void> {
@@ -46,8 +103,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     });
 
     if (validMarkers.length > 0) {
-      const group = L.featureGroup(validMarkers);
-      this.map.fitBounds(group.getBounds().pad(0.2));
+      const allMarkers = [...this.markers, ...this.defaultMarkers];
+      if (allMarkers.length > 0) {
+        const group = L.featureGroup(allMarkers);
+        this.map.fitBounds(group.getBounds().pad(0.2));
+      }
     }
   }
 
@@ -119,15 +179,13 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       try {
         const coordinates = await this.getCoordinatesFromAddress(accommodation.city + ', ' + accommodation.province + ', ' + accommodation.country);
         if (coordinates) {
-          // Crea un'icona personalizzata
           const customIcon = L.icon({
-            iconUrl: 'assets/images/location.png', // Percorso dell'immagine
-            iconSize: [32, 32], // Imposta la dimensione dell'icona
-            iconAnchor: [16, 32], // Punto di ancoraggio dell'icona (centro inferiore dell'icona)
-            popupAnchor: [0, -32] // Punto di ancoraggio del popup (sopra l'icona)
+            iconUrl: 'assets/images/location.png',
+            iconSize: [32, 32],
+            iconAnchor: [16, 32],
+            popupAnchor: [0, -32]
           });
   
-          // Aggiungi il marker con l'icona personalizzata
           const marker = L.marker([coordinates.lat, coordinates.lon], { icon: customIcon })
             .addTo(this.map)
             .bindPopup(`
@@ -139,7 +197,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         console.error('Errore nel geocoding dell\'indirizzo:', error);
       }
   
-    // Se ci sono marker, centra la mappa per mostrarli tutti
     if (this.markers.length > 0) {
       const group = L.featureGroup(this.markers);
       this.map.fitBounds(group.getBounds(), { padding: [50, 50] });

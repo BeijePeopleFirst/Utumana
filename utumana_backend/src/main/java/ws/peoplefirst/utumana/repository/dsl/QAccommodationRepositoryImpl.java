@@ -15,10 +15,13 @@ import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+
+import ws.peoplefirst.utumana.AddressConfiguration;
 import ws.peoplefirst.utumana.criteria.SearchAccomodationCriteria;
 import ws.peoplefirst.utumana.dto.AccommodationDTO;
 import ws.peoplefirst.utumana.exception.TheJBeansException;
@@ -27,12 +30,16 @@ import ws.peoplefirst.utumana.model.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 public class QAccommodationRepositoryImpl implements QAccommodationRepository {
 
     @PersistenceContext
     private EntityManager entityManager;
+    
+    @Autowired
+    private AddressConfiguration addressConfiguration;
 
     @Override
     public Page<AccommodationDTO> searchAccomodation(SearchAccomodationCriteria criteria) {
@@ -171,6 +178,46 @@ public class QAccommodationRepositoryImpl implements QAccommodationRepository {
                     NumberExpression<Double> minPriceExpr = minPriceSubquery.coalesce(Double.MAX_VALUE);
                     orderSpecifier = new OrderSpecifier<>(order, minPriceExpr);
                     break;
+                case "distance":
+                    System.out.println(criteria);
+                    String addressName = criteria.getAddressName(); 
+                    AddressConfiguration.DefaultAddress defaultAddress = null;
+                    System.out.println("addressName: " + addressName);
+                    if (addressName != null && !addressName.isEmpty()) {
+                        Optional<AddressConfiguration.DefaultAddress> foundAddress = addressConfiguration.getDefaultAddresses()
+                                .stream()
+                                .filter(addr -> addressName.equals(addr.getAddress()))
+                                .findFirst();
+                        if (foundAddress.isPresent()) {
+                            defaultAddress = foundAddress.get();
+                        }
+                    }
+                    
+                    // Se non è stato trovato un indirizzo specifico, usa il primo disponibile
+                    if (defaultAddress == null && !addressConfiguration.getDefaultAddresses().isEmpty()) {
+                        defaultAddress = addressConfiguration.getDefaultAddresses().get(0);
+                    }
+                    
+                    double refLat = defaultAddress != null ? defaultAddress.getLat() : 45.43915047718785;
+                    double refLon = defaultAddress != null ? defaultAddress.getLon() : 9.100000000000001;
+                
+                    NumberExpression<Double> latExpr = Expressions.numberTemplate(Double.class, 
+                        "cast(substring({0}, 1, locate(',', {0})-1) as double)", 
+                        accommodation.coordinates);
+
+                    NumberExpression<Double> lonExpr = Expressions.numberTemplate(Double.class, 
+                        "cast(substring({0}, locate(',', {0})+1) as double)", 
+                        accommodation.coordinates);
+
+                    NumberExpression<Double> distance = Expressions.numberTemplate(Double.class,
+                        "6371 * acos(cos(radians({0})) * cos(radians({1})) * cos(radians({2}) - radians({3})) + " +
+                        "sin(radians({0})) * sin(radians({1})))",
+                        refLat, latExpr, refLon, lonExpr);
+
+                    System.out.println("distance: " + distance);
+                    orderSpecifier = new OrderSpecifier<>(order, distance);
+                    break;
+                
                 default:
                     PathBuilder<Accommodation> pathBuilder = new PathBuilder<>(Accommodation.class, "accommodation");
                     ComparableExpressionBase<?> fieldPath = pathBuilder.getComparable(orderBy, Comparable.class);
