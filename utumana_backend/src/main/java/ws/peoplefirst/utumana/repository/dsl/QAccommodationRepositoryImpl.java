@@ -48,6 +48,7 @@ public class QAccommodationRepositoryImpl implements QAccommodationRepository {
         QAccommodation accommodation = QAccommodation.accommodation;
         QAccommodationRating accommodationRating = QAccommodationRating.accommodationRating;
         QAvailability availability = QAvailability.availability;
+        QBooking booking = QBooking.booking;
         QService service = QService.service;
 
         // Costruzione dei filtri principali
@@ -76,9 +77,23 @@ public class QAccommodationRepositoryImpl implements QAccommodationRepository {
         BooleanBuilder availabilityBuilder = new BooleanBuilder();
         LocalDate checkInDate = criteria.getCheckInDate();
         LocalDate checkOutDate = criteria.getCheckOutDate();
+
         if (checkInDate != null && checkOutDate != null) {
             availabilityBuilder.and(availability.startDate.loe(checkInDate))
-                    .and(availability.endDate.goe(checkOutDate));
+                               .and(availability.endDate.goe(checkOutDate));
+            
+            availabilityBuilder.and(
+                availability.accommodation.id.notIn(
+                    JPAExpressions.select(booking.accommodation.id)
+                                .from(booking)
+                                .where(
+                                    booking.checkOut.goe(checkInDate.atTime(14,0))
+                                        .and(
+                                            booking.checkIn.loe(checkOutDate.atTime(10,0, 0))
+                                        )
+                                )
+                )
+            );
         }
 
         // Filtro per freeOnly

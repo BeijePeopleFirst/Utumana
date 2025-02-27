@@ -339,7 +339,7 @@ public class BookingService {
 		if(startDate.isBefore(checkIn) && endDate.isAfter(checkOut)) return true;
 
 		//Because there should be at least one day dedicated to set the Accommodation up for the new Guest:
-		if(startDate.isEqual(checkOut) || endDate.isEqual(checkIn)) return true;
+		//if(startDate.isEqual(checkOut) || endDate.isEqual(checkIn)) return true;
 		
 		return false;
 	}
