@@ -76,8 +76,8 @@ export class CreateAccommodationPhotosComponent implements OnInit {
     }
   }
 
-  removePhoto(preview: Photo): void {
-    this.previews = this.previews.filter(p => p.id != preview.id);
-    this.draftService.removePhoto(this.draftId, preview.id);
+  removePhoto(previewId: number): void {
+    this.previews = this.previews.filter(p => p.id != previewId);
+    this.draftService.removePhoto(this.draftId, previewId);
   }
 }
