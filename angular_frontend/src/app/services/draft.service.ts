@@ -205,7 +205,7 @@ export class DraftService {
     }).pipe(
       catchError(error => {
         console.error(error);
-        return of(null);
+        throw error;
       })
     );
   }

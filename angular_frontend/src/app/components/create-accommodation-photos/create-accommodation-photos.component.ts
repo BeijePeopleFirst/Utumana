@@ -12,6 +12,7 @@ import { imagesPrefix } from 'src/costants';
 export class CreateAccommodationPhotosComponent implements OnInit {
   draftId: number;
   genericError: boolean = false;
+  payloadTooLarge: boolean = false;
   photoFiles!: FileList;
   previews!: Photo[];
 
@@ -64,7 +65,10 @@ export class CreateAccommodationPhotosComponent implements OnInit {
           error: error => {
             console.error(error);
             if(error.status == 413){  // payload too large
-              // inform user ?
+              this.payloadTooLarge = true;
+              setTimeout(() => {
+                this.payloadTooLarge = false;
+              }, 5000);
             }
           }
         });
