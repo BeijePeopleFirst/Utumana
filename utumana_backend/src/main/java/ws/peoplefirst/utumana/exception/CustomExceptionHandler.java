@@ -118,4 +118,16 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 		return ResponseEntity.status(errorCode).body(re);
 	}
 
+	// catch all other types of RuntimeException and avoid returning 401 error
+	@ExceptionHandler(value = {RuntimeException.class})
+	public ResponseEntity<ErrorMessage> ControllerExceptionHandler(RuntimeException ex, WebRequest request) {
+		int errorCode = 500;
+		ErrorMessage re = new ErrorMessage();
+		re.setMessage(ex.getLocalizedMessage());
+		re.setStatus(errorCode);
+		re.setTime(LocalDateTime.now());
+		log.error(re.getMessage());
+		ex.printStackTrace();
+		return ResponseEntity.status(errorCode).body(re);
+	}
 }
