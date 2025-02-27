@@ -6,6 +6,7 @@ import { AccommodationCardComponent } from './components/accommodation-card/acco
 import {HttpClientModule,HttpClient, HTTP_INTERCEPTORS} from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthInterceptor } from './interceptors/authInterceptor.service';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -54,6 +55,8 @@ import { DraftCardsComponent } from './components/draft-cards/draft-cards.compon
 import { CreateAccommodationConfirmModalComponent } from './components/create-accommodation-confirm-modal/create-accommodation-confirm-modal.component';
 import { MapComponent } from './components/map/map.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AdminDashboardMainAndSidenavComponent } from './components/admin-dashboard-main-and-sidenav/admin-dashboard-main-and-sidenav.component';
+import { AdminDashboardHomePanelComponent } from './components/admin-dashboard-home-panel-component/admin-dashboard-home-panel-component.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -100,7 +103,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     DraftCardComponent,
     DraftCardsComponent,
     CreateAccommodationConfirmModalComponent,
-    MapComponent
+    MapComponent,
+    AdminDashboardMainAndSidenavComponent,
+    AdminDashboardHomePanelComponent
   ],
   imports: [
     BrowserModule,
@@ -115,7 +120,8 @@ export function HttpLoaderFactory(http: HttpClient) {
         deps:[HttpClient]
       }
     }),
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatSidenavModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }

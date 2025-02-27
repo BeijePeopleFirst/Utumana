@@ -20,6 +20,8 @@ import { CreateAccommodationInfoComponent } from './components/create-accommodat
 import { CreateAccommodationPhotosComponent } from './components/create-accommodation-photos/create-accommodation-photos.component';
 import { CreateAccommodationRecapComponent } from './components/create-accommodation-recap/create-accommodation-recap.component';
 import { BookNowComponent } from './components/book-now/book-now.component';
+import { AdminDashboardMainAndSidenavComponent } from './components/admin-dashboard-main-and-sidenav/admin-dashboard-main-and-sidenav.component';
+import { AdminDashboardHomePanelComponent } from './components/admin-dashboard-home-panel-component/admin-dashboard-home-panel-component.component';
 
 const routes: Routes = [
   {path: 'login', title: "Login", component: LoginComponent},
@@ -39,7 +41,10 @@ const routes: Routes = [
   {path: 'host_dashboard', title: "Host Dashboard", component: HostDashboardComponent, canActivate: [authGuard]},
   {path: 'accommodation/:id', title: "Accommodation Details", component: AccommodationDetailsComponent, canActivate: [authGuard]},
   {path: 'book/:id', component: BookNowComponent, canActivate: [authGuard]},
-  {path: 'confirm_booking_on_creation', component: ConfirmBookingBooknowComponent, canActivate: [authGuard]}
+  {path: 'confirm_booking_on_creation', component: ConfirmBookingBooknowComponent, canActivate: [authGuard]},
+  {path: 'admin-dashboard', component: AdminDashboardMainAndSidenavComponent, canActivate: [authGuard], children: [
+    {path: '', component: AdminDashboardHomePanelComponent, canActivate: [authGuard]}
+  ]}
   // { path: '**', title: "Error", component: PageNotFoundComponent }
 ];
 
