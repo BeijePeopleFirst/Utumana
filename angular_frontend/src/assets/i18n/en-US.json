@@ -193,7 +193,7 @@
 
 	"photos": "Photos",
 	"choose_photos": "Choose Photos",
-	"photos_instructions": "The first photo will be used as the main photo of this accommodation. At least one photo is required. Files must not exceed 7 MB.",
+	"photos_instructions": "The first photo will be used as the main photo of this accommodation. At least one photo is required. You can upload up to 10 photos. Files must not exceed 7 MB.",
 	"drag_and_drop": "Drag and drop",
 	"files_here": "images here",
 	"or": "or",
@@ -202,6 +202,7 @@
 	"photos_preview": "Photos Preview",
 	"no_photos": "No photos",
 	"payload_too_large": "Error: maximum allowed size (7 MB) exceeded for file ",
+	"too_many_photos": "Error: maximum allowed number of photos (10) exceeded",
 
 	"recap": "Confirm",
 	"no_address": "No address",

@@ -6,6 +6,7 @@ const s3Prefix = BACKEND_URL_PREFIX + "/api/s3/"; //"https://s3.eu-south-1.amazo
 const prefixUrl = "http://localhost:4200"
 
 const LATEST_UPLOADS_LIMIT = 20;
+const MAX_NUMBER_OF_PHOTOS_PER_ACCOMMODATION = 10;
 
 export default iconURL;
-export { iconURL, imagesURL, prefixUrl, BACKEND_URL_PREFIX, LATEST_UPLOADS_LIMIT, s3Prefix };
+export { iconURL, imagesURL, prefixUrl, BACKEND_URL_PREFIX, LATEST_UPLOADS_LIMIT, s3Prefix, MAX_NUMBER_OF_PHOTOS_PER_ACCOMMODATION };

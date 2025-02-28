@@ -4,7 +4,7 @@ import { lastValueFrom } from 'rxjs';
 import { Photo } from 'src/app/models/photo';
 import { DraftService } from 'src/app/services/draft.service';
 import { S3Service } from 'src/app/services/s3.service';
-import { s3Prefix } from 'src/costants';
+import { MAX_NUMBER_OF_PHOTOS_PER_ACCOMMODATION, s3Prefix } from 'src/costants';
 
 @Component({
   selector: 'app-create-accommodation-photos',
@@ -13,11 +13,13 @@ import { s3Prefix } from 'src/costants';
 })
 export class CreateAccommodationPhotosComponent implements OnInit {
   draftId: number;
+  photoFiles!: FileList;
+  previews!: Photo[];
+
   genericError: boolean = false;
   payloadTooLarge: boolean = false;
   fileToolarge: string = '';
-  photoFiles!: FileList;
-  previews!: Photo[];
+  tooManyPhotos: boolean = false;
 
   constructor(
     private router: Router,
@@ -64,6 +66,10 @@ export class CreateAccommodationPhotosComponent implements OnInit {
       let startingOrderPosition = this.previews.length;
       let currentUpload;
       for (let i = 0; i < this.photoFiles.length; i++) {
+        if(startingOrderPosition + i >= MAX_NUMBER_OF_PHOTOS_PER_ACCOMMODATION){
+          this.tooManyPhotos = true;
+          return;
+        }
         currentUpload = this.draftService.uploadPhoto(this.draftId, this.photoFiles[i], startingOrderPosition + i);
         await lastValueFrom(currentUpload).then(photo => {
           if(photo){
