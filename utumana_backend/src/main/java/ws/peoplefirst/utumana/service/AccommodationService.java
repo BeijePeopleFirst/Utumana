@@ -13,6 +13,7 @@ import ws.peoplefirst.utumana.criteria.SearchAccomodationCriteria;
 import ws.peoplefirst.utumana.dto.AccommodationDTO;
 import ws.peoplefirst.utumana.dto.BookingDTO;
 import ws.peoplefirst.utumana.dto.PriceDTO;
+import ws.peoplefirst.utumana.dto.UserDTO;
 import ws.peoplefirst.utumana.exception.ForbiddenException;
 import ws.peoplefirst.utumana.exception.IdNotFoundException;
 import ws.peoplefirst.utumana.exception.InvalidJSONException;
@@ -23,7 +24,11 @@ import ws.peoplefirst.utumana.utility.BookingStatus;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -54,6 +59,9 @@ public class AccommodationService {
 
     @Autowired
     private ServiceService serviceService;
+
+    @Autowired
+    private BookingService bookingService;
 
     public Accommodation approveAccommodation(Long accommodationId) {
         Accommodation accommodation = findByIdAndHidingTimestampIsNull(accommodationId);
@@ -689,4 +697,155 @@ public class AccommodationService {
     public void setCoordinates(String coordinates, Long accommodationId) {
         accommodationRepository.setCoordinates(coordinates, accommodationId);
     }
+
+    public List<String> fetchFullAvailabilityListForAccommodation(Long accommodationId, UserDTO user) {
+        List<Booking> values = bookingService.findByStatusInAndAccommodationId(Arrays.asList(
+                BookingStatus.DOING, BookingStatus.ACCEPTED, BookingStatus.PENDING
+        ), accommodationId);
+
+        List<Booking> copy2 = new ArrayList<>();
+
+        for (Booking b : values) {
+            if (b.getStatus().equals(BookingStatus.PENDING) && b.getUser().getId() != user.getId())
+                ;
+            else {
+                copy2.add(b);
+            }
+        }
+
+        // Now lets retrieve the Accommodation Availabilities and remove from those the occupied days:
+        List<Availability> avs = this.availabilityService.findByAccommodationId(accommodationId);
+
+        List<List<LocalDate>> occupiedDates = new ArrayList<List<LocalDate>>(); // From Booking Obj to List of Dates
+        List<LocalDate> availableDates = new ArrayList<LocalDate>(); // From Availability Obj to List of Dates
+
+        List<String> availabilities = new ArrayList<String>(); // RESULT: dd-Month-yyyy
+
+        LocalDate checkIn = null;
+        LocalDate checkOut = null;
+        LocalDate cursor = null;
+        for (Booking b : copy2) {
+            checkIn = b.getCheckIn().toLocalDate();
+            checkOut = b.getCheckOut().toLocalDate();
+            cursor = checkIn;
+
+            while (cursor.isBefore(checkOut) || cursor.isEqual(checkOut)) {
+                occupiedDates = addToOccupiedDates(occupiedDates, cursor, b.getUserId());
+                cursor = cursor.plus(Period.ofDays(1));
+            }
+
+        }
+
+        for (Availability a : avs) {
+            checkIn = a.getStartDate();
+            checkOut = a.getEndDate();
+            cursor = checkIn;
+
+            while (cursor.isBefore(checkOut) || cursor.isEqual(checkOut)) {
+                availableDates.add(cursor);
+                cursor = cursor.plus(Period.ofDays(1));
+            }
+
+        }
+
+        // Now I sort the dates list for the occupied ones:
+        for (List<LocalDate> l : occupiedDates)
+            l.sort((d1, d2) -> d1.compareTo(d2));
+
+        // Now I add the avaiable days from the occupied ones:
+        List<String> possibleRemovals = new ArrayList<String>();
+        for (List<LocalDate> l : occupiedDates) {
+            for (int cursorIndex = 0; cursorIndex < l.size(); cursorIndex++) {
+                for (LocalDate dAv : availableDates) {
+                    if ((l.get(cursorIndex)).isEqual(dAv) && cursorIndex != (l.size() - 1)) {
+                        if (availabilities.indexOf(createDateString(l.get(cursorIndex))) != -1) possibleRemovals.add(createDateString(l.get(cursorIndex)));
+                    } 
+                    else if((l.get(cursorIndex)).isEqual(dAv) && cursorIndex == (l.size() - 1)) availabilities.add(createDateString(l.get(cursorIndex)));
+                }
+            }
+        }
+
+        // Now I remove the incorrect dates:
+        List<String> copySupport = new ArrayList<String>(availabilities);
+
+        for (String c : copySupport)
+            if (availabilities.indexOf(c) != -1) availabilities = recursiveRemoval(availabilities, c);
+
+        // Now I add all the available dates:
+
+        Set<LocalDate> notAdd = new HashSet<LocalDate>();
+        for (List<LocalDate> occ : occupiedDates)
+            for (LocalDate occD : occ)
+                notAdd.add(occD);
+
+        for (LocalDate add : availableDates)
+            if (!(notAdd.contains(add))) availabilities.add(createDateString(add));
+
+        return availabilities;
+    }
+
+    //dd-Month-yyyy:
+	private static String createDateString(LocalDate date) {
+		String[] tmp = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).split("-");
+		String monthName = getMonthNameByNumber(Integer.parseInt(tmp[1]));
+
+		return tmp[2] + "-" + monthName + "-" + tmp[0];
+	}
+
+	private static String getMonthNameByNumber(int monthNumber) {
+		return switch(monthNumber) {
+			case 1 -> "January";
+			case 2 -> "February";
+			case 3 -> "March";	
+			case 4 -> "April";
+			case 5 -> "May";
+			case 6 -> "June";
+			case 7 -> "July";
+			case 8 -> "August";
+			case 9 -> "September";
+			case 10 -> "October";
+			case 11 -> "November";
+			case 12 -> "December";		
+			default -> "Error";
+		};
+	}
+
+	private static List<String> recursiveRemoval(List<String> list, String factor) {
+		if (list.contains(factor)) {
+			list.remove(factor);
+			return recursiveRemoval(list, factor);
+		}
+		return list;
+	}
+
+	private static List<List<LocalDate>> addToOccupiedDates(List<List<LocalDate>> occupiedDates, LocalDate cursor, Long userId) {
+		if(occupiedDates.isEmpty()) {
+
+			int index = 0;
+			while(index <= userId) {
+				occupiedDates.add(new ArrayList<LocalDate>());
+				index++;
+			}
+
+			occupiedDates.get(userId.intValue()).add(cursor);
+			return occupiedDates;
+		}
+		else {
+			if(occupiedDates.size() <= userId) {
+
+				int index = occupiedDates.size();
+				while(index <= userId) {
+					occupiedDates.add(new ArrayList<LocalDate>());
+					index++;
+				}
+
+				occupiedDates.get(userId.intValue()).add(cursor);
+				return occupiedDates;
+			}
+			else {
+				occupiedDates.get(userId.intValue()).add(cursor);
+				return occupiedDates;
+			}
+		}
+	}
 }

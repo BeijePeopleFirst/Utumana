@@ -843,74 +843,11 @@ public class AccommodationController {
 		boolean isFavourite = accommodationService.isFavourite(accommodationId, user.getId());
 		res.put("isFavourite", isFavourite);
 
-		//"pendingByUserOrAcceptedOrDoingBookings":
-		List<Booking> values = bookingService.findByStatusInAndAccommodationId(Arrays.asList(
-			BookingStatus.DOING, BookingStatus.ACCEPTED, BookingStatus.PENDING
-		), accommodationId);
-
-		List<BookingDTO> copy = new ArrayList<>();
-		List<Booking> copy2 = new ArrayList<>();
-
-		for(Booking b: values) {
-			if(b.getStatus().equals(BookingStatus.PENDING) && b.getUser().getId() != user.getId());
-			else {
-				copy.add(new BookingDTO(b.getPrice(), b.getStatus(), b.getCheckIn(), b.getCheckOut(), new AccommodationDTO()));
-				copy2.add(b);
-			}
-		}
-
-		res.put("pendingByUserOrAcceptedOrDoingBookings", copy);
-
-		//Now lets retrieve the Accommodation Availabilities and remove from those the occupied days:
-		List<Availability> avs = this.availabilityService.findByAccommodationId(accommodationId);
-		List<String> availabilities = new ArrayList<String>();	//RESULT: dd-Month-yyyy
-
-		Map<LocalDate, Long> occupiedDates = new HashMap<LocalDate, Long>();
-		List<LocalDate> avaiableDates = new ArrayList<LocalDate>();
-
-		LocalDate tmp = null;
-		LocalDate checkIn = null;
-		LocalDate checkOut = null;
-		LocalDate cursor = null;
-		for(Booking b: copy2) {
-			checkIn = b.getCheckIn().toLocalDate();
-			checkOut = b.getCheckOut().toLocalDate();
-			cursor = checkIn;
-
-			while(cursor.isBefore(checkOut) || cursor.isEqual(checkOut)) {
-				occupiedDates.put(cursor, b.getUserId());
-				cursor = cursor.plus(Period.ofDays(1));
-			}
-
-		}
-
-		for(Availability a: avs) {
-			checkIn = a.getStartDate();
-			checkOut = a.getEndDate();
-			cursor = checkIn;
-
-			while(cursor.isBefore(checkOut) || cursor.isEqual(checkOut)) {
-				avaiableDates.add(cursor);
-				cursor = cursor.plus(Period.ofDays(1));
-			}
-
-		}
-
-		//Now I sort both lists:
-		List<LocalDate
-		avaiableDates.sort((l, r) -> l.compareTo(r));
-
-		boolean isLastOccupiedDay = false;
-		for(LocalDate occ: occupiedDates)
-			for(LocalDate av: avaiableDates) {
-				isLastOccupiedDay = checkIfItsLastOccupiedDay(occ);
-			}
+		
+		List<String> availabilities = this.accommodationService.fetchFullAvailabilityListForAccommodation(accommodationId, user);
+		res.put("availabilities_post_elaboration", availabilities);
 
 		return ok(res);
-	}
-
-	private static boolean checkIfItsLastOccupiedDay(LocalDate d) {
-
 	}
 
 	@Operation(summary = "Return the house that has been approved")
