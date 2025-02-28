@@ -205,7 +205,7 @@ public class AccommodationDraftController {
         return publishDraftService.publishDraft(draftId);
     }
 
-    @DeleteMapping("/id/{id}")
+    @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasAuthority('USER')")
     public void deleteById(@PathVariable("id") Long id, Authentication auth) {
         authenticateCall(auth, id);

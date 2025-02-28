@@ -9,10 +9,9 @@
             </button>
             <div id="accommodations" class="flex flex-wrap gap-3 justify-center">
                 <div *ngFor="let accommodation of accommodations" class="flex p-2 max-w-sm rounded-lg text-start lg:max-w-4xl">
-                    <app-draft-card [accommodation]="accommodation"></app-draft-card>
+                    <app-draft-card [accommodation]="accommodation " [draggable]="draggable" (dragStart)="onDragStart($event.draft, $event.event)"></app-draft-card>
                 </div>
             </div>
-
             <button type="button" class="carousel-arrow responsive-right-arrow" (click)="nextPage()" [disabled]="pageNumber === totalPages - 1">
                 <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg">
