@@ -53,6 +53,7 @@ import { DraftCardComponent } from './components/draft-card/draft-card.component
 import { DraftCardsComponent } from './components/draft-cards/draft-cards.component';
 import { CreateAccommodationConfirmModalComponent } from './components/create-accommodation-confirm-modal/create-accommodation-confirm-modal.component';
 import { MapComponent } from './components/map/map.component';
+import { ProfilePictureModalComponent } from './components/profile-picture-modal/profile-picture-modal.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -99,7 +100,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     DraftCardComponent,
     DraftCardsComponent,
     CreateAccommodationConfirmModalComponent,
-    MapComponent
+    MapComponent,
+    ProfilePictureModalComponent
   ],
   imports: [
     BrowserModule,

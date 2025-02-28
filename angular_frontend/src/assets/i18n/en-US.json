@@ -293,7 +293,9 @@
 	"bio": "Bio",
 	"change_password": "Change password",
 	"edit_bio": "Edit your bio",
-	"edit_bio_placeholder": "Write a short introduction about yourself..."
+	"edit_bio_placeholder": "Write a short introduction about yourself...",
+	"edit_picture": "Edit your profile picture",
+	"edit_picture_instructions": "Upload a photo (max 7 MB)."
 	},
 "review": {
 	"comfort": "Comfort",

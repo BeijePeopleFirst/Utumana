@@ -49,6 +49,7 @@ public class S3Service {
     }
 
     private void upload(String fileKey, InputStream inputStream, long fileSize) throws IOException {
+        System.out.println("Uploading " + fileKey);
          // Crea la richiesta di upload su S3
          PutObjectRequest putObjectRequest = PutObjectRequest.builder()
          .bucket(bucketName)

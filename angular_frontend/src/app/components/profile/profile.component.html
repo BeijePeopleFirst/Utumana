@@ -3,9 +3,9 @@
         <div class="container flex flex-wrap gap-x-20 justify-center items-center">
             <div class="relative">
                 <div class="overflow-hidden relative w-44 h-44 rounded-full shadow-md">
-                    <img class="object-cover absolute top-0 left-0 w-full h-full bg-cover object-fit" src="{{pictureUrl}}" (error)="pictureUrl = defaultPictureUrl" alt="Profile picture">
+                    <img class="object-cover absolute top-0 left-0 w-full h-full bg-cover object-fit" [src]="pictureUrl" (error)="pictureUrl = defaultPictureUrl" alt="Profile picture">
                 </div>
-                <button class="top-0 right-0 rounded-full shadow-md bg-neutral-2 icon" aria-label="edit picture" (click)="editPicture()">
+                <button class="top-0 right-0 rounded-full shadow-md bg-neutral-2 icon" aria-label="edit picture" (click)="showEditPictureModal()">
                     <img src="{{iconsUrl}}\\pencil.png" alt="edit">
                 </button>
             </div>
@@ -66,3 +66,6 @@
 
 <app-profile-bio-modal *ngIf="user && user.id" [userId]="user.id" [bio]="user.bio || ''" [isModalOpen]="isEditBioModalOpen"
 (closeModal)="closeEditBioModal($event)"></app-profile-bio-modal>
+
+<app-profile-picture-modal *ngIf="user && user.id" [userId]="user.id" [isModalOpen]="isEditPictureModalOpen"
+(closeModal)="closeEditPictureModal($event)"></app-profile-picture-modal>

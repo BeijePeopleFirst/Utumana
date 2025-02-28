@@ -72,6 +72,7 @@ public class User implements Serializable, UserDetails {
 	private String password;
 	
 	@Column(name = "is_admin")
+	@JsonProperty(value = "is_admin" )
 	@Schema(description = "Keep the information about the admin role", example = "false")
 	private Boolean isAdmin;
 	
@@ -80,6 +81,7 @@ public class User implements Serializable, UserDetails {
 	private String bio;
 	
 	@Column(name = "profile_picture_url")
+	@JsonProperty(value = "profile_picture_url" )
 	@Schema(description = "User profile picture url", example = "https://example.com/profile.jpg")
 	private String profilePictureUrl;
 	
