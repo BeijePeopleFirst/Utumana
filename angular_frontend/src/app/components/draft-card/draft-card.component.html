@@ -1,4 +1,4 @@
-<div *ngIf="accommodation" class="w-72 group hover:-translate-y-2">
+<div *ngIf="accommodation" class="w-72 group hover:-translate-y-2" [draggable]="draggable" (dragstart)="onDragStart(accommodation, $event)">
     <a class="clickable_card" (click)="onClick($event)">
       <div class="flex overflow-hidden flex-col flex-1 bg-white rounded-lg shadow-lg" >
         <div *ngIf="accommodation.main_photo_blob_url; else no_photo">

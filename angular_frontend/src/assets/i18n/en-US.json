@@ -144,6 +144,10 @@
 	"redirect-in-few-seconds": "Redirect in few seconds...",
 	"created-unavailability-id": "Unavailability Created"
 	},
+"common": {
+	"cancel": "Cancel",
+	"delete": "Delete"
+	},
 "create": {
 	"continue": "Next",
 	"back": "Back",
@@ -282,7 +286,12 @@
 	"title": "My accommodations",
 	"pending": "My accommodations waiting for approval",
 	"rejected": "Rejected accommodations",
-	"drafts": "My drafts"
+	"drafts": "My drafts",
+	"drop_to_delete": "Drag here to delete",
+	"confirm_delete_title": "Confirm deletion",
+	"confirm_delete_message": "Are you sure you want to delete this draft? This action cannot be undone.",
+	"draft_deleted_success": "Draft deleted successfully",
+	"draft_deleted_error": "An error occurred while deleting the draft"
 	},
 "profile": {
 	"reviews_title": "Reviews received",

@@ -144,6 +144,10 @@
 	"redirect-in-few-seconds": "Cambio di Pagina tra qualche secondo...",
 	"created-unavailability-id": "Indisponibilita' Creata"
 	},
+"common": {
+	"cancel": "Annulla",
+	"delete": "Elimina"
+	},
 "create": {
 	"continue": "Continua",
 	"back": "Indietro",
@@ -282,7 +286,12 @@
 	"title": "Le mie sistemazioni",
 	"pending": "Le mie sistemazioni in attesa di conferma",
 	"rejected": "Sistemazioni rifiutate",
-	"drafts": "Le mie bozze"
+	"drafts": "Le mie bozze",
+	"drop_to_delete": "Trascina qui per eliminare",
+    "confirm_delete_title": "Conferma eliminazione",
+    "confirm_delete_message": "Sei sicuro di voler eliminare questa bozza? Questa azione non può essere annullata.",
+    "draft_deleted_success": "Bozza eliminata con successo",
+    "draft_deleted_error": "Si è verificato un errore durante l'eliminazione della bozza"
 	},
 "profile": {
 	"reviews_title": "Recensioni ricevute",
