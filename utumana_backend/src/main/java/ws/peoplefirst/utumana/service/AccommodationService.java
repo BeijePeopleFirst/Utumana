@@ -754,7 +754,10 @@ public class AccommodationService {
                     if ((l.get(cursorIndex)).isEqual(dAv) && cursorIndex != (l.size() - 1)) {
                         if (availabilities.indexOf(createDateString(l.get(cursorIndex))) != -1) possibleRemovals.add(createDateString(l.get(cursorIndex)));
                     } 
-                    else if((l.get(cursorIndex)).isEqual(dAv) && cursorIndex == (l.size() - 1)) availabilities.add(createDateString(l.get(cursorIndex)));
+                    else if((l.get(cursorIndex)).isEqual(dAv) && cursorIndex == (l.size() - 1) && 
+                    ((l.get(cursorIndex)).isEqual(LocalDate.now()) || (l.get(cursorIndex)).isAfter(LocalDate.now()))) {
+                        availabilities.add(createDateString(l.get(cursorIndex)));
+                    }
                 }
             }
         }
@@ -773,7 +776,10 @@ public class AccommodationService {
                 notAdd.add(occD);
 
         for (LocalDate add : availableDates)
-            if (!(notAdd.contains(add))) availabilities.add(createDateString(add));
+            if (!(notAdd.contains(add)) && 
+            (add.isEqual(LocalDate.now()) || add.isAfter(LocalDate.now()))) {
+                availabilities.add(createDateString(add));
+            };
 
         return availabilities;
     }
