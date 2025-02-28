@@ -10,6 +10,7 @@ import { Availability, AvailabilityInterface } from '../models/availability';
 import { UnavailabilityDTO, UnavailabilityInterface } from '../dtos/unavailabilityDTO';
 import { GeneralAccommodationInfoDTO } from '../dtos/generalAccommodationInfoDTO';
 import { Photo } from '../models/photo';
+import { Coordinates } from '../models/coordinates';
 import { S3Service } from './s3.service';
 
 @Injectable({
@@ -259,7 +260,7 @@ export class DraftService {
     );
   }
 
-  async getCoordinates(address: string): Promise<{ lat: number; lon: number } | null> {  
+  async getCoordinates(address: string): Promise<Coordinates | null> {  
     const response = await fetch(
       `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`
     );
@@ -267,7 +268,7 @@ export class DraftService {
     if (data.length > 0) {
       return {
         lat: parseFloat(data[0].lat),
-        lon: parseFloat(data[0].lon)
+        lng: parseFloat(data[0].lon)
       };
     }
     return null;
