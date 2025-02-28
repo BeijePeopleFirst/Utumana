@@ -1,15 +1,15 @@
 <div *ngIf="accommodation" class="w-72 group hover:-translate-y-2">
-    <a class="clickable_card " (click)="onClick($event)">
-      <div class="flex flex-col flex-1 overflow-hidden bg-white rounded-lg shadow-lg" >
-        <div *ngIf="accommodation.main_photo_url; else no_photo">
-          <img [src]="'http://localhost:4200/assets/'+accommodation.main_photo_url" [alt]="accommodation.main_photo_url" class="object-cover h-64">
+    <a class="clickable_card" (click)="onClick($event)">
+      <div class="flex overflow-hidden flex-col flex-1 bg-white rounded-lg shadow-lg" >
+        <div *ngIf="accommodation.main_photo_blob_url; else no_photo">
+          <img [src]="accommodation.main_photo_blob_url" [alt]="accommodation.main_photo_url" class="object-cover h-64">
         </div>
         <ng-template #no_photo>
-          <img src = {{genericHouseUrl}} [alt]="genericHouseUrl" class="object-fit h-64">
+          <img src = {{genericHouseUrl}} [alt]="genericHouseUrl" class="h-64 object-fit">
         </ng-template>
 
-        <div class="flex flex-col items-center flex-1 p-4 text-center">
-          <span *ngIf="accommodation.title" class="flex items-baseline justify-between gap-x-2">
+        <div class="flex flex-col flex-1 items-center p-4 text-center">
+          <span *ngIf="accommodation.title" class="flex gap-x-2 justify-between items-baseline">
             <h4 class="inline group-hover:text-primary-dark">{{accommodation.title}}</h4>
           </span>
   

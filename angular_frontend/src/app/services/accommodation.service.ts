@@ -13,6 +13,7 @@ import { SearchService } from './search.service';
 import { PageResponse} from '../models/paginatedResponse';
 import { PaginationInfo } from '../models/paginationInfo';
 import { DefaultAddress } from '../models/defaultAddress';
+import { S3Service } from './s3.service';
 
 @Injectable({
   providedIn: 'root'
@@ -38,7 +39,11 @@ export class AccommodationService {
   } | null>(null);
   public paginationInfo$ = this.paginationInfoSubject.asObservable();
 
-  constructor(private http: HttpClient, private searchService: SearchService) { }
+  constructor(
+    private http: HttpClient, 
+    private searchService: SearchService, 
+    private s3Service: S3Service
+    ) { }
 
   public getLatestUploads(): Observable<AccommodationDTO[]> {
     return this.getAccommodationsDTO(`${BACKEND_URL_PREFIX}/api/accommodation/latest_uploads`);
@@ -87,8 +92,16 @@ export class AccommodationService {
         console.error(error);
         return of([]);
       }),
-      tap(data => {
+      map(data => {
+        for(let acc of data){
+          this.s3Service.getPhoto(acc.main_photo_url).subscribe(blob => {
+            if(blob != null){
+              acc.main_photo_blob_url = URL.createObjectURL(blob);
+            }
+          })
+        }
         console.log("Accommodation Service - Fetched accommodations DTO:", data);
+        return data;
       })
     );
   }
@@ -110,39 +123,6 @@ export class AccommodationService {
     );
   }
 
-  getAccommodationsDTOToSubject(url: string, offset: number, pageSize: number, subject: Subject<AccommodationDTO[]>): void {
-    // TODO get page of results
-    this.http.get<AccommodationDTO[]>(url).pipe(
-      catchError(error => {
-        console.error(error);
-        return of([]);
-      })
-    ).subscribe(data => {
-      console.log("Accommodation Service - Fetched accommodations DTO:", data);
-      if(data.length == 0){
-        subject.next(data);
-      }else{
-        this.getPricesToSubject(data.slice(offset, offset + pageSize), subject); // remove slice when result will be paginated by backend
-      }
-    });
-  }
-
-  getPricesToSubject(accommodations: AccommodationDTO[], subject: Subject<AccommodationDTO[]>): void {
-    let ids = accommodations.map(a => a.id);
-    this.http.get<PriceDTO[]>(`${BACKEND_URL_PREFIX}/api/accommodation/prices?ids=${ids}`).pipe(
-      catchError(error => {
-        console.error(error);
-        return of([]);
-      })
-    ).subscribe(prices => {
-      for(let i: number = 0; i < prices.length; i++){
-        accommodations[i].min_price = prices[i].min_price;
-        accommodations[i].max_price = prices[i].max_price;
-      }
-      console.log("Accommodation Service - Fetched prices:", prices);
-      subject.next(accommodations);
-    })
-  }
   public getSearchResults(pageNumber: number, pageSize: number): Observable<PageResponse<AccommodationDTO>> {
     const currentParams = this.searchService.getSearchData();
     if (!currentParams) return of({} as PageResponse<AccommodationDTO>);
@@ -199,20 +179,23 @@ export class AccommodationService {
   }
 
   public getAccommodationById(id: number): Observable<(Accommodation | null)> {
-    return this.http.get<(Accommodation | {time: string, status: string, message: string})>(BACKEND_URL_PREFIX + "/api/accommodation/" + id)
-                      .pipe(
-                        map(response => {
-                          if("message" in response) return null;
-                          else return response;
-                        }),
-
-                        catchError(error => {
-                          console.log("Errore");
-                          console.error(error);
-                          return of(null);
-                        })
-                      )
-  }
+    return this.http.get<Accommodation>(BACKEND_URL_PREFIX + "/api/accommodation/" + id).pipe(
+      map(acc => {
+        for(let photo of acc.photos){
+          this.s3Service.getPhoto(photo.photo_url).subscribe(blob => {
+            if(blob != null){
+              photo.blob_url = URL.createObjectURL(blob);
+            }
+          })
+        }
+        return acc;
+      }),
+      catchError(error => {
+        console.error(error);
+        return of(null);
+      })
+    )
+}
 
   public getAccommodationInfo(accId: number): Observable<Map<string, object> | {message: string, status: string, time: string}> {
     return this.http.get<Map<string, object> | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/accommodation_info/" + accId);
@@ -289,10 +272,8 @@ export class AccommodationService {
 
   updateAccommodationAddress(userId: number, accommodation: Accommodation): Observable<Accommodation | null | {message: string, status: string, time: string}> {
     //let headers = this.getAuth();
-    accommodation = Object.assign(new Accommodation(), accommodation);
 
-    return this.http.patch<Accommodation | null | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/accommodation/" + accommodation.id + "/address",
-                        accommodation.toJSON(), {})
+    return this.http.patch<Accommodation | null | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/accommodation/" + accommodation.id + "/address", accommodation)
                       .pipe(
                         catchError(error => {
                           console.error(error);
@@ -305,9 +286,7 @@ export class AccommodationService {
     //let headers = this.getAuth();
     console.log("input ->", accommodation, accommodation.id);
 
-    accommodation = Object.assign(new Accommodation(), accommodation);
-
-    return this.http.patch<Accommodation | null | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/accommodation/" + accommodation.id, accommodation.toJSON(), {})
+    return this.http.patch<Accommodation | null | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/accommodation/" + accommodation.id, accommodation)
                       .pipe(
                         catchError(error => {
                           console.error("Errore in Service Accommodation", error);

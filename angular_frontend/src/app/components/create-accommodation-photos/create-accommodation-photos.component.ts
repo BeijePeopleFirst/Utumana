@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
 import { Photo } from 'src/app/models/photo';
 import { DraftService } from 'src/app/services/draft.service';
+import { S3Service } from 'src/app/services/s3.service';
 import { s3Prefix } from 'src/costants';
 
 @Component({
@@ -21,7 +22,8 @@ export class CreateAccommodationPhotosComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private draftService: DraftService
+    private draftService: DraftService,
+    private s3Service: S3Service
   ) {
     this.draftId = this.route.snapshot.params['draftId'];
   }
@@ -35,7 +37,7 @@ export class CreateAccommodationPhotosComponent implements OnInit {
       console.log("Photos on init:", photos);
       this.previews = [];
       for(let photo of photos){
-        this.draftService.getPhoto(photo.photo_url).subscribe(blob => {
+        this.s3Service.getPhoto(photo.photo_url).subscribe(blob => {
           if(blob == null){
             this.genericError = true;
             return;
@@ -43,7 +45,7 @@ export class CreateAccommodationPhotosComponent implements OnInit {
           photo.blob_url = URL.createObjectURL(blob);
           this.previews.push(photo);
         })
-      };
+      }
     });
   }
 
@@ -65,7 +67,7 @@ export class CreateAccommodationPhotosComponent implements OnInit {
         currentUpload = this.draftService.uploadPhoto(this.draftId, this.photoFiles[i], startingOrderPosition + i);
         await lastValueFrom(currentUpload).then(photo => {
           if(photo){
-            this.draftService.getPhoto(photo.photo_url).subscribe(blob => {
+            this.s3Service.getPhoto(photo.photo_url).subscribe(blob => {
               if(blob == null){
                 this.genericError = true;
                 return;

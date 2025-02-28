@@ -1,15 +1,14 @@
-export class AccommodationDTO{
-    constructor(
-        public id: number,
-        public title: string,
-        public city: string,
-        public main_photo_url: string,
-        public country: string,
-        public province: string,
-        public min_price: number,
-        public max_price: number,
-        public is_favourite:boolean,
-        public rating: number,
-        public coordinates?: string
-        ) {  }
+export interface AccommodationDTO{
+    id: number,
+    title: string,
+    city: string,
+    main_photo_url: string,
+    country: string,
+    province: string,
+    min_price: number,
+    max_price: number,
+    is_favourite:boolean,
+    rating: number,
+    coordinates?: string,
+    main_photo_blob_url?: string,
 }

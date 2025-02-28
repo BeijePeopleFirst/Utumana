@@ -95,7 +95,7 @@
             <label class="label-primary">{{'create.address_notes' | translate}}</label>
             <input class="input-primary" [ngClass]="{'alert-danger': notes.invalid}" 
             type="text" id="notes" name="notes" autocomplete="address-level3" 
-            pattern="[a-zA-Z \-\',\#\.\+]+"   
+            pattern="[a-zA-Z \-',#\.\+]+"   
             [(ngModel)]="address.address_notes" #notes="ngModel"/>
         </div>
         <ng-container *ngIf="notes.invalid">

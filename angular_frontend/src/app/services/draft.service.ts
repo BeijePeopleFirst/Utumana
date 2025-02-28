@@ -10,6 +10,7 @@ import { Availability, AvailabilityInterface } from '../models/availability';
 import { UnavailabilityDTO, UnavailabilityInterface } from '../dtos/unavailabilityDTO';
 import { GeneralAccommodationInfoDTO } from '../dtos/generalAccommodationInfoDTO';
 import { Photo } from '../models/photo';
+import { S3Service } from './s3.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,8 @@ import { Photo } from '../models/photo';
 export class DraftService {
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private s3Service: S3Service
   ) { }
 
   createAccommodationDraft(): Observable<number> {
@@ -175,16 +177,6 @@ export class DraftService {
     );
   }
 
-  getPhoto(photoUrl:string): Observable<Blob | null> {
-    const authToken =  localStorage.getItem("token");
-    return this.http.get<Blob>(`${s3Prefix}${photoUrl}`).pipe(
-      catchError(error => {
-        console.error(error);
-        return of(null);
-      })
-    );
-  }
-
   uploadPhoto(draftId: number, photo: File, order: number): Observable<Photo | null> {
     const authToken =  localStorage.getItem("token");
     const formData: FormData = new FormData();
@@ -242,6 +234,17 @@ export class DraftService {
       catchError(error => {
         console.error(error);
         return of([]);
+      }),
+      map(data => {
+        for(let acc of data){
+          this.s3Service.getPhoto(acc.main_photo_url).subscribe(blob => {
+            if(blob != null){
+              acc.main_photo_blob_url = URL.createObjectURL(blob);
+            }
+          })
+        }
+        console.log("Draft Service - Fetched accommodation drafts DTO:", data);
+        return data;
       })
     );
   }
