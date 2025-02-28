@@ -1,9 +1,12 @@
 package ws.peoplefirst.utumana.controller;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,9 +55,26 @@ public class S3Controller {
         }
         try{
             InputStream inputStream = s3Service.downloadFile(fileKey);
+            //String base64 = convertToBase64(inputStream);
             return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).body(new InputStreamResource(inputStream));
         }catch (IOException e){
             throw new TheJBeansException("Error converting input stream");
         }
+    }
+
+    public static String convertToBase64(InputStream inputStream) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        byte[] buffer = new byte[8192];
+        int bytesRead;
+        
+        try{
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+        }catch (IOException e){
+            throw new TheJBeansException("Error converting input stream");
+        }
+        byte[] bytes = outputStream.toByteArray();
+        return Base64.getEncoder().encodeToString(bytes);
     }
 }

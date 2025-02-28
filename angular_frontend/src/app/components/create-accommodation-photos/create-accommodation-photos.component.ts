@@ -33,9 +33,14 @@ export class CreateAccommodationPhotosComponent implements OnInit {
       console.log("Photos on init:", photos);
       this.previews = [];
       for(let photo of photos){
-        //photo.photo_url = s3Prefix + encodeURIComponent(photo.photo_url);
-        photo.photo_url = s3Prefix + photo.photo_url;
-        this.previews.push(photo);
+        this.draftService.getPhoto(photo.photo_url).subscribe(blob => {
+          if(blob == null){
+            this.genericError = true;
+            return;
+          }
+          photo.blob_url = URL.createObjectURL(blob);
+          this.previews.push(photo);
+        })
       };
     });
   }
@@ -56,8 +61,14 @@ export class CreateAccommodationPhotosComponent implements OnInit {
         this.draftService.uploadPhoto(this.draftId, this.photoFiles[i], startingOrderPosition + i).subscribe({
           next: (photo) => {
             if(photo){
-              photo.photo_url = s3Prefix + photo.photo_url;
-              this.previews.push(photo);
+              this.draftService.getPhoto(photo.photo_url).subscribe(blob => {
+                if(blob == null){
+                  this.genericError = true;
+                  return;
+                }
+                photo.blob_url = URL.createObjectURL(blob);
+                this.previews.push(photo);
+              })
               console.log("Photo uploaded", photo);
             }else{
               console.log("Photo upload failed");

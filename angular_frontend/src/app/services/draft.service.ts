@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AddressDTO } from '../dtos/addressDTO';
-import { BACKEND_URL_PREFIX } from 'src/costants';
+import { BACKEND_URL_PREFIX, s3Prefix } from 'src/costants';
 import { catchError, map, Observable, of, tap } from 'rxjs';
 import { Accommodation } from '../models/accommodation';
 import { Service } from '../models/service';
@@ -175,14 +175,9 @@ export class DraftService {
     );
   }
 
-  getPhoto(photoId: number): Observable<Blob | null> {
+  getPhoto(photoUrl:string): Observable<Blob | null> {
     const authToken =  localStorage.getItem("token");
-    return this.http.get<Blob>(`${BACKEND_URL_PREFIX}/api/accommodation-draft/photo/${photoId}`, {
-      headers: { 
-        Authorization: `Bearer ${authToken}`, 
-        ContentType: 'application/json',
-        AcceptType: 'application/octet-stream' } 
-    }).pipe(
+    return this.http.get<Blob>(`${s3Prefix}${photoUrl}`).pipe(
       catchError(error => {
         console.error(error);
         return of(null);
