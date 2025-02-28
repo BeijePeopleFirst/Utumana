@@ -13,6 +13,7 @@ import { SearchService } from './search.service';
 import { PageResponse} from '../models/paginatedResponse';
 import { PaginationInfo } from '../models/paginationInfo';
 import { DefaultAddress } from '../models/defaultAddress';
+import { Coordinates } from '../models/coordinates';
 
 @Injectable({
   providedIn: 'root'
@@ -368,8 +369,8 @@ export class AccommodationService {
     return this.http.get<DefaultAddress[]>(`${BACKEND_URL_PREFIX}/api/address/default`);
   }
 
-  setCoordinates(accommodationId: number, coordinates: {lat: number, lon: number}) {
-    const coordinateObj = {"coordinates": coordinates.lat.toString() + "," + coordinates.lon.toString()};
+  setCoordinates(accommodationId: number, coordinates: Coordinates) {
+    const coordinateObj = {"coordinates": coordinates.lat.toString() + "," + coordinates.lng.toString()};
         
     this.http.post<Number[]>(BACKEND_URL_PREFIX + "/api/set_coordinates/" + accommodationId, coordinateObj).subscribe();
   }

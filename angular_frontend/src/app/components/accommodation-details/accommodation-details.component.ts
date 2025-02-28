@@ -6,10 +6,12 @@ import { AccommodationDTO } from 'src/app/dtos/accommodationDTO';
 import { BookingDTO } from 'src/app/dtos/bookingDTO';
 import { Accommodation } from 'src/app/models/accommodation';
 import { Booking } from 'src/app/models/booking';
+import { Coordinates } from 'src/app/models/coordinates';
 import { Review } from 'src/app/models/review';
 import { Service } from 'src/app/models/service';
 import { User } from 'src/app/models/user';
 import { AccommodationService } from 'src/app/services/accommodation.service';
+import { DraftService } from 'src/app/services/draft.service';
 import { ReviewService } from 'src/app/services/review.service';
 import { ServiceService } from 'src/app/services/service.service';
 import { UserService } from 'src/app/services/user.service';
@@ -105,6 +107,8 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
   chosenAvailability?: {start_date: string, end_date: string, price_per_night: number, accommodation_id: number};
   queryParams?: Params;
 
+  //Coordinates:
+  coordinates?: Coordinates;
 
   constructor(
     private accommodationService: AccommodationService,
@@ -113,6 +117,7 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private reviewService: ReviewService,
     private translateService: TranslateService,
+    private draftService: DraftService,
     private router: Router
   ) 
   {}
@@ -522,6 +527,9 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
       return;
     }
 
+    this.setCoordinates(this.accommodation);
+    if(this.errorOccurred) return;
+
     this.accommodationService.updateAccommodationAddress(this.userId, this.accommodation).subscribe(
       result => {
         if(!result) {
@@ -540,6 +548,17 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
 
   }
 
+  async setCoordinates(accommodation: Accommodation) {
+    const coordinates = await this.draftService.getCoordinates((accommodation.street ?? '') + ', ' + (accommodation.street_number ?? '') + ', ' + (accommodation.city ?? '') + ', ' + (accommodation.cap ?? '') + ', ' + (accommodation.province ?? '') + ', ' + (accommodation.country ?? ''));
+    console.log(coordinates);
+    if(coordinates && accommodation.id) {
+    this.accommodationService.setCoordinates(accommodation.id, coordinates);
+    this.coordinates = coordinates;
+    } else {
+      this.message = "true";
+      this.errorOccurred = true;
+    }
+  }
   //Need to create the perspective itself
   toggleViewMorePhotosPerspective() {
     this.showViewMorePhotosPerspective = !this.showViewMorePhotosPerspective;

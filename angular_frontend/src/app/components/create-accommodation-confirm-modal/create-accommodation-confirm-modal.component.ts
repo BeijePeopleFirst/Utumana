@@ -38,7 +38,7 @@ export class CreateAccommodationConfirmModalComponent {
     this.draftService.publishDraft(this.draftId).subscribe({
       next: async (accommodationId: number) => {
         if(accommodationId > -1){
-          const coordinates = await this.draftService.getCoordinates(this.address?.street + ', ' + this.address?.street_number + ', ' + this.address?.city + ', ' + this.address?.province + ', ' + this.address?.country)
+          const coordinates = await this.draftService.getCoordinates((this.address?.street ?? '') + ', ' + (this.address?.street_number ?? '') + ', ' + (this.address?.city ?? '') + ', ' + (this.address?.cap ?? '') + ', ' + (this.address?.province ?? '') + ', ' + (this.address?.country ?? ''))
           if(coordinates) {
           this.accommodationService.setCoordinates(accommodationId, coordinates)
           } else {

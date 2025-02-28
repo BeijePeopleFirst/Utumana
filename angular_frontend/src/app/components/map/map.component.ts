@@ -3,6 +3,7 @@ import { Component, AfterViewInit, Input, OnDestroy, OnInit } from '@angular/cor
 import * as L from 'leaflet';
 import { Observable, Subscription, debounceTime, of } from 'rxjs';
 import { AccommodationDTO } from 'src/app/dtos/accommodationDTO';
+import { Coordinates } from 'src/app/models/coordinates';
 import { DefaultAddress } from 'src/app/models/defaultAddress';
 import { AccommodationService } from 'src/app/services/accommodation.service';
 import { DraftService } from 'src/app/services/draft.service';
@@ -115,13 +116,13 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
     }
   }
 
-  getCoordinatesFromString(cooridnates: string): {lat: number, lon: number} | null {
+  getCoordinatesFromString(cooridnates: string): Coordinates | null {
     if (!cooridnates) return null;
     
     const coordinates = cooridnates.split(',');
     if (coordinates.length !== 2) return null;
     
-    return {lat: parseFloat(coordinates[0]), lon: parseFloat(coordinates[1])};
+    return {lat: parseFloat(coordinates[0]), lng: parseFloat(coordinates[1])};
   }
 
   private async createMarker(accommodation: AccommodationDTO): Promise<L.Marker | null> {
@@ -141,7 +142,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
       }
       if (!coordinates) return null;
       
-      return L.marker([coordinates.lat, coordinates.lon], {
+      return L.marker([coordinates.lat, coordinates.lng], {
         icon: L.icon({
           iconUrl: 'assets/images/location.png',
           iconSize: [32, 32],
@@ -187,7 +188,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
             popupAnchor: [0, -32]
           });
   
-          const marker = L.marker([coordinates.lat, coordinates.lon], { icon: customIcon })
+          const marker = L.marker([coordinates.lat, coordinates.lng], { icon: customIcon })
             .addTo(this.map)
             .bindPopup(`
               <strong>${accommodation.title || 'Appartamento'}</strong>
@@ -204,7 +205,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
     }
   }
 
-  private async getCoordinatesFromAddress(address: string): Promise<{lat: number, lon: number} | null> {
+  private async getCoordinatesFromAddress(address: string): Promise<Coordinates | null> {
     return this.draftService.getCoordinates(address);
   }
 }
