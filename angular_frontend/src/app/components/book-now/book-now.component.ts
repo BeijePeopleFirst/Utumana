@@ -108,12 +108,13 @@ export class BookNowComponent implements OnInit {
 
             //Aggiungo i valori alla lista "tmp":
             for(let v of responseInfo2["pendingByUserOrAcceptedOrDoingBookings"]) {
-              tempBooking = new BookingDTO(v.checkIn, v.checkOut, 0, "",
-                                            new AccommodationDTO(this.accommodation.id!, this.accommodation.title, this.accommodation.city!,
-                                              this.accommodation.main_photo_url, this.accommodation.country, this.accommodation.province!,
-                                            0, 0, false, 0
-                                            )
-              );
+              tempBooking = {
+                check_in: v.checkIn, 
+                check_out: v.checkOut, 
+                price: 0, 
+                status: "",
+                accommodation: {id: this.accommodation.id!, title: this.accommodation.title, city: this.accommodation.city!, main_photo_url: this.accommodation.main_photo_url, country: this.accommodation.country, province: this.accommodation.province!, min_price: 0, max_price: 0, is_favourite: false, rating: 0}
+              };
 
               tmp.push(tempBooking);
             }console.log("STAMPO TMP -> ", tmp);
@@ -130,8 +131,8 @@ export class BookNowComponent implements OnInit {
             let cursor: number;
 
             for(let b of tmp) {
-              inDateN = Date.parse(b.checkIn);
-              outDateN = Date.parse(b.checkOut);
+              inDateN = Date.parse(b.check_in);
+              outDateN = Date.parse(b.check_out);
 
               cursor = inDateN;
 

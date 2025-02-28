@@ -9,6 +9,7 @@ import { AvailabilityInterface } from 'src/app/models/availability';
 import { Photo } from 'src/app/models/photo';
 import { Service } from 'src/app/models/service';
 import { DraftService } from 'src/app/services/draft.service';
+import { S3Service } from 'src/app/services/s3.service';
 import iconURL, { s3Prefix } from 'src/costants';
 
 @Component({
@@ -43,7 +44,8 @@ export class CreateAccommodationRecapComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private draftService: DraftService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private s3Service: S3Service
   ) {
     this.draftId = this.route.snapshot.params['draftId'];
   }
@@ -137,7 +139,7 @@ export class CreateAccommodationRecapComponent implements OnInit, OnDestroy {
       console.log("Photos on init:", photos);
       this.photoPreviews = [];
       for(let photo of photos){
-        this.draftService.getPhoto(photo.photo_url).subscribe(blob => {
+        this.s3Service.getPhoto(photo.photo_url).subscribe(blob => {
           if(blob == null){
             this.genericError = true;
             return;
