@@ -137,12 +137,18 @@ export class CreateAccommodationRecapComponent implements OnInit, OnDestroy {
       console.log("Photos on init:", photos);
       this.photoPreviews = [];
       for(let photo of photos){
-        photo.photo_url = s3Prefix + photo.photo_url;
-        this.photoPreviews.push(photo);
-      };
+        this.draftService.getPhoto(photo.photo_url).subscribe(blob => {
+          if(blob == null){
+            this.genericError = true;
+            return;
+          }
+          photo.blob_url = URL.createObjectURL(blob);
+          this.photoPreviews.push(photo);
+        })
+      }
 
       this.arePhotosOk = true;
-      if(this.photoPreviews.length == 0){
+      if(photos.length == 0){
         this.arePhotosOk = false;
       }
     });

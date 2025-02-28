@@ -91,6 +91,6 @@ public class Photo {
 
 	@Override
 	public String toString() {
-		return "Photo [id=" + id + ", photoUrl=" + photoUrl + ", order=" + photoOrder + ",accommodation=" + accommodation.toString() + "]";
+		return "Photo [id=" + id + ", photoUrl=" + photoUrl + ", order=" + photoOrder + "]";
 	}	
 }

@@ -24,6 +24,7 @@ export class CreateAccommodationConfirmModalComponent {
 
   close(): void {
     this.closeModal.emit();
+    this.error = false;
   }
 
   createAccommodation(): void {
@@ -32,18 +33,19 @@ export class CreateAccommodationConfirmModalComponent {
     this.draftService.getAddress(this.draftId).subscribe(address => {
       this.address = address;
     });
+
+    console.log("Publishing...");
     this.draftService.publishDraft(this.draftId).subscribe({
       next: async (accommodationId: number) => {
         if(accommodationId > -1){
+          const coordinates = await this.draftService.getCoordinates(this.address?.street + ', ' + this.address?.street_number + ', ' + this.address?.city + ', ' + this.address?.province + ', ' + this.address?.country)
+          if(coordinates) {
+          this.accommodationService.setCoordinates(accommodationId, coordinates)
+          } else {
+            this.error = true;
+          }
           this.router.navigate(['/accommodation', accommodationId]);
-                const coordinates = await this.draftService.getCoordinates(this.address?.street + ', ' + this.address?.street_number + ', ' + this.address?.city + ', ' + this.address?.province + ', ' + this.address?.country)
-                if(coordinates) {
-                this.accommodationService.setCoordinates(accommodationId, coordinates)
-                } else {
-                  this.error = true;
-                }
-              }
-        else{
+        }else{
           this.error = true;
         }
       },

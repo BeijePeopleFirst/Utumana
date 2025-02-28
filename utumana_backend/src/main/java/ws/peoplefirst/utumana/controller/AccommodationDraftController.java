@@ -161,6 +161,7 @@ public class AccommodationDraftController {
         } catch (NumberFormatException e) {
             throw new InvalidJSONException("Order must be a number");
         }
+        System.out.println("Uploading photo with order " + orderInt);
         return accommodationDraftService.uploadPhoto(draftId, photo, orderInt);
     }
 

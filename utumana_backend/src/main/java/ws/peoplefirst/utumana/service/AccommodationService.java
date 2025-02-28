@@ -24,6 +24,7 @@ import ws.peoplefirst.utumana.utility.BookingStatus;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -47,6 +48,9 @@ public class AccommodationService {
     private AvailabilityRepository availabilityRepository;
 
     @Autowired
+    private PhotoRepository photoRepository;
+
+    @Autowired
     private ServiceRepository serviceRepository;
 
     @Autowired
@@ -54,6 +58,10 @@ public class AccommodationService {
 
     @Autowired
     private ServiceService serviceService;
+
+    @Autowired
+    private S3Service s3Service;
+
 
     public Accommodation approveAccommodation(Long accommodationId) {
         Accommodation accommodation = findByIdAndHidingTimestampIsNull(accommodationId);
@@ -157,6 +165,25 @@ public class AccommodationService {
 
     public List<Review> getAllAccommodationReviews(Long accommodationId) {
         return bookingRepository.getAllAccommodationReviews(accommodationId);
+    }
+
+    public void deleteAllAccommodationImagesExceptMain(Long accommodationId){
+        Accommodation accommodation = findById(accommodationId);
+        List<String> photoUrls = new ArrayList<String>();
+        List<Photo> photos = accommodation.getPhotos();
+        Photo mainPhoto = photos.stream().filter(p -> p.getPhotoOrder().equals(0)).findFirst().orElse(null);
+        accommodation.setPhotos(new ArrayList<>(Arrays.asList(mainPhoto)));
+        accommodationRepository.save(accommodation);
+
+        for (Photo photo : photos) {
+            if(!photo.getPhotoOrder().equals(0)){
+                photoUrls.add(photo.getPhotoUrl());
+                photoRepository.delete(photo);
+            }
+        }
+
+        // delete photos from s3
+        s3Service.deleteAll(photoUrls);
     }
 
     public List<AccommodationDTO> getFavouritesDTO(Long userId) {
@@ -666,6 +693,9 @@ public class AccommodationService {
         List<BookingDTO> futureBookings = bookingRepository.findByStatusACCEPTEDOrDOINGAndAccommodationId(accommodationId);
         System.out.println("future bookings " + futureBookings);
         if (futureBookings.isEmpty()) {
+            // delete all photos except main photo
+            deleteAllAccommodationImagesExceptMain(accommodationId);
+
             toDelete.setHidingTimestamp(LocalDateTime.now());
             System.out.println(toDelete);
             accommodationRepository.save(toDelete);

@@ -201,7 +201,7 @@
 	"from_your_device": "from your device",
 	"photos_preview": "Photos Preview",
 	"no_photos": "No photos",
-	"payload_too_large": "Error: the file uploaded exceeds the maximum allowed size (7 MB)",
+	"payload_too_large": "Error: maximum allowed size (7 MB) exceeded for file ",
 
 	"recap": "Confirm",
 	"no_address": "No address",

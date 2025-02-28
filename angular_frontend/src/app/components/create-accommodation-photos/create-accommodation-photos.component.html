@@ -30,7 +30,7 @@
     <div class="flex flex-row flex-wrap gap-5 justify-center w-full text-center lg:px-32">
         <ng-container *ngIf="previews && previews.length > 0">
             <div *ngFor="let preview of previews" class="flex relative items-center px-5 pt-4 pb-3 h-40 rounded-lg w-fit">
-                <button (click)="removePhoto(preview.id)" class="right-0 -top-1 p-0 w-fit h-min scale-80 close-modal peer"> &times; </button>
+                <button (click)="removePhoto(preview)" class="right-0 -top-1 p-0 w-fit h-min scale-80 close-modal peer"> &times; </button>
                 <img [src]="preview.blob_url" class="w-auto max-h-40 peer-hover:scale105 peer-hover:opacity-50" alt="photo_{{preview.photo_order}}">
             </div>
         </ng-container>
@@ -40,7 +40,7 @@
     </div>
     
     <ng-container *ngIf="payloadTooLarge">
-        <div class="text-center error-message">{{'create.payload_too_large' | translate}}</div>
+        <div class="text-center error-message">{{'create.payload_too_large' | translate}} {{fileToolarge}}</div>
     </ng-container>
     <ng-container *ngIf="genericError">
         <div class="text-center error-message">{{'error' | translate}}</div>

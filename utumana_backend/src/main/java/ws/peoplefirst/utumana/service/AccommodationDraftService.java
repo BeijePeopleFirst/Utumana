@@ -143,8 +143,8 @@ public class AccommodationDraftService {
         // save photo file in images/drafts/{draftId}/ 
         String fileExtension = photo.getContentType() != null ? photo.getContentType().split("/")[1] : ".jpg";
         String savedPhotoUrl = "images/drafts/" + draftId.toString() + "/" + photoDraft.getId().toString() + "." + fileExtension;
-        // TODO save photo file in s3
-
+        
+        //save photo file in s3
         s3Service.uploadFile(savedPhotoUrl, photo);
 
         // update photo url in photo draft
@@ -155,6 +155,8 @@ public class AccommodationDraftService {
         photos.add(photoDraft);
         draft.setPhotos(photos);
         draft = accommodationDraftRepository.save(draft);
+
+        System.out.println("Updated photos: " + photos);
 
         // if order == 0 then set main photo url
         if(order == 0){
@@ -180,25 +182,27 @@ public class AccommodationDraftService {
         }
 
         List<PhotoDraft> photos = draft.getPhotos();
+        int index = 0;
         for(int i=0; i<photos.size(); i++){
             if(photos.get(i).getId() == photoDraftId){
-                photos.remove(i);
-            }
-            if(photos.get(i).getPhotoOrder() > photoDraft.getPhotoOrder()){
+                index = i;
+            }else if(photos.get(i).getPhotoOrder() > photoDraft.getPhotoOrder()){
                 photos.get(i).setPhotoOrder(photos.get(i).getPhotoOrder() - 1);
 
                 // if new photo order == 0, update mainPhotoUrl
                 if(photos.get(i).getPhotoOrder() == 0){
                     draft.setMainPhotoUrl(photos.get(i).getPhotoUrl());
                 }
-
-                // TODO update photo url in s3
             }
         }
+        photos.remove(index);
         draft.setPhotos(photos);
         accommodationDraftRepository.save(draft);
+    
+        // delete file from s3
+        s3Service.deleteFile(photoDraft.getPhotoUrl());
+
         photoDraftRepository.deleteById(photoDraftId);
-        // TODO delete file from s3
     }
 
     // this method makes no checks on availabilities validity: the check is done in frontend and at the moment of draft transformation into accommodation

@@ -201,7 +201,7 @@
 	"from_your_device": "dal tuo dispositivo",
 	"photos_preview": "Anteprima foto",
 	"no_photos": "Nessuna foto",
-	"payload_too_large": "Errore: il file caricato supera il limite massimo consentito (7 MB)",
+	"payload_too_large": "Errore: superata la grandezza massima consentita (7 MB) per il file ",
 
 	"recap": "Conferma",
 	"no_address": "Nessun indirizzo",

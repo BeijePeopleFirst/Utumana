@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { lastValueFrom } from 'rxjs';
 import { Photo } from 'src/app/models/photo';
 import { DraftService } from 'src/app/services/draft.service';
 import { s3Prefix } from 'src/costants';
@@ -13,6 +14,7 @@ export class CreateAccommodationPhotosComponent implements OnInit {
   draftId: number;
   genericError: boolean = false;
   payloadTooLarge: boolean = false;
+  fileToolarge: string = '';
   photoFiles!: FileList;
   previews!: Photo[];
 
@@ -52,44 +54,51 @@ export class CreateAccommodationPhotosComponent implements OnInit {
     this.router.navigate(['/create/info/', this.draftId]);
   }
 
-  addPhotos(event: any): void {
+  async addPhotos(event: any): Promise<void> {
     console.log("Adding photo files:", event.target.files);
     this.photoFiles = event.target.files;
+    this.fileToolarge = '';
     if(this.photoFiles && this.photoFiles.length > 0){
       let startingOrderPosition = this.previews.length;
+      let currentUpload;
       for (let i = 0; i < this.photoFiles.length; i++) {
-        this.draftService.uploadPhoto(this.draftId, this.photoFiles[i], startingOrderPosition + i).subscribe({
-          next: (photo) => {
-            if(photo){
-              this.draftService.getPhoto(photo.photo_url).subscribe(blob => {
-                if(blob == null){
-                  this.genericError = true;
-                  return;
-                }
-                photo.blob_url = URL.createObjectURL(blob);
-                this.previews.push(photo);
-              })
-              console.log("Photo uploaded", photo);
-            }else{
-              console.log("Photo upload failed");
-            }
-          },
-          error: error => {
-            console.error(error);
+        currentUpload = this.draftService.uploadPhoto(this.draftId, this.photoFiles[i], startingOrderPosition + i);
+        await lastValueFrom(currentUpload).then(photo => {
+          if(photo){
+            this.draftService.getPhoto(photo.photo_url).subscribe(blob => {
+              if(blob == null){
+                this.genericError = true;
+                return;
+              }
+              photo.blob_url = URL.createObjectURL(blob);
+              this.previews.push(photo);
+            })
+            console.log("Photo uploaded", photo);
+          }else{
+            console.log("Photo upload failed");
+          }
+        })
+        .catch(error => {
+          console.error(error);
             if(error.status == 413){  // payload too large
+              this.fileToolarge = this.fileToolarge + " " + this.photoFiles[i].name;
               this.payloadTooLarge = true;
               setTimeout(() => {
                 this.payloadTooLarge = false;
               }, 5000);
             }
-          }
         });
       }
     }
   }
 
-  removePhoto(previewId: number): void {
-    this.previews = this.previews.filter(p => p.id != previewId);
-    this.draftService.removePhoto(this.draftId, previewId);
+  removePhoto(preview: Photo): void {
+    for(let i=0; i<this.previews.length; i++){
+      if(this.previews[i].photo_order > preview.photo_order){
+        this.previews[i].photo_order--;
+      }
+    }
+    this.previews = this.previews.filter(p => p.id != preview.id);
+    this.draftService.removePhoto(this.draftId, preview.id);
   }
 }
