@@ -60,8 +60,6 @@ public class AccommodationService {
     @Autowired
     private ServiceService serviceService;
 
-    @Autowired
-    private BookingService bookingService;
 
     public Accommodation approveAccommodation(Long accommodationId) {
         Accommodation accommodation = findByIdAndHidingTimestampIsNull(accommodationId);
@@ -698,11 +696,7 @@ public class AccommodationService {
         accommodationRepository.setCoordinates(coordinates, accommodationId);
     }
 
-    public List<String> fetchFullAvailabilityListForAccommodation(Long accommodationId, UserDTO user) {
-        List<Booking> values = bookingService.findByStatusInAndAccommodationId(Arrays.asList(
-                BookingStatus.DOING, BookingStatus.ACCEPTED, BookingStatus.PENDING
-        ), accommodationId);
-
+    public List<String> fetchFullAvailabilityListForAccommodation(Long accommodationId, UserDTO user, List<Booking> values) {
         List<Booking> copy2 = new ArrayList<>();
 
         for (Booking b : values) {

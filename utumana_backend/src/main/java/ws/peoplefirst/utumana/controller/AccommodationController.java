@@ -843,8 +843,11 @@ public class AccommodationController {
 		boolean isFavourite = accommodationService.isFavourite(accommodationId, user.getId());
 		res.put("isFavourite", isFavourite);
 
+		List<Booking> values = bookingService.findByStatusInAndAccommodationId(Arrays.asList(
+                BookingStatus.DOING, BookingStatus.ACCEPTED, BookingStatus.PENDING
+        ), accommodationId);
 		
-		List<String> availabilities = this.accommodationService.fetchFullAvailabilityListForAccommodation(accommodationId, user);
+		List<String> availabilities = this.accommodationService.fetchFullAvailabilityListForAccommodation(accommodationId, user, values);
 		res.put("availabilities_post_elaboration", availabilities);
 
 		return ok(res);

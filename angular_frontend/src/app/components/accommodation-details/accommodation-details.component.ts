@@ -35,8 +35,7 @@ export class AccommodationDetailsComponent implements OnInit {
   invalidAccommodation: boolean = false;
   isFavourite: boolean = false;
   isAdminOrMe: boolean = false;
-
-  accommodationUnavailabilities: string[] = [];
+  accommodationAvailabilities: string[] = [];
 
   accommodationReviews: Review[] = [];
   filteredAccommodationReviews: Review[] = [];
@@ -191,10 +190,11 @@ export class AccommodationDetailsComponent implements OnInit {
             let tmp4: Boolean | undefined;console.log("INFO -> ", info);
             let tmp5: any;
 
-            if(!("isAdmin" in info) || !("isOwner" in info) || !("reviews" in info) || !("isFavourite" in info) || !("pendingByUserOrAcceptedOrDoingBookings" in info)
-              || ((tmp1 = Boolean(info["isAdmin"])) == undefined) || ((tmp2 = Boolean(info["isOwner"])) == undefined)
-              || !(tmp3 = info["reviews"]) || ((tmp4 = Boolean(info["isFavourite"])) == undefined)
-              || !(tmp5 = info["pendingByUserOrAcceptedOrDoingBookings"])) {
+            let info2 = info as any;console.log("INFO2 -> ", info2);
+            if(!("isAdmin" in info2) || !("isOwner" in info2) || !("reviews" in info2) || !("isFavourite" in info2) || !("availabilities_post_elaboration" in info2)
+              || ((tmp1 = Boolean(info2["isAdmin"])) == undefined) || ((tmp2 = Boolean(info2["isOwner"])) == undefined)
+              || !(tmp3 = info2["reviews"]) || ((tmp4 = Boolean(info2["isFavourite"])) == undefined)
+              || !(tmp5 = info2["availabilities_post_elaboration"])) {
 
               this.errorFetchingAccommodationDetails = true;
               this.message = "true";
@@ -234,70 +234,19 @@ export class AccommodationDetailsComponent implements OnInit {
             //Ora calcolo il numero di pagine:
             this.accommodationReviewsTotalPagesNumber = Math.ceil(this.accommodationReviews.length / 4);
 
-            //Now lets insert values into the unavailabilities Map:
-            let tmp: BookingDTO[] = [];
-            let tempBooking: BookingDTO;
-
-            //Aggiungo i valori alla lista "tmp":
-            for (let v of tmp5) {
-              tempBooking = new BookingDTO(
-                v.checkIn,
-                v.checkOut,
-                0,
-                "",
-                new AccommodationDTO(
-                  this.accommodation.id!,
-                  this.accommodation.title,
-                  this.accommodation.city!,
-                  this.accommodation.main_photo_url,
-                  this.accommodation.country,
-                  this.accommodation.province!,
-                  0,
-                  0,
-                  false,
-                  0
-                )
-              );
-
-              tmp.push(tempBooking);
+            //Now lets insert values into the availabilities array:
+            if(!(Array.isArray(tmp5))) {
+              this.errorFetchingAccommodationDetails = true;
+              this.message = "true";
+              return;
             }
-            console.log("STAMPO TMP -> ", tmp);
-
-            let inDateN: number;
-            let outDateN: number;
-
-            let date: Date;
-
-            let monthName: string;
-            let year: number;
-            let day: number;
-
-            let cursor: number;
-
-            for (let b of tmp) {
-              inDateN = Date.parse(b.checkIn);
-              outDateN = Date.parse(b.checkOut);
-
-              cursor = inDateN;
-
-              while (cursor <= outDateN) {
-                date = new Date(cursor);
-
-                monthName = this.getMonthName(date.getMonth());
-                year = date.getFullYear();
-                day = date.getDate();
-
-                if(!this.accommodationUnavailabilities.includes(year + "-" + monthName + "-" + day))
-                this.accommodationUnavailabilities.push(
-                  year + "-" + monthName + "-" + day
-                );
-
-                cursor = new Date(
-                  year,
-                  date.getMonth(),
-                  day + 1
-                ).getTime();
+            else {
+              
+              for(let s of tmp5) {
+                this.accommodationAvailabilities.push(s);
               }
+              //console.log("Stampo le availabilities -> ", this.accommodationAvailabilities);
+
             }
 
             //Ora recupero l' Owner dell' Accommodation:
@@ -346,24 +295,6 @@ export class AccommodationDetailsComponent implements OnInit {
         )
       }
     )
-  }
-
-  private getMonthName(monthIndexLocal: number): string {
-    switch(monthIndexLocal) {
-      case 0: return "january";
-      case 1: return "february";
-      case 2: return "march";
-      case 3: return "april";
-      case 4: return "may";
-      case 5: return "june";
-      case 6: return "july";
-      case 7: return "august";
-      case 8: return "september";
-      case 9: return "october";
-      case 10: return "november";
-      case 11: return "december";
-      default: return "Error";
-    }
   }
 
   receiveAvailabilityFromChild($event: { start_date: string; end_date: string; price_per_night: number; accommodation_id: number; } | undefined | {message: string}) {

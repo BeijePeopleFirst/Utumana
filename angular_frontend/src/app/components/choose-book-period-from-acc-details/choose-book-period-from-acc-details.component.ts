@@ -18,7 +18,7 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
 
   @Input() queryParamsFromParent?: Params;
 
-  @Input() unavailabilities!: string[];
+  @Input() availabilities!: string[];
 
   chosenOne: Availability = new Availability();
 
@@ -27,7 +27,7 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
 
   alreadySelectedStart: boolean = false;
 
-  availabilityCacheImproved: Map<string, boolean> = new Map<string, boolean>();
+  //availabilityCacheImproved: Map<string, boolean> = new Map<string, boolean>();
   selectedDays: Map<string, boolean> = new Map<string, boolean>();
 
 
@@ -44,8 +44,6 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
-    
-    this.initializeAvailabilityCache();
 
     if(this.queryParamsFromParent && this.queryParamsFromParent["start_date"] && this.queryParamsFromParent["end_date"]) {
       let tmp1: Date = new Date(this.queryParamsFromParent["start_date"]);
@@ -141,182 +139,6 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
       )
     }
     
-  }
-
-  //TODO: Remove dates that are in common with UNAVAILABILITIES
-  initializeAvailabilityCache(): void {
-    this.accommodationService.getAvailabilities(this.accommodation).subscribe(
-      availabilities => {
-        if("message" in availabilities) {
-          this.sendChosenAvailability.emit({message: availabilities.message});
-          return;
-        }
-        else {
-
-          let start: number;
-          let end: number;
-
-          let s_day: number;        //From 1
-          let s_month: string;      //January, February...
-          let s_year: number;       //2025, 2026...
-
-          let e_day: number;        //From 1
-          let e_month: string;      //January, February...
-          let e_year: number;       //2025, 2026...
-
-
-
-          //1-January-2025          
-
-          for(let a of availabilities) {
-            start = Date.parse(a.start_date);
-            end = Date.parse(a.end_date);
-
-            s_month = this.getMonthName(new Date(start).getMonth());
-            s_day = new Date(start).getDate();
-            s_year = new Date(start).getFullYear();
-
-            //Now I have the start date:
-            this.availabilityCacheImproved.set(s_day + '-' + s_month + '-' + s_year, true);
-
-            e_month = this.getMonthName(new Date(end).getMonth());
-            e_day = new Date(end).getDate();
-            e_year = new Date(end).getFullYear();
-
-            //Now I have the end date:
-            this.availabilityCacheImproved.set(e_day + '-' + e_month + '-' + e_year, true);
-            
-            let tmp = new Date(s_year, new Date(start).getMonth(), s_day + 1);
-
-            while(tmp.getTime() < new Date(end).getTime()) {
-              //Aggiungo alla mappa:
-              this.availabilityCacheImproved.set(tmp.getDate() + '-' + this.getMonthName(tmp.getMonth()) + '-' + tmp.getFullYear(), true);
-
-              //Incremento di un Giorno:
-              tmp = new Date(tmp.getFullYear(), new Date(tmp).getMonth(), tmp.getDate() + 1);
-            }
-          }
-
-          //Now lets remove the days that are in comon with unavailabilities array:
-          let support: Map<string, boolean> = new Map<string, boolean>();
-          this.availabilityCacheImproved.forEach((a, b) => support.set(b, a));
-          //console.log("Stampo il nuovo Map copiato -> ", support, "Stampo il vecchio -> ", this.availabilityCacheImproved);
-
-          let toAnalize: string;
-          let arrStr: string[];
-          let monthNameToSet: String = "";
-          for(let u of this.unavailabilities) {
-            arrStr = u.split("-"); //yyyy-MM-dd
-            monthNameToSet = "";
-
-            //Inside unavailabilities the month names are all in lowercase characters: I need to convert the first character into uppercase
-            for(let index = 0; index < arrStr[1].length; index++)
-              if(index === 0) monthNameToSet += arrStr[1][index].toUpperCase();
-              else monthNameToSet += arrStr[1][index];
-
-            toAnalize = arrStr[2] + "-" + monthNameToSet + "-" + arrStr[0];
-
-            if(support.has(toAnalize)) this.availabilityCacheImproved.delete(toAnalize);
-          }
-
-          //console.log("Stamp unavailabilities -> ", this.unavailabilities);
-          //console.log("Stampo il map risultante -> ", this.availabilityCacheImproved);
-
-          //Now lets remove the dates that are previous than today:
-
-          let tR_splitted: string[];
-          let tR_date: Date;
-          let tR_month: string;
-
-          let tR_support: string[] = [];
-          this.availabilityCacheImproved.forEach((v, k) => tR_support.push(k));
-
-          for(let k of tR_support) {
-            tR_splitted = k.split("-"); //dd-MM-yyyy
-            tR_month = tR_splitted[1];
-            tR_date = new Date(Number(tR_splitted[2]), this.getMonthIndexByName(tR_month), Number(tR_splitted[0]));
-
-            if(Date.now() > tR_date.getTime()) this.availabilityCacheImproved.delete(k);
-          }
-        }
-      }
-    )
-  }
-
-  private getMonthIndexByName(n: string): number {
-    switch(n.toUpperCase()) {
-
-      case "JANUARY": return 0;
-      case "FEBRUARY": return 1;
-      case "MARCH": return 2;
-      case "APRIL": return 3;
-      case "MAY": return 4;
-      case "JUNE": return 5;
-      case "JULY": return 6;
-      case "AUGUST": return 7;
-      case "SEPTEMBER": return 8;
-      case "OCTOBER": return 9;
-      case "NOVEMBER": return 10;
-      case "DECEMBER": return 11;
-      default: return -1;
-
-    }
-  }
-
-  private getMonthName(m: number): string {
-    let month = "";
-
-    switch (m) {
-      case 0:
-        month = "January";
-        break;
-
-      case 1:
-        month = "February";
-        break;
-
-      case 2:
-        month = "March";
-        break;
-
-      case 3:
-        month = "April";
-        break;
-
-      case 4:
-        month = "May";
-        break;
-
-      case 5:
-        month = "June";
-        break;
-
-      case 6:
-        month = "July";
-        break;
-
-      case 7:
-        month = "August";
-        break;
-
-      case 8:
-        month = "September";
-        break;
-
-      case 9:
-        month = "October";
-        break;
-
-      case 10:
-        month = "November";
-        break;
-
-      case 11:
-        month = "December";
-        break;
-    }
-
-    return month;
   }
 
   isSelectedOrBetween(day: number, monthName: string, year: number): boolean {
