@@ -1,4 +1,4 @@
-<ng-container *ngIf="(accommodations$ | async) as accommodations">
+<ng-container *ngIf="(accommodations$ | async) as accommodations else loader">
     <div *ngIf="accommodations && accommodations.length > 0" class="justify-self-center">
         <div class="flex relative flex-nowrap gap-x-5 justify-center items-start self-center p-3 w-full align-top">
             <button type="button" class="carousel-arrow responsive-left-arrow" (click)="prevPage()" [disabled]="pageNumber === 0">
@@ -31,3 +31,9 @@
         <span>{{"accommodations_cards.notFound" | translate}}</span>
     </div>
 </ng-container>
+
+<ng-template #loader>
+    <div class="flex justify-center items-center h-full">
+        <div class="loader"></div>
+    </div>
+</ng-template>

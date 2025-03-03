@@ -304,11 +304,12 @@ confirmSelectedDates(): void {
   
   //Unavailability:
   if(this.isAnUnavailability) {
-    let unavailability: Availability = new Availability();
-    unavailability.accommodation_id = this.accommodation.id!;
-    unavailability.start_date = selectedCheckInStr;
-    unavailability.end_date = selectedCheckOutStr;
-    unavailability.price_per_night = 0;
+    let unavailability: Availability = {
+    accommodation_id: this.accommodation.id!,
+    start_date: selectedCheckInStr,
+    end_date: selectedCheckOutStr,
+    price_per_night: 0
+    };
 
     //Now lets store the Unavailability:
     this.bookingService.newUnavailability(unavailability).subscribe(
@@ -330,8 +331,15 @@ confirmSelectedDates(): void {
 
   //Real Booking:
   else {
-    let booking: Booking = new Booking(this.accommodation, this.convertToCompatibleDateFormat(new Date(Date.now()).toLocaleDateString()), 0, 
-                                          BookingStatus.PENDING, selectedCheckInStr, selectedCheckOutStr, false, userId);
+    let booking: Booking = {
+    accommodation: this.accommodation, 
+    timestamp: this.convertToCompatibleDateFormat(new Date(Date.now()).toLocaleDateString()), 
+    price: 0, 
+    status: BookingStatus.PENDING, 
+    check_in: selectedCheckInStr, 
+    check_out: selectedCheckOutStr, 
+    is_unavailability: false, 
+    user_id: userId};
 
     //Now lets store the Booking:
     this.bookingService.newBooking(booking).subscribe(

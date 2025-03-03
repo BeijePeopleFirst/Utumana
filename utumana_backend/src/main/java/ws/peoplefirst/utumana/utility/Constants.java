@@ -17,4 +17,5 @@ public class Constants {
 	public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ISO_DATE_TIME;
 	public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_DATE;
 
+	public static final int MAX_NUMBER_OF_DRAFTS_PER_USER = 5;
 }

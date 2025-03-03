@@ -15,6 +15,7 @@ export class CreateAccommodationPhotosComponent implements OnInit {
   draftId: number;
   photoFiles!: FileList;
   previews!: Photo[];
+  loading: boolean = true;
 
   genericError: boolean = false;
   payloadTooLarge: boolean = false;
@@ -31,6 +32,7 @@ export class CreateAccommodationPhotosComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loading = true;
     this.draftService.getPhotos(this.draftId).subscribe(photos => {
       if(!photos) {
         this.genericError = true;
@@ -38,14 +40,18 @@ export class CreateAccommodationPhotosComponent implements OnInit {
       }
       console.log("Photos on init:", photos);
       this.previews = [];
-      for(let photo of photos){
-        this.s3Service.getPhoto(photo.photo_url).subscribe(blob => {
+      for(let i=0; i<photos.length; i++){
+        this.s3Service.getPhoto(photos[i].photo_url).subscribe(blob => {
           if(blob == null){
             this.genericError = true;
             return;
           }
-          photo.blob_url = URL.createObjectURL(blob);
-          this.previews.push(photo);
+          photos[i].blob_url = URL.createObjectURL(blob);
+          this.previews.push(photos[i]);
+
+          if(i === photos.length - 1){
+            this.loading = false;
+          }
         })
       }
     });

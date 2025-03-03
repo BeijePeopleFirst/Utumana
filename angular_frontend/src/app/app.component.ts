@@ -103,6 +103,12 @@ export class AppComponent implements DoCheck {
       }else{
         alert("Error creating draft");
       }
+    }, error => {
+      if(error.status == 403){
+        alert("Error: max number of drafts reached");
+      }else{
+        alert("Error creating draft");
+      }
     });
   }
 
