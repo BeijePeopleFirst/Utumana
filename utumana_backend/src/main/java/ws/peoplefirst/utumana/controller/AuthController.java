@@ -152,6 +152,12 @@ public class AuthController {
 		return ok(res);
 	}
 	
+	@PreAuthorize("hasAuthority('USER')")
+	@GetMapping("/is_admin")
+	public boolean isUserAdmin(Authentication auth) {
+		return AuthorizationUtility.hasAdminRole(auth);
+	}
+
     @Operation(summary = "Check if user is an admin or the owner")
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@GetMapping("/isAdmin")

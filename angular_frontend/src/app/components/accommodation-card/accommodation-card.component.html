@@ -28,8 +28,13 @@
             <span *ngIf="priceRange"> - {{accommodation.max_price | currency:'EUR':'symbol-narrow':'1.2-2':'it-IT'}} </span>
           </span>
         </p>
-        <button type="button" (click)="book = true" class="mt-2 btn-primary">{{'accommodation-card.book' | translate}}</button>
-      </div>
+        
+        <button *ngIf="!isPending" type="button" (click)="book = true" class="mt-2 btn-primary">{{'accommodation-card.book' | translate}}</button>
+        <div *ngIf="isAdmin && isPending" class="flex flex-row justify-around w-full">
+          <button type="button" (click)="approve()"  class="btn-primary w-2/5">{{'accommodation-card.approve' | translate}}</button>
+          <button type="button" (click)="reject()"  class="btn-primary w-2/5">{{'accommodation-card.reject' | translate}}</button>
+        </div>
+      </div>  
     </div>  
   </a>
 </div>

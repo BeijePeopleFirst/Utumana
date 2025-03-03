@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { AccommodationDTO } from 'src/app/dtos/accommodationDTO';
 import { AccommodationService } from 'src/app/services/accommodation.service';
+import { AuthService } from 'src/app/services/auth.service';
 import iconURL from 'src/costants';
 
 @Component({
@@ -16,15 +17,21 @@ export class AccommodationCardComponent implements OnInit {
   book: boolean = false;
   heartClick: boolean = false;
   iconsUrl: string = iconURL;
+  isAdmin: boolean = false;
+  @Input() isPending: boolean = false;
 
   constructor(
     private router: Router,
-    private accommodationService: AccommodationService
+    private accommodationService: AccommodationService,
+    private authService: AuthService
   ){}
 
   ngOnInit(): void {
     this.priceRange = this.accommodation.max_price - this.accommodation.min_price > 0;
     this.free = !this.priceRange && this.accommodation.max_price < 0.01;
+    this.authService.isAdmin().subscribe(is_admin => {
+      this.isAdmin = is_admin;
+    });
   }
 
   onClick(event: Event): void {
@@ -55,5 +62,19 @@ export class AccommodationCardComponent implements OnInit {
         }
       });
     }
+  }
+
+  approve() {
+    this.isPending = false;
+    this.accommodationService.approveAccommodation(this.accommodation.id).subscribe({
+      next: () => this.router.navigate(['/admin-dashboard/accommodations/accept-reject'])
+    })
+  }
+
+  reject() {
+    this.isPending = false;
+    this.accommodationService.rejectAccommodation(this.accommodation.id).subscribe({
+      next: () => this.router.navigate(['/admin-dashboard/accommodations/accept-reject'])
+    })
   }
 }

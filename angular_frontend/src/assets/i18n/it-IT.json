@@ -1,7 +1,9 @@
 {
 "accommodation-card": {
 	"book": "Prenota ora",
-	"free": "gratis"
+	"free": "gratis",
+	"approve": "Approva",
+	"reject": "Rifiuta"
 	},
 "accommodations_cards": {
 	"notFound": "Nessuna offerta disponibile"

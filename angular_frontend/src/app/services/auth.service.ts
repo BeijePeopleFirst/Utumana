@@ -95,4 +95,8 @@ export class AuthService {
       })
     );
   }
+
+  public isAdmin(): Observable<boolean> {
+    return this.http.get<boolean>(`${BACKEND_URL_PREFIX}/api/is_admin`)
+  }
 }

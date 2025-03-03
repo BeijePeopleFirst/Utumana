@@ -78,6 +78,10 @@ export class AccommodationService {
     return this.getAccommodationsDTO(`${BACKEND_URL_PREFIX}/api/pending_accommodations/${userId}`); // backend is not paginated
   }
 
+  getPendingAccommodations(): Observable<AccommodationDTO[]> { 
+    return this.getAccommodationsDTO(`${BACKEND_URL_PREFIX}/api/pending_accommodations`);
+  }
+
   getMyRejectedAccommodations(): Observable<AccommodationDTO[]> {
     const userId = localStorage.getItem("id");
     if(!userId){
@@ -357,7 +361,17 @@ export class AccommodationService {
   deleteDraft(draftId: number): Observable<any> {
     return this.http.delete<any>(BACKEND_URL_PREFIX + "/api/accommodation-draft/delete/" + draftId);
   }
-  
+
+  getAccommodationsToBeApproved() {
+    return this.getAccommodationsDTO(BACKEND_URL_PREFIX + "/api/get_accommodationsdto_to_approve");
+ }
+
+ approveAccommodation(id: number): Observable<Accommodation | {message: string, status: string, time: string}> {
+   return this.http.patch<Accommodation | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/approve_accommodation/" + id, {});
+ }
+ rejectAccommodation(id: number): Observable<Accommodation | {message: string, status: string, time: string}> {
+   return this.http.patch<Accommodation | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/delete_accommodation/" + id, {});
+ }
   /*private getAuth(): HttpHeaders {
     let headers = new HttpHeaders();
     return headers;

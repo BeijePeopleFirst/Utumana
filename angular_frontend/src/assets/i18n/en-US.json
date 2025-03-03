@@ -1,7 +1,9 @@
 {
 "accommodation-card": {
 	"book": "Book now",
-	"free": "free"
+	"free": "free",
+	"approve": "Approve",
+	"reject": "Reject"
 	},
 "accommodations_cards": {
 	"notFound": "No accommodation found"
