@@ -34,7 +34,10 @@
                 <img [src]="preview.blob_url" class="w-auto max-h-40 peer-hover:scale105 peer-hover:opacity-50" alt="photo_{{preview.photo_order}}">
             </div>
         </ng-container>
-        <div class="self-center py-10 w-full" *ngIf="!previews || previews.length == 0">
+        <div *ngIf="loading" class="flex justify-center items-center place-self-center h-full">
+            <div class="loader"></div>
+        </div>
+        <div *ngIf="!loading && (!previews || previews.length == 0)" class="self-center py-10 w-full">
             {{'create.no_photos' | translate}}
         </div>
     </div>
