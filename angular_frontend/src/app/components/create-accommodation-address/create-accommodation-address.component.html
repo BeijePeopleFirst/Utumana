@@ -1,5 +1,5 @@
 <div class="flex flex-col justify-center items-center w-screen sm:w-auto">
-    <app-create-progress [step] = 1></app-create-progress>
+    <app-create-progress [step] = 1 [draftId]="draftId"></app-create-progress>
 
     <form *ngIf="address" class="px-2 my-4 w-screen md:w-auto" (ngSubmit)="saveAndContinue()" #addressForm="ngForm">
         <div class="flex flex-row gap-x-5 justify-between">
