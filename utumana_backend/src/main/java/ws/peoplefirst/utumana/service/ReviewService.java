@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import ws.peoplefirst.utumana.dto.ReviewDTO;
+import ws.peoplefirst.utumana.dto.ReviewUserDTO;
 import ws.peoplefirst.utumana.exception.ForbiddenException;
 import ws.peoplefirst.utumana.exception.IdNotFoundException;
 import ws.peoplefirst.utumana.exception.InvalidJSONException;
@@ -98,5 +98,9 @@ public class ReviewService {
 		
 	public List<Review> getUserReview(Long userId) {
 		return userRepository.findUserReviews(userId);
+	}
+
+	public List<ReviewUserDTO> getReviewUserDTO(Long userId) {
+		return reviewRepository.findReviewUserById(userId);
 	}
 }
