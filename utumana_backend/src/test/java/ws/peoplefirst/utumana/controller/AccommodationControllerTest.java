@@ -24,7 +24,9 @@ import ws.peoplefirst.utumana.service.AvailabilityService;
 import ws.peoplefirst.utumana.service.BookingService;
 import ws.peoplefirst.utumana.service.UserService;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -228,6 +230,7 @@ public class AccommodationControllerTest {
 
     @Test
     void getAvailabilities() {
+        when(accommodationService.findById(anyLong())).thenReturn(getInstance(Accommodation.class));
         when(availabilityService.findAvailableDatesByMonth(anyLong(), anyString(), anyString())).thenReturn(new HashMap<>());
         assertDoesNotThrow(() -> accommodationController.getAvailabilities(0L, "", ""));
     }
@@ -716,4 +719,159 @@ public class AccommodationControllerTest {
         when(accommodationService.approveAccommodation(anyLong())).thenReturn(getInstance(Accommodation.class));
         assertDoesNotThrow(() -> accommodationController.approveHouse(0L));
     }
+
+    /**
+     * GET - API: /rejected_accommodation/{id}
+     * MTEHOD: getRejectedAccommodationAPI(...)
+     */
+
+//    @Test
+//    void getRejectedAccommodationAPI() {
+//        when(accommodationService.findRejectedAccommodation(anyLong())).thenReturn(getInstance(Accommodation.class));
+//        assertDoesNotThrow(() -> accommodationController.getRejectedAccommodationAPI(anyLong(), authentication));
+//    }
+
+    @Test
+    void getRejectedAccommodationAPIKo() {
+        when(accommodationService.findRejectedAccommodation(anyLong())).thenReturn(null);
+        assertThrows(IdNotFoundException.class, () -> accommodationController.getRejectedAccommodationAPI(anyLong(), authentication));
+    }
+
+    /**
+     * GET - API: /accommodation/{accommodationId}/info
+     * MTEHOD: getAccomodationInfo(...)
+     */
+
+    @Test
+    void getAccomodationInfo() {
+        Accommodation accommodationMock = new Accommodation();
+        accommodationMock.setOwnerId(1L);
+        UserDTO userDTO = new UserDTO(1L, "","","");
+        when(accommodationService.findById(anyLong())).thenReturn(accommodationMock);
+        when(authentication.getPrincipal()).thenReturn(userDTO);
+        assertDoesNotThrow(() -> accommodationController.getAccomodationInfo(authentication,anyLong()));
+    }
+
+    /**
+     * GET - API: /accommodation/{accommodationId}/address
+     * MTEHOD: getAccomodationAddress(...)
+     */
+
+    @Test
+    void getAccomodationAddress() {
+        Accommodation accommodationMock = new Accommodation();
+        accommodationMock.setOwnerId(1L);
+        UserDTO userDTO = new UserDTO(1L, "","","");
+        when(accommodationService.findById(anyLong())).thenReturn(accommodationMock);
+        when(authentication.getPrincipal()).thenReturn(userDTO);
+        assertDoesNotThrow(() -> accommodationController.getAccomodationAddress(authentication,anyLong()));
+
+    }
+
+    /**
+     * GET - API: /accommodation/most_liked
+     * MTEHOD: getMostLikedAccommodationsDTO(...)
+     */
+
+    @Test
+    void getMostLikedAccommodationsDTO() {
+        when(authentication.getPrincipal()).thenReturn(userDTO);
+        assertDoesNotThrow(() -> accommodationController.getMostLikedAccommodationsDTO(authentication));
+
+    }
+
+    /**
+     * GET - API: /accommodation/prices
+     * MTEHOD: configurePriceRanges(...)
+     */
+
+    @Test
+    void configurePriceRanges() {
+        assertDoesNotThrow(() -> accommodationController.configurePriceRanges(List.of(1L, 2L), "2025-03-01", "2025-03-10"));
+    }
+
+    /**
+     * GET - API: /pending_accommodations/{userId}
+     * MTEHOD: getPendingAccommodationsDTO(...)
+     */
+
+    @Test
+    void getPendingAccommodationsDTOKo() {
+        UserDTO userDTO = new UserDTO(1L, "","","");
+        when(authentication.getPrincipal()).thenReturn(userDTO);
+        when(usrService.findById(anyLong())).thenReturn(null);
+        assertThrows(IdNotFoundException.class, ()  -> accommodationController.getPendingAccommodationsDTO(1L, authentication));
+    }
+
+    @Test
+    void getPendingAccommodationsDTO() {
+        UserDTO userDTO = new UserDTO(1L, "","","");
+        when(authentication.getPrincipal()).thenReturn(userDTO);
+        when(usrService.findById(anyLong())).thenReturn(getInstance(User.class));
+        assertDoesNotThrow(() -> accommodationController.getPendingAccommodationsDTO(1L, authentication));
+    }
+
+    /**
+     * GET - API: /rejected_accommodations/{userId}
+     * MTEHOD: getRejectedAccommodationsDTO(...)
+     */
+    @Test
+    void getRejectedAccommodationsDTOKo() {
+        UserDTO userDTO = new UserDTO(1L, "","","");
+        when(authentication.getPrincipal()).thenReturn(userDTO);
+        when(usrService.findById(anyLong())).thenReturn(null);
+        assertThrows(IdNotFoundException.class, ()  -> accommodationController.getRejectedAccommodationsDTO(1L, authentication));
+    }
+
+    @Test
+    void getRejectedAccommodationsDTO() {
+        UserDTO userDTO = new UserDTO(1L, "","","");
+        when(authentication.getPrincipal()).thenReturn(userDTO);
+        when(usrService.findById(anyLong())).thenReturn(getInstance(User.class));
+        assertDoesNotThrow(() -> accommodationController.getRejectedAccommodationsDTO(1L, authentication));
+    }
+
+    /**
+     * GET - API: /search
+     * MTEHOD: searchResults(...)
+     */
+
+//    @Test
+//    void searchResults() {
+//        String destination = "Rome";
+//        String checkIn = "2025-04-01";
+//        String checkOut = "2025-04-10";
+//        Integer guests = 2;
+//        boolean freeOnly = true;
+//        List<Long> services = List.of(1L, 2L);
+//        Integer minRating = 3;
+//        Integer maxRating = 5;
+//        Double minPrice = 100.0;
+//        Double maxPrice = 300.0;
+//        String orderBy = "price";
+//        String orderDirection = "asc";
+//        Integer page = 0;
+//        Integer size = 10;
+//
+//        Long userId = 123L;
+//
+//        when(authentication.getPrincipal()).thenReturn(userDTO);
+//        assertDoesNotThrow(() -> accommodationController.searchResults(
+//                destination,
+//                checkIn,
+//                checkOut,
+//                guests,
+//                freeOnly,
+//                services,
+//                minRating,
+//                maxRating,
+//                minPrice,
+//                maxPrice,
+//                orderBy,
+//                orderDirection,
+//                page,
+//                size,
+//                authentication
+//        ));
+//    }
 }

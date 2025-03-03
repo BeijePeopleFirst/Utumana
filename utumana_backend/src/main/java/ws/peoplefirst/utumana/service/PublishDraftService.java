@@ -51,16 +51,22 @@ public class PublishDraftService {
     @Autowired
     private AccommodationService accommodationService;
 
+    @Autowired
+    private S3Service s3Service;
+
 
     @Transactional
     public Accommodation publishDraft(Long draftId) {
         AccommodationDraft draft = draftRepository.findById(draftId).orElseThrow(() -> new EntityNotFoundException("Draft not found"));
 
         validateDraftForPublication(draft);
+        System.out.println("Draft validated");
 
         Accommodation accommodation = convertDraftToAccommodation(draft);
+        System.out.println("Created accommodation");
 
         draftRepository.deleteById(draftId);
+        System.out.println("Deleted draft");
 
         return accommodation;
     }
@@ -91,25 +97,37 @@ public class PublishDraftService {
         }
         
         accommodation = accommodationRepository.save(accommodation);
+        System.out.println("Saved accommodation with basic info");
         
         if (draft.getServices() != null) {
             accommodation.setServices(new HashSet<>(draft.getServices()));
         }
+
+        System.out.println("Added services");
         
         if (draft.getPhotos() != null) {
             List<Photo> photos = new ArrayList<>();
-            //TODO : move photo files from images/drafts/{draftId}/ to images/accommodations/{accommodationId}/
             for(PhotoDraft photoDraft : draft.getPhotos()){
                 Photo photo = new Photo();
                 BeanUtils.copyProperties(photoDraft, photo, "id", "accommodationDraft");
-                // photo.setPhotoUrl(photoDraft.getPhotoUrl());
-                // photo.setOrder(photoDraft.getOrder());
                 photo.setAccommodation(accommodation);
                 photo = photoRepository.save(photo);
+
+                // move photo file in s3 from images/drafts/{draftId}/ to images/accommodations/{accommodationId}/
+                String fileExtension = photoDraft.getPhotoUrl().split("\\.")[1];
+                String newPhotoUrl = "images/accommodations/" + accommodation.getId().toString() + "/" + photo.getId().toString() + "." + fileExtension;
+                s3Service.moveFile(photoDraft.getPhotoUrl(), newPhotoUrl);
+
+                photo.setPhotoUrl(newPhotoUrl);
                 photos.add(photo);
+
+                if(photoDraft.getPhotoOrder() == 0){
+                    accommodation.setMainPhotoUrl(newPhotoUrl);
+                }
             }
             System.out.println("Photos: " + photos);
             accommodation.setPhotos(photos);
+            System.out.println("Added photos");
         }
         
         if (draft.getAvailabilities() != null) {
@@ -122,6 +140,7 @@ public class PublishDraftService {
             }
             accommodationService.checkAvailabilites(availabilities);
             accommodation.setAvailabilities(availabilities);
+            System.out.println("Added availabilities");
         }
 
         if (draft.getUnavailabilities() != null) {
@@ -140,6 +159,7 @@ public class PublishDraftService {
             for(Booking booking : unavailabilities){
                 bookingRepository.save(booking);
             }
+            System.out.println("Added unavailabilities");
         }
         
         return accommodationRepository.save(accommodation);

@@ -19,6 +19,7 @@
                 <span *ngIf="address.cap">{{address.cap}} &nbsp; </span>
                 <span *ngIf="address.country">{{address.country}}</span>
             </p>
+            <p *ngIf="address.address_notes">{{address.address_notes}}</p>
 
             <p *ngIf="!isAddressComplete" class="text-center error-message">{{'create.missing_required' | translate}}</p>
             <p *ngIf="!isAddressValid" class="text-center error-message">{{'create.invalid_address' | translate}}</p>
@@ -124,7 +125,7 @@
         <div class="flex flex-row flex-wrap gap-5 justify-center w-full text-center">
             <ng-container *ngIf="photoPreviews && photoPreviews.length > 0">
                 <div *ngFor="let preview of photoPreviews" class="flex relative items-center px-5 pt-4 pb-3 h-40 rounded-lg w-fit">
-                    <img [src]="preview.photo_url" class="w-auto max-h-40" alt="photo_preview">
+                    <img [src]="preview.blob_url" class="w-auto max-h-40" alt="photo_preview">
                 </div>
             </ng-container>
             <div class="self-center py-10 w-full" *ngIf="!photoPreviews || photoPreviews.length == 0">

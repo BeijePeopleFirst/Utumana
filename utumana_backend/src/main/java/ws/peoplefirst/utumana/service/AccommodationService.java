@@ -52,6 +52,9 @@ public class AccommodationService {
     private AvailabilityRepository availabilityRepository;
 
     @Autowired
+    private PhotoRepository photoRepository;
+
+    @Autowired
     private ServiceRepository serviceRepository;
 
     @Autowired
@@ -59,6 +62,9 @@ public class AccommodationService {
 
     @Autowired
     private ServiceService serviceService;
+
+    @Autowired
+    private S3Service s3Service;
 
 
     public Accommodation approveAccommodation(Long accommodationId) {
@@ -165,6 +171,25 @@ public class AccommodationService {
         return bookingRepository.getAllAccommodationReviews(accommodationId);
     }
 
+    public void deleteAllAccommodationImagesExceptMain(Long accommodationId){
+        Accommodation accommodation = findById(accommodationId);
+        List<String> photoUrls = new ArrayList<String>();
+        List<Photo> photos = accommodation.getPhotos();
+        Photo mainPhoto = photos.stream().filter(p -> p.getPhotoOrder().equals(0)).findFirst().orElse(null);
+        accommodation.setPhotos(new ArrayList<>(Arrays.asList(mainPhoto)));
+        accommodationRepository.save(accommodation);
+
+        for (Photo photo : photos) {
+            if(!photo.getPhotoOrder().equals(0)){
+                photoUrls.add(photo.getPhotoUrl());
+                photoRepository.delete(photo);
+            }
+        }
+
+        // delete photos from s3
+        s3Service.deleteAll(photoUrls);
+    }
+
     public List<AccommodationDTO> getFavouritesDTO(Long userId) {
         if (userId != null) {
             List<AccommodationDTO> results = accommodationRepository.getFavouritesDTO(userId);
@@ -219,12 +244,10 @@ public class AccommodationService {
                                                      Integer numberOfGuests, boolean freeOnly, List<Long> serviceIds,
                                                      Integer minRating, Integer maxRating,
                                                      Double minPrice, Double maxPrice,
-                                                     String orderBy, String orderDirection, Long userId, Pageable pageable) {
-        System.out.println("service ids = " + serviceIds);
-
+                                                     String orderBy, String orderDirection, String addressName, Long userId, Pageable pageable) {
         SearchAccomodationCriteria criteria =
                 new SearchAccomodationCriteria(destination, checkInDate, checkOutDate, numberOfGuests, freeOnly,
-                        serviceIds, minRating, maxRating, minPrice, maxPrice, orderBy, orderDirection, userId, pageable);
+                        serviceIds, minRating, maxRating, minPrice, maxPrice, orderBy, orderDirection, addressName, userId, pageable);
 
         logger.debug(criteria.toString());
         Page<AccommodationDTO> results = accommodationRepository.searchAccomodation(criteria);
@@ -674,6 +697,9 @@ public class AccommodationService {
         List<BookingDTO> futureBookings = bookingRepository.findByStatusACCEPTEDOrDOINGAndAccommodationId(accommodationId);
         System.out.println("future bookings " + futureBookings);
         if (futureBookings.isEmpty()) {
+            // delete all photos except main photo
+            deleteAllAccommodationImagesExceptMain(accommodationId);
+
             toDelete.setHidingTimestamp(LocalDateTime.now());
             System.out.println(toDelete);
             accommodationRepository.save(toDelete);

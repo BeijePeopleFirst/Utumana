@@ -1,0 +1,40 @@
+<div *ngIf="isModalOpen" class="modal">
+    <div class="justify-center px-7 pt-7 pb-5 modal-dialog">
+        <h5 class="text-center">{{'profile.edit_picture' | translate}}</h5>
+        <p class="text-center">{{'profile.edit_picture_instructions' | translate}}</p>
+  
+        <button (click)="close()" class="close-modal">
+            &times;
+        </button>
+
+        <form (ngSubmit)="updatePicture()" class="mt-4">
+            <div class="flex justify-center items-center w-full">
+                <label *ngIf="!picturePreview" class="flex flex-col p-10 w-full h-60 text-center rounded-lg border-4 border-dashed hover:cursor-pointer group">
+                    <div class="flex flex-col justify-center items-center w-full h-full text-center">
+                        <!-- 'upload to cloud' icon -->
+                        <!-- <svg xmlns="http://www.w3.org/2000/svg" class="mb-7 w-10 h-10 text-secondary group-hover:text-secondary-dark" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                        </svg> -->
+                        <div class="flex overflow-hidden flex-auto mx-auto -mt-10 w-2/5 max-h-48">
+                            <img class="object-center h-36" src="https://img.freepik.com/free-vector/image-upload-concept-landing-page_52683-27130.jpg?size=338&ext=jpg" alt="upload files image">
+                        </div>
+                        <p class="text-gray-500 pointer-none">
+                            <span class="text-sm">{{'create.drag_and_drop' | translate}}</span> {{'create.files_here' | translate}} <br /> {{'create.or' | translate}} <a>{{'create.select_a_file' | translate}}</a> {{'create.from_your_device' | translate}}
+                        </p>
+                    </div>
+                    <input type="file" accept="image/*" class="hidden" (change)="showPhoto($event)" multiple>
+                </label>
+
+                <div *ngIf="picturePreview" class="overflow-hidden relative w-44 h-44 rounded-full shadow-md">
+                    <img class="object-cover absolute top-0 left-0 w-full h-full bg-cover object-fit" [src]="picturePreview" alt="Profile picture">
+                </div>
+            </div>
+
+            <div class="flex gap-x-5 justify-center mt-4">
+                <button type="submit" class="w-1/4 btn-primary">{{'save_button_label' | translate}}</button>
+                <button type="button" class="w-1/4 btn-cancel" (click)="close()">{{'cancel_button_label' | translate}}</button>
+            </div>
+        </form>
+        <p *ngIf="error" class="mt-4 mb-0 text-center error-message">{{'error' | translate}}</p>
+    </div>
+  </div>

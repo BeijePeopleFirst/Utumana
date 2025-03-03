@@ -3,6 +3,7 @@ import { Review } from 'src/app/models/review';
 import { User } from 'src/app/models/user';
 import { AuthService } from 'src/app/services/auth.service';
 import { ReviewService } from 'src/app/services/review.service';
+import { S3Service } from 'src/app/services/s3.service';
 import { UserService } from 'src/app/services/user.service';
 import iconURL, { imagesURL } from 'src/costants';
 
@@ -15,9 +16,10 @@ export class ProfileComponent implements OnInit {
   id: number | undefined = Number(localStorage.getItem("id"));
   user!: User;
   iconsUrl: string = iconURL;
-  pictureUrl!: string;
-  defaultPictureUrl: string = `${imagesURL}\\users\\default_profile.png`;
+  defaultPictureUrl: string = `${imagesURL}\\default_profile.png`;
+  pictureUrl?: string  = `${imagesURL}\\default_profile.png`;
   isEditBioModalOpen: boolean = false;
+  isEditPictureModalOpen: boolean = false;
 
   reviews: Review[] = [];
   reviewsPageSize!: number;
@@ -37,7 +39,8 @@ export class ProfileComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    private reviewService: ReviewService
+    private reviewService: ReviewService,
+    private s3Service: S3Service
   ){}
 
   ngOnInit(): void {
@@ -47,19 +50,21 @@ export class ProfileComponent implements OnInit {
           return;
         }else{
           this.user = res;
-          this.pictureUrl = `${imagesURL}\\users\\${this.user.id}\\profile.png`;
-
+          console.log("User", this.user);
+          if(this.user.profile_picture_url){
+            this.s3Service.getPhoto(this.user.profile_picture_url).subscribe(blob => {
+              if(blob != null){
+                this.user.profile_picture_blob_url = URL.createObjectURL(blob);
+                this.pictureUrl = this.user.profile_picture_blob_url;
+                console.log("Blob url:",this.pictureUrl);
+              }
+            })
+          }
           this.loadUserReviews();    
         }
       })
     }
   }
-
-  editPicture(): void {
-    console.log("Editing profile picture");
-  }
-
-
 
   loadUser(): void {
     if(this.id){
@@ -68,7 +73,7 @@ export class ProfileComponent implements OnInit {
           return;
         }else{
           this.user = res;
-          this.pictureUrl = `${imagesURL}\\users\\${this.user.id}\\profile.png`; 
+          this.pictureUrl = this.user.profile_picture_blob_url;
         }
       })
     }
@@ -142,6 +147,19 @@ export class ProfileComponent implements OnInit {
 
   showEditBioModal(): void {
     this.isEditBioModalOpen = true;
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeEditPictureModal(refresh: boolean): void {
+    this.isEditPictureModalOpen = false;
+    document.body.style.overflow = 'auto';
+    if(refresh == true){
+      this.loadUser();
+    }
+  }
+
+  showEditPictureModal(): void {
+    this.isEditPictureModalOpen = true;
     document.body.style.overflow = 'hidden';
   }
 }

@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
+import { AddressDTO } from 'src/app/dtos/addressDTO';
+import { AccommodationService } from 'src/app/services/accommodation.service';
 import { DraftService } from 'src/app/services/draft.service';
 
 @Component({
@@ -12,22 +14,36 @@ export class CreateAccommodationConfirmModalComponent {
   @Input() isModalOpen!: boolean;
   @Output() closeModal = new EventEmitter<void>();
   error: boolean = false;
+  address: AddressDTO | null = null;
 
   constructor(
     private draftService: DraftService,
+    private accommodationService: AccommodationService,
     private router: Router
   ) { }
 
   close(): void {
     this.closeModal.emit();
+    this.error = false;
   }
 
   createAccommodation(): void {
     console.log("Creating accommodation...");
     this.error = false;
+    this.draftService.getAddress(this.draftId).subscribe(address => {
+      this.address = address;
+    });
+
+    console.log("Publishing...");
     this.draftService.publishDraft(this.draftId).subscribe({
-      next: (accommodationId: number) => {
+      next: async (accommodationId: number) => {
         if(accommodationId > -1){
+          const coordinates = await this.draftService.getCoordinates((this.address?.street ?? '') + ', ' + (this.address?.street_number ?? '') + ', ' + (this.address?.city ?? '') + ', ' + (this.address?.cap ?? '') + ', ' + (this.address?.province ?? '') + ', ' + (this.address?.country ?? ''))
+          if(coordinates) {
+          this.accommodationService.setCoordinates(accommodationId, coordinates)
+          } else {
+            this.error = true;
+          }
           this.router.navigate(['/accommodation', accommodationId]);
         }else{
           this.error = true;

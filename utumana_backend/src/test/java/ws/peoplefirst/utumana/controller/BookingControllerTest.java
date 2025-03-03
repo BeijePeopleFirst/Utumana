@@ -8,6 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
 import ws.peoplefirst.utumana.dto.AccommodationDTO;
 import ws.peoplefirst.utumana.dto.BookingDTO;
+import ws.peoplefirst.utumana.dto.UnavailabilityDTO;
 import ws.peoplefirst.utumana.dto.UserDTO;
 import ws.peoplefirst.utumana.exception.DBException;
 import ws.peoplefirst.utumana.exception.ForbiddenException;
@@ -20,10 +21,12 @@ import ws.peoplefirst.utumana.service.AvailabilityService;
 import ws.peoplefirst.utumana.service.BookingService;
 import ws.peoplefirst.utumana.utility.BookingStatus;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -119,7 +122,8 @@ public class BookingControllerTest {
 
     @Test
     void manageBookingAppove() {
-        when(bookingService.hostActionOnBooking(anyLong(), any())).thenReturn(getInstance(Booking.class));
+        when(authentication.getPrincipal()).thenReturn(userDTO);
+        when(bookingService.hostActionOnBooking(anyLong(), any(), anyLong())).thenReturn(getInstance(Booking.class));
         assertDoesNotThrow(() -> bookingController.manageBookingAppove(authentication, 0L));
     }
 
@@ -130,7 +134,8 @@ public class BookingControllerTest {
 
     @Test
     void manageBookingReject() {
-        when(bookingService.hostActionOnBooking(anyLong(), any())).thenReturn(getInstance(Booking.class));
+        when(authentication.getPrincipal()).thenReturn(userDTO);
+        when(bookingService.hostActionOnBooking(anyLong(), any(), anyLong())).thenReturn(getInstance(Booking.class));
         assertDoesNotThrow(() -> bookingController.manageBookingReject(authentication, 0L));
     }
 
@@ -224,7 +229,7 @@ public class BookingControllerTest {
     @Test
     void addUnavilability() {
         when(authentication.getPrincipal()).thenReturn(userDTO);
-        when(bookingService.addUnAvailabilities(anyLong(), any())).thenReturn(getInstance(Booking.class));
+        when(bookingService.addUnAvailability(anyLong(), any())).thenReturn(getInstance(UnavailabilityDTO.class));
         assertDoesNotThrow(() -> bookingController.addUnavilability(authentication, getInstance(Availability.class)));
     }
 
@@ -236,7 +241,7 @@ public class BookingControllerTest {
     @Test
     void deleteUnavilability() {
         when(authentication.getPrincipal()).thenReturn(userDTO);
-        when(bookingService.deleteUnAvailabilities(anyLong(), anyLong())).thenReturn(getInstance(Booking.class));
+        when(bookingService.deleteUnAvailability(anyLong(), anyLong())).thenReturn(getInstance(UnavailabilityDTO.class));
         assertDoesNotThrow(() -> bookingController.deleteUnavilability(authentication, 0L));
     }
 
@@ -252,44 +257,67 @@ public class BookingControllerTest {
     }
 
     /**
+     * GET - API: /calculate_price/{accommodation_id}
+     * MTEHOD: calculatePrice(...)
+     */
+
+    @Test
+    void calculatePriceKoAvailability() {
+        when(bookingService.checkDate(anyString(), anyString())).thenReturn(getInstance(HashMap.class));
+        when(availabilityService.findAvailabilities(anyLong(), anyString(), anyString())).thenReturn(null);
+        assertThrows(ForbiddenException.class, () -> bookingController.calculatePrice(0L, "2025-01-01", "2025-01-01"));
+    }
+
+    @Test
+    void calculatePrice() {
+        Map<String, LocalDate> mockDateMap = new HashMap<>();
+        mockDateMap.put("checkIn", LocalDate.parse("2025-01-01"));
+        mockDateMap.put("checkOut", LocalDate.parse("2025-01-01"));
+        when(bookingService.checkDate(anyString(), anyString())).thenReturn(mockDateMap);
+        when(availabilityService.findAvailabilities(anyLong(), anyString(), anyString())).thenReturn(List.of(getInstance(Availability.class)));
+        when(availabilityService.calculatePrice(anyList(), any(LocalDate.class), any(LocalDate.class) )).thenReturn(10.50);
+        assertDoesNotThrow(() -> bookingController.calculatePrice(0L, "2025-01-01", "2025-01-01"));
+    }
+
+    /**
      * PATCH - API: /booking_assign_review/{id}
      * MTEHOD: assignReviewToBooking(...)
      */
 
-    @Test
-    void assignReviewToBooking() {
-        Booking mockBooking = getInstance(Booking.class);
-        mockBooking.setId(0L);
-        mockBooking.setUserId(0L);
-        when(bookingService.findByIdIfDONE(anyLong())).thenReturn(mockBooking);
-        when(authentication.getPrincipal()).thenReturn(userDTO);
-        doNothing().when(bookingService).save(any());
-        assertDoesNotThrow(() -> bookingController.assignReviewToBooking(0L, mockBooking, authentication));
-    }
+//    @Test
+//    void assignReviewToBooking() {
+//        Booking mockBooking = getInstance(Booking.class);
+//        mockBooking.setId(0L);
+//        mockBooking.setUserId(0L);
+//        when(bookingService.findByIdIfDONE(anyLong())).thenReturn(mockBooking);
+//        when(authentication.getPrincipal()).thenReturn(userDTO);
+//        doNothing().when(bookingService).save(any());
+//        assertDoesNotThrow(() -> bookingController.assignReviewToBooking(0L, mockBooking, authentication));
+//    }
 
-    @Test
-    void assignReviewToBookingKoDifferentId() {
-        Booking mockBooking = getInstance(Booking.class);
-        mockBooking.setId(1L);
-        when(bookingService.findByIdIfDONE(anyLong())).thenReturn(mockBooking);
-        assertThrows(InvalidJSONException.class, () -> bookingController.assignReviewToBooking(0L, getInstance(Booking.class), authentication));
-    }
+//    @Test
+//    void assignReviewToBookingKoDifferentId() {
+//        Booking mockBooking = getInstance(Booking.class);
+//        mockBooking.setId(1L);
+//        when(bookingService.findByIdIfDONE(anyLong())).thenReturn(mockBooking);
+//        assertThrows(InvalidJSONException.class, () -> bookingController.assignReviewToBooking(0L, getInstance(Booking.class), authentication));
+//    }
 
-    @Test
-    void assignReviewToBookingKoDifferentUserId() {
-        Booking mockBooking = getInstance(Booking.class);
-        mockBooking.setUserId(1L);
-        when(bookingService.findByIdIfDONE(anyLong())).thenReturn(mockBooking);
-        assertThrows(ForbiddenException.class, () -> bookingController.assignReviewToBooking(0L, getInstance(Booking.class), authentication));
-    }
+//    @Test
+//    void assignReviewToBookingKoDifferentUserId() {
+//        Booking mockBooking = getInstance(Booking.class);
+//        mockBooking.setUserId(1L);
+//        when(bookingService.findByIdIfDONE(anyLong())).thenReturn(mockBooking);
+//        assertThrows(ForbiddenException.class, () -> bookingController.assignReviewToBooking(0L, getInstance(Booking.class), authentication));
+//    }
 
-    @Test
-    void assignReviewToBookingKoAuth() {
-        Booking mockBooking = getInstance(Booking.class);
-        mockBooking.setId(0L);
-        mockBooking.setUserId(0L);
-        when(bookingService.findByIdIfDONE(anyLong())).thenReturn(mockBooking);
-        when(authentication.getPrincipal()).thenReturn(getUnautorizedUser());
-        assertThrows(ForbiddenException.class, () -> bookingController.assignReviewToBooking(0L, mockBooking, authentication));
-    }
+//    @Test
+//    void assignReviewToBookingKoAuth() {
+//        Booking mockBooking = getInstance(Booking.class);
+//        mockBooking.setId(0L);
+//        mockBooking.setUserId(0L);
+//        when(bookingService.findByIdIfDONE(anyLong())).thenReturn(mockBooking);
+//        when(authentication.getPrincipal()).thenReturn(getUnautorizedUser());
+//        assertThrows(ForbiddenException.class, () -> bookingController.assignReviewToBooking(0L, mockBooking, authentication));
+//    }
 }

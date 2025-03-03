@@ -28,6 +28,7 @@ export class AuthInterceptor implements HttpInterceptor {
         })
       );
     }else if(req.url.includes('photo')){
+      console.log("Request with photo:", req);
       // forward request without overwriting headers
       // handle 401 error with method handle401Error
       return next.handle(req).pipe(
@@ -39,9 +40,33 @@ export class AuthInterceptor implements HttpInterceptor {
         })
       ); 
 
-    }else if(req.url.includes('signin') || req.url.includes('forgotPassword') || req.url.includes('refresh_token')){
+    }else if(req.url.includes('signin') || req.url.includes('forgotPassword')){
+      console.log("Request with signin or forgotPassword:", req);
       // forward request without overwriting headers
       return next.handle(req);
+    }else if(req.url.includes('s3')){
+      // set request headers
+      // handle 401 error with method handle401Error
+      const authToken =  localStorage.getItem("token");
+      let authReq: HttpRequest<any>;
+      authReq = req.clone({
+        responseType: 'blob',
+        setHeaders: {
+          Authorization: `Bearer ${authToken}`,
+          AcceptType: 'application/octet-stream'
+        }
+      });
+
+      console.log("Request with image:", authReq);
+
+      return next.handle(authReq).pipe(
+        catchError(error => {
+          if ( error.status === 401) {
+            return this.handle401Error(authReq, next);
+          }
+          return throwError(() => error);
+        })
+      ); 
     }else{
       // set request headers
       // handle 401 error with method handle401Error
@@ -54,6 +79,8 @@ export class AuthInterceptor implements HttpInterceptor {
           AcceptType: 'application/json'
         }
       });
+
+      console.log("Request:", authReq);
 
       return next.handle(authReq).pipe(
         catchError(error => {

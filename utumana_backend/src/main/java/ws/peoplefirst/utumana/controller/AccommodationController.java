@@ -749,13 +749,16 @@ public class AccommodationController {
 			@RequestParam(name = "max_price", required = false) Double maxPrice,
 			@RequestParam(name = "order_by", required = false, defaultValue = "id") String orderBy,
 			@RequestParam(name = "order_direction", required = false, defaultValue = "desc") String oderDirection,
+			@RequestParam(name = "address_name", required = false) String addressName,
 			@RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
 			@RequestParam(name = "size", required = false, defaultValue = "10") Integer size,
 			Authentication auth) {
 		logger.debug("GET /search");
 
-		// decode destination
-		destination = URLDecoder.decode(destination, StandardCharsets.UTF_8);
+		if(destination != null) {
+			// decode destination
+			destination = URLDecoder.decode(destination, StandardCharsets.UTF_8);
+		}
 
 		// get check-in and check-out dates
 		if (checkIn.isBlank()) {
@@ -801,7 +804,7 @@ public class AccommodationController {
 
 		Long userId = AuthorizationUtility.getUserFromAuthentication(auth).getId();
         Pageable pageable = PageRequest.of(page, size);
-        return accommodationService.findByUserInputDTO(destination, checkInDate, checkOutDate, numberOfGuests, freeOnly, serviceIds, minRating, maxRating, minPrice, maxPrice, orderBy, oderDirection, userId, pageable);
+        return accommodationService.findByUserInputDTO(destination, checkInDate, checkOutDate, numberOfGuests, freeOnly, serviceIds, minRating, maxRating, minPrice, maxPrice, orderBy, oderDirection, addressName, userId, pageable);
 	}
 	
 	@Operation(summary = "Return the full accommodation with utility fields such as : if the logged user is and admin or owner, hasPendingBooking,"

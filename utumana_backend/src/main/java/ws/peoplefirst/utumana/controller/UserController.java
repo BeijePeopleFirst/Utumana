@@ -3,9 +3,11 @@ package ws.peoplefirst.utumana.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -272,60 +274,61 @@ public class UserController {
 		return userService.getAllUserBadges(userId);
 	}
 
-//	@PreAuthorize("hasAuthority('USER')")
-//	@PostMapping(value = "/user/store_photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//	public Map<String, String> storePhotoOnServer(@RequestParam MultipartFile img, Authentication auth) {
-//
-//		System.out.println("File -> " + img);
-//		UserDTO loggedUser = AuthorizationUtility.getUserFromAuthentication(auth);
-//
-//		if(img == null || img.isEmpty()) throw new InvalidJSONException("You have to provide a photo");
-//
-//		String orFilename = img.getOriginalFilename();
-//		byte[] content = null;
-//		FileOutputStream out = null;
-//		String finalUrl = null;
-//		try {
-//
-//			finalUrl = URLEncoder.encode(loggedUser.getId() + "_" + new Date().getTime() + "." + orFilename.substring(orFilename.lastIndexOf('.') + 1), StandardCharsets.UTF_8.toString());
-//
-//		} catch (UnsupportedEncodingException e) {
-//			// TODO Auto-generated catch block
-//			throw new TheJBeansException("" + e);
-//		}
-//		//File destination = new File("/Users/riccardogugolati/LAVORO/People First/CouchSurfing/TheJBeansCouchSurfing/src/main/resources/static/images/" + finalUrl);
-//		File destination = new File(destinationPathPhotoPrefix + finalUrl);
-//		try {
-//
-//			System.out.println("SONO DENTRO AL TRY");
-//			destination.createNewFile();
-//			out = new FileOutputStream(destination);
-//			content = img.getBytes();
-//
-//			out.write(content);
-//
-//
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		finally {
-//
-//			try {
-//				out.close();
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//
-//		}
-//
-//		Map<String, String> map = new HashMap<String, String>();
-//		String res = null;
-//		res = "/images/" + finalUrl;
-//		map.put("url", res);
-//
-//		return map;
-//	}
+	@PreAuthorize("hasAuthority('USER')")
+	@PostMapping(value = "/user/store_photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public @ResponseBody Boolean storePhotoOnServer(@RequestParam MultipartFile photo, Authentication auth) {
+		System.out.println("File -> " + photo);
+		UserDTO loggedUser = AuthorizationUtility.getUserFromAuthentication(auth);
+
+		if(photo == null || photo.isEmpty()) throw new InvalidJSONException("You have to provide a photo");
+
+		return userService.uploadProfilePicture(loggedUser.getId(), photo) != null;
+
+		// String orFilename = photo.getOriginalFilename();
+		// byte[] content = null;
+		// FileOutputStream out = null;
+		// String finalUrl = null;
+		// try {
+
+		// 	finalUrl = URLEncoder.encode(loggedUser.getId() + "_" + new Date().getTime() + "." + orFilename.substring(orFilename.lastIndexOf('.') + 1), StandardCharsets.UTF_8.toString());
+
+		// } catch (UnsupportedEncodingException e) {
+		// 	// TODO Auto-generated catch block
+		// 	throw new TheJBeansException("" + e);
+		// }
+		// //File destination = new File("/Users/riccardogugolati/LAVORO/People First/CouchSurfing/TheJBeansCouchSurfing/src/main/resources/static/images/" + finalUrl);
+		// File destination = new File(destinationPathPhotoPrefix + finalUrl);
+		// try {
+
+		// 	System.out.println("SONO DENTRO AL TRY");
+		// 	destination.createNewFile();
+		// 	out = new FileOutputStream(destination);
+		// 	content = photo.getBytes();
+
+		// 	out.write(content);
+
+
+		// } catch (IOException e) {
+		// 	// TODO Auto-generated catch block
+		// 	e.printStackTrace();
+		// }
+		// finally {
+
+		// 	try {
+		// 		out.close();
+		// 	} catch (IOException e) {
+		// 		// TODO Auto-generated catch block
+		// 		e.printStackTrace();
+		// 	}
+
+		// }
+
+		// Map<String, String> map = new HashMap<String, String>();
+		// String res = null;
+		// res = "/images/" + finalUrl;
+		// map.put("url", res);
+
+		// return map;
+	}
 }
 	

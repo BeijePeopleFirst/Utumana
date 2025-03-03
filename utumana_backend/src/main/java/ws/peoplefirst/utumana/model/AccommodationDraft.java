@@ -93,7 +93,7 @@ public class AccommodationDraft {
 	@Schema(description = "URL of the main photo of the accommodation draft", example = "https://example.com/photo.jpg")
 	private String mainPhotoUrl;
 
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@OrderColumn(name="service_order")
 	@JoinTable(name = "service_availability_draft", joinColumns = {
             @JoinColumn(name = "accommodation_draft_id", referencedColumnName = "id", insertable = true, nullable = false, updatable = true) }, inverseJoinColumns = {

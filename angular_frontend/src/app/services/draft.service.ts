@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AddressDTO } from '../dtos/addressDTO';
-import { BACKEND_URL_PREFIX } from 'src/costants';
+import { BACKEND_URL_PREFIX, s3Prefix } from 'src/costants';
 import { catchError, map, Observable, of, tap } from 'rxjs';
 import { Accommodation } from '../models/accommodation';
 import { Service } from '../models/service';
@@ -10,6 +10,8 @@ import { Availability, AvailabilityInterface } from '../models/availability';
 import { UnavailabilityDTO, UnavailabilityInterface } from '../dtos/unavailabilityDTO';
 import { GeneralAccommodationInfoDTO } from '../dtos/generalAccommodationInfoDTO';
 import { Photo } from '../models/photo';
+import { Coordinates } from '../models/coordinates';
+import { S3Service } from './s3.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +19,8 @@ import { Photo } from '../models/photo';
 export class DraftService {
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private s3Service: S3Service
   ) { }
 
   createAccommodationDraft(): Observable<number> {
@@ -175,21 +178,6 @@ export class DraftService {
     );
   }
 
-  getPhoto(photoId: number): Observable<Blob | null> {
-    const authToken =  localStorage.getItem("token");
-    return this.http.get<Blob>(`${BACKEND_URL_PREFIX}/api/accommodation-draft/photo/${photoId}`, {
-      headers: { 
-        Authorization: `Bearer ${authToken}`, 
-        ContentType: 'application/json',
-        AcceptType: 'application/octet-stream' } 
-    }).pipe(
-      catchError(error => {
-        console.error(error);
-        return of(null);
-      })
-    );
-  }
-
   uploadPhoto(draftId: number, photo: File, order: number): Observable<Photo | null> {
     const authToken =  localStorage.getItem("token");
     const formData: FormData = new FormData();
@@ -205,13 +193,15 @@ export class DraftService {
     }).pipe(
       catchError(error => {
         console.error(error);
-        return of(null);
+        throw error;
       })
     );
   }
 
   removePhoto(draftId: number, photoId: number): void {
-    if(!draftId || draftId < 0 || !photoId || photoId < 0) return;
+    if(!draftId || draftId < 0 || !photoId || photoId < 0) 
+      return;
+    
     const authToken =  localStorage.getItem("token");
     this.http.delete<any>(`${BACKEND_URL_PREFIX}/api/accommodation-draft/${draftId}/remove-photo/${photoId}`, {
       headers: {
@@ -245,6 +235,17 @@ export class DraftService {
       catchError(error => {
         console.error(error);
         return of([]);
+      }),
+      map(data => {
+        for(let acc of data){
+          this.s3Service.getPhoto(acc.main_photo_url).subscribe(blob => {
+            if(blob != null){
+              acc.main_photo_blob_url = URL.createObjectURL(blob);
+            }
+          })
+        }
+        console.log("Draft Service - Fetched accommodation drafts DTO:", data);
+        return data;
       })
     );
   }
@@ -257,5 +258,19 @@ export class DraftService {
         return of(-1);
       })
     );
+  }
+
+  async getCoordinates(address: string): Promise<Coordinates | null> {  
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`
+    );
+    const data = await response.json();
+    if (data.length > 0) {
+      return {
+        lat: parseFloat(data[0].lat),
+        lng: parseFloat(data[0].lon)
+      };
+    }
+    return null;
   }
 }

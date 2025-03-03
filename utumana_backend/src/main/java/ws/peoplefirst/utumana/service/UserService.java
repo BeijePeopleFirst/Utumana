@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import ws.peoplefirst.utumana.dto.ReviewDTO;
 import ws.peoplefirst.utumana.dto.UserDTO;
@@ -34,7 +35,11 @@ public class UserService implements UserDetailsService {
 	
 	@Autowired
 	private UserAuthorityRepository userAuthorityRepository;
-	
+
+	@Autowired
+	private S3Service s3Service;
+
+
 	public boolean isUserOK(User user) {
 		if(user == null) {
 			log.trace("User is null");
@@ -129,6 +134,23 @@ public class UserService implements UserDetailsService {
 			return false;
 		}
 		return true;
+	}
+
+	public String uploadProfilePicture(Long userId, MultipartFile photo) {
+		User user = getUserById(userId);
+		if(user == null){
+			throw new IdNotFoundException("User not found with id: " + userId);
+		}
+
+		String fileExtension = photo.getContentType() != null ? photo.getContentType().split("/")[1] : ".jpg";
+        String savedPhotoUrl = "images/users/" + userId.toString() + "/profile" + "." + fileExtension;
+        
+        //save photo file in s3
+        s3Service.uploadFile(savedPhotoUrl, photo);
+
+		user.setProfilePictureUrl(savedPhotoUrl);
+		userRepository.save(user);
+		return savedPhotoUrl;
 	}
 	
 	public User getUserByEmail(String email) {

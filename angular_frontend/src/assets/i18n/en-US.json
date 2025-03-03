@@ -7,6 +7,8 @@
 	"notFound": "No accommodation found"
 	},
 "accommodation-card-details": {
+	"delete": "Delete",
+	"host": "Host",
 	"city-placeholder-input-field": "City",
 	"province-placeholder-input-field": "Province",
 	"country-placeholder-input-field": "Country",
@@ -142,6 +144,10 @@
 	"redirect-in-few-seconds": "Redirect in few seconds...",
 	"created-unavailability-id": "Unavailability Created"
 	},
+"common": {
+	"cancel": "Cancel",
+	"delete": "Delete"
+	},
 "create": {
 	"continue": "Next",
 	"back": "Back",
@@ -191,7 +197,7 @@
 
 	"photos": "Photos",
 	"choose_photos": "Choose Photos",
-	"photos_instructions": "The first photo will be used as the main photo of this accommodation. At least one photo is required. Files must not exceed 5 MB.",
+	"photos_instructions": "The first photo will be used as the main photo of this accommodation. At least one photo is required. You can upload up to 10 photos. Files must not exceed 7 MB.",
 	"drag_and_drop": "Drag and drop",
 	"files_here": "images here",
 	"or": "or",
@@ -199,6 +205,8 @@
 	"from_your_device": "from your device",
 	"photos_preview": "Photos Preview",
 	"no_photos": "No photos",
+	"payload_too_large": "Error: maximum allowed size (7 MB) exceeded for file ",
+	"too_many_photos": "Error: maximum allowed number of photos (10) exceeded",
 
 	"recap": "Confirm",
 	"no_address": "No address",
@@ -278,7 +286,12 @@
 	"title": "My accommodations",
 	"pending": "My accommodations waiting for approval",
 	"rejected": "Rejected accommodations",
-	"drafts": "My drafts"
+	"drafts": "My drafts",
+	"drop_to_delete": "Drag here to delete",
+	"confirm_delete_title": "Confirm deletion",
+	"confirm_delete_message": "Are you sure you want to delete this draft? This action cannot be undone.",
+	"draft_deleted_success": "Draft deleted successfully",
+	"draft_deleted_error": "An error occurred while deleting the draft"
 	},
 "profile": {
 	"reviews_title": "Reviews received",
@@ -289,7 +302,9 @@
 	"bio": "Bio",
 	"change_password": "Change password",
 	"edit_bio": "Edit your bio",
-	"edit_bio_placeholder": "Write a short introduction about yourself..."
+	"edit_bio_placeholder": "Write a short introduction about yourself...",
+	"edit_picture": "Edit your profile picture",
+	"edit_picture_instructions": "Upload a photo (max 7 MB)."
 	},
 "review": {
 	"comfort": "Comfort",
@@ -330,12 +345,16 @@
 	"recentDesc": "Recent: Desc",
 	"ratingAsc": "Rating: Asc",
 	"ratingDesc": "Rating: Desc",
+	"addressASC": " Distance from: Asc",
+	"addressDESC": " Distance from: Desc",
 	"minPrice-asc": " (Price: Asc)",
 	"minPrice-desc": " (Price: Desc)",
 	"approvalTimestamp-asc": " (Recent: Asc)",
 	"approvalTimestamp-desc": " (Recent: Desc)",
 	"rating-asc": " (Rating: Asc)",
-	"rating-desc": " (Rating: Desc)"
+	"rating-desc": " (Rating: Desc)",
+	"distance-asc": " (Distance : Asc)",
+	"distance-desc": " (Distance : Desc)"
 	},
 "settings": {
 	"title": "Settings",

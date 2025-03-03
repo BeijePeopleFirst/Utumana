@@ -15,10 +15,13 @@ import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+
+import ws.peoplefirst.utumana.AddressConfiguration;
 import ws.peoplefirst.utumana.criteria.SearchAccomodationCriteria;
 import ws.peoplefirst.utumana.dto.AccommodationDTO;
 import ws.peoplefirst.utumana.exception.TheJBeansException;
@@ -27,12 +30,16 @@ import ws.peoplefirst.utumana.model.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 public class QAccommodationRepositoryImpl implements QAccommodationRepository {
 
     @PersistenceContext
     private EntityManager entityManager;
+    
+    @Autowired
+    private AddressConfiguration addressConfiguration;
 
     @Override
     public Page<AccommodationDTO> searchAccomodation(SearchAccomodationCriteria criteria) {
@@ -41,6 +48,7 @@ public class QAccommodationRepositoryImpl implements QAccommodationRepository {
         QAccommodation accommodation = QAccommodation.accommodation;
         QAccommodationRating accommodationRating = QAccommodationRating.accommodationRating;
         QAvailability availability = QAvailability.availability;
+        QBooking booking = QBooking.booking;
         QService service = QService.service;
 
         // Costruzione dei filtri principali
@@ -69,9 +77,23 @@ public class QAccommodationRepositoryImpl implements QAccommodationRepository {
         BooleanBuilder availabilityBuilder = new BooleanBuilder();
         LocalDate checkInDate = criteria.getCheckInDate();
         LocalDate checkOutDate = criteria.getCheckOutDate();
+
         if (checkInDate != null && checkOutDate != null) {
             availabilityBuilder.and(availability.startDate.loe(checkInDate))
-                    .and(availability.endDate.goe(checkOutDate));
+                               .and(availability.endDate.goe(checkOutDate));
+            
+            availabilityBuilder.and(
+                availability.accommodation.id.notIn(
+                    JPAExpressions.select(booking.accommodation.id)
+                                .from(booking)
+                                .where(
+                                    booking.checkOut.goe(checkInDate.atTime(14,0))
+                                        .and(
+                                            booking.checkIn.loe(checkOutDate.atTime(10,0, 0))
+                                        )
+                                )
+                )
+            );
         }
 
         // Filtro per freeOnly
@@ -171,6 +193,46 @@ public class QAccommodationRepositoryImpl implements QAccommodationRepository {
                     NumberExpression<Double> minPriceExpr = minPriceSubquery.coalesce(Double.MAX_VALUE);
                     orderSpecifier = new OrderSpecifier<>(order, minPriceExpr);
                     break;
+                case "distance":
+                    System.out.println(criteria);
+                    String addressName = criteria.getAddressName(); 
+                    AddressConfiguration.DefaultAddress defaultAddress = null;
+                    System.out.println("addressName: " + addressName);
+                    if (addressName != null && !addressName.isEmpty()) {
+                        Optional<AddressConfiguration.DefaultAddress> foundAddress = addressConfiguration.getDefaultAddresses()
+                                .stream()
+                                .filter(addr -> addressName.equals(addr.getAddress()))
+                                .findFirst();
+                        if (foundAddress.isPresent()) {
+                            defaultAddress = foundAddress.get();
+                        }
+                    }
+                    
+                    // Se non è stato trovato un indirizzo specifico, usa il primo disponibile
+                    if (defaultAddress == null && !addressConfiguration.getDefaultAddresses().isEmpty()) {
+                        defaultAddress = addressConfiguration.getDefaultAddresses().get(0);
+                    }
+                    
+                    double refLat = defaultAddress != null ? defaultAddress.getLat() : 45.43915047718785;
+                    double refLon = defaultAddress != null ? defaultAddress.getLon() : 9.100000000000001;
+                
+                    NumberExpression<Double> latExpr = Expressions.numberTemplate(Double.class, 
+                        "cast(substring({0}, 1, locate(',', {0})-1) as double)", 
+                        accommodation.coordinates);
+
+                    NumberExpression<Double> lonExpr = Expressions.numberTemplate(Double.class, 
+                        "cast(substring({0}, locate(',', {0})+1) as double)", 
+                        accommodation.coordinates);
+
+                    NumberExpression<Double> distance = Expressions.numberTemplate(Double.class,
+                        "6371 * acos(cos(radians({0})) * cos(radians({1})) * cos(radians({2}) - radians({3})) + " +
+                        "sin(radians({0})) * sin(radians({1})))",
+                        refLat, latExpr, refLon, lonExpr);
+
+                    System.out.println("distance: " + distance);
+                    orderSpecifier = new OrderSpecifier<>(order, distance);
+                    break;
+                
                 default:
                     PathBuilder<Accommodation> pathBuilder = new PathBuilder<>(Accommodation.class, "accommodation");
                     ComparableExpressionBase<?> fieldPath = pathBuilder.getComparable(orderBy, Comparable.class);

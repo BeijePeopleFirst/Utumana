@@ -34,6 +34,10 @@ export class MyAccommodationsComponent implements OnInit {
   myDraftsPageNumber!: number;
   myDraftsTotalPages!: number;
 
+  draftBeingDragged: AccommodationDTO | null = null;
+  showDeleteModal = false;
+  draftToDelete: AccommodationDTO | null = null;
+
   ownerId: number;
 
   constructor(
@@ -105,5 +109,51 @@ export class MyAccommodationsComponent implements OnInit {
     this.myDraftsPageNumber = pageNumber;
     let offset = this.myDraftsPageNumber * this.myDraftsPageSize;
     this.myDrafts$ = of(this.allMyDrafts.slice(offset, offset + this.myDraftsPageSize));
+  }
+
+  onDraftDragStart(event: {draft: AccommodationDTO, event: Event}): void {
+    this.draftBeingDragged = event.draft;
+  }
+
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
+
+    if(event.dataTransfer) {
+      event.dataTransfer.dropEffect = 'move';
+    }
+  }
+
+  onDraftDrop(event: DragEvent): void {
+    event.preventDefault();
+    if(this.draftBeingDragged) {
+      this.draftToDelete = this.draftBeingDragged;
+      this.showDeleteModal = true;
+      this.draftBeingDragged = null;
+    }
+  }
+
+  cancelDelete(): void {
+    this.showDeleteModal = false;
+    this.draftToDelete = null;
+  }
+
+  confirmDelete(): void {
+    if(this.draftToDelete) {
+      const draftId = this.draftToDelete.id;
+
+      this.accommodationService.deleteDraft(draftId).subscribe({
+        next: () => {
+          this.allMyDrafts = this.allMyDrafts.filter(draft => draft.id !== draftId);
+          this.showDeleteModal = false;
+          this.loadMyDraftsPage(this.myDraftsPageNumber);
+        },
+        error: () => {
+          console.error("Error deleting draft");
+        }
+      });
+
+      this.showDeleteModal = false;
+      this.draftToDelete = null;
+    }
   }
 }

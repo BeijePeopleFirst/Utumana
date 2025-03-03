@@ -31,4 +31,5 @@ replay_pid*
 *.iws
 *.iml
 *.ipr
+
 utumana_backend/src/main/resources/S3.properties

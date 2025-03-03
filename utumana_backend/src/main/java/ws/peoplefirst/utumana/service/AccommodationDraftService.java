@@ -24,6 +24,7 @@ import ws.peoplefirst.utumana.model.PhotoDraft;
 import ws.peoplefirst.utumana.model.UnavailabilityDraft;
 import ws.peoplefirst.utumana.repository.AccommodationDraftRepository;
 import ws.peoplefirst.utumana.repository.AvailabilityDraftRepository;
+import ws.peoplefirst.utumana.repository.PhotoDraftRepository;
 import ws.peoplefirst.utumana.repository.UnavailabilityDraftRepository;
 
 @Service
@@ -39,6 +40,12 @@ public class AccommodationDraftService {
 
     @Autowired
     private UnavailabilityDraftRepository unavailabilityDraftRepository;
+
+    @Autowired
+    private PhotoDraftRepository photoDraftRepository;
+
+    @Autowired
+    private S3Service s3Service;
 
 
     public List<AccommodationDraft> getAccommodationDraftByOwnerId(Long ownerId) {
@@ -126,21 +133,30 @@ public class AccommodationDraftService {
         AccommodationDraft draft = getDraftById(draftId);
         System.out.println("Photo file: " + photo.getOriginalFilename() + " " + photo.getContentType() + " " + photo.getSize());
 
-        // save photo file in images/drafts/{draftId}/ 
-        //...
-        String fileExtension = photo.getContentType() != null ? photo.getContentType().split("/")[1] : ".jpg";
-        String savedPhotoUrl = "images/drafts/" + draftId.toString() + "/" + order.toString() + "." + fileExtension;
-
         // save PhotoDraft entity in db
         PhotoDraft photoDraft = new PhotoDraft();
-        photoDraft.setPhotoUrl(savedPhotoUrl);
+        photoDraft.setPhotoUrl("tempUrl");
         photoDraft.setPhotoOrder(order);
         photoDraft.setAccommodationDraft(draft);
+        photoDraft = photoDraftRepository.save(photoDraft);
+
+        // save photo file in images/drafts/{draftId}/ 
+        String fileExtension = photo.getContentType() != null ? photo.getContentType().split("/")[1] : ".jpg";
+        String savedPhotoUrl = "images/drafts/" + draftId.toString() + "/" + photoDraft.getId().toString() + "." + fileExtension;
+        
+        //save photo file in s3
+        s3Service.uploadFile(savedPhotoUrl, photo);
+
+        // update photo url in photo draft
+        photoDraft.setPhotoUrl(savedPhotoUrl);
+        photoDraft = photoDraftRepository.save(photoDraft);
         
         List<PhotoDraft> photos = draft.getPhotos();
         photos.add(photoDraft);
         draft.setPhotos(photos);
         draft = accommodationDraftRepository.save(draft);
+
+        System.out.println("Updated photos: " + photos);
 
         // if order == 0 then set main photo url
         if(order == 0){
@@ -155,19 +171,38 @@ public class AccommodationDraftService {
 
     @Transactional
     public void removePhoto(Long draftId, Long photoDraftId) {
+        System.out.println("Removing photo draft with id " + photoDraftId);
         AccommodationDraft draft = getDraftById(draftId);
         if(draft == null){
             throw new IdNotFoundException("Draft with id " + draftId + " not found");
         }
+        PhotoDraft photoDraft = photoDraftRepository.findById(photoDraftId).orElse(null);
+        if(photoDraft == null){
+            throw new IdNotFoundException("Photo draft with id " + photoDraftId + " not found");
+        }
+
         List<PhotoDraft> photos = draft.getPhotos();
+        int index = 0;
         for(int i=0; i<photos.size(); i++){
             if(photos.get(i).getId() == photoDraftId){
-                photos.remove(i);
-                break;
+                index = i;
+            }else if(photos.get(i).getPhotoOrder() > photoDraft.getPhotoOrder()){
+                photos.get(i).setPhotoOrder(photos.get(i).getPhotoOrder() - 1);
+
+                // if new photo order == 0, update mainPhotoUrl
+                if(photos.get(i).getPhotoOrder() == 0){
+                    draft.setMainPhotoUrl(photos.get(i).getPhotoUrl());
+                }
             }
         }
+        photos.remove(index);
         draft.setPhotos(photos);
         accommodationDraftRepository.save(draft);
+    
+        // delete file from s3
+        s3Service.deleteFile(photoDraft.getPhotoUrl());
+
+        photoDraftRepository.deleteById(photoDraftId);
     }
 
     // this method makes no checks on availabilities validity: the check is done in frontend and at the moment of draft transformation into accommodation

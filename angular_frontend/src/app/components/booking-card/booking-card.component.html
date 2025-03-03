@@ -1,22 +1,22 @@
 <div *ngIf="booking">
-    <div class="flex w-fit md:flex-row flex-col sm:flex-col">
+    <div class="flex flex-col w-fit md:flex-row sm:flex-col">
         <div class="flex w-fit">
             <app-accommodation-card [accommodation]="booking.accommodation"></app-accommodation-card>
         </div>
 
-        <div class="flex flex-col justify-between p-4 ml-3 bg-white rounded-lg ">
-            <div class="text-lg font-semibold text-center md:text-start pb-2">
-                <p> {{'bookings.checkIn' | translate}}:</p>
-                <p class="text-gray-700">{{ booking.checkIn | date: 'short':undefined:locale}}</p>
-                <p> {{'bookings.checkOut' | translate}}:</p>
-                <p class="text-gray-700">{{ booking.checkOut | date: 'short':undefined:locale }}</p>
+        <div class="flex flex-col justify-between p-4 ml-3 bg-white rounded-lg">
+            <div class="pb-2 text-lg font-semibold text-center md:text-start">
+                <p> {{'bookings.check_in' | translate}}:</p>
+                <p class="text-gray-700">{{ booking.check_in | date: 'short':undefined:locale}}</p>
+                <p> {{'bookings.check_out' | translate}}:</p>
+                <p class="text-gray-700">{{ booking.check_out | date: 'short':undefined:locale }}</p>
                 <p class="text-lg font-semibold">  {{'bookings.price' | translate}}: 
                     <span *ngIf="booking.price > 0" class="text-green-600">{{ booking.price | currency:'EUR':'symbol-narrow':'1.2-2':'it-IT' }}</span>
                     <span *ngIf="booking.price == 0" class="text-green-600">{{'bookings.free' | translate | uppercase }}</span>
                 </p>
             </div>
 
-            <div *ngIf="!booking.reviewId && booking.status == 'DONE' && !isOwner" class="flex">
+            <div *ngIf="!booking.review_id && booking.status == 'DONE' && !isOwner" class="flex">
                 <button type="button" class="w-full btn-primary" (click)="selectCard()">
                     {{'bookings.review' | translate}}
                 </button>
@@ -32,7 +32,7 @@
             </div>
 
             <div *ngIf="booking.status == 'ACCEPTED'">
-                <app-timer [startDate]="booking.checkIn"></app-timer>
+                <app-timer [startDate]="booking.check_in"></app-timer>
             </div>
         </div>
     </div>

@@ -7,6 +7,8 @@
 	"notFound": "Nessuna offerta disponibile"
 	},
 "accommodation-card-details": {
+	"delete": "Elimina",
+	"host": "Proprietario",
 	"city-placeholder-input-field": "Comune",
 	"province-placeholder-input-field": "Provincia",
 	"country-placeholder-input-field": "Paese",
@@ -142,6 +144,10 @@
 	"redirect-in-few-seconds": "Cambio di Pagina tra qualche secondo...",
 	"created-unavailability-id": "Indisponibilita' Creata"
 	},
+"common": {
+	"cancel": "Annulla",
+	"delete": "Elimina"
+	},
 "create": {
 	"continue": "Continua",
 	"back": "Indietro",
@@ -193,12 +199,14 @@
 	"choose_photos": "Seleziona foto",
 	"drag_and_drop": "Trascina",
 	"files_here": "qui le immagini",
-	"photos_instructions": "La prima foto verrà usata come foto principale di questa sistemazione. È necessario caricare almeno una foto. I file caricati non possono superare 5 MB.",
+	"photos_instructions": "La prima foto verrà usata come foto principale di questa sistemazione. È necessario caricare almeno una foto, per un massimo di 10 foto. I file caricati non possono superare 7 MB.",
 	"or": "oppure",
 	"select_a_file": "seleziona immagini",
 	"from_your_device": "dal tuo dispositivo",
 	"photos_preview": "Anteprima foto",
 	"no_photos": "Nessuna foto",
+	"payload_too_large": "Errore: superata la grandezza massima consentita (7 MB) per il file ",
+	"too_many_photos": "Errore: superato il numero massimo di foto consentito (10) per questa sistemazione",
 
 	"recap": "Conferma",
 	"no_address": "Nessun indirizzo",
@@ -278,7 +286,12 @@
 	"title": "Le mie sistemazioni",
 	"pending": "Le mie sistemazioni in attesa di conferma",
 	"rejected": "Sistemazioni rifiutate",
-	"drafts": "Le mie bozze"
+	"drafts": "Le mie bozze",
+	"drop_to_delete": "Trascina qui per eliminare",
+    "confirm_delete_title": "Conferma eliminazione",
+    "confirm_delete_message": "Sei sicuro di voler eliminare questa bozza? Questa azione non può essere annullata.",
+    "draft_deleted_success": "Bozza eliminata con successo",
+    "draft_deleted_error": "Si è verificato un errore durante l'eliminazione della bozza"
 	},
 "profile": {
 	"reviews_title": "Recensioni ricevute",
@@ -289,7 +302,9 @@
 	"bio": "Biografia",
 	"change_password": "Cambia password",
 	"edit_bio": "Modifica la tua biografia",
-	"edit_bio_placeholder": "Scrivi una tua breve presentazione..."
+	"edit_bio_placeholder": "Scrivi una tua breve presentazione...",
+	"edit_picture": "Modifica la tua foto profilo",
+	"edit_picture_instructions": "Seleziona una foto (max 7 MB)."
 	},
 "review": {
 	"comfort": "Comfort",
@@ -335,7 +350,11 @@
 	"approvalTimestamp-asc": " (Recenti: crescente)",
 	"approvalTimestamp-desc": " (Recenti: decrescente)",
 	"rating-asc": " (Voto: crescente)",
-	"rating-desc": " (Voto: decrescente)"
+	"rating-desc": " (Voto: decrescente)",
+	"addressASC": " Distanza crescente da:",
+	"addressDESC": " Distanza decrescente da:",
+	"distance-asc": " (Distanza crescente)",
+	"distance-desc": " (Distanza decrescente)"
 	},
 "settings": {
 	"title": "Impostazioni",

@@ -1,15 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, debounceTime, distinctUntilChanged, map, Observable, of, Subject, switchMap } from 'rxjs';
+import { BehaviorSubject, debounceTime, distinctUntilChanged, map, Observable, of, Subject, Subscription, switchMap } from 'rxjs';
 import { AccommodationDTO } from 'src/app/dtos/accommodationDTO';
 import { BookingDTO } from 'src/app/dtos/bookingDTO';
 import { Accommodation } from 'src/app/models/accommodation';
 import { Booking } from 'src/app/models/booking';
+import { Coordinates } from 'src/app/models/coordinates';
 import { Review } from 'src/app/models/review';
 import { Service } from 'src/app/models/service';
 import { User } from 'src/app/models/user';
 import { AccommodationService } from 'src/app/services/accommodation.service';
+import { DraftService } from 'src/app/services/draft.service';
 import { ReviewService } from 'src/app/services/review.service';
 import { ServiceService } from 'src/app/services/service.service';
 import { UserService } from 'src/app/services/user.service';
@@ -21,7 +23,7 @@ import iconURL from 'src/costants';
   templateUrl: './accommodation-details.component.html',
   styleUrls: ['./accommodation-details.component.css']
 })
-export class AccommodationDetailsComponent implements OnInit {
+export class AccommodationDetailsComponent implements OnInit, OnDestroy {
 
   userId?: number;
 
@@ -96,12 +98,16 @@ export class AccommodationDetailsComponent implements OnInit {
   //-------------------------------------------------------------------------------------
 
 
-  iconUrl = iconURL
+  iconUrl = iconURL;
+  locale: string = 'en';
+  localeSubscription?: Subscription;
 
   //Child Communication:
   chosenAvailability?: {start_date: string, end_date: string, price_per_night: number, accommodation_id: number};
   queryParams?: Params;
 
+  //Coordinates:
+  coordinates?: Coordinates;
 
   constructor(
     private accommodationService: AccommodationService,
@@ -110,6 +116,7 @@ export class AccommodationDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private reviewService: ReviewService,
     private translateService: TranslateService,
+    private draftService: DraftService,
     private router: Router
   ) 
   {}
@@ -117,7 +124,9 @@ export class AccommodationDetailsComponent implements OnInit {
   //IMPORTANT NOTE: check that the Accommodation has both main photo url in accommodation table
   //AND associated photos in the photo table
   ngOnInit(): void {
-
+    this.localeSubscription = this.translateService.onLangChange.subscribe(
+      event => this.locale = event.lang.slice(0,2));
+    
     this.queryParams = this.route.snapshot.queryParams;
 
     let id: (string | undefined | null) = this.route.snapshot.params["id"];
@@ -297,6 +306,11 @@ export class AccommodationDetailsComponent implements OnInit {
     )
   }
 
+  ngOnDestroy(): void {
+    if(this.localeSubscription)
+      this.localeSubscription.unsubscribe();
+  }
+
   receiveAvailabilityFromChild($event: { start_date: string; end_date: string; price_per_night: number; accommodation_id: number; } | undefined | {message: string}) {
     if($event && !("message" in $event)) {
       this.chosenAvailability = $event;
@@ -444,6 +458,9 @@ export class AccommodationDetailsComponent implements OnInit {
       return;
     }
 
+    this.setCoordinates(this.accommodation);
+    if(this.errorOccurred) return;
+
     this.accommodationService.updateAccommodationAddress(this.userId, this.accommodation).subscribe(
       result => {
         if(!result) {
@@ -462,6 +479,17 @@ export class AccommodationDetailsComponent implements OnInit {
 
   }
 
+  async setCoordinates(accommodation: Accommodation) {
+    const coordinates = await this.draftService.getCoordinates((accommodation.street ?? '') + ', ' + (accommodation.street_number ?? '') + ', ' + (accommodation.city ?? '') + ', ' + (accommodation.cap ?? '') + ', ' + (accommodation.province ?? '') + ', ' + (accommodation.country ?? ''));
+    console.log(coordinates);
+    if(coordinates && accommodation.id) {
+    this.accommodationService.setCoordinates(accommodation.id, coordinates);
+    this.coordinates = coordinates;
+    } else {
+      this.message = "true";
+      this.errorOccurred = true;
+    }
+  }
   //Need to create the perspective itself
   toggleViewMorePhotosPerspective() {
     this.showViewMorePhotosPerspective = !this.showViewMorePhotosPerspective;
