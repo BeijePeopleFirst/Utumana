@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -380,7 +381,8 @@ public class BookingService {
 		if(user == null) throw new IdNotFoundException("The provided User ID is not Valid");
 		if(acc == null) throw new IdNotFoundException("The provided Accommodation ID is not Valid");
 		
-		List<Booking> bookings = this.findByAccommodationAndUser(acc, user);
+		//List<Booking> bookings = this.findByAccommodationAndUser(acc, user);
+		List<Booking> bookings = this.findByStatusInAndAccommodationIdAndUserId(Arrays.asList(BookingStatus.ACCEPTED, BookingStatus.DOING, BookingStatus.PENDING), accommodationId, userId);
 		
 		for(Booking b : bookings) {
 			
@@ -400,6 +402,10 @@ public class BookingService {
 		
 		
 		return false;
+	}
+
+	private List<Booking> findByStatusInAndAccommodationIdAndUserId(List<BookingStatus> stats, Long accId, Long usrId) {
+		return this.bookingRepository.findByStatusInAndAccommodationIdAndUserId(stats, accId, usrId);
 	}
 
 	private List<Booking> findByAccommodationAndUser(Accommodation acc, User user) {
