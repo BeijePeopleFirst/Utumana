@@ -1,15 +1,15 @@
 <div *ngIf="review" class="relative w-72">
   <div class="flex-shrink-0 mx-4 mt-4">
-    <div class="flex items-center justify-between w-full gap-x-5">
-      <div class="flex items-center gap-x-5">
-        <div class="relative w-10 h-10 overflow-hidden rounded-full shadow-md">
-          <img class="absolute top-0 left-0 object-cover w-full h-full bg-cover object-fit" src="{{iconsUrl}}\profile.png" alt="Profile picture">
+    <div class="flex gap-x-5 justify-between items-center w-full">
+      <div class="flex gap-x-5 items-center">
+        <div class="overflow-hidden relative w-10 h-10 rounded-full shadow-md">
+          <img class="object-cover absolute top-0 left-0 w-full h-full bg-cover object-fit" src="{{iconsUrl}}\profile.png" alt="Profile picture">
         </div>
         <p class="relative">
           <span class="font-bold text-gray-600">{{review.author}}</span>
         </p>
       </div>
-      <div *ngIf="!review.approval_timestamp" class="flex items-center gap-x-3">
+      <div *ngIf="!review.approval_timestamp" class="flex gap-x-3 items-center">
         <button class="review-action" aria-label="accept review" (click)="acceptReview()">
           <img src="{{iconsUrl}}\accept.png" alt="accept review">
         </button>
@@ -21,20 +21,20 @@
   </div>
   <div class="mx-4 mt-2">
     <div class="mt-1 text-2xl stars-container">
-      <div class="star-container" [ngClass]="{'star-half-container': 1 > review.overallRating && review.overallRating > 0}">
-        <div [ngClass]="{'star-full': review.overallRating >= 1, 'star-empty': 0 >= review.overallRating}">&#x2605;</div>
+      <div class="star-container" [ngClass]="{'star-half-container': 1 > review.overall_rating && review.overall_rating > 0}">
+        <div [ngClass]="{'star-full': review.overall_rating >= 1, 'star-empty': 0 >= review.overall_rating}">&#x2605;</div>
       </div>
-      <div class="star-container" [ngClass]="{'star-half-container': 2 > review.overallRating && review.overallRating > 1}">
-        <div [ngClass]="{'star-full': review.overallRating >= 2, 'star-empty': 1 >= review.overallRating}">&#x2605;</div>
+      <div class="star-container" [ngClass]="{'star-half-container': 2 > review.overall_rating && review.overall_rating > 1}">
+        <div [ngClass]="{'star-full': review.overall_rating >= 2, 'star-empty': 1 >= review.overall_rating}">&#x2605;</div>
       </div>
-      <div class="star-container" [ngClass]="{'star-half-container': 3 > review.overallRating && review.overallRating > 2}">
-        <div [ngClass]="{'star-full': review.overallRating >= 3, 'star-empty': 2 >= review.overallRating}">&#x2605;</div>
+      <div class="star-container" [ngClass]="{'star-half-container': 3 > review.overall_rating && review.overall_rating > 2}">
+        <div [ngClass]="{'star-full': review.overall_rating >= 3, 'star-empty': 2 >= review.overall_rating}">&#x2605;</div>
       </div>
-      <div class="star-container" [ngClass]="{'star-half-container': 4 > review.overallRating && review.overallRating > 3}">
-        <div [ngClass]="{'star-full': review.overallRating >= 4, 'star-empty': 3 >= review.overallRating}">&#x2605;</div>
+      <div class="star-container" [ngClass]="{'star-half-container': 4 > review.overall_rating && review.overall_rating > 3}">
+        <div [ngClass]="{'star-full': review.overall_rating >= 4, 'star-empty': 3 >= review.overall_rating}">&#x2605;</div>
       </div>
-      <div class="star-container" [ngClass]="{'star-half-container': 5 > review.overallRating && review.overallRating > 4}">
-        <div [ngClass]="{'star-full': review.overallRating >= 5, 'star-empty': 4 >= review.overallRating}">&#x2605;</div>
+      <div class="star-container" [ngClass]="{'star-half-container': 5 > review.overall_rating && review.overall_rating > 4}">
+        <div [ngClass]="{'star-full': review.overall_rating >= 5, 'star-empty': 4 >= review.overall_rating}">&#x2605;</div>
       </div>
     </div>
     <div [ngClass]="{'preview': !expanded}">

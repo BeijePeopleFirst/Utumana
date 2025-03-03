@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { AddressDTO } from 'src/app/dtos/addressDTO';
 import { GeneralAccommodationInfoDTO } from 'src/app/dtos/generalAccommodationInfoDTO';
 import { UnavailabilityInterface } from 'src/app/dtos/unavailabilityDTO';
-import { AvailabilityInterface } from 'src/app/models/availability';
+import { Availability } from 'src/app/models/availability';
 import { Photo } from 'src/app/models/photo';
 import { Service } from 'src/app/models/service';
 import { DraftService } from 'src/app/services/draft.service';
@@ -24,7 +24,7 @@ export class CreateAccommodationRecapComponent implements OnInit, OnDestroy {
 
   address!: AddressDTO;
   services!: Service[];
-  availabilities!: AvailabilityInterface[];
+  availabilities!: Availability[];
   unavailabilities!: UnavailabilityInterface[];
   info!: GeneralAccommodationInfoDTO;
   photoPreviews!: Photo[];

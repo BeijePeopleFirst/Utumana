@@ -120,7 +120,7 @@ export class AuthInterceptor implements HttpInterceptor {
       this.isRefreshing = true;
       this.refreshTokenSubject.next(null);
 
-      let refresh = new RefreshToken(0,0,getCookie('refresh_token'),"");
+      let refresh: RefreshToken = { refresh_token: getCookie('refresh_token')};
       console.log(refresh);
 
       if(!refresh.refresh_token){
@@ -129,7 +129,6 @@ export class AuthInterceptor implements HttpInterceptor {
         console.log("In if !refresh token");
         return of(new HttpResponse({status: 400, statusText: "Invalid refresh token"}));
       }
-        
 
       return this.authService.refreshToken(refresh).pipe(
         switchMap((tokenData: any) => {

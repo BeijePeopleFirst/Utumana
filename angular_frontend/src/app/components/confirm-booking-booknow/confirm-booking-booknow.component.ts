@@ -41,16 +41,7 @@ export class ConfirmBookingBooknowComponent implements OnInit {
 
   ngOnInit(): void {
     this.tmp = JSON.parse(localStorage.getItem("created_booking")!);
-    this.createdBooking = new Booking(
-      this.tmp._accommodation,
-      this.tmp._timestamp,
-      this.tmp._price,
-      this.tmp._status,
-      this.tmp._check_in,
-      this.tmp._check_out,
-      this.tmp._is_unavailability,
-      this.tmp._user_id
-    );
+    this.createdBooking = this.tmp;
     //console.log(this.createdBooking.accommodation);
 
     if (
@@ -151,11 +142,12 @@ export class ConfirmBookingBooknowComponent implements OnInit {
           }
         });
     else {
-      let unavailability: Availability = new Availability();
-      unavailability.accommodation_id = this.createdBooking.accommodation.id!;
-      unavailability.start_date = this.createdBooking.check_in;
-      unavailability.end_date = this.createdBooking.check_out;
-      unavailability.price_per_night = this.pricePerNight;
+      let unavailability: Availability = {
+        accommodation_id: this.createdBooking.accommodation.id,
+        start_date: this.createdBooking.check_in,
+        end_date: this.createdBooking.check_out,
+        price_per_night: this.pricePerNight,
+      };
 
       this.bookingService
         .newUnavailability(unavailability)

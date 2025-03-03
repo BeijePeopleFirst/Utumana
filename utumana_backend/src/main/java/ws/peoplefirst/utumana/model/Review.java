@@ -3,6 +3,7 @@ package ws.peoplefirst.utumana.model;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -32,6 +33,7 @@ public class Review {
 	@Column(name = "booking_id")
 	@Schema(description = "Unique ID of the booking to which this review is associated", example = "1")
 	@Min(value = 1)
+	@JsonProperty(value = "booking_id")
 	private Long bookingId;
 	
 	@Column(name = "title")
@@ -47,11 +49,13 @@ public class Review {
 	@Column(name = "approval_timestamp")
 	@Schema(description = "timestamp of the review's approval", example = "2024-11-06T15:39:45")
 	@Nullable
+	@JsonProperty(value = "approval_timestamp")
 	private LocalDateTime approvalTimestamp;
 	
 	@Column(name = "overall_rating")
 	@Schema(description = "review's overall rating. Must be a decimal between 0.0 and 5.0", example = "4.33")
 	@Nullable
+	@JsonProperty(value = "overall_rating")
 	private Double overallRating;
 	
 	@Column(name = "comfort")

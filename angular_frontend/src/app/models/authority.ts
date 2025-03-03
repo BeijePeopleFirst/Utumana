@@ -1,6 +1,4 @@
-export class Authority{
-    constructor(
-        public id:number,
-        public authority: string
-        ) {  }
+export interface Authority{
+    id:number;
+    authority: string;
 }

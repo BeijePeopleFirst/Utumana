@@ -5,6 +5,7 @@ import { BehaviorSubject, debounceTime, distinctUntilChanged, map, Observable, o
 import { AccommodationDTO } from 'src/app/dtos/accommodationDTO';
 import { BookingDTO } from 'src/app/dtos/bookingDTO';
 import { Accommodation } from 'src/app/models/accommodation';
+import { Availability } from 'src/app/models/availability';
 import { Booking } from 'src/app/models/booking';
 import { Coordinates } from 'src/app/models/coordinates';
 import { Review } from 'src/app/models/review';
@@ -104,7 +105,7 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
   localeSubscription?: Subscription;
 
   //Child Communication:
-  chosenAvailability?: {start_date: string, end_date: string, price_per_night: number, accommodation_id: number};
+  chosenAvailability?: Availability;
   queryParams?: Params;
 
   //Coordinates:
@@ -168,7 +169,7 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
 
         //Recupero i Servizi dell' Accommodation:
         for (let s of this.accommodation.services)
-          this.selectedServices.push(new Service(s.id, s.title, s.icon_url));
+          this.selectedServices.push(s);
 
         this.selectedServicesView$.next(this.selectedServices);
 
@@ -222,10 +223,7 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
               
               //Recupero le Review
               for(let r of tmp3) {
-                this.accommodationReviews.push(new Review(r.title, r.description, r.overall_rating, r.comfort,
-                                                r.convenience, r.position, r.id, r.approval_timestamp, r.booking_id
-                                                )
-                                              )
+                this.accommodationReviews.push(r);
               } 
             }
             
@@ -378,25 +376,27 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  receiveAvailabilityFromChild($event: { start_date: string; end_date: string; price_per_night: number; accommodation_id: number; } | undefined | {message: string}) {
+  receiveAvailabilityFromChild($event: Availability | {message: string}) {
     if($event && !("message" in $event)) {
       this.chosenAvailability = $event;
 
-      // Calcola il numero di notti
-      const startDate = new Date($event.start_date);
-      const endDate = new Date($event.end_date);
-      const nights = Math.floor((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+      if($event.start_date != "" && $event.end_date != "") {
+        // Calcola il numero di notti
+        const startDate = new Date($event.start_date);
+        const endDate = new Date($event.end_date);
+        const nights = Math.floor((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
 
-      this.chosenAvailability.start_date = new Date(this.chosenAvailability.start_date).toLocaleDateString();
-      this.chosenAvailability.end_date = new Date(this.chosenAvailability.end_date).toLocaleDateString();
+        this.chosenAvailability.start_date = new Date(this.chosenAvailability.start_date).toLocaleDateString();
+        this.chosenAvailability.end_date = new Date(this.chosenAvailability.end_date).toLocaleDateString();
 
-      // Aggiorna i BehaviorSubject
-      this.nightsNumber$.next(nights);
-      console.log("Stampo price per night -> ", $event.price_per_night);
-      this.postOperation$.next(nights * $event.price_per_night);
+        // Aggiorna i BehaviorSubject
+        this.nightsNumber$.next(nights);
+        console.log("Stampo price per night -> ", $event.price_per_night);
+        this.postOperation$.next(nights * $event.price_per_night);
+      }
     }
     else {
-      if($event) this.message = $event.message;
+      if($event && 'message' in $event) this.message = $event.message;
     }
   }
 
@@ -608,10 +608,18 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    let booking: Booking = new Booking(this.accommodation, (new Date()).toLocaleDateString(), this.postOperation$.value, BookingStatus.PENDING, this.chosenAvailability?.start_date!, 
-                                          this.chosenAvailability?.end_date!, false, this.userId!);
+    let booking: Booking = {
+      accommodation: this.accommodation, 
+      timestamp: (new Date()).toLocaleDateString(), 
+      price: this.postOperation$.value, 
+      status: BookingStatus.PENDING, 
+      check_in: this.chosenAvailability?.start_date!, 
+      check_out: this.chosenAvailability?.end_date!, 
+      is_unavailability: false, 
+      user_id: this.userId!
+    };
 
-    let container: {chosen_availability: {start_date: string, end_date: string, price_per_night: number, accommodation_id: number},
+    let container: {chosen_availability: Availability,
                     nights_number: number, post_operation: number
                    }
 

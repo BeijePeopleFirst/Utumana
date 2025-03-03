@@ -5,7 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { BookingDTO } from 'src/app/dtos/bookingDTO';
 import { UnavailabilityDTO, UnavailabilityInterface } from 'src/app/dtos/unavailabilityDTO';
-import { Availability, AvailabilityInterface } from 'src/app/models/availability';
+import { Availability } from 'src/app/models/availability';
 import { DraftService } from 'src/app/services/draft.service';
 
 @Component({
@@ -16,7 +16,7 @@ import { DraftService } from 'src/app/services/draft.service';
 export class CreateAccommodationAvailabilityComponent implements OnInit, OnDestroy {
   draftId: number;
   genericError: boolean = false;
-  availabilities!: AvailabilityInterface[];
+  availabilities!: Availability[];
   unavailabilities!: UnavailabilityInterface[];
 
   invalidAvailability: boolean = false;
@@ -105,7 +105,7 @@ export class CreateAccommodationAvailabilityComponent implements OnInit, OnDestr
     return Date.parse(start) <= Date.parse(end);
   }
 
-  isLatestAvailabilityOk(availability: AvailabilityInterface): boolean {
+  isLatestAvailabilityOk(availability: Availability): boolean {
     // check that start date is before end date
     this.invalidDates = !this.areDatesInOrder(availability.start_date, availability.end_date);
     if(this.invalidDates === true){
@@ -132,7 +132,7 @@ export class CreateAccommodationAvailabilityComponent implements OnInit, OnDestr
       return;
     }
 
-    let new_acc_avail: AvailabilityInterface = {
+    let new_acc_avail: Availability = {
       start_date: this.availForm.value.start_avail, 
       end_date: this.availForm.value.end_avail, 
       price_per_night: Number(this.availForm.value.price)
@@ -151,7 +151,7 @@ export class CreateAccommodationAvailabilityComponent implements OnInit, OnDestr
     this.isAvailSubmitted = false;
   }
 
-  removeAvailability(availability: AvailabilityInterface): void{
+  removeAvailability(availability: Availability): void{
     this.availabilities = this.availabilities.filter(a => a.start_date !== availability.start_date);
     this.draftService.setAvailabilities(this.availabilities, this.draftId);
   }

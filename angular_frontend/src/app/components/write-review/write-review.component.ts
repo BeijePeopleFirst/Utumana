@@ -36,10 +36,10 @@ export class WriteReviewComponent {
         convenience: this.reviewForm.value.convenience,
         comfort: this.reviewForm.value.comfort,
         description: this.reviewForm.value.description,
-        overallRating:0,
+        overall_rating:0,
         id:null,
         approval_timestamp:null,
-        bookingId : this.bookingId
+        booking_id : this.bookingId
       };
 
       this.reviewService.addReview(review).subscribe({
