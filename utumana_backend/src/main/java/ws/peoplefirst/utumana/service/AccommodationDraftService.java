@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ws.peoplefirst.utumana.dto.AddressDTO;
 import ws.peoplefirst.utumana.dto.GeneralAccommodationInfoDTO;
+import ws.peoplefirst.utumana.exception.ForbiddenException;
 import ws.peoplefirst.utumana.exception.IdNotFoundException;
 import ws.peoplefirst.utumana.exception.InvalidJSONException;
 import ws.peoplefirst.utumana.model.AccommodationDraft;
@@ -26,6 +27,7 @@ import ws.peoplefirst.utumana.repository.AccommodationDraftRepository;
 import ws.peoplefirst.utumana.repository.AvailabilityDraftRepository;
 import ws.peoplefirst.utumana.repository.PhotoDraftRepository;
 import ws.peoplefirst.utumana.repository.UnavailabilityDraftRepository;
+import ws.peoplefirst.utumana.utility.Constants;
 
 @Service
 public class AccommodationDraftService {
@@ -48,7 +50,7 @@ public class AccommodationDraftService {
     private S3Service s3Service;
 
 
-    public List<AccommodationDraft> getAccommodationDraftByOwnerId(Long ownerId) {
+    public List<AccommodationDraft> getAccommodationDraftsByOwnerId(Long ownerId) {
         return accommodationDraftRepository.findByOwnerId(ownerId);
     }
 
@@ -274,6 +276,10 @@ public class AccommodationDraftService {
 
     @Transactional
     public AccommodationDraft createNewDraft(Long owner_id) {
+        Integer count = accommodationDraftRepository.countByOwnerId(owner_id);
+        if(count >= Constants.MAX_NUMBER_OF_DRAFTS_PER_USER) {
+            throw new ForbiddenException("User has reached the maximum number of accommodation drafts");
+        }
         AccommodationDraft draft = new AccommodationDraft();
         draft.setOwnerId(owner_id);
         return accommodationDraftRepository.save(draft);

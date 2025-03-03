@@ -30,7 +30,7 @@ export class DraftService {
     return this.http.post<number>(`${BACKEND_URL_PREFIX}/api/accommodation-draft/new/${userId}`, {}).pipe(
       catchError(error => {
         console.error(error);
-        return of(-1);
+        throw error;
       }),
       tap(res => {
         console.log("Created new accomnmmodation draft", res);
