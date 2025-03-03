@@ -59,6 +59,7 @@ import { AdminDashboardMainAndSidenavComponent } from './components/admin-dashbo
 import { AdminDashboardHomePanelComponent } from './components/admin-dashboard-home-panel-component/admin-dashboard-home-panel-component.component';
 import { ProfilePictureModalComponent } from './components/profile-picture-modal/profile-picture-modal.component';
 import { ImagesCarouselComponent } from './components/images-carousel/images-carousel.component';
+import { EditPhotosAccommodationDetailsComponent } from './components/edit-photos-accommodation-details/edit-photos-accommodation-details.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -109,7 +110,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     AdminDashboardMainAndSidenavComponent,
     AdminDashboardHomePanelComponent,
     ProfilePictureModalComponent,
-    ImagesCarouselComponent
+    ImagesCarouselComponent,
+    EditPhotosAccommodationDetailsComponent
   ],
   imports: [
     BrowserModule,
