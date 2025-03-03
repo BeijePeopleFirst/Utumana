@@ -1,6 +1,8 @@
 package ws.peoplefirst.utumana.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.*;
 import org.hibernate.annotations.Immutable;
 
@@ -10,6 +12,7 @@ import org.hibernate.annotations.Immutable;
 public class AccommodationRating {
     @Id
     @Column(name = "accommodation_id")
+    @JsonProperty(value = "accommodation_id")
     private Long accommodationId;
 
     @Column

@@ -1,12 +1,4 @@
-export class UnavailabilityDTO{
-    constructor(
-        public id: number,
-        public check_in: string,
-        public check_out: string
-        ) {  }
-}
-
-export interface UnavailabilityInterface {
+export interface Unavailability {
     id?: number,
     check_in: string,
     check_out: string,

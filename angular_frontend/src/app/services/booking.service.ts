@@ -5,7 +5,7 @@ import { BookingDTO } from '../dtos/bookingDTO';
 import { BehaviorSubject, catchError, Observable, of, Subject, tap } from 'rxjs';
 import { BACKEND_URL_PREFIX } from 'src/costants';
 import { Availability } from '../models/availability';
-import { UnavailabilityDTO } from '../dtos/unavailabilityDTO';
+import { Unavailability } from '../dtos/unavailabilityDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +31,7 @@ export class BookingService {
 
   newUnavailability(createdBooking: Availability): Observable<{message: string, status: string, time: string} | Availability> {
     console.log("newUnavailability", createdBooking);
-    return this.http.post<UnavailabilityDTO>(BACKEND_URL_PREFIX + "/api/add_unavailability", 
+    return this.http.post<Unavailability>(BACKEND_URL_PREFIX + "/api/add_unavailability", 
       {
         start_date: createdBooking.start_date,
         end_date: createdBooking.end_date,

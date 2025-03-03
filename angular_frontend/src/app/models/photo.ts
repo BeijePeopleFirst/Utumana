@@ -1,8 +1,6 @@
-export class Photo {
-    constructor(
-        public id:number,
-        public photo_url:string,
-        public photo_order: number,
-        public blob_url?:string
-        ) {  }
+export interface Photo {
+    id:number,
+    photo_url:string,
+    photo_order: number,
+    blob_url?:string
 }

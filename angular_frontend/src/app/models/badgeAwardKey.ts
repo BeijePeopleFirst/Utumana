@@ -1,6 +1,4 @@
-export class BadgeAwardKey{
-    constructor(
-        public badgeId:number,
-        public userId: number
-        ) {  }
+export interface BadgeAwardKey{
+    badgeId:number,
+    userId: number
 }

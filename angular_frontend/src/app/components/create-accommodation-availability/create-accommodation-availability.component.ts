@@ -4,8 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { BookingDTO } from 'src/app/dtos/bookingDTO';
-import { UnavailabilityDTO, UnavailabilityInterface } from 'src/app/dtos/unavailabilityDTO';
-import { Availability, AvailabilityInterface } from 'src/app/models/availability';
+import { Unavailability } from 'src/app/dtos/unavailabilityDTO';
+import { Availability } from 'src/app/models/availability';
 import { DraftService } from 'src/app/services/draft.service';
 
 @Component({
@@ -16,8 +16,8 @@ import { DraftService } from 'src/app/services/draft.service';
 export class CreateAccommodationAvailabilityComponent implements OnInit, OnDestroy {
   draftId: number;
   genericError: boolean = false;
-  availabilities!: AvailabilityInterface[];
-  unavailabilities!: UnavailabilityInterface[];
+  availabilities!: Availability[];
+  unavailabilities!: Unavailability[];
 
   invalidAvailability: boolean = false;
   invalidDates: boolean = false;
@@ -105,7 +105,7 @@ export class CreateAccommodationAvailabilityComponent implements OnInit, OnDestr
     return Date.parse(start) <= Date.parse(end);
   }
 
-  isLatestAvailabilityOk(availability: AvailabilityInterface): boolean {
+  isLatestAvailabilityOk(availability: Availability): boolean {
     // check that start date is before end date
     this.invalidDates = !this.areDatesInOrder(availability.start_date, availability.end_date);
     if(this.invalidDates === true){
@@ -132,7 +132,7 @@ export class CreateAccommodationAvailabilityComponent implements OnInit, OnDestr
       return;
     }
 
-    let new_acc_avail: AvailabilityInterface = {
+    let new_acc_avail: Availability = {
       start_date: this.availForm.value.start_avail, 
       end_date: this.availForm.value.end_avail, 
       price_per_night: Number(this.availForm.value.price)
@@ -151,12 +151,12 @@ export class CreateAccommodationAvailabilityComponent implements OnInit, OnDestr
     this.isAvailSubmitted = false;
   }
 
-  removeAvailability(availability: AvailabilityInterface): void{
+  removeAvailability(availability: Availability): void{
     this.availabilities = this.availabilities.filter(a => a.start_date !== availability.start_date);
     this.draftService.setAvailabilities(this.availabilities, this.draftId);
   }
 
-  isLatestUnavailabilityOk(unavailability: UnavailabilityInterface): boolean {
+  isLatestUnavailabilityOk(unavailability: Unavailability): boolean {
     // check that start date is before end date
     this.invalidUnavDates = !this.areDatesInOrder(unavailability.check_in, unavailability.check_out);
     if(this.invalidUnavDates === true){
@@ -183,7 +183,7 @@ export class CreateAccommodationAvailabilityComponent implements OnInit, OnDestr
       return;
     }
 
-    let new_acc_unav: UnavailabilityInterface = {
+    let new_acc_unav: Unavailability = {
       check_in: this.unavForm.value.start_unav + "T14:00:00", 
       check_out: this.unavForm.value.end_unav + "T10:00:00"
     };
@@ -200,7 +200,7 @@ export class CreateAccommodationAvailabilityComponent implements OnInit, OnDestr
     this.isUnavSubmitted = false;
   }
 
-  removeUnavailability(unavailability: UnavailabilityInterface): void{
+  removeUnavailability(unavailability: Unavailability): void{
     this.unavailabilities = this.unavailabilities.filter(u => u.check_in !== unavailability.check_in);
     this.draftService.setUnavailabilities(this.unavailabilities, this.draftId);
   }

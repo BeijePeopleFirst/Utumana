@@ -1,5 +1,6 @@
-import { ReviewDTO } from "../dtos/reviewDTO";
 import { Accommodation } from "./accommodation";
+import { BadgeAward } from "./badgeAward";
+import { Review } from "./review";
 
 export interface User {
     id?: number;
@@ -14,5 +15,6 @@ export interface User {
 	rating?: number;
 	archived_timestamp?: Date;
 	favourites: Accommodation[];
-	reviews: ReviewDTO[];
+	reviews: Review[];
+	badges: BadgeAward[];
 }
