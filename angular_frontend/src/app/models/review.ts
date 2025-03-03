@@ -8,5 +8,5 @@ export interface Review{
     id:number|null,
     approval_timestamp: string|null,
     booking_id: number|null,
-    author?: string,
+    author?: string
 }
