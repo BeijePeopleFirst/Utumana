@@ -49,7 +49,6 @@ export class MyBookingsComponent {
   selectedBookingId:number=-1;
 
     constructor(
-      private router: Router,
       private bookingService:BookingService
     ){ }
 
@@ -173,10 +172,5 @@ export class MyBookingsComponent {
     this.rejectedBookingsPageNumber = pageNumber;
     let offset = this.rejectedBookingsPageNumber * this.rejectedBookingsPageSize;
     this.rejectedBookings$ = of(this.allRejectedBookings.slice(offset, offset + this.rejectedBookingsPageSize));
-  }
-  
-  changeBgColor(): string {
-    this.bgColor === 'bg-neutral-1' ? this.bgColor = 'bg-neutral-2' : this.bgColor = 'bg-neutral-1';
-    return this.bgColor;
   }
 }

@@ -1,4 +1,4 @@
-<section class="flex items-center justify-center pt-8" [ngClass]="changeBgColor()">
+<section class="flex justify-center items-center pt-8 odd:bg-neutral-1 even:bg-neutral-2">
     <div class="container justify-center p-5 text-center">
         <h2 class="text-gray-800">{{'bookings.doing' | translate}}</h2>
         <app-booking-cards (bookingSelected)="onWriteReview($event)" [bookings$]="doingBookings$" [pageNumber]="doingBookingsPageNumber" [totalPages]="doingBookingsTotalPages"
@@ -6,7 +6,7 @@
     </div>
 </section>
 
-<section class="flex items-center justify-center pt-8" [ngClass]="changeBgColor()">
+<section class="flex justify-center items-center pt-8 odd:bg-neutral-1 even:bg-neutral-2" >
     <div class="container p-5 text-center">
         <h2 class="text-gray-800">{{'bookings.accepted' | translate}}</h2>
         <app-booking-cards (bookingSelected)="onWriteReview($event)" [bookings$]="acceptedBookings$" [pageNumber]="acceptedBookingsPageNumber" [totalPages]="acceptedBookingsTotalPages"
@@ -14,7 +14,7 @@
     </div>
 </section>
 
-<section class="flex items-center justify-center pt-8" [ngClass]="changeBgColor()">
+<section class="flex justify-center items-center pt-8 odd:bg-neutral-1 even:bg-neutral-2" >
     <div class="container p-5 text-center">
         <h2 class="text-gray-800">{{'bookings.pending' | translate}}</h2>
         <app-booking-cards (bookingSelected)="onWriteReview($event)" [bookings$]="pendingBookings$" [pageNumber]="pendingBookingsPageNumber" [totalPages]="pendingBookingsTotalPages"
@@ -22,7 +22,7 @@
     </div>
 </section>
 
-<section class="flex items-center justify-center pt-8" [ngClass]="changeBgColor()">
+<section class="flex justify-center items-center pt-8 odd:bg-neutral-1 even:bg-neutral-2" >
     <div class="container p-5 text-center">
         <h2 class="text-gray-800">{{'bookings.done' | translate}}</h2>
         <app-booking-cards (bookingSelected)="onWriteReview($event)" [bookings$]="doneBookings$" [pageNumber]="doneBookingsPageNumber" [totalPages]="doneBookingsTotalPages"
@@ -30,7 +30,7 @@
     </div>
 </section>
 
-<section class="flex items-center justify-center pt-8" [ngClass]="changeBgColor()">
+<section class="flex justify-center items-center pt-8 odd:bg-neutral-1 even:bg-neutral-2" >
     <div class="container p-5 text-center">
         <h2 class="text-gray-800">{{'bookings.rejected' | translate}}</h2>
         <app-booking-cards  (bookingSelected)="onWriteReview($event)" [bookings$]="rejectedBookings$" [pageNumber]="rejectedBookingsPageNumber" [totalPages]="rejectedBookingsTotalPages"
