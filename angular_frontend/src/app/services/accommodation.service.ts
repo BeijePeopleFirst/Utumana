@@ -178,6 +178,25 @@ export class AccommodationService {
     }
     return params;
   }
+
+  public getAccommodationIgnoreHidingTimestamp(id: number): Observable<(Accommodation | null)> {
+    return this.http.get<Accommodation>(BACKEND_URL_PREFIX + "/api/accommodation_ignore_hidden/" + id).pipe(
+      map(acc => {
+        for(let photo of acc.photos){
+          this.s3Service.getPhoto(photo.photo_url).subscribe(blob => {
+            if(blob != null){
+              photo.blob_url = URL.createObjectURL(blob);
+            }
+          })
+        }
+        return acc;
+      }),
+      catchError(error => {
+        console.error(error);
+        return of(null);
+      })
+    )
+  }
   
   public getAccommodationById(id: number): Observable<(Accommodation | null)> {
     return this.http.get<Accommodation>(BACKEND_URL_PREFIX + "/api/accommodation/" + id).pipe(

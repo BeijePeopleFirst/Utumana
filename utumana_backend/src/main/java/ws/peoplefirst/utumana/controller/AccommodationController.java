@@ -110,6 +110,26 @@ public class AccommodationController {
 
 	@ApiResponses({
 	    @ApiResponse(responseCode = "200", description = "Accommodation was retrieved Successfully"),
+	    @ApiResponse(responseCode = "404", description = "Accommodation Not Found: illegal ID provided", content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ErrorMessage.class)))
+	})
+	@Operation(summary = "Get single Accommodation by ID")
+	@PreAuthorize("hasAuthority('USER')")
+	@GetMapping(value = "/accommodation_ignore_hidden/{id}")
+	public Accommodation getSingleAccommodationIgnoreHiddenAPI(@PathVariable Long id, Authentication auth) {
+		logger.debug("GET /accommodation_ignore_hidden/" + id);
+
+		Accommodation acc = accommodationService.findById(id);
+
+		if (acc != null) return acc;
+		else {
+			logger.error("Incorrect ID -- No Accommodation was found");
+			throw new IdNotFoundException("Incorrect ID -- No Accommodation was found");
+		}
+	}
+
+	@ApiResponses({
+	    @ApiResponse(responseCode = "200", description = "Accommodation was retrieved Successfully"),
 	    @ApiResponse(responseCode = "404", description = "Accommodation Not Found: entity not Hidden or illegal ID provided", content=@Content(mediaType = "application/json",
 	    		schema=@Schema(implementation=ErrorMessage.class)))
 	})

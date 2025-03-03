@@ -58,6 +58,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AdminDashboardMainAndSidenavComponent } from './components/admin-dashboard-main-and-sidenav/admin-dashboard-main-and-sidenav.component';
 import { AdminDashboardHomePanelComponent } from './components/admin-dashboard-home-panel-component/admin-dashboard-home-panel-component.component';
 import { ProfilePictureModalComponent } from './components/profile-picture-modal/profile-picture-modal.component';
+import { ImagesCarouselComponent } from './components/images-carousel/images-carousel.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -107,7 +108,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     MapComponent,
     AdminDashboardMainAndSidenavComponent,
     AdminDashboardHomePanelComponent,
-    ProfilePictureModalComponent
+    ProfilePictureModalComponent,
+    ImagesCarouselComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,15 @@
+<div id="root" class="flex flex-col items-center">
+    <div id="arrows-and-image" class="flex flex-row items-center align-middle">
+        <button id="arrow-left" [disabled]="photo[1] === 0" (click)="changePhotoLeft()" class="mr-8 btn-primary"><</button>
+        <img [src]="photo[0].blob_url" class="w-96" />
+        <button id="arrow-right" [disabled]="photo[1] === totalPhotos-1" (click)="changePhotoRight()" class="ml-8 btn-primary">></button>
+    </div>
+    <div id="dots" class="justify-center align-middle">
+        <div class="flex flex-row items-center m-0">
+            <div *ngFor="let d of arrPlaceHolder" class="mr-2">
+                <div *ngIf="d === true" class="text-2xl">.</div>
+                <div *ngIf="d === false">.</div>
+            </div>
+        </div>
+    </div>
+</div>
