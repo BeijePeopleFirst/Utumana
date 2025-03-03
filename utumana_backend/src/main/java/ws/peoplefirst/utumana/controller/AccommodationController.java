@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import ws.peoplefirst.utumana.dto.AccommodationDTO;
 import ws.peoplefirst.utumana.dto.BookingDTO;
 import ws.peoplefirst.utumana.dto.PriceDTO;
+import ws.peoplefirst.utumana.dto.ReviewUserDTO;
 import ws.peoplefirst.utumana.dto.UnavailabilityDTO;
 import ws.peoplefirst.utumana.dto.UserDTO;
 import ws.peoplefirst.utumana.exception.ErrorMessage;
@@ -828,7 +829,7 @@ public class AccommodationController {
 			res.put("approval", approval);
 
 			//List<Review> reviews = accommodationService.getAccommodationReviews(accommodationId);
-			List<Review> reviews = accommodationService.getAllAccommodationReviews(accommodationId);
+			List<ReviewUserDTO> reviews = accommodationService.getAllAccommodationReviews(accommodationId);
 			res.put("reviews", reviews);
 
 			boolean hasPendingBooking = bookingService.hasPendingBooking(user.getId(), accommodationId);

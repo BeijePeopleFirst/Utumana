@@ -13,6 +13,7 @@ import ws.peoplefirst.utumana.criteria.SearchAccomodationCriteria;
 import ws.peoplefirst.utumana.dto.AccommodationDTO;
 import ws.peoplefirst.utumana.dto.BookingDTO;
 import ws.peoplefirst.utumana.dto.PriceDTO;
+import ws.peoplefirst.utumana.dto.ReviewUserDTO;
 import ws.peoplefirst.utumana.exception.ForbiddenException;
 import ws.peoplefirst.utumana.exception.IdNotFoundException;
 import ws.peoplefirst.utumana.exception.InvalidJSONException;
@@ -43,6 +44,9 @@ public class AccommodationService {
 
     @Autowired
     private BookingRepository bookingRepository;
+
+    @Autowired
+    private ReviewRepository reviewRepository;
 
     @Autowired
     private AvailabilityRepository availabilityRepository;
@@ -163,8 +167,8 @@ public class AccommodationService {
         return bookingRepository.getApprovedAccommodationReviews(accommodationId);
     }
 
-    public List<Review> getAllAccommodationReviews(Long accommodationId) {
-        return bookingRepository.getAllAccommodationReviews(accommodationId);
+    public List<ReviewUserDTO> getAllAccommodationReviews(Long accommodationId) {
+        return reviewRepository.getAllAccommodationReviews(accommodationId);
     }
 
     public void deleteAllAccommodationImagesExceptMain(Long accommodationId){

@@ -112,14 +112,12 @@ export class ProfileComponent implements OnInit {
   loadUserReviewsPage(pageNumber: number): void {
     let offset = pageNumber * this.reviewsPageSize;
     this.reviews = this.allReviews.slice(offset, offset + this.reviewsPageSize);
-    this.reviews.forEach(review => { if(!review.author) review.author = 'User'; }); // TODO get real author
     this.reviewsPageNumber = pageNumber;
   }
 
   loadWaitingReviewsPage(pageNumber: number): void {
     let offset = pageNumber * this.waitingReviewsPageSize;
     this.waitingReviews = this.allWaitingReviews.slice(offset, offset + this.waitingReviewsPageSize);
-    this.waitingReviews.forEach(review => { if(!review.author) review.author = 'User'; }); // TODO get real author
     this.waitingReviewsPageNumber = pageNumber;
   }
 

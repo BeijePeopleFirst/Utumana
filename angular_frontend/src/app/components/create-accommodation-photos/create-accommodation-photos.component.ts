@@ -39,6 +39,10 @@ export class CreateAccommodationPhotosComponent implements OnInit {
         return;
       }
       console.log("Photos on init:", photos);
+      if(photos.length == 0){
+        this.loading = false;
+      }
+      
       this.previews = [];
       for(let i=0; i<photos.length; i++){
         this.s3Service.getPhoto(photos[i].photo_url).subscribe(blob => {

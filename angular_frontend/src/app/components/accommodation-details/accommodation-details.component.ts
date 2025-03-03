@@ -14,6 +14,7 @@ import { User } from 'src/app/models/user';
 import { AccommodationService } from 'src/app/services/accommodation.service';
 import { DraftService } from 'src/app/services/draft.service';
 import { ReviewService } from 'src/app/services/review.service';
+import { S3Service } from 'src/app/services/s3.service';
 import { ServiceService } from 'src/app/services/service.service';
 import { UserService } from 'src/app/services/user.service';
 import { BookingStatus } from 'src/app/utils/enums';
@@ -119,6 +120,7 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
     private reviewService: ReviewService,
     private translateService: TranslateService,
     private draftService: DraftService,
+    private s3Service: S3Service,
     private router: Router
   ) 
   {}
@@ -224,7 +226,18 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
               //Recupero le Review
               for(let r of tmp3) {
                 this.accommodationReviews.push(r);
-              } 
+              }
+
+              for(let r of this.accommodationReviews){
+                if(r.image_user){
+                  this.s3Service.getPhoto(r.image_user).subscribe(blob => {
+                    if(blob != null){
+                      r.user_picture_blob = URL.createObjectURL(blob);
+                    }
+                    
+                  })
+                }
+              }
             }
             
             console.log("Reviews -> ", this.accommodationReviews);
