@@ -73,7 +73,15 @@ export class ProfileComponent implements OnInit {
           return;
         }else{
           this.user = res;
-          this.pictureUrl = this.user.profile_picture_blob_url;
+          if(this.user.profile_picture_url){
+            this.s3Service.getPhoto(this.user.profile_picture_url).subscribe(blob => {
+              if(blob != null){
+                this.user.profile_picture_blob_url = URL.createObjectURL(blob);
+                this.pictureUrl = this.user.profile_picture_blob_url;
+                console.log("Blob url:",this.pictureUrl);
+              }
+            })
+          }
         }
       })
     }
