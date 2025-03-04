@@ -189,6 +189,17 @@ export class AccommodationService {
     const url = `${BACKEND_URL_PREFIX}/api/search?${httpParams.toString()}`;
     
     return this.http.get<PageResponse<AccommodationDTO>>(url).pipe(
+      map(data => {
+        for(let acc of data.content){
+          this.s3Service.getPhoto(acc.main_photo_url).subscribe(blob => {
+            if(blob != null){
+              acc.main_photo_blob_url = URL.createObjectURL(blob);
+            }
+          })
+        }
+        console.log("Accommodation Service - Fetched accommodations DTO:", data);
+        return data;
+      }),
       catchError(error => {
         console.error("Error fetching search results:", error);
         return of({
