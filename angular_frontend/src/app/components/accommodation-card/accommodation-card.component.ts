@@ -18,7 +18,7 @@ export class AccommodationCardComponent implements OnInit {
   heartClick: boolean = false;
   iconsUrl: string = iconURL;
   isAdmin: boolean = false;
-  @Input() isPending: boolean = false;
+  @Input() status!: string;
 
   constructor(
     private router: Router,
@@ -65,14 +65,14 @@ export class AccommodationCardComponent implements OnInit {
   }
 
   approve() {
-    this.isPending = false;
+    this.status = 'accepted';
     this.accommodationService.approveAccommodation(this.accommodation.id).subscribe({
       next: () => this.router.navigate(['/admin-dashboard/accommodations/accept-reject'])
     })
   }
 
   reject() {
-    this.isPending = false;
+    this.status = 'rejected';
     this.accommodationService.rejectAccommodation(this.accommodation.id).subscribe({
       next: () => this.router.navigate(['/admin-dashboard/accommodations/accept-reject'])
     })

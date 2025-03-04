@@ -12,7 +12,7 @@ export class AccommodationCardsComponent{
   @Input() accommodations$!: Observable<AccommodationDTO[] | null>; 
   @Input() pageNumber!: number;
   @Input() totalPages!: number;
-  @Input() isPending!: boolean;
+  @Input() status!: string;
   @Output() askForPage = new EventEmitter<number>();
 
   constructor( ){ }
