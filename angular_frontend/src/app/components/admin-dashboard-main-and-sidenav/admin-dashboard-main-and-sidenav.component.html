@@ -1,0 +1,90 @@
+<mat-sidenav-container class="h-screen">
+    <mat-sidenav mode="side" opened class="bg-neutral-1 w-64 shadow-md">
+      <div class="py-1 border-b border-neutral-2">
+        <h2 class="text-center">Admin Panel</h2>
+      </div>
+      
+      <mat-nav-list class="py-2">
+        <a mat-list-item routerLink="/{{PREFIX_ADMIN}}/home" class="my-1 hover:bg-neutral-2 rounded-lg flex items-center h-12">
+          <div class="flex items-center w-full">
+            <mat-icon class="text-primary mx-3">home</mat-icon>
+            <span class="flex-grow">Home</span>
+          </div>
+        </a>
+        
+        <div class="my-1">
+          <a mat-list-item (click)="toggleAccommodationsMenu()" class="flex items-center h-12 hover:bg-neutral-2 rounded-lg">
+            <div class="flex items-center w-full">
+              <mat-icon class="text-primary mx-3">apartment</mat-icon>
+              <span class="flex-grow">Accommodations</span>
+              <mat-icon class="mx-3">{{ isAccommodationMenuOpen ? 'expand_more' : 'chevron_right' }}</mat-icon>
+            </div>
+          </a>
+          
+          <div *ngIf="isAccommodationMenuOpen" class="pl-4 py-1 bg-neutral-1 rounded-lg ml-4 border-l-2 border-secondary">
+            <a mat-list-item routerLink="/{{PREFIX_ADMIN}}/accommodations/accept-reject" class="flex items-center h-10 text-sm hover:bg-neutral-2">
+              <div class="flex items-center w-full">
+                <span class="ml-6">Accept/Reject</span>
+              </div>
+            </a>
+            <a mat-list-item routerLink="/{{PREFIX_ADMIN}}/accommodations/active-ones" class="flex items-center h-10 text-sm hover:bg-neutral-2">
+              <div class="flex items-center w-full">
+                <span class="ml-6">Active ones</span>
+              </div>
+            </a>
+            <a mat-list-item routerLink="/{{PREFIX_ADMIN}}/accommodations/inactive-ones" class="flex items-center h-10 text-sm hover:bg-neutral-2">
+              <div class="flex items-center w-full">
+                <span class="ml-6">Inactive ones</span>
+              </div>
+            </a>
+            <a mat-list-item routerLink="/{{PREFIX_ADMIN}}/accommodations/all-accommodations" class="flex items-center h-10 text-sm hover:bg-neutral-2">
+              <div class="flex items-center w-full">
+                <span class="ml-6">All</span>
+              </div>
+            </a>
+          </div>
+        </div>
+        
+        <div class="my-1">
+          <a mat-list-item (click)="toggleUsersMenu()" class="flex items-center h-12 hover:bg-neutral-2 rounded-lg">
+            <div class="flex items-center w-full">
+              <mat-icon class="text-primary mx-3">people</mat-icon>
+              <span class="flex-grow">Users</span>
+              <mat-icon class="mx-3">{{ isUsersMenuOpen ? 'expand_more' : 'chevron_right' }}</mat-icon>
+            </div>
+          </a>
+          
+          <div *ngIf="isUsersMenuOpen" class="pl-4 py-1 bg-neutral-1 rounded-lg ml-4 border-l-2 border-secondary">
+            <a mat-list-item routerLink="/{{PREFIX_ADMIN}}/users/profiles" class="flex items-center h-10 text-sm hover:bg-neutral-2 ">
+              <div class="flex items-center w-full">
+                <span class="ml-6">Profiles</span>
+              </div>
+            </a>
+            <a mat-list-item routerLink="/{{PREFIX_ADMIN}}/users/add-user" class="flex items-center h-10 text-sm hover:bg-neutral-2 ">
+              <div class="flex items-center w-full">
+                <span class="ml-6">Add user</span>
+              </div>
+            </a>
+            <a mat-list-item routerLink="/{{PREFIX_ADMIN}}/users/make-new-admin" class="flex items-center h-10 text-sm hover:bg-neutral-2 ">
+              <div class="flex items-center w-full">
+                <span class="ml-6">Make new admin</span>
+              </div>
+            </a>
+          </div>
+        </div>
+        
+        <a mat-list-item routerLink="/{{PREFIX_ADMIN}}/metrics" class="my-1 hover:bg-neutral-2 rounded-lg flex items-center h-12">
+          <div class="flex items-center w-full">
+            <mat-icon class="text-primary mx-3">insert_chart</mat-icon>
+            <span class="flex-grow">Metrics</span>
+          </div>
+        </a>
+      </mat-nav-list>
+    </mat-sidenav>
+    
+    <mat-sidenav-content class="bg-gray-50">
+      <div class="p-6">
+        <router-outlet></router-outlet>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>

@@ -1,0 +1,36 @@
+<div class="p-8">
+    <div id="photo-previews" class="flex flex-col mt-32">
+        <div class="flex flex-row items-center justify-center" *ngFor="let c of photosCouples">
+            <div class="relative mr-7">
+                <p (click)="removePhoto(c[0].id)" class="absolute top-0 right-0 text-2xl text-secondary">X</p>
+                <img [src]="c[0].blob_url" class="mb-12 w-52" />
+            </div>
+            <div class="relative mr-7" *ngIf="c[1]?.blob_url">
+                <p (click)="removePhoto(c[1]?.id)" class="absolute top-0 right-0 text-2xl text-secondary">X</p>
+                <img [src]="c[1]?.blob_url" class="mb-12 w-52" />
+            </div>
+            <div class="relative mr-7" *ngIf="c[1]?.blob_url">
+                <p (click)="removePhoto(c[2]?.id)" class="absolute top-0 right-0 text-2xl text-secondary">X</p>
+                <img [src]="c[2]?.blob_url" class="mb-12 w-52" />
+            </div>
+        </div>
+    </div>
+    <form #photo_form="ngForm">
+        <input id="add-photos" type="file" accept="image/*" (change)="uploadPhotosToS3($event)" multiple class="mt-10" />
+        <button type="button" (click)="confirmPhotos()" class="btn-success">{{"edit-photos-accommodation-details.confirm-button" | translate}}</button>
+    </form>
+
+    <div id="messages-edit-photos" class="flex flex-col mt-10" *ngIf="messages">
+        <button (click)="clearMessages()" class="btn-primary">{{"edit-photos-accommodation-details.clear-messages" | translate}}</button>
+        <br>
+
+        <h1 class="text-xl text-blue-800" *ngIf="errorWhileSelectingFiles">
+            {{"edit-photos-accommodation-details.file-selection-error" | translate}}
+        </h1>
+
+        <h1 class="text-xl text-blue-800" *ngIf="errorWhileUploadingToS3">
+            {{"edit-photos-accommodation-details.S3-upload-error" | translate}}
+        </h1>
+          
+    </div>
+</div>

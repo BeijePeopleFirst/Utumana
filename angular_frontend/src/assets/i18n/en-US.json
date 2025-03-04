@@ -1,7 +1,11 @@
 {
 "accommodation-card": {
 	"book": "Book now",
-	"free": "free"
+	"free": "free",
+	"approve": "Approve",
+	"reject": "Reject",
+	"pending": "Pending",
+	"rejected": "Rejected"
 	},
 "accommodations_cards": {
 	"notFound": "No accommodation found"
@@ -94,18 +98,18 @@
 	"thursday": "Thursday",
 	"friday": "Friday",
 	"saturday": "Saturday",
-	"january": "January",
-	"february": "February",
-	"march": "March",
-	"april": "April",
-	"may": "May",
-	"june": "June",
-	"july": "July",
-	"august": "August",
-	"september": "September",
-	"october": "October",
-	"november": "November",
-	"december": "December",
+	"January": "January",
+	"February": "February",
+	"March": "March",
+	"April": "April",
+	"May": "May",
+	"June": "June",
+	"July": "July",
+	"August": "August",
+	"September": "September",
+	"October": "October",
+	"November": "November",
+	"December": "December",
 	"error-occurred-while-fetching-month-name-or-number-error": "An Error occurred while fetching month name or number",
 	"invalid-chosen-day-error": "Invalid chosen Day",
 	"reset-choices-word": "Reset Choices",
@@ -220,6 +224,12 @@
 	"missing_required": "One or more required fields haven't been filled",
 	"modal_title": "Confirm and create this accommodation?",
 	"modal_subtitle": "By clicking 'Confirm', this accommodation will be created and sent to the admin for approval."
+},
+"edit-photos-accommodation-details": {
+	"confirm-button": "Confirm",
+	"clear-messages": "Clear",
+	"file-selection-error": "Error while choosing Files",
+	"S3-upload-error": "Error occurred while processing Files"
 },
 "error": "Unexpected error. Please retry.",
 "favourites": {

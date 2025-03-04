@@ -20,6 +20,16 @@ import { CreateAccommodationInfoComponent } from './components/create-accommodat
 import { CreateAccommodationPhotosComponent } from './components/create-accommodation-photos/create-accommodation-photos.component';
 import { CreateAccommodationRecapComponent } from './components/create-accommodation-recap/create-accommodation-recap.component';
 import { BookNowComponent } from './components/book-now/book-now.component';
+import { AdminDashboardMainAndSidenavComponent } from './components/admin-dashboard-main-and-sidenav/admin-dashboard-main-and-sidenav.component';
+import { AdminDashboardHomePanelComponent } from './components/admin-dashboard-home-panel-component/admin-dashboard-home-panel-component.component';
+import { AdminDashboardMetricsComponent } from './components/admin-dashboard-metrics/admin-dashboard-metrics.component';
+import { AdminDashboardAccetRejectComponent } from './components/admin-dashboard-accet-reject/admin-dashboard-accet-reject.component';
+import { AdminDashboardAccommodationActiveComponent } from './components/admin-dashboard-accommodation-active/admin-dashboard-accommodation-active.component';
+import { AdminDashboardAccommodationInactiveComponent } from './components/admin-dashboard-accommodation-inactive/admin-dashboard-accommodation-inactive.component';
+import { AdminDashboardAccommodationAllComponent } from './components/admin-dashboard-accommodation-all/admin-dashboard-accommodation-all.component';
+import { AdminDashboardUsersProfilesComponent } from './components/admin-dashboard-users-profiles/admin-dashboard-users-profiles.component';
+import { AdminDashboardUsersAddUserComponent } from './components/admin-dashboard-users-add-user/admin-dashboard-users-add-user.component';
+import { AdminDashboardUsersMakeNewAdminComponent } from './components/admin-dashboard-users-make-new-admin/admin-dashboard-users-make-new-admin.component';
 
 const routes: Routes = [
   {path: 'login', title: "Login", component: LoginComponent},
@@ -39,7 +49,23 @@ const routes: Routes = [
   {path: 'host_dashboard', title: "Host Dashboard", component: HostDashboardComponent, canActivate: [authGuard]},
   {path: 'accommodation/:id', title: "Accommodation Details", component: AccommodationDetailsComponent, canActivate: [authGuard]},
   {path: 'book/:id', component: BookNowComponent, canActivate: [authGuard]},
-  {path: 'confirm_booking_on_creation', component: ConfirmBookingBooknowComponent, canActivate: [authGuard]}
+  {path: 'confirm_booking_on_creation', component: ConfirmBookingBooknowComponent, canActivate: [authGuard]},
+  {path: 'admin-dashboard', component: AdminDashboardMainAndSidenavComponent, canActivate: [authGuard], children: [
+    {path: '', component: AdminDashboardHomePanelComponent, canActivate: [authGuard]},
+    {path: 'home', component: AdminDashboardHomePanelComponent, canActivate: [authGuard]},
+    {path: 'accommodations', children: [
+      {path: 'accept-reject', component: AdminDashboardAccetRejectComponent, canActivate: [authGuard]},
+      {path: 'active-ones', component: AdminDashboardAccommodationActiveComponent, canActivate: [authGuard]},
+      {path: 'inactive-ones', component: AdminDashboardAccommodationInactiveComponent, canActivate: [authGuard]},
+      {path: 'all-accommodations', component: AdminDashboardAccommodationAllComponent, canActivate: [authGuard]},
+    ]},
+    {path: 'users', children: [
+      {path: 'profiles', component: AdminDashboardUsersProfilesComponent, canActivate: [authGuard]},
+      {path: 'add-user', component: AdminDashboardUsersAddUserComponent, canActivate: [authGuard]},
+      {path: 'make-new-admin', component: AdminDashboardUsersMakeNewAdminComponent, canActivate: [authGuard]},
+    ]},
+    {path: 'metrics', component: AdminDashboardMetricsComponent, canActivate: [authGuard]}
+  ]}
   // { path: '**', title: "Error", component: PageNotFoundComponent }
 ];
 

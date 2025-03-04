@@ -1,5 +1,6 @@
 package ws.peoplefirst.utumana.repository;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -152,4 +153,9 @@ public interface AccommodationRepository extends JpaRepository<Accommodation, Lo
 	@Modifying
 	@Query("UPDATE Accommodation a SET a.coordinates = :coordinates WHERE a.id = :accommodationId")
     public void setCoordinates(@Param(value = "coordinates") String coordinates, @Param(value = "accommodationId") Long accommodationId);
+
+	@Query("SELECT new ws.peoplefirst.utumana.dto.AccommodationDTO(a.id, a.title, a.city, a.province, a.country, a.mainPhotoUrl, r.rating) "
+			+ "FROM Accommodation as a "
+			+ "JOIN a.rating r WHERE a.hidingTimestamp IS NULL AND a.approvalTimestamp IS NOT NULL")
+	public Page<AccommodationDTO> getActiveAccommodationDTO(Pageable pageable);
 }

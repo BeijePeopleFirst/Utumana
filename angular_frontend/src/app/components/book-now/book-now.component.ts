@@ -20,9 +20,8 @@ export class BookNowComponent implements OnInit {
   //Accommodation variables:
   //------------------------------------------------------------------------------------------------
   accommodation!: Accommodation;
-  selectedAccommodationAvailabilities: Availability[] = [];
   isMe!: boolean;
-  private unavailabilities: string[] = [];
+  availabilitiesFinal: string[] = [];
   //------------------------------------------------------------------------------------------------
 
   //Chosen dates:
@@ -94,60 +93,26 @@ export class BookNowComponent implements OnInit {
             }
 
             let responseInfo2 = responseInfo as any;console.log("STAMPO il 2 ----> ", responseInfo2);
-            if(responseInfo2["isAdmin"] == null || responseInfo2["isOwner"] == null || responseInfo2["pendingByUserOrAcceptedOrDoingBookings"] == null) {
-              this.thereAreMessagesToDiplay = true;
+            if(responseInfo2["isAdmin"] == null || responseInfo2["isOwner"] == null
+              || responseInfo2["availabilities_post_elaboration"] == null
+            ) {
+              this.thereAreMessagesToDiplay = true;console.log("ECComi QUI1");
               this.accommodationInfoError = true;
               return;
             }
             
             this.isMe = Boolean(responseInfo2["isOwner"]).valueOf();
 
-            //Now lets insert values into the unavailabilities Map:
-            let tmp: BookingDTO[] = [];
-            let tempBooking: BookingDTO;
+            let tmpAv: any = responseInfo2["availabilities_post_elaboration"];
 
-            //Aggiungo i valori alla lista "tmp":
-            for(let v of responseInfo2["pendingByUserOrAcceptedOrDoingBookings"]) {
-              tempBooking = {
-                check_in: v.checkIn, 
-                check_out: v.checkOut, 
-                price: 0, 
-                status: "",
-                accommodation: {id: this.accommodation.id!, title: this.accommodation.title, city: this.accommodation.city!, main_photo_url: this.accommodation.main_photo_url, country: this.accommodation.country, province: this.accommodation.province!, min_price: 0, max_price: 0, is_favourite: false, rating: 0}
-              };
-
-              tmp.push(tempBooking);
-            }console.log("STAMPO TMP -> ", tmp);
-
-            let inDateN: number;
-            let outDateN: number;
-
-            let date: Date;
-
-            let monthName: string;
-            let year: number;
-            let day: number;
-
-            let cursor: number;
-
-            for(let b of tmp) {
-              inDateN = Date.parse(b.check_in);
-              outDateN = Date.parse(b.check_out);
-
-              cursor = inDateN;
-
-              while(cursor <= outDateN) {
-                date = new Date(cursor);
-
-                monthName = this.getMonthName(date.getMonth());
-                year = date.getFullYear();
-                day = date.getDate();
-
-                this.unavailabilities.push(year + "-" + monthName + "-" + day);
-
-                cursor = new Date(year, date.getMonth(), day + 1).getTime();
-              }
-              
+            if(!Array.isArray(tmpAv)) {
+              this.thereAreMessagesToDiplay = true;console.log("ECComi QUI2");
+              this.accommodationInfoError = true;
+              return;
+            }
+            else {
+              for(let a of tmpAv)
+                this.availabilitiesFinal.push(a);
             }
 
             this.generateCalendars();
@@ -158,23 +123,28 @@ export class BookNowComponent implements OnInit {
     )
   }
 
+  public fetchDayString(d: number | null): string {
+    if(!d) return "Null Value";
+    return d < 10 ? ("0" + d) : ("" + d);
+  }
+
   // Getter per il nome del mese corrente (es. "marzo")
   public getMonthName(monthIndexLocal?: number): string {
     let monthIndex: number = monthIndexLocal ? monthIndexLocal : this.currentDate.getMonth();
 
     switch(monthIndex) {
-      case 0: return "january";
-      case 1: return "february";
-      case 2: return "march";
-      case 3: return "april";
-      case 4: return "may";
-      case 5: return "june";
-      case 6: return "july";
-      case 7: return "august";
-      case 8: return "september";
-      case 9: return "october";
-      case 10: return "november";
-      case 11: return "december";
+      case 0: return "January";
+      case 1: return "February";
+      case 2: return "March";
+      case 3: return "April";
+      case 4: return "May";
+      case 5: return "June";
+      case 6: return "July";
+      case 7: return "August";
+      case 8: return "September";
+      case 9: return "October";
+      case 10: return "November";
+      case 11: return "December";
       default: return "Error";
     }
   }
@@ -242,7 +212,7 @@ export class BookNowComponent implements OnInit {
 // Metodo per ottenere il nome del mese successivo
 public getNextMonthName(): string {
   
-  if(this.currentDate.getMonth() === 11) return "january";
+  if(this.currentDate.getMonth() === 11) return "January";
 
   const nextMonthDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 1);
   //console.log(this.getMonthName(nextMonthDate.getMonth()));
@@ -265,7 +235,7 @@ isSelected(year: number, monthName: string, day: number | null): boolean {
 }
 
 nextMonthName(): string {
-  if(this.getMonthName() === "december") return "january";
+  if(this.getMonthName() === "December") return "January";
   else {
     let number: number = this.currentDate.getMonth() + 1;
     return this.getMonthName(number);
@@ -378,115 +348,25 @@ private convertToCompatibleDateFormat(s: string): string {
   return result;
 }
 
-availabilitiesOrNotKeys: Map<String, Boolean> = new Map<String, Boolean>(); 
-isAnAvailability(y: number, monthName: string, day: number | null): boolean {
-
-  //Se la data c'è già la restituisco:
-  if(this.availabilitiesOrNotKeys.has(y + "-" + monthName + "-" + day)) return this.availabilitiesOrNotKeys.get(y + "-" + monthName + "-" + day)!.valueOf();
-
-  let monthNumber: number = this.getMonthNumberByName(monthName);
-
-  if(!day) return false;
-
-  if(monthNumber === -1) {
-    this.thereAreMessagesToDiplay = true;
-    this.errorOccurredWhileFetchingMonthNameOrIndexError = true;
-    return false;
-  }
-
-  let dateToAnalize: number = new Date(y, monthNumber, day, 0, 0, 0).getTime();
-
-  //DEBUG:
-  /*if(monthNumber === 3) {
-    console.log(this.accommodation.availabilities)
-    for(let a of this.accommodation.availabilities) {
-      if(new Date(a.start_date).getMonth() === 3 && new Date(a.start_date).getDate() === 1) {
-        console.log("APRIL");
-        console.log("CHECK", "To Analize: " + dateToAnalize, "Start: ", Date.parse(a.start_date));
-        console.log("PROVA -> ", new Date())
-        let tmp = a.start_date.split("-");
-        console.log("RESULT ", new Date(Number(tmp[0]), 3, Number(tmp[2]), 0, 0, 0).getTime(), dateToAnalize);
-      }
-    }
-  }*/
-
-  //If the day to analize is passed already, then it will not be selectable
-  if(dateToAnalize < Date.now()) {
-    this.availabilitiesOrNotKeys.set(y + "-" + monthName + "-" + day, false);
-    return false;
-  }
-  
-  //Now I check if the date is in the booked already Array: if so then it will not be selectable.
-  if(this.unavailabilities.includes(y + "-" + monthName + "-" + day)) {
-    this.availabilitiesOrNotKeys.set(y + "-" + monthName + "-" + day, false);
-    return false;
-  }
-
-  let start: number;
-  let end: number;
-  //let tmpArr: string[];
-  //let tmpDate: Date;
-  for(let a of this.accommodation.availabilities) {
-
-    /*tmpArr = a.start_date.split("-");
-    tmpDate = new Date(Date.parse(a.start_date));
-    tmpDate = new Date(Number(tmpArr[0]), tmpDate.getMonth(), Number(tmpArr[2]), 0, 0, 0);*/
-    
-    start = this.createDateInMilliseconds(a, "start_date");
-
-    /*tmpArr = a.end_date.split("-");
-    tmpDate = new Date(Date.parse(a.end_date));
-    tmpDate = new Date(Number(tmpArr[0]), tmpDate.getMonth(), Number(tmpArr[2]), 0, 0, 0);*/
-    
-    end = this.createDateInMilliseconds(a, "end_date");
-
-    if(this.checkIfIsBetween(dateToAnalize, start, end)) {
-
-      //Lets add to the cache this availability:
-      this.availabilitiesOrNotKeys.set(y + "-" + monthName + "-" + day, true);
-
-      return true;
-    }
-  }
-
-  this.availabilitiesOrNotKeys.set(y + "-" + monthName + "-" + day, false);
-  return false;
-}
-
 private checkIfIsBetween(test: number, start: number, end: number): boolean {
   if(test >= start && test <= end) return true;
   return false;
 }
 
-//Example: createDateInMilliseconds(a, "start_date")
-private createDateInMilliseconds(av: Availability, field: string): number {
-
-  let a = av as any;
-
-  let tmpArr: string[];
-  let tmpDate: Date;
-
-  tmpArr = a[field].split("-");
-  tmpDate = new Date(Date.parse(a[field]));
-  tmpDate = new Date(Number(tmpArr[0]), tmpDate.getMonth(), Number(tmpArr[2]), 0, 0, 0);
-
-  return tmpDate.getTime();
-}
-
 private getMonthNumberByName(name: string): number {
   switch(name) {
-    case "january": return 0;
-    case "february": return 1;
-    case "march": return 2;
-    case "april": return 3;
-    case "may": return 4;
-    case "june": return 5;
-    case "july": return 6;
-    case "august": return 7;
-    case "september": return 8;
-    case "october": return 9;
-    case "november": return 10;
-    case "december": return 11;
+    case "January": return 0;
+    case "February": return 1;
+    case "March": return 2;
+    case "April": return 3;
+    case "May": return 4;
+    case "June": return 5;
+    case "July": return 6;
+    case "August": return 7;
+    case "September": return 8;
+    case "October": return 9;
+    case "November": return 10;
+    case "December": return 11;
     default: return -1;
   }
 }

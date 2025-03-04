@@ -1,7 +1,11 @@
 {
 "accommodation-card": {
 	"book": "Prenota ora",
-	"free": "gratis"
+	"free": "gratis",
+	"approve": "Approva",
+	"reject": "Rifiuta",
+	"pending": "In attesa",
+	"rejected": "Rifiutato"
 	},
 "accommodations_cards": {
 	"notFound": "Nessuna offerta disponibile"
@@ -94,18 +98,18 @@
 	"thursday": "Giovedi'",
 	"friday": "Venerdi'",
 	"saturday": "Sabato",
-	"january": "Gennaio",
-	"february": "Febbraio",
-	"march": "Marzo",
-	"april": "Aprile",
-	"may": "Maggio",
-	"june": "Giugno",
-	"july": "Luglio",
-	"august": "Agosto",
-	"september": "Settembre",
-	"october": "Ottobre",
-	"november": "Novembre",
-	"december": "Dicembre",
+	"January": "Gennaio",
+	"February": "Febbraio",
+	"March": "Marzo",
+	"April": "Aprile",
+	"May": "Maggio",
+	"June": "Giugno",
+	"July": "Luglio",
+	"August": "Agosto",
+	"September": "Settembre",
+	"October": "Ottobre",
+	"November": "Novembre",
+	"December": "Dicembre",
 	"error-occurred-while-fetching-month-name-or-number-error": "Si è verificato un errore mentre si stava recuperando il nome del mese oppure il suo indice",
 	"invalid-chosen-day-error": "Giorno selezionato non valido",
 	"reset-choices-word": "Reimposta Campi",
@@ -220,6 +224,12 @@
 	"missing_required": "Uno o più campi obbligatori non sono compilati",
 	"modal_title": "Confermare la creazione di questa sistemazione?",
 	"modal_subtitle": "Cliccando su 'Conferma', questa sistemazione verrà creata e inviata all'amministratore per essere approvata."
+},
+"edit-photos-accommodation-details": {
+	"confirm-button": "Conferma",
+	"clear-messages": "Cancella Messaggi",
+	"file-selection-error": "Errore durante la selezione delle Foto",
+	"S3-upload-error": "Errore durante l' elaborazione delle Foto"
 },
 "error": "Errore sconosciuto. Per favore, riprova.",
 "favourites": {

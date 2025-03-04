@@ -34,13 +34,13 @@
             <tbody>
               <tr *ngFor="let week of calendarLeft">
                 <td *ngFor="let day of week">
-                  <div *ngIf="isAnAvailability(currentYear, getMonthName(), day) && !isSelected(currentYear, getMonthName(), day)" class="w-full bg-green-500 cursor-pointer" (click)="selectDay(currentYear, getMonthName(), day)">
+                  <div *ngIf="availabilitiesFinal.includes(day + '-' + getMonthName() + '-' + currentYear) && !isSelected(currentYear, getMonthName(), day)" class="w-full bg-green-500 cursor-pointer" (click)="selectDay(currentYear, getMonthName(), day)">
                       {{ day || '' }}
                   </div>
-                  <div *ngIf="isSelected(currentYear, getMonthName(), day) && isAnAvailability(currentYear, getMonthName(), day)" class="w-full bg-blue-800">
+                  <div *ngIf="isSelected(currentYear, getMonthName(), day) && availabilitiesFinal.includes(day + '-' + getMonthName() + '-' + currentYear)" class="w-full bg-blue-800">
                       {{ day || '' }}
                   </div>
-                  <div *ngIf="!isAnAvailability(currentYear, getMonthName(), day)">
+                  <div *ngIf="!availabilitiesFinal.includes(day + '-' + getMonthName() + '-' + currentYear)">
                       {{ day || '' }}
                   </div>
                 </td>
@@ -68,13 +68,13 @@
             <tbody>
               <tr *ngFor="let week of calendarRight">
                 <td *ngFor="let day of week">
-                  <div *ngIf="isAnAvailability(nextMonthYear, nextMonthName(), day) && !isSelected(nextMonthYear, nextMonthName(), day)" class="w-full bg-green-500 cursor-pointer" (click)="selectDay(nextMonthYear, nextMonthName(), day)">
+                  <div *ngIf="availabilitiesFinal.includes(fetchDayString(day) + '-' + nextMonthName() + '-' + nextMonthYear) && !isSelected(nextMonthYear, nextMonthName(), day)" class="w-full bg-green-500 cursor-pointer" (click)="selectDay(nextMonthYear, nextMonthName(), day)">
                       {{ day || '' }}
                   </div>
-                  <div *ngIf="isSelected(nextMonthYear, nextMonthName(), day) && isAnAvailability(nextMonthYear, nextMonthName(), day)" class="w-full bg-blue-800">
+                  <div *ngIf="isSelected(nextMonthYear, nextMonthName(), day) && availabilitiesFinal.includes(fetchDayString(day) + '-' + nextMonthName() + '-' + nextMonthYear)" class="w-full bg-blue-800">
                       {{ day || '' }}
                   </div>
-                  <div *ngIf="!isAnAvailability(nextMonthYear, nextMonthName(), day)">
+                  <div *ngIf="!availabilitiesFinal.includes(fetchDayString(day) + '-' + nextMonthName() + '-' + nextMonthYear)">
                       {{ day || '' }}
                   </div>
                 </td>
