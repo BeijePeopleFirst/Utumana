@@ -100,7 +100,7 @@ export class EditPhotosAccommodationDetailsComponent implements OnInit {
                   return;
                 }
 
-                let tmp: Photo = new Photo(0, response.photo_url, response.photo_order, URL.createObjectURL(photo));
+                let tmp: Photo = {id: 0, photo_url: response.photo_url, photo_order: response.photo_order, blob_url: URL.createObjectURL(photo)};
 
                 this.photosCouples = this.addPhotoToViewList(tmp, this.photosCouples);
               }
