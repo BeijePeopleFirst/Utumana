@@ -79,6 +79,7 @@ export class AccommodationService {
     return this.getAccommodationsDTO(`${BACKEND_URL_PREFIX}/api/pending_accommodations/${userId}`); // backend is not paginated
   }
 
+  
   getMyRejectedAccommodations(): Observable<AccommodationDTO[]> {
     const userId = localStorage.getItem("id");
     if(!userId){
@@ -86,7 +87,10 @@ export class AccommodationService {
     }
     return this.getAccommodationsDTO(`${BACKEND_URL_PREFIX}/api/rejected_accommodations/${userId}`); // backend is not paginated
   }
-  
+
+  getPendingAccommodations(): Observable<AccommodationDTO[]> { 
+    return this.getAccommodationsDTO(`${BACKEND_URL_PREFIX}/api/pending_accommodations`);
+  }
   /** @Param url - url of api request (should already include pagination params, if any) */
   getAccommodationsDTO(url: string): Observable<AccommodationDTO[]> {
     return this.http.get<AccommodationDTO[]>(url).pipe(
@@ -125,6 +129,50 @@ export class AccommodationService {
     );
   }
 
+  public getActiveAccommodations(pageNumber: number, pageSize: number): Observable<PageResponse<AccommodationDTO>> {
+    let httpParams = new HttpParams()
+    .set('page', pageNumber.toString())
+    .set('size', pageSize.toString());
+
+  
+    return this.http.get<PageResponse<AccommodationDTO>>(`${BACKEND_URL_PREFIX}/api/accommodations/active`, { params: httpParams }).pipe(
+      map(data => {
+        for(let acc of data.content){
+          this.s3Service.getPhoto(acc.main_photo_url).subscribe(blob => {
+            if(blob != null){
+              acc.main_photo_blob_url = URL.createObjectURL(blob);
+            }
+          })
+        }
+        console.log("Accommodation Service - Fetched accommodations DTO:", data);
+        return data;
+      }),
+      catchError(error => {
+        console.error("Error fetching active accommodations:", error);
+        return of({
+          content: [],
+          pageable: {
+            pageNumber: 0,
+            pageSize: pageSize,
+            sort: { empty: true, sorted: false, unsorted: true },
+            offset: 0,
+            paged: true,
+            unpaged: false
+          },
+          totalPages: 0,
+          totalElements: 0,
+          last: true,
+          size: pageSize,
+          number: 0,
+          sort: { empty: true, sorted: false, unsorted: true },
+          first: true,
+          numberOfElements: 0,
+          empty: true
+        });
+      })
+    );
+  }
+
   public getSearchResults(pageNumber: number, pageSize: number): Observable<PageResponse<AccommodationDTO>> {
     const currentParams = this.searchService.getSearchData();
     if (!currentParams) return of({} as PageResponse<AccommodationDTO>);
@@ -142,6 +190,17 @@ export class AccommodationService {
     const url = `${BACKEND_URL_PREFIX}/api/search?${httpParams.toString()}`;
     
     return this.http.get<PageResponse<AccommodationDTO>>(url).pipe(
+      map(data => {
+        for(let acc of data.content){
+          this.s3Service.getPhoto(acc.main_photo_url).subscribe(blob => {
+            if(blob != null){
+              acc.main_photo_blob_url = URL.createObjectURL(blob);
+            }
+          })
+        }
+        console.log("Accommodation Service - Fetched accommodations DTO:", data);
+        return data;
+      }),
       catchError(error => {
         console.error("Error fetching search results:", error);
         return of({
@@ -387,6 +446,16 @@ export class AccommodationService {
     )
   }
   
+  getAccommodationsToBeApproved() {
+    return this.getAccommodationsDTO(BACKEND_URL_PREFIX + "/api/get_accommodationsdto_to_approve");
+ }
+
+ approveAccommodation(id: number): Observable<Accommodation | {message: string, status: string, time: string}> {
+   return this.http.patch<Accommodation | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/approve_accommodation/" + id, {});
+ }
+ rejectAccommodation(id: number): Observable<Accommodation | {message: string, status: string, time: string}> {
+   return this.http.patch<Accommodation | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/delete_accommodation/" + id, {});
+ }
   /*private getAuth(): HttpHeaders {
     let headers = new HttpHeaders();
     return headers;
