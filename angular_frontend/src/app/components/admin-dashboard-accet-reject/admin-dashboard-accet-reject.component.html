@@ -1,9 +1,13 @@
 <h2>Accept/Reject Accommodations</h2>
 
+<div *ngIf="isLoading" class="flex justify-center items-center min-h-screen">
+    <mat-progress-spinner class="color-primary" mode="indeterminate"></mat-progress-spinner>
+  </div>
+
 <section *ngIf="allPendingAccommodations && allPendingAccommodations.length > 0; else noAccommodations" class="flex justify-center items-center pt-8 bg-neutral-2">
     <div class="container p-5 text-center">
       <app-accommodation-cards [accommodations$]="pendingAccommodations$" [pageNumber]="pendingAccommodationsPageNumber" [totalPages]="pendingAccommodationsTotalPages" 
-        (askForPage)="loadPendingAccommodationsPage($event)" [isPending]="true"></app-accommodation-cards>
+        (askForPage)="loadPendingAccommodationsPage($event)" [status]="'pending'"></app-accommodation-cards>
     </div>
 </section>
 

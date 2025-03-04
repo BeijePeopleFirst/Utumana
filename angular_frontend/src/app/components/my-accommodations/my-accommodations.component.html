@@ -2,14 +2,14 @@
     <div class="container p-5 text-center">
       <h2>{{'my_accommodations.title' | translate}}</h2>
       <app-accommodation-cards [accommodations$]="accommodations$" [pageNumber]="accommodationsPageNumber" [totalPages]="accommodationsTotalPages" 
-        (askForPage)="loadAccommodationsPage($event)"></app-accommodation-cards>
+        (askForPage)="loadAccommodationsPage($event)" [status]="'accepted'"></app-accommodation-cards>
     </div>
 </section>
 <section *ngIf="allPendingAccommodations && allPendingAccommodations.length > 0" class="flex justify-center items-center pt-8 bg-neutral-2">
   <div class="container p-5 text-center">
     <h2>{{'my_accommodations.pending' | translate}}</h2>
     <app-accommodation-cards [accommodations$]="pendingAccommodations$" [pageNumber]="pendingAccommodationsPageNumber" [totalPages]="pendingAccommodationsTotalPages" 
-      (askForPage)="loadPendingAccommodationsPage($event)"></app-accommodation-cards>
+      (askForPage)="loadPendingAccommodationsPage($event)" [status]="'pending'"></app-accommodation-cards>
   </div>
 </section>
 <section *ngIf="allRejectedAccommodations && allRejectedAccommodations.length > 0" 
@@ -17,7 +17,7 @@
   <div class="container p-5 text-center">
     <h2>{{'my_accommodations.rejected' | translate}}</h2>
     <app-accommodation-cards [accommodations$]="rejectedAccommodations$" [pageNumber]="rejectedAccommodationsPageNumber" [totalPages]="rejectedAccommodationsTotalPages" 
-      (askForPage)="loadRejectedAccommodationsPage($event)"></app-accommodation-cards>
+      (askForPage)="loadRejectedAccommodationsPage($event)" [status]="'rejected'"></app-accommodation-cards>
   </div>
 </section>
 

@@ -14,6 +14,8 @@ export class AdminDashboardAccetRejectComponent implements OnInit{
   pendingAccommodationsPageNumber = 1;
   pendingAccommodationsPageSize = 5;
   pendingAccommodationsTotalPages = 1;
+  
+  isLoading = true;
 
   constructor(private accommodationService: AccommodationService) {}
 
@@ -25,6 +27,7 @@ export class AdminDashboardAccetRejectComponent implements OnInit{
       this.accommodationService.getPrices(accommodations).subscribe(updated => {
         this.allPendingAccommodations = updated;
         this.pendingAccommodations$ = of(updated.slice(0, this.pendingAccommodationsPageSize));
+        this.isLoading = false;
       });
     });
   }

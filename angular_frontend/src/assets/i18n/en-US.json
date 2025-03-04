@@ -3,7 +3,9 @@
 	"book": "Book now",
 	"free": "free",
 	"approve": "Approve",
-	"reject": "Reject"
+	"reject": "Reject",
+	"pending": "Pending",
+	"rejected": "Rejected"
 	},
 "accommodations_cards": {
 	"notFound": "No accommodation found"

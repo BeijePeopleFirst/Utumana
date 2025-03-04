@@ -3,7 +3,9 @@
 	"book": "Prenota ora",
 	"free": "gratis",
 	"approve": "Approva",
-	"reject": "Rifiuta"
+	"reject": "Rifiuta",
+	"pending": "In attesa",
+	"rejected": "Rifiutato"
 	},
 "accommodations_cards": {
 	"notFound": "Nessuna offerta disponibile"
