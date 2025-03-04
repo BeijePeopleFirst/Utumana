@@ -3,6 +3,6 @@ export class Photo {
         public id:number,
         public photo_url:string,
         public photo_order: number,
-        public blob_url?:string
+        public blob_url:string
         ) {  }
 }

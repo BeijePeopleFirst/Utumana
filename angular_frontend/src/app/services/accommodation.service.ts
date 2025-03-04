@@ -15,6 +15,7 @@ import { PaginationInfo } from '../models/paginationInfo';
 import { DefaultAddress } from '../models/defaultAddress';
 import { Coordinates } from '../models/coordinates';
 import { S3Service } from './s3.service';
+import { Photo } from '../models/photo';
 
 @Injectable({
   providedIn: 'root'
@@ -375,6 +376,15 @@ export class AccommodationService {
   
   deleteDraft(draftId: number): Observable<any> {
     return this.http.delete<any>(BACKEND_URL_PREFIX + "/api/accommodation-draft/delete/" + draftId);
+  }
+
+  uploadPhoto(accId: number, usrId: number, photo: FormData): Observable<Photo | {message: string, status: string, time: string}> {
+    return this.http.post<Photo | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/accommodation/upload_photo/" + accId + "/" + usrId, photo).pipe(
+      catchError(error => {
+        console.error(error); 
+        return of(error.error);
+      })
+    )
   }
   
   /*private getAuth(): HttpHeaders {

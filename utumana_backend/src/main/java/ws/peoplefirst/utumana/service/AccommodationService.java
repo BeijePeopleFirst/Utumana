@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.transaction.Transactional;
 import ws.peoplefirst.utumana.criteria.SearchAccomodationCriteria;
@@ -874,4 +875,33 @@ public class AccommodationService {
 			}
 		}
 	}
+
+    public String uploadSinglePhotoToS3(Long accId, MultipartFile file) {
+
+        Accommodation acc = this.findById(accId);
+        String original = file.getOriginalFilename();
+        String extension = original.substring(original.lastIndexOf('.'));
+
+        if(acc == null) throw new IdNotFoundException("Invalid Accommodation ID provided");
+        
+        Integer order = 0;
+        for(Photo p : acc.getPhotos()) {
+            order = p.getPhotoOrder() > order ? p.getPhotoOrder() : order;
+        }
+
+        Photo p = new Photo();
+        p.setAccommodation(acc);
+        p.setPhotoOrder(++order);
+        p.setPhotoUrl(null);
+
+        p = photoRepository.save(p);
+
+        String fileKey = "images/accommodations/" + accId + "/" + p.getId() + extension;
+        p.setPhotoUrl(fileKey);
+        photoRepository.save(p);
+
+        s3Service.uploadFile(fileKey, file);
+
+        return fileKey;
+    }
 }

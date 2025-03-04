@@ -221,6 +221,12 @@
 	"modal_title": "Confermare la creazione di questa sistemazione?",
 	"modal_subtitle": "Cliccando su 'Conferma', questa sistemazione verrà creata e inviata all'amministratore per essere approvata."
 },
+"edit-photos-accommodation-details": {
+	"confirm-button": "Conferma",
+	"clear-messages": "Cancella Messaggi",
+	"file-selection-error": "Errore durante la selezione delle Foto",
+	"S3-upload-error": "Errore durante l' elaborazione delle Foto"
+},
 "error": "Errore sconosciuto. Per favore, riprova.",
 "favourites": {
 	"title": "Preferiti"
