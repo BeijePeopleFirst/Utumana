@@ -1,82 +1,82 @@
 <mat-sidenav-container class="h-screen">
-    <mat-sidenav mode="side" opened class="bg-neutral-1 w-64 shadow-md w-fit">
-      <div class="py-1 border-b border-neutral-2">
-        <h3 class="text-center">Admin Panel</h3>
+    <mat-sidenav mode="side" opened class="w-72 shadow-md bg-neutral-1">
+      <div class="pt-3 border-b border-neutral-2">
+        <h3 class="text-center">{{'admin-dashboard-sidenav.title' | translate}}</h3>
       </div>
       
       <mat-nav-list class="py-2">
-        <a mat-list-item routerLink="/{{PREFIX_ADMIN}}/home" class="my-1 hover:bg-neutral-2 rounded-lg flex items-center h-12">
+        <a mat-list-item routerLink="/{{PREFIX_ADMIN}}/home" class="flex items-center my-1 h-12 rounded-lg hover:bg-neutral-2">
           <div class="flex items-center w-full">
-            <mat-icon class="text-primary mx-3">home</mat-icon>
-            <span class="flex-grow">Home</span>
+            <mat-icon class="mx-3 text-primary">home</mat-icon>
+            <span class="flex-grow">{{'admin-dashboard-sidenav.home' | translate}}</span>
           </div>
         </a>
         
         <div class="my-1">
-          <a mat-list-item (click)="toggleAccommodationsMenu()" class="flex items-center h-12 hover:bg-neutral-2 rounded-lg">
+          <a mat-list-item (click)="toggleAccommodationsMenu()" class="flex items-center h-12 rounded-lg hover:bg-neutral-2">
             <div class="flex items-center w-full">
-              <mat-icon class="text-primary mx-3">apartment</mat-icon>
-              <span class="flex-grow">Accommodations</span>
+              <mat-icon class="mx-3 text-primary">apartment</mat-icon>
+              <span class="flex-grow">{{'admin-dashboard-sidenav.accommodations' | translate}}</span>
               <mat-icon class="mx-3">{{ isAccommodationMenuOpen ? 'expand_more' : 'chevron_right' }}</mat-icon>
             </div>
           </a>
           
-          <div *ngIf="isAccommodationMenuOpen" class="pl-4 py-1 bg-neutral-1 rounded-lg ml-4 border-l-2 border-secondary">
+          <div *ngIf="isAccommodationMenuOpen" class="py-1 pl-4 ml-4 rounded-lg border-l-2 bg-neutral-1 border-secondary">
             <a mat-list-item routerLink="/{{PREFIX_ADMIN}}/accommodations/accept-reject" class="flex items-center h-10 text-sm hover:bg-neutral-2">
               <div class="flex items-center w-full">
-                <span class="ml-6">Accept/Reject</span>
+                <span class="ml-6">{{'admin-dashboard-sidenav.accept_reject' | translate}}</span>
               </div>
             </a>
             <a mat-list-item routerLink="/{{PREFIX_ADMIN}}/accommodations/active-ones" class="flex items-center h-10 text-sm hover:bg-neutral-2">
               <div class="flex items-center w-full">
-                <span class="ml-6">Active ones</span>
+                <span class="ml-6">{{'admin-dashboard-sidenav.active' | translate}}</span>
               </div>
             </a>
             <a mat-list-item routerLink="/{{PREFIX_ADMIN}}/accommodations/inactive-ones" class="flex items-center h-10 text-sm hover:bg-neutral-2">
               <div class="flex items-center w-full">
-                <span class="ml-6">Inactive ones</span>
+                <span class="ml-6">{{'admin-dashboard-sidenav.inactive' | translate}}</span>
               </div>
             </a>
             <a mat-list-item routerLink="/{{PREFIX_ADMIN}}/accommodations/all-accommodations" class="flex items-center h-10 text-sm hover:bg-neutral-2">
               <div class="flex items-center w-full">
-                <span class="ml-6">All</span>
+                <span class="ml-6">{{'admin-dashboard-sidenav.all' | translate}}</span>
               </div>
             </a>
           </div>
         </div>
         
         <div class="my-1">
-          <a mat-list-item (click)="toggleUsersMenu()" class="flex items-center h-12 hover:bg-neutral-2 rounded-lg">
+          <a mat-list-item (click)="toggleUsersMenu()" class="flex items-center h-12 rounded-lg hover:bg-neutral-2">
             <div class="flex items-center w-full">
-              <mat-icon class="text-primary mx-3">people</mat-icon>
-              <span class="flex-grow">Users</span>
+              <mat-icon class="mx-3 text-primary">people</mat-icon>
+              <span class="flex-grow">{{'admin-dashboard-sidenav.users' | translate}}</span>
               <mat-icon class="mx-3">{{ isUsersMenuOpen ? 'expand_more' : 'chevron_right' }}</mat-icon>
             </div>
           </a>
           
-          <div *ngIf="isUsersMenuOpen" class="pl-4 py-1 bg-neutral-1 rounded-lg ml-4 border-l-2 border-secondary">
-            <a mat-list-item routerLink="/{{PREFIX_ADMIN}}/users/profiles" class="flex items-center h-10 text-sm hover:bg-neutral-2 ">
+          <div *ngIf="isUsersMenuOpen" class="py-1 pl-4 ml-4 rounded-lg border-l-2 bg-neutral-1 border-secondary">
+            <a mat-list-item routerLink="/{{PREFIX_ADMIN}}/users/profiles" class="flex items-center h-10 text-sm hover:bg-neutral-2">
               <div class="flex items-center w-full">
-                <span class="ml-6">Profiles</span>
+                <span class="ml-6">{{'admin-dashboard-sidenav.profiles' | translate}}</span>
               </div>
             </a>
-            <a mat-list-item routerLink="/{{PREFIX_ADMIN}}/users/add-user" class="flex items-center h-10 text-sm hover:bg-neutral-2 ">
+            <a mat-list-item routerLink="/{{PREFIX_ADMIN}}/users/add-user" class="flex items-center h-10 text-sm hover:bg-neutral-2">
               <div class="flex items-center w-full">
-                <span class="ml-6">Add user</span>
+                <span class="ml-6">{{'admin-dashboard-sidenav.add_user' | translate}}</span>
               </div>
             </a>
-            <a mat-list-item routerLink="/{{PREFIX_ADMIN}}/users/make-new-admin" class="flex items-center h-10 text-sm hover:bg-neutral-2 ">
+            <a mat-list-item routerLink="/{{PREFIX_ADMIN}}/users/make-new-admin" class="flex items-center h-10 text-sm hover:bg-neutral-2">
               <div class="flex items-center w-full">
-                <span class="ml-6">Make new admin</span>
+                <span class="ml-6">{{'admin-dashboard-sidenav.new_admin' | translate}}</span>
               </div>
             </a>
           </div>
         </div>
         
-        <a mat-list-item routerLink="/{{PREFIX_ADMIN}}/metrics" class="my-1 hover:bg-neutral-2 rounded-lg flex items-center h-12">
+        <a mat-list-item routerLink="/{{PREFIX_ADMIN}}/metrics" class="flex items-center my-1 h-12 rounded-lg hover:bg-neutral-2">
           <div class="flex items-center w-full">
-            <mat-icon class="text-primary mx-3">insert_chart</mat-icon>
-            <span class="flex-grow">Metrics</span>
+            <mat-icon class="mx-3 text-primary">insert_chart</mat-icon>
+            <span class="flex-grow">{{'admin-dashboard-sidenav.metrics' | translate}}</span>
           </div>
         </a>
       </mat-nav-list>

@@ -75,6 +75,29 @@
 	"confirm-acc-deletion-btn-text": "Conferma Eliminazione",
 	"ABORT-acc-deletion-btn-text": "Annulla Operazione"
 },
+"admin-dashboard-accommodations": {
+	"approve_reject_title": "Approva/Rifiuta sistemazioni",
+	"active_title": "Sistemazioni attive",
+	"inactive_title": "Sistemazioni inattive",
+	"all_title": "Tutte le sistemazioni"
+},
+"admin-dashboard-sidenav": {
+	"title": "Area admin",
+	"home": "Home",
+
+	"accommodations": "Sistemazioni",
+	"accept_reject": "Approva/Rifiuta",
+	"active": "Attive",
+	"inactive": "Inattive",
+	"all": "Tutte",
+
+	"users": "Utenti",
+	"profiles":"Profili",
+	"add_user":"Aggiungi utente",
+	"new_admin":"Nuovo amministratore",
+
+	"metrics": "Statistiche"
+},
 "bookings":{
 	"checkIn":"Check-in",
 	"checkOut":"Check-out",
