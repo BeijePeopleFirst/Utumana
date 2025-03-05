@@ -20,7 +20,7 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
 
   @Input() availabilities!: string[];
 
-  chosenOne!: Availability;
+  chosenOne: Availability = {start_date: "", end_date: "", price_per_night: 0};
 
   currentMonth!: { name: string; days: number[]; monthIndex: number; year: number };
   previousMonth!: { name: string; days: number[]; monthIndex: number; year: number };
@@ -94,22 +94,30 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
     this.initializeCalendars(newYear, newMonth);
   }
 
+  private checkInDate: string = "";
   selectDay(day: number, month: string, monthName: string, year: number) {
     this.chosenOne.accommodation_id = this.accommodation.id!;
+
+    if(this.chosenOne.start_date != "" && this.chosenOne.end_date != "") {
+      this.alreadySelectedStart = false;
+      this.chosenOne.start_date = "";
+      this.chosenOne.end_date = "";
+    }
 
     if(!this.alreadySelectedStart) {
       this.chosenOne.start_date = new Date(this.accommodationService.fetchDate(day, monthName, year)) + "";
       //this.selectedDays.set(day + '-' + month + '-' + year, true);
       console.log(this.chosenOne.start_date);
+      this.checkInDate = year + "-" + monthName + "-" + day;
     }
     else {
-      if(Date.parse(this.chosenOne.start_date) >= this.accommodationService.fetchDate(day, monthName, year)) {
+      if(Date.parse(this.chosenOne.start_date.split("T")[0]) >= this.accommodationService.fetchDate(day, monthName, year)) {
         if(this.translateService.currentLang === 'en-US') this.sendChosenAvailability.emit({message: "Start Date must be BEFORE End Date"});
         if(this.translateService.currentLang === 'it-IT') this.sendChosenAvailability.emit({message: "La data di inizio deve essere precedente alla data di fine"});
         return;
       }
       this.chosenOne.end_date = new Date(this.accommodationService.fetchDate(day, monthName, year)) + "";
-      console.log(this.chosenOne.end_date);
+      console.log("FINAL VALUES -> " + this.chosenOne.start_date, this.chosenOne.end_date);
       this.sendAvailability();
     }
 
@@ -124,11 +132,14 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
           }
           else {
             let date = this.accommodationService.fetchDate(day, monthName, year);
+            let support: Date = new Date(date);
+            let res2 = new Map<Date, number>(Object.entries(response1).map(([key, value]) => [new Date(key), value as number]));
+            //console.log(res2);
             
-            for(let a of response1) {
-              if(date >= (new Date(a.start_date).setHours(0, 0, 0, 0)) && date <= (new Date(a.end_date).setHours(0, 0, 0, 0))) {
+            for(let [a, b] of res2) {
+              if((a.setHours(0, 0, 0, 0)) == support.setHours(0, 0, 0, 0)) {
                 console.log("Entro in IF");
-                this.chosenOne.price_per_night = a.price_per_night;
+                this.chosenOne.price_per_night = b;
                 console.log("Stampo valore impostato -> ", this.chosenOne.price_per_night);
                 break;
               }
@@ -141,20 +152,52 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
     
   }
 
-  isSelectedOrBetween(day: number, monthName: string, year: number): boolean {
-    if(!this.chosenOne || this.chosenOne.start_date == "" || this.chosenOne.end_date == "") return false;
+  toCompatibleStringFormat(s: string): string {
+    if(s.includes("/")) {
+      let tmp: string[] = s.split("/");
+      return tmp[2] + "-" + tmp[1] + "-" + tmp[0];
+    }
+    else if(s.includes("T")) return s.split("T")[0];
+    else return s;
+  }
 
-    if(this.accommodationService.fetchDate(day, monthName, year) === Date.parse(this.chosenOne.start_date)
-      || this.accommodationService.fetchDate(day, monthName, year) === Date.parse(this.chosenOne.end_date)) {
+  getDateNumberValue(d: Date): number {
+    return d.setHours(0,0,0,0);
+  }
+
+  isSelectedOrBetween(day: number, monthName: string, year: number): boolean {
+
+    let sup: string = year + "-" + monthName + "-" + day;
+    if(sup === this.checkInDate) return true;
+
+    /*let currDate: Date = new Date(this.accommodationService.fetchDate(day, monthName, year));
+    currDate.setHours(0,0,0,0);
+    let currNumber: number = currDate.getTime();*/
+
+    let currNumber: number = this.getDateNumberValue(new Date(this.accommodationService.fetchDate(day, monthName, year)));
+
+    let outNumber: number = -1;
+    if(this.chosenOne.end_date != "") {
+      outNumber = this.getDateNumberValue(new Date(Date.parse(this.toCompatibleStringFormat(this.chosenOne.end_date))));
+    }
+    
+    let inNumber: number = -1;
+    if(this.chosenOne.start_date != "") {
+      inNumber = this.getDateNumberValue(new Date(Date.parse(this.toCompatibleStringFormat(this.chosenOne.start_date))));
+    }
+    
+    if(!this.chosenOne || this.chosenOne.start_date == "") return false;
+
+    if(currNumber === inNumber || currNumber === outNumber) {
     
         return true;
     }
-    else if(this.accommodationService.fetchDate(day, monthName, year) > Date.parse(this.chosenOne.start_date)
-            && this.accommodationService.fetchDate(day, monthName, year) < Date.parse(this.chosenOne.end_date)) {
-          
+    else if(currNumber >= inNumber && this.chosenOne.end_date !== "" && currNumber <= outNumber) {
         return true;
     }
-    else return false;
+    else {
+      return false;
+    }
   }
 
   resetChoices() {
@@ -165,6 +208,7 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
       end_date: "",
     };
     this.alreadySelectedStart = false;
+    this.checkInDate = "";
 
     this.sendAvailability();
   }

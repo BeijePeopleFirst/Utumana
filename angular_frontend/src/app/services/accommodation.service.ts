@@ -375,8 +375,12 @@ export class AccommodationService {
                       )
   }
   
-  getAvailabilities(accommodation: Accommodation): Observable<Availability[] | {message: string, status: string, time: string}> {
-    return this.http.get<Availability[] | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/accommodation/" + accommodation.id + "/availabilities");
+  getAvailabilities(accommodation: Accommodation): Observable<any | {message: string, status: string, time: string}> {
+    let startDate: string = "1970-01-01";
+    let endDate: string = "3000-12-31";
+    return this.http.get<Availability[] | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/availabilities/" + accommodation.id + 
+      "?check_in=" + startDate + "&check_out=" + endDate
+    );
   }
   
   fetchDate(day: number, monthName: string, year: number): number {
