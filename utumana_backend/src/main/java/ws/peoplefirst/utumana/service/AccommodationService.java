@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -732,11 +733,8 @@ public class AccommodationService {
         List<Booking> copy2 = new ArrayList<>();
 
         for (Booking b : values) {
-            if (b.getStatus().equals(BookingStatus.PENDING) && b.getUser().getId() != user.getId())
-                ;
-            else {
-                copy2.add(b);
-            }
+            if (b.getStatus().equals(BookingStatus.PENDING) && b.getUser().getId() != user.getId());
+            else copy2.add(b);
         }
 
         // Now lets retrieve the Accommodation Availabilities and remove from those the occupied days:
@@ -813,7 +811,60 @@ public class AccommodationService {
                 availabilities.add(createDateString(add));
             };
 
+        //Now lets remove isolated Dates:
+        availabilities = sortAndCleanStringList(availabilities);
+
+        System.out.println("\n\n\n\n" +  availabilities + "\n\n\nGATTO\n\n\n");
+
         return availabilities;
+    }
+
+    private static List<String> sortAndCleanStringList(List<String> l) {
+        List<LocalDate> converted = convertToLocalDateList(l);
+        converted.sort((a, b) -> a.compareTo(b));
+
+        //System.out.println("\n\n\n\n" +  converted + "\n\n\n\n\n\n");
+        
+        List<LocalDate> filtered = new ArrayList<LocalDate>();
+        for(int i = 1; i < converted.size() - 1; i++) {
+            if(isAnIsolatedDate(converted.get(i), converted.get(i-1), converted.get(i+1)));
+            else filtered.add(converted.get(i));
+        }
+
+        //System.out.println("\n\n\n\n" +  filtered + "\n\n\n\n\n\n");
+
+        //The List will be sorted already
+        List<String> result = new ArrayList<String>();
+        for(int i = 0; i < filtered.size(); i++) {
+            result.add(createDateString(filtered.get(i)));
+        }
+
+        //System.out.println("\n\n\n\n" +  result + "\n\n\n\n\n\n");
+
+        return result;
+    }
+
+    private static boolean isAnIsolatedDate(LocalDate test, LocalDate previous, LocalDate next) {
+        Period p = Period.ofDays(1);
+
+        return (!(test.minus(p)).isEqual(previous) && !(test.plus(p)).isEqual(next));
+    }
+
+    private static List<LocalDate> convertToLocalDateList(List<String> l) {
+        List<LocalDate> result = new ArrayList<LocalDate>();
+
+        for(String s: l) {
+            result.add(convertFromDateStringToLocalDate(s));
+        }
+
+        //System.out.println("\n\n\n\n" +  result + l + "\n\n\n\n\n\n");
+        
+        return result;
+    }
+
+    //Parses dd-Month-yyyy:
+    private static LocalDate convertFromDateStringToLocalDate(String s) {
+        return LocalDate.parse(s, DateTimeFormatter.ofPattern("dd-MMMM-yyyy", Locale.ENGLISH));
     }
 
     //dd-Month-yyyy:

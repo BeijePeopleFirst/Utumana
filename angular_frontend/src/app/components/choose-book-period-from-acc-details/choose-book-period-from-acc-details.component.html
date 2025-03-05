@@ -22,9 +22,9 @@
         <div class="grid grid-cols-7 gap-2">
           <div *ngFor="let day of previousMonth.days"
             class="p-2 font-medium text-center rounded-md w-9 bg-secondary-light text-neutral-1">
-            <div *ngIf="!availabilities.includes(day + '-' + previousMonth.name + '-' + previousMonth.year)" class="text-center">{{day}}</div>
-            <div *ngIf="!isSelectedOrBetween(day, previousMonth.name, previousMonth.year) && availabilities.includes(day + '-' + previousMonth.name + '-' + previousMonth.year)" class="text-center bg-green-400 cursor-pointer" (click)="selectDay(day, 'previousMonth', previousMonth.name, previousMonth.year)">{{day}}</div>
-            <div *ngIf="isSelectedOrBetween(day, previousMonth.name, previousMonth.year) && availabilities.includes(day + '-' + previousMonth.name + '-' + previousMonth.year)" class="text-center bg-primary-dark">{{day}}</div>
+            <div *ngIf="!availabilities.includes((day < 10 ? '0'+day : day) + '-' + previousMonth.name + '-' + previousMonth.year)" class="text-center">{{day}}</div>
+            <div *ngIf="!isSelectedOrBetween(day, previousMonth.name, previousMonth.year) && availabilities.includes((day < 10 ? '0'+day : day) + '-' + previousMonth.name + '-' + previousMonth.year)" class="text-center bg-green-400 cursor-pointer" (click)="selectDay(day, 'previousMonth', previousMonth.name, previousMonth.year)">{{day}}</div>
+            <div *ngIf="isSelectedOrBetween(day, previousMonth.name, previousMonth.year) && availabilities.includes((day < 10 ? '0'+day : day) + '-' + previousMonth.name + '-' + previousMonth.year)" class="text-center bg-primary-dark">{{day}}</div>
           </div>
         </div>
       </div>
@@ -37,9 +37,9 @@
         <div class="grid grid-cols-7 gap-2">
           <div *ngFor="let day of currentMonth.days"
           class="p-2 font-medium text-center rounded-md w-9 bg-secondary-light text-neutral-1" >
-            <div *ngIf="!availabilities.includes(day + '-' + currentMonth.name + '-' + currentMonth.year)" class="text-center">{{day}}</div>
-            <div *ngIf="!isSelectedOrBetween(day, currentMonth.name, currentMonth.year) && availabilities.includes(day + '-' + currentMonth.name + '-' + currentMonth.year)" class="text-center bg-green-400 cursor-pointer" (click)="selectDay(day, 'currentMonth', currentMonth.name, currentMonth.year)">{{day}}</div>
-            <div *ngIf="isSelectedOrBetween(day, currentMonth.name, currentMonth.year) && availabilities.includes(day + '-' + currentMonth.name + '-' + currentMonth.year)" class="text-center bg-primary-dark">{{day}}</div>
+            <div *ngIf="!availabilities.includes((day < 10 ? '0'+day : day) + '-' + currentMonth.name + '-' + currentMonth.year)" class="text-center">{{day}}</div>
+            <div *ngIf="!isSelectedOrBetween(day, currentMonth.name, currentMonth.year) && availabilities.includes((day < 10 ? '0'+day : day) + '-' + currentMonth.name + '-' + currentMonth.year)" class="text-center bg-green-400 cursor-pointer" (click)="selectDay(day, 'currentMonth', currentMonth.name, currentMonth.year)">{{day}}</div>
+            <div *ngIf="isSelectedOrBetween(day, currentMonth.name, currentMonth.year) && availabilities.includes((day < 10 ? '0'+day : day) + '-' + currentMonth.name + '-' + currentMonth.year)" class="text-center bg-primary-dark">{{day}}</div>
           </div>
         </div>
       </div>
