@@ -49,6 +49,7 @@
     <div class="py-5 text-center">
         <h2>{{'profile.reviews_to_accept' | translate}}</h2>
         <app-review-cards [reviews]="waitingReviews" [pageNumber]="waitingReviewsPageNumber" [totalPages]="waitingReviewsTotalPages" 
+        [showAccommodationLinks]="true"
         (askForPage)="loadWaitingReviewsPage($event)" (reviewAction)="showReviewModal($event.id, $event.action)"></app-review-cards>
     </div>
 </section>
@@ -57,6 +58,7 @@
     <div class="py-5 text-center">
         <h2>{{'profile.reviews_title' | translate}}</h2>
         <app-review-cards [reviews]="reviews" [pageNumber]="reviewsPageNumber" [totalPages]="reviewsTotalPages" 
+        [showAccommodationLinks]="true"
         (askForPage)="loadUserReviewsPage($event)"></app-review-cards>
     </div>
 </section>

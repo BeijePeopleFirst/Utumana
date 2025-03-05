@@ -3,7 +3,6 @@ package ws.peoplefirst.utumana.dto;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSetter;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
@@ -24,7 +23,7 @@ public class ReviewUserDTO {
 	@Schema(description = "Unique ID of the booking to which this review is associated", example = "1")
 	@Min(value = 1)
 	@JsonProperty(value = "booking_id")
-	private Long bookingId;
+	private final Long bookingId;
 
     @Schema(description = "review's title", example = "Wonderful house in the city")
     @Nullable
@@ -47,17 +46,17 @@ public class ReviewUserDTO {
     @Column(name = "comfort")
 	@Schema(description = "rating of the accommodation's comfort. Must be a decimal between 0.0 and 5.0", example = "4.00")
 	@Nullable
-	private Double comfort;
+	private final Double comfort;
 
 	@Column(name = "convenience")
 	@Schema(description = "rating of the accommodation's convenience/affordibility. Must be a decimal between 0.0 and 5.0", example = "4.00")
 	@Nullable
-	private Double convenience;
+	private final Double convenience;
 	
 	@Column(name = "position")
 	@Schema(description = "rating of the accommodation's position. Must be a decimal between 0.0 and 5.0", example = "5.00")
 	@Nullable
-	private Double position;
+	private final Double position;
 
     @Schema(description = "review's user name", example = "Pippo")
     @Nullable
@@ -69,7 +68,13 @@ public class ReviewUserDTO {
     @JsonProperty(value = "image_user")
     private final String imageUser;
 
-    public ReviewUserDTO(Long id, Long bookingId, String title, String description, Double overallRating, LocalDateTime approvalTimestamp, Double comfort, Double convenience, Double position, String nameUser, String imageUser) {
+    @Schema(description = "Id of the reviewed accommodation", example = "1")
+    @Min(value = 1)
+    @JsonProperty(value = "accommodation_id")
+    private final Long accommodationId;
+
+
+    public ReviewUserDTO(Long id, Long bookingId, String title, String description, Double overallRating, LocalDateTime approvalTimestamp, Double comfort, Double convenience, Double position, String nameUser, String imageUser, Long accommodationId) {
         this.id = id;
         this.bookingId = bookingId;
         this.title = title;
@@ -81,6 +86,7 @@ public class ReviewUserDTO {
         this.position = position;
         this.nameUser = nameUser;
         this.imageUser = imageUser;
+        this.accommodationId = accommodationId;
     }
 
     public Long getId() {
@@ -132,6 +138,9 @@ public class ReviewUserDTO {
         return position;
     }
 
+    public Long getAccommodationId() {
+        return accommodationId;
+    }
 }
 
 

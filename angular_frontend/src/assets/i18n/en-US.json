@@ -363,7 +363,8 @@
 	"reject_title": "Are you sure you want to reject this review?",
 	"reject_subtitle": "If you choose \"Reject\", the review will be permanently deleted",
 	"accept_button_label": "Accept",
-	"reject_button_label": "Reject"
+	"reject_button_label": "Reject",
+	"see_accommodation": "See accommodation"
 },
 "save_button_label": "Save",
 "search": {

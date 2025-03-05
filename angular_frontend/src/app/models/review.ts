@@ -10,5 +10,6 @@ export interface Review{
     booking_id: number|null,
     name_user?: string,
     image_user?: string,
-    user_picture_blob?: string
+    user_picture_blob?: string,
+    accommodation_id?: number
 }
