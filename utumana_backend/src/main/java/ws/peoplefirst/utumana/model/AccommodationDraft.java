@@ -1,10 +1,14 @@
 package ws.peoplefirst.utumana.model;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
@@ -21,6 +25,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.OrderColumn;
 import jakarta.persistence.Table;
+import ws.peoplefirst.utumana.utility.JsonFormatter;
 
 @Entity
 @Table(name = "accommodation_draft")
@@ -93,6 +98,12 @@ public class AccommodationDraft {
 	@Schema(description = "URL of the main photo of the accommodation draft", example = "https://example.com/photo.jpg")
 	private String mainPhotoUrl;
 
+    @JsonIgnore
+	@Column(name = "last_modified_timestamp")
+	@Schema(description = "Timestamp of the last modification of the accommodation draft", example = "2024-01-01T12:00:00")
+	private LocalDateTime lastModifiedTimestamp;
+
+
 	@ManyToMany(fetch = FetchType.EAGER)
 	@OrderColumn(name="service_order")
 	@JoinTable(name = "service_availability_draft", joinColumns = {
@@ -117,12 +128,16 @@ public class AccommodationDraft {
 	@Schema(description = "List of unavailabilities of the accommodation draft")
     private List<UnavailabilityDraft> unavailabilities;
 
+    public AccommodationDraft() {
+        lastModifiedTimestamp = LocalDateTime.now();
+    }
 
     public Long getId() {
         return id;
     }
     public void setId(Long id) {
         this.id = id;
+        lastModifiedTimestamp = LocalDateTime.now();
     }
 
     public Long getOwnerId() {
@@ -130,6 +145,7 @@ public class AccommodationDraft {
     }
     public void setOwnerId(Long ownerId) {
         this.ownerId = ownerId;
+        lastModifiedTimestamp = LocalDateTime.now();
     }
 
     public String getTitle() {
@@ -137,6 +153,7 @@ public class AccommodationDraft {
     }
     public void setTitle(String title) {
         this.title = title;
+        lastModifiedTimestamp = LocalDateTime.now();
     }
 
     public String getDescription() {
@@ -144,6 +161,7 @@ public class AccommodationDraft {
     }
     public void setDescription(String description) {
         this.description = description;
+        lastModifiedTimestamp = LocalDateTime.now();
     }
 
     public Integer getBeds() {
@@ -151,6 +169,7 @@ public class AccommodationDraft {
     }
     public void setBeds(Integer beds) {
         this.beds = beds;
+        lastModifiedTimestamp = LocalDateTime.now();
     }
 
     public Integer getRooms() {
@@ -158,6 +177,7 @@ public class AccommodationDraft {
     }
     public void setRooms(Integer rooms) {
         this.rooms = rooms;
+        lastModifiedTimestamp = LocalDateTime.now();
     }
 
     public String getStreet() {
@@ -165,6 +185,7 @@ public class AccommodationDraft {
     }
     public void setStreet(String street) {
         this.street = street;
+        lastModifiedTimestamp = LocalDateTime.now();
     }
 
     public String getStreetNumber() {
@@ -172,6 +193,7 @@ public class AccommodationDraft {
     }
     public void setStreetNumber(String streetNumber) {
         this.streetNumber = streetNumber;
+        lastModifiedTimestamp = LocalDateTime.now();
     }
 
     public String getAddressNotes() {
@@ -179,6 +201,7 @@ public class AccommodationDraft {
     }
     public void setAddressNotes(String addressNotes) {
         this.addressNotes = addressNotes;
+        lastModifiedTimestamp = LocalDateTime.now();
     }
 
     public String getCity() {
@@ -186,6 +209,7 @@ public class AccommodationDraft {
     }
     public void setCity(String city) {
         this.city = city;
+        lastModifiedTimestamp = LocalDateTime.now();
     }
 
     public String getCap() {
@@ -193,6 +217,7 @@ public class AccommodationDraft {
     }
     public void setCap(String cap) {
         this.cap = cap;
+        lastModifiedTimestamp = LocalDateTime.now();
     }
 
     public String getProvince() {
@@ -200,6 +225,7 @@ public class AccommodationDraft {
     }
     public void setProvince(String province) {
         this.province = province;
+        lastModifiedTimestamp = LocalDateTime.now();
     }
 
     public String getCountry() {
@@ -207,6 +233,7 @@ public class AccommodationDraft {
     }
     public void setCountry(String country) {
         this.country = country;
+        lastModifiedTimestamp = LocalDateTime.now();
     }
 
     public String getCoordinates() {
@@ -214,6 +241,7 @@ public class AccommodationDraft {
     }
     public void setCoordinates(String coordinates) {
         this.coordinates = coordinates;
+        lastModifiedTimestamp = LocalDateTime.now();
     }
 
     public String getMainPhotoUrl() {
@@ -221,6 +249,25 @@ public class AccommodationDraft {
     }
     public void setMainPhotoUrl(String mainPhotoUrl) {
         this.mainPhotoUrl = mainPhotoUrl;
+        lastModifiedTimestamp = LocalDateTime.now();
+    }
+
+    public LocalDateTime getLastModifiedTimestamp() {
+        return lastModifiedTimestamp;
+    }
+
+    public void setLastModifiedTimestamp(LocalDateTime lastModifiedTimestamp) {
+        this.lastModifiedTimestamp = lastModifiedTimestamp;
+    }
+
+    @JsonGetter(value = "last_modified_timestamp")
+    public String getLastModifiedTimestampJson() {
+        return JsonFormatter.parseDateTime(lastModifiedTimestamp);
+    }
+
+    @JsonSetter(value = "last_modified_timestamp")
+    public void setLastModifiedTimestampJson(String date) {
+        this.lastModifiedTimestamp = JsonFormatter.parseStringIntoDateTime(date);
     }
 
     public Set<Service> getServices() {
@@ -228,6 +275,7 @@ public class AccommodationDraft {
     }
     public void setServices(Set<Service> services) {
         this.services = services;
+        lastModifiedTimestamp = LocalDateTime.now();
     }
 
     public List<PhotoDraft> getPhotos() {
@@ -235,6 +283,7 @@ public class AccommodationDraft {
     }
     public void setPhotos(List<PhotoDraft> photos) {
         this.photos = photos;
+        lastModifiedTimestamp = LocalDateTime.now();
     }
 
     public List<AvailabilityDraft> getAvailabilities() {
@@ -242,6 +291,7 @@ public class AccommodationDraft {
     }
     public void setAvailabilities(List<AvailabilityDraft> availabilities) {
         this.availabilities = availabilities;
+        lastModifiedTimestamp = LocalDateTime.now();
     }
 
     public List<UnavailabilityDraft> getUnavailabilities() {
@@ -249,6 +299,7 @@ public class AccommodationDraft {
     }
     public void setUnavailabilities(List<UnavailabilityDraft> unavailabilities) {
         this.unavailabilities = unavailabilities;
+        lastModifiedTimestamp = LocalDateTime.now();
     }
 
     @Override
@@ -256,7 +307,8 @@ public class AccommodationDraft {
         return "AccommodationDraft [id=" + id + ", ownerId=" + ownerId + ", title=" + title + ", description=" + description
                 + ", beds=" + beds + ", rooms=" + rooms + ", street=" + street + ", streetNumber=" + streetNumber
                 + ", addressNotes=" + addressNotes + ", city=" + city + ", cap=" + cap + ", province=" + province
-                + ", country=" + country + ", coordinates=" + coordinates + ", mainPhotoUrl=" + mainPhotoUrl + ", services="
+                + ", country=" + country + ", coordinates=" + coordinates + ", mainPhotoUrl=" + mainPhotoUrl
+                + ", lastModifiedTimestamp=" + lastModifiedTimestamp + ", services="
                 + services + ", photos=" + photos + ", availabilities=" + availabilities + "]";
     }
 }
