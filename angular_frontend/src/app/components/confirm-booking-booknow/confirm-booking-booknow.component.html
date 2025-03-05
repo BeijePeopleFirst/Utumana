@@ -1,18 +1,18 @@
-<div class="container mx-auto px-4">
+<div class="container px-4 mx-auto">
   <div class="flex flex-row items-center mt-4">
     <p class="text-4xl cursor-pointer"><</p>
     <p class="ml-2 text-3xl cursor-pointer" (click)="goBack()">{{("confirm-booking-booknow.go_back" | translate)}}</p>
   </div>
 
-  <div class="flex flex-col md:flex-row justify-center items-center gap-8 mt-12">
+  <div class="flex flex-col items-center justify-center gap-8 mt-12 md:flex-row">
     <div class="flex flex-col items-center justify-center w-full md:w-1/2" id="accommodation-details-confirm-booking">
-      <img [src]="'assets/' + createdBooking.accommodation.main_photo_url" class="w-full max-w-xs" />
-      <p class="mt-6 text-2xl md:text-4xl text-center">{{createdBooking.accommodation.title}}</p>
-      <p class="text-xl md:text-3xl text-center">{{createdBooking.accommodation.city}}, {{createdBooking.accommodation.province}}, {{createdBooking.accommodation.country}}</p>
+      <img [src]="mainPhotoBlobUrl" class="w-full max-w-xs" />
+      <p class="mt-6 text-2xl text-center md:text-4xl">{{createdBooking.accommodation.title}}</p>
+      <p class="text-xl text-center md:text-3xl">{{createdBooking.accommodation.city}}, {{createdBooking.accommodation.province}}, {{createdBooking.accommodation.country}}</p>
     </div>
 
-    <div class="flex flex-col items-center w-full md:w-1/2 border rounded-lg shadow-sm bg-neutral-1 p-4" id="book-now-section-confirm-booking">
-      <div id="chk-in-chk-out" class="flex flex-row w-full justify-center gap-4 p-4">
+    <div class="flex flex-col items-center w-full p-4 border rounded-lg shadow-sm md:w-1/2 bg-neutral-1" id="book-now-section-confirm-booking">
+      <div id="chk-in-chk-out" class="flex flex-row justify-center w-full gap-4 p-4">
         <div id="in" class="flex flex-col">
           <p class="mb-3 text-lg font-bold text-center text-primary-light">Check-In</p>
           <input type="text" class="text-center align-middle" [(ngModel)]="createdBooking.check_in" />
@@ -23,7 +23,7 @@
         </div>
       </div>
 
-      <div class="flex flex-row items-center p-4 mt-1 w-full justify-center">
+      <div class="flex flex-row items-center justify-center w-full p-4 mt-1">
         <label class="mr-3 align-middle label-primary" for="guests-number">{{("accommodation-card-details.guests-word" | translate)}}: </label>
         <input id="guests-number" class="align-middle" type="number" [(ngModel)]="numGuests" min="1" max="{{createdBooking.accommodation.beds}}"/>
       </div>
@@ -31,14 +31,14 @@
       <p class="p-4 text-center" id="calculus">{{pricePerNight}}€ x {{ nightsNumber}} {{("accommodation-card-details.nights-word" | translate)}} = {{ postOperation}} €</p>
       <button (click)="bookNow()" class="m-4 btn-primary">{{("accommodation-card-details.book-now" | translate)}}</button>
       
-      <div *ngIf="isMe" class="flex flex-row items-center justify-center mt-6 w-full">
+      <div *ngIf="isMe" class="flex flex-row items-center justify-center w-full mt-6">
         <input type="checkbox" [(ngModel)]="isUnavailability" id="checkbox" />
         <label for="checkbox" class="ml-2 label-primary">{{("confirm-booking-booknow.is_unavailability" | translate)}}</label>
       </div>
     </div>
   </div>
 
-  <div id="messages-communications" *ngIf="messagesCommunications || (messages && messages.length > 0)" class="mt-12 w-full">
+  <div id="messages-communications" *ngIf="messagesCommunications || (messages && messages.length > 0)" class="w-full mt-12">
     <button class="mb-4 btn-primary" (click)="clearMessages()">{{("confirm-booking-booknow.clear-messages-sentence" | translate)}}</button>
     
     <h1 *ngIf="createdBookingStatus" class="text-xl text-blue-800">{{ "confirm-booking-booknow.created-booking-status" | translate }}</h1>
@@ -46,6 +46,7 @@
     <h1 *ngIf="invalidDateFormatProvided" class="text-xl text-blue-800">{{ "confirm-booking-booknow.invalid-date-format-provided" | translate }}</h1>
     <h1 *ngIf="invalidDateProvidedMsg" class="text-xl text-blue-800">{{ "confirm-booking-booknow.invalid-date-provided" | translate }}</h1>
     <h1 *ngIf="invalidDateDoesNotExist" class="text-xl text-blue-800">{{ "confirm-booking-booknow.invalid-date-does-not-exist" | translate }}</h1>
+    <h1 *ngIf="errorFetchingBlobAccommodationPhoto" class="text-xl text-blue-800">{{ "confirm-booking-booknow.BLOB-error" | translate }}</h1>
     <h1 *ngIf="redirectInFewSeconds" class="text-xl text-blue-800">{{ "confirm-booking-booknow.redirect-in-few-seconds" | translate }}</h1>
 
     <div id="messages-server" *ngIf="messages && messages.length > 0">

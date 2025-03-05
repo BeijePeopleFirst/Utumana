@@ -4,6 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Availability } from 'src/app/models/availability';
 import { Booking } from 'src/app/models/booking';
 import { BookingService } from 'src/app/services/booking.service';
+import { S3Service } from 'src/app/services/s3.service';
 
 @Component({
   selector: "app-confirm-booking-booknow",
@@ -18,6 +19,8 @@ export class ConfirmBookingBooknowComponent implements OnInit {
   nightsNumber!: number;
   postOperation!: number;
 
+  mainPhotoBlobUrl!: string;
+
   isUnavailability!: boolean;
   isMe!: boolean;
 
@@ -29,13 +32,14 @@ export class ConfirmBookingBooknowComponent implements OnInit {
   redirectInFewSeconds: boolean = false;
   createdUnavailabilityId: boolean = false;
   messagesCommunications: boolean = false;
+  errorFetchingBlobAccommodationPhoto: boolean = false;
 
   tmp!: any;
 
   constructor(
     private bookingService: BookingService,
     private route: ActivatedRoute,
-    private translateService: TranslateService,
+    private s3Service: S3Service,
     private router: Router
   ) {}
 
@@ -44,12 +48,7 @@ export class ConfirmBookingBooknowComponent implements OnInit {
     this.createdBooking = this.tmp;
     //console.log(this.createdBooking.accommodation);
 
-    if (
-      this.route.snapshot.queryParams["userId"] &&
-      this.createdBooking.accommodation.owner_id ===
-        +this.route.snapshot.queryParams["userId"]
-    )
-      this.isMe = true;
+    if (this.route.snapshot.queryParams["userId"] && this.createdBooking.accommodation.owner_id === +this.route.snapshot.queryParams["userId"]) this.isMe = true;
     else this.isMe = false;
 
     this.tmp = JSON.parse(localStorage.getItem("num_guests")!);
@@ -59,6 +58,17 @@ export class ConfirmBookingBooknowComponent implements OnInit {
     this.pricePerNight = this.tmp.chosen_availability.price_per_night;
     this.nightsNumber = this.tmp.nights_number;
     this.postOperation = this.tmp.post_operation;
+
+    this.s3Service.getPhoto(this.createdBooking.accommodation.main_photo_url).subscribe(
+      blob => {
+        if(!blob) {
+          this.errorFetchingBlobAccommodationPhoto = true;
+          return;
+        }
+
+        this.mainPhotoBlobUrl = URL.createObjectURL(blob);
+      }
+    )
   }
 
   invalidDateProvided!: boolean;

@@ -146,7 +146,8 @@
 	"invalid-date-does-not-exist": "Invalid Date provided: the specified Date does not exist",
 	"created-booking-status": "Booking Created",
 	"redirect-in-few-seconds": "Redirect in few seconds...",
-	"created-unavailability-id": "Unavailability Created"
+	"created-unavailability-id": "Unavailability Created",
+	"BLOB-error": "Error while fetching the Accommoation' s main Photo"
 	},
 "common": {
 	"cancel": "Cancel",
