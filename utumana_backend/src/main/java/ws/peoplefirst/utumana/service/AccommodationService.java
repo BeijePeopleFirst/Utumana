@@ -147,8 +147,9 @@ public class AccommodationService {
         return accommodationRepository.findAll();
     }
 
-    public List<Accommodation> getAccommodationsToBeApproved() {
-        return accommodationRepository.getAccommodationsToBeApproved();
+    public Page<AccommodationDTO> getAccommodationsToBeApproved(int size, int page) {
+        Pageable pageable =  PageRequest.of(page, size);
+        return accommodationRepository.getAccommodationsToBeApproved(pageable);
     }
 
     public List<AccommodationDTO> getAccommodationsDTOToBeApproved() {
@@ -931,5 +932,15 @@ public class AccommodationService {
     public Page<AccommodationDTO> getActiveAccommodationsDTO(int pageNumber, int pageSize) {
         Pageable p = PageRequest.of(pageNumber, pageSize);
         return accommodationRepository.getActiveAccommodationDTO(p);
+    }
+
+    public Page<AccommodationDTO> getInactiveAccommodationsDTO(int pageNumber, int pageSize) {
+        Pageable p = PageRequest.of(pageNumber, pageSize);
+        return accommodationRepository.getInactiveAccommodationDTO(p);
+    }
+
+    public Page<AccommodationDTO> getAllAccommodationsDTO(int pageNumber, int pageSize) {
+        Pageable p = PageRequest.of(pageNumber, pageSize);
+        return accommodationRepository.getAllAccommodationDTO(p);
     }
 }

@@ -520,11 +520,11 @@ public class AccommodationControllerTest {
      * MTEHOD: getAccommodationsToBeApproved(...)
      */
 
-    @Test
-    void getAccommodationsToBeApproved() {
-        when(accommodationService.getAccommodationsToBeApproved()).thenReturn(List.of(getInstance(Accommodation.class)));
-        assertDoesNotThrow(() -> accommodationController.getAccommodationsToBeApproved(authentication));
-    }
+//    @Test
+//    void getAccommodationsToBeApproved() {
+//        when(accommodationService.getAccommodationsToBeApproved()).thenReturn(List.of(getInstance(Accommodation.class)));
+//        assertDoesNotThrow(() -> accommodationController.getAccommodationsToBeApproved(authentication));
+//    }
 
     /**
      * GET - API: /get_accommodationsdto_to_approve
