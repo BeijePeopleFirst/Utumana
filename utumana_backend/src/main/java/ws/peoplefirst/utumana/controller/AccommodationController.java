@@ -566,6 +566,7 @@ public class AccommodationController {
 	}
 
 	@Operation(summary = "Return the list of active accommodation")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	@GetMapping(value = "/accommodations/active")
 	public Page<AccommodationDTO> getActiveAccommodationsDTO(@RequestParam(value = "page", required = false) int pageNumber,
 															  @RequestParam(value = "size", required = false) int pageSize) {
@@ -574,7 +575,9 @@ public class AccommodationController {
 
 	}
 
-	@Operation(summary = "Return the list of inactive accommodation")
+	@Operation(summary = "Return the list of inactive accommodations", 
+	description = "Return the list of inactive accommodations. Inactive accommodations are accommodations that have been deleted by their owner. They are unreachable for normal users but can be seen by admins. They are still in the databse to keep track of past bookings.")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	@GetMapping(value = "/accommodations/inactive")
 	public Page<AccommodationDTO> getInactiveAccommodationsDTO(@RequestParam(value = "page", required = false) int pageNumber,
 															 @RequestParam(value = "size", required = false) int pageSize) {
@@ -584,6 +587,7 @@ public class AccommodationController {
 	}
 
 	@Operation(summary = "Return the list of all accommodation")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	@GetMapping(value = "/accommodations/all")
 	public Page<AccommodationDTO> getAllAccommodationsDTO(@RequestParam(value = "page", required = false) int pageNumber,
 															   @RequestParam(value = "size", required = false) int pageSize) {
