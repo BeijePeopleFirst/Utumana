@@ -156,14 +156,14 @@ public interface AccommodationRepository extends JpaRepository<Accommodation, Lo
 
 	@Query("SELECT new ws.peoplefirst.utumana.dto.AccommodationDTO(a.id, a.title, a.city, a.province, a.country, a.mainPhotoUrl, r.rating) "
 			+ "FROM Accommodation as a "
-			+ "JOIN a.rating r WHERE a.hidingTimestamp IS NULL AND a.approvalTimestamp IS NOT NULL")
+			+ "JOIN a.rating r WHERE a.hidingTimestamp IS NULL AND a.approvalTimestamp IS NOT NULL ORDER BY a.id DESC")
 	public Page<AccommodationDTO> getActiveAccommodationDTO(Pageable pageable);
 	@Query("SELECT new ws.peoplefirst.utumana.dto.AccommodationDTO(a.id, a.title, a.city, a.province, a.country, a.mainPhotoUrl, r.rating) "
 			+ "FROM Accommodation as a "
-			+ "JOIN a.rating r WHERE a.hidingTimestamp IS NOT NULL AND a.approvalTimestamp IS NOT NULL")
+			+ "JOIN a.rating r WHERE a.hidingTimestamp IS NOT NULL AND a.approvalTimestamp IS NOT NULL ORDER BY a.id DESC")
 	public Page<AccommodationDTO> getInactiveAccommodationDTO(Pageable p);
 	@Query("SELECT new ws.peoplefirst.utumana.dto.AccommodationDTO(a.id, a.title, a.city, a.province, a.country, a.mainPhotoUrl, r.rating) "
 			+ "FROM Accommodation as a "
-			+ "JOIN a.rating r")
+			+ "JOIN a.rating r Order By a.id DESC")
 	public Page<AccommodationDTO> getAllAccommodationDTO(Pageable p);
 }
