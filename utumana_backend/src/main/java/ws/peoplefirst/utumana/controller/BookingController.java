@@ -334,30 +334,5 @@ public class BookingController {
 		@PathVariable(name="id") Long id, 
 		Authentication auth) {
 		return bookingService.findByIdIfDONE(id);
-	}
-	
-	
-	/*
-	// Not used anywhere: it may be a left over from previous versions of utumana. Use the methods in review controller instead.
-	@PreAuthorize("hasAuthority('USER')")
-	@PatchMapping(value="/booking_assign_review/{id}")
-	public Booking assignReviewToBooking(
-		@PathVariable(name="id") Long id, 
-		@RequestBody(required = true) Booking booking, 
-		Authentication auth) {
-		
-		Booking b = bookingService.findByIdIfDONE(id);
-		
-		if(b.getId() != booking.getId()) throw new InvalidJSONException("The bookings must correspond");
-		if(b.getUserId() != booking.getUserId()) throw new ForbiddenException("Error: could not complete booking request because you have no privileges");
-		AuthorizationUtility.checkIsAdminOrMe(auth, b.getUserId());
-		
-		Review r = booking.getReview();
-		b.setReview(r);
-		
-		bookingService.save(b);
-		return b;
-	}
-	*/
-	
+	}	
 }

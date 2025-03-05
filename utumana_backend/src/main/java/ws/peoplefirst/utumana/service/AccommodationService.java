@@ -76,7 +76,25 @@ public class AccommodationService {
         }
         accommodation.setApprovalTimestamp(LocalDateTime.now());
         return accommodationRepository.save(accommodation);
+    }
 
+    public Accommodation rejectAccommodation(Long accommodationId) {
+        Accommodation accommodation = findByIdAndHidingTimestampIsNull(accommodationId);
+
+        if (accommodation == null) {
+            throw new IdNotFoundException("Accommodation ID does not exist");
+        }
+
+        accommodation.setApprovalTimestamp(null);
+        accommodation.setHidingTimestamp(LocalDateTime.now());
+        accommodationRepository.save(accommodation);
+
+        List<BookingDTO> futureBookings = bookingRepository.findByStatusACCEPTEDOrDOINGAndAccommodationId(accommodationId);
+        System.out.println("future bookings " + futureBookings);
+        for(BookingDTO b: futureBookings){
+            // TODO notify guests that the accommodation will be temporarily hidden because it's waiting for admin approval
+        }
+        return accommodation;
     }
 
     public List<AccommodationDTO> getLatestUploadsDTO(int pageNumber, int pageSize, Long userId) {

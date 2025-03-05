@@ -500,7 +500,7 @@ public class AccommodationController {
 	@PreAuthorize("hasAuthority('USER')")
 	@PatchMapping(value = "/delete_accommodation/{id}")
 	public Accommodation deleteAccommodationAPI(@PathVariable Long id, Authentication auth) {
-		logger.debug("DELETE /delete_accommodation/" + id);
+		logger.debug("PATCH /delete_accommodation/" + id);
 		Accommodation toDelete = accommodationService.findByIdAndHidingTimestampIsNull(id);
 
 		if (toDelete == null) {
@@ -864,17 +864,30 @@ public class AccommodationController {
 		return ok(res);
 	}
 
-	@Operation(summary = "Return the house that has been approved")
+	@Operation(summary = "Return the accommodation that has been approved")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "If the list of searched accommodations is correctly returned"),
+        @ApiResponse(responseCode = "200", description = "If the approved accommodation is correctly returned"),
         @ApiResponse(responseCode = "404", description = "If the accommodation_id does not match any accommodation with null approval_timestamp", content=@Content(mediaType = "application/json",
 			schema=@Schema(implementation=ErrorMessage.class)))
     })
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@PatchMapping(value = "/approve_accommodation/{accommodation_id}")
-	public Accommodation approveHouse(@PathVariable(name = "accommodation_id") Long accommodationId) {
+	public Accommodation approveAccommodation(@PathVariable(name = "accommodation_id") Long accommodationId) {
 
 		return accommodationService.approveAccommodation(accommodationId);
+	}
+
+	@Operation(summary = "Return the accommodation that has been rejected")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "If the rejected accommodation is correctly returned"),
+        @ApiResponse(responseCode = "404", description = "If the accommodation_id does not match any accommodation with null approval_timestamp", content=@Content(mediaType = "application/json",
+			schema=@Schema(implementation=ErrorMessage.class)))
+    })
+	@PreAuthorize("hasAuthority('ADMIN')")
+	@PatchMapping(value = "/reject_accommodation/{accommodation_id}")
+	public Accommodation rejectAccommodation(@PathVariable(name = "accommodation_id") Long accommodationId) {
+
+		return accommodationService.rejectAccommodation(accommodationId);
 	}
 
 	@Operation(summary = "Return the set of cities where accommodations are located")

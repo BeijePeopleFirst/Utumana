@@ -421,12 +421,12 @@ export class AccommodationService {
     return this.getAccommodationsDTO(BACKEND_URL_PREFIX + "/api/get_accommodationsdto_to_approve");
  }
 
- approveAccommodation(id: number): Observable<Accommodation | {message: string, status: string, time: string}> {
-   return this.http.patch<Accommodation | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/approve_accommodation/" + id, {});
- }
- rejectAccommodation(id: number): Observable<Accommodation | {message: string, status: string, time: string}> {
-   return this.http.patch<Accommodation | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/delete_accommodation/" + id, {});
- }
+  approveAccommodation(id: number): Observable<Accommodation> {
+    return this.http.patch<Accommodation>(BACKEND_URL_PREFIX + "/api/approve_accommodation/" + id, {});
+  }
+  rejectAccommodation(id: number): Observable<Accommodation> {
+    return this.http.patch<Accommodation>(BACKEND_URL_PREFIX + "/api/reject_accommodation/" + id, {});
+  }
   /*private getAuth(): HttpHeaders {
     let headers = new HttpHeaders();
     return headers;

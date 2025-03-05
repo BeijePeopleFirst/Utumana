@@ -711,13 +711,13 @@ public class AccommodationControllerTest {
 
     /**
      * PATCH - API: /approve_accommodation/{accommodation_id}
-     * MTEHOD: approveHouse(...)
+     * MTEHOD: approveAccommodation(...)
      */
 
     @Test
-    void approveHouse() {
+    void approveAccommodation() {
         when(accommodationService.approveAccommodation(anyLong())).thenReturn(getInstance(Accommodation.class));
-        assertDoesNotThrow(() -> accommodationController.approveHouse(0L));
+        assertDoesNotThrow(() -> accommodationController.approveAccommodation(0L));
     }
 
     /**
