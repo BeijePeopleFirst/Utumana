@@ -76,6 +76,29 @@
 	"confirm-acc-deletion-btn-text": "Confirm Deletion",
 	"ABORT-acc-deletion-btn-text": "Cancel Operation"
 	},
+"admin-dashboard-accommodations": {
+	"approve_reject_title": "Approve/Reject accommodations",
+	"active_title": "Active accommodations",
+	"inactive_title": "Inactive accommodations",
+	"all_title": "All accommodations"
+},
+"admin-dashboard-sidenav": {
+	"title": "Admin Panel",
+	"home": "Home",
+
+	"accommodations": "Accommodations",
+	"accept_reject": "Approve/Reject",
+	"active": "Active",
+	"inactive": "Inactive",
+	"all": "All",
+
+	"users": "Users",
+	"profiles":"Profiles",
+	"add_user":"Add user",
+	"new_admin":"New admin",
+
+	"metrics": "Metrics"
+},
 "bookings": {
 	"checkIn":"Check-in",
 	"checkOut":"Check-out",
