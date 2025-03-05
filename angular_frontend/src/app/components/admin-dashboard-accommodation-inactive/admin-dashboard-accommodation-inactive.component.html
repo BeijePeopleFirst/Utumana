@@ -1,1 +1,18 @@
-<p>admin-dashboard-accommodation-inactive works!</p>
+<h2>Inactive Accommodations</h2>
+
+<div *ngIf="isLoading" class="flex justify-center items-center min-h-screen">
+    <mat-progress-spinner class="text-primary" mode="indeterminate"></mat-progress-spinner>
+  </div>
+
+<section *ngIf="!isLoading && allInactiveAccommodations && allInactiveAccommodations.length > 0" class="flex justify-center items-center pt-8 bg-neutral-2">
+    <div class="container p-5 text-center">
+      <app-search-accommodation-list [accommodations$]="inactiveAccommodations$" [pageNumber]="inactiveAccommodationsPageNumber" [totalPages]="inactiveAccommodationsTotalPages" 
+        (askForPage)="loadInactiveAccommodationsPage($event)"></app-search-accommodation-list>
+    </div>
+</section>
+
+<div *ngIf="!isLoading && allInactiveAccommodations && allInactiveAccommodations.length === 0" class="flex justify-center items-center min-h-screen">
+    <div class="container p-5 text-center">
+        <h3>{{"accommodations_cards.notFound" | translate}}</h3>
+    </div>
+</div>
