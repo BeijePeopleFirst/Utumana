@@ -2,6 +2,6 @@
     <div class="container p-5 text-center">
       <h1 class="text-gray-800">{{'favourites.title' | translate}}</h1>
       <app-accommodation-cards [accommodations$]="favourites$" [pageNumber]="favouritesPageNumber" [totalPages]="favouritesTotalPages" 
-        (askForPage)="loadFavouritesPage($event)"></app-accommodation-cards>
+        (askForPage)="loadFavouritesPage($event)" [status]="'active'"></app-accommodation-cards>
     </div>
 </section>

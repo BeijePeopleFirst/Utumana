@@ -7,7 +7,7 @@
 <section *ngIf="!isLoading && allAccommodations && allAccommodations.length > 0" class="flex justify-center items-center pt-8 bg-neutral-2">
     <div class="container p-5 text-center">
       <app-search-accommodation-list [accommodations$]="allAccommodations$" [pageNumber]="allAccommodationsPageNumber" [totalPages]="allAccommodationsTotalPages" 
-        (askForPage)="loadAllAccommodationsPage($event)"></app-search-accommodation-list>
+        (askForPage)="loadAllAccommodationsPage($event)" [status]="'all'"></app-search-accommodation-list>
     </div>
 </section>
 

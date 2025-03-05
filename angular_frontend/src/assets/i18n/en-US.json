@@ -9,7 +9,8 @@
 	"reject_subtitle": "If you choose \"Reject\", the accommodation will be hidden. The owner will be able to edit it and submit it for approval at a later time.",
 	"reject": "Reject",
 	"pending": "Pending",
-	"rejected": "Rejected"
+	"rejected": "Rejected",
+	"deleted": "Deleted"
 	},
 "accommodations_cards": {
 	"notFound": "No accommodation found"

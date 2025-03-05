@@ -7,7 +7,7 @@
 <section *ngIf="!isLoading && allInactiveAccommodations && allInactiveAccommodations.length > 0" class="flex justify-center items-center pt-8 bg-neutral-2">
     <div class="container p-5 text-center">
       <app-search-accommodation-list [accommodations$]="inactiveAccommodations$" [pageNumber]="inactiveAccommodationsPageNumber" [totalPages]="inactiveAccommodationsTotalPages" 
-        (askForPage)="loadInactiveAccommodationsPage($event)"></app-search-accommodation-list>
+        (askForPage)="loadInactiveAccommodationsPage($event)" [status] = "'deleted'"></app-search-accommodation-list>
     </div>
 </section>
 
