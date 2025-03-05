@@ -1,5 +1,7 @@
 package ws.peoplefirst.utumana.repository;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,6 +16,8 @@ public interface AccommodationDraftRepository extends JpaRepository<Accommodatio
     List<AccommodationDraft> findByOwnerId(Long ownerId);
 
     Integer countByOwnerId(Long ownerId);
+
+    List<AccommodationDraft> findByLastModifiedTimestampBefore(LocalDateTime valueOf);
     
 /*     List<AccommodationDraft> findByOwnerIdAndId(Long ownerId, Long id);
     
