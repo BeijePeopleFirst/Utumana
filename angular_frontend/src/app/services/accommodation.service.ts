@@ -442,12 +442,25 @@ export class AccommodationService {
   }
 
   uploadPhoto(accId: number, usrId: number, photo: FormData): Observable<Photo | {message: string, status: string, time: string}> {
-    return this.http.post<Photo | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/accommodation/upload_photo/" + accId + "/" + usrId, photo).pipe(
+    const authToken =  localStorage.getItem("token");
+
+    return this.http.post<Photo | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/accommodation/upload_photo/" + accId + "/" + usrId, photo, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        ContentType: 'multipart/form-data',
+        AcceptType: 'application/json'
+      }
+    }).pipe(
       catchError(error => {
         console.error(error); 
         return of(error.error);
       })
     )
+  }
+
+  removePhotosFromAccommodation(accId: number, usrId: number, IDs: number[]): Observable<boolean | {message: string, status: string, time: string}> {
+    let urlParam = encodeURIComponent(JSON.stringify(IDs));
+    return this.http.delete<boolean | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/accommodation/remove_photos/" + accId + "/" + usrId + "?ids=" + urlParam);
   }
   
   getAccommodationsToBeApproved() {

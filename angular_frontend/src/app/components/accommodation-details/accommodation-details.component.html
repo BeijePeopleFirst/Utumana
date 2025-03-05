@@ -387,7 +387,10 @@
         <button class="btn-primary" (click)="toggleEditPhotosPerspective()">X</button>
       </div>
       <div id="content-popup" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-5 z-[1000] bg-neutral-2">
-        <app-edit-photos-accommodation-details [accomodation]="accommodation"></app-edit-photos-accommodation-details>
+        <app-edit-photos-accommodation-details 
+        [accomodation]="accommodation" 
+        (notConfirmedPhotosIDsEvent)="handleNotConfimerdPhotosEvent($event)"
+        (closeThisWindowEvent)="handleCloseWindowEditPhotosEvent($event)"></app-edit-photos-accommodation-details>
       </div>
     </div>
   </ng-template>

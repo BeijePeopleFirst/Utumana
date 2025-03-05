@@ -19,6 +19,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import ws.peoplefirst.utumana.dto.AccommodationDTO;
 import ws.peoplefirst.utumana.dto.BookingDTO;
 import ws.peoplefirst.utumana.dto.PriceDTO;
@@ -29,6 +34,7 @@ import ws.peoplefirst.utumana.exception.ErrorMessage;
 import ws.peoplefirst.utumana.exception.ForbiddenException;
 import ws.peoplefirst.utumana.exception.IdNotFoundException;
 import ws.peoplefirst.utumana.exception.InvalidJSONException;
+import ws.peoplefirst.utumana.exception.TheJBeansException;
 import ws.peoplefirst.utumana.model.Accommodation;
 import ws.peoplefirst.utumana.model.Availability;
 import ws.peoplefirst.utumana.model.Booking;
@@ -934,10 +940,37 @@ public class AccommodationController {
     })
 	@PreAuthorize("hasAuthority('USER')")
 	@PostMapping(value = "/accommodation/upload_photo/{accommodationId}/{userId}")
-	public String uploadPhoto(@PathVariable("accommodationId") Long id, @PathVariable("userId") Long userId, @RequestParam("photo") MultipartFile file, Authentication auth) {
+	public Photo uploadPhoto(@PathVariable("accommodationId") Long id, @PathVariable("userId") Long userId, @RequestParam("photo") MultipartFile file, Authentication auth) {
 		
 		AuthorizationUtility.checkIsAdminOrMe(auth, userId);
 
 		return accommodationService.uploadSinglePhotoToS3(id, file);
+	}
+
+	@Operation(summary = "Deletes a set of photos from S3 for a single Accommodation")
+	@ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Removal Completed"),
+		@ApiResponse(responseCode = "400", description = "If there was an error processing Photos IDs", content=@Content(mediaType = "application/json",
+			schema=@Schema(implementation=ErrorMessage.class))),
+		@ApiResponse(responseCode = "404", description = "If there are some invalid requested Photos ID or not found Accommodation ID", content=@Content(mediaType = "application/json",
+			schema=@Schema(implementation=ErrorMessage.class)))
+    })
+	@PreAuthorize("hasAuthority('USER')")
+	@DeleteMapping(value = "/accommodation/remove_photos/{accommodationId}/{userId}")
+	public boolean removePhotos(@PathVariable("accommodationId") Long id, @PathVariable("userId") Long userId, @RequestParam("ids") String ids, Authentication auth) {
+		
+		AuthorizationUtility.checkIsAdminOrMe(auth, userId);
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		List<Long> decodedList;
+		try {
+			decodedList = objectMapper.readValue(ids, new TypeReference<List<Long>>() {});
+		} catch (JsonMappingException e) {
+			throw new TheJBeansException("Error processing ID list");
+		} catch (JsonProcessingException e) {
+			throw new TheJBeansException("Error processing ID list");
+		}
+
+		return accommodationService.deletePhotosFromAccommodation(id, decodedList);
 	}
 }

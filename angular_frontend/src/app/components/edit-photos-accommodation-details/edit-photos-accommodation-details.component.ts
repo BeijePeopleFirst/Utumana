@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Accommodation } from 'src/app/models/accommodation';
 import { Photo } from 'src/app/models/photo';
 import { AccommodationService } from 'src/app/services/accommodation.service';
@@ -13,7 +13,12 @@ export class EditPhotosAccommodationDetailsComponent implements OnInit {
   
   @Input() accomodation!: Accommodation;
 
+  @Output() notConfirmedPhotosIDsEvent: EventEmitter<number[]> = new EventEmitter<number[]>();
+  @Output() closeThisWindowEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
+
   photosCouples: [Photo, (Photo | null), (Photo | null)][] = [];
+
+  private notConfirmedPhotosIDs: number[] = [];
 
   //Messagges:
   //----------------------------------------------------
@@ -56,7 +61,6 @@ export class EditPhotosAccommodationDetailsComponent implements OnInit {
 
   }
 
-  //TODO:
   public uploadPhotosToS3($event: Event): void {
     const PHOTOS: HTMLInputElement = $event.target as HTMLInputElement;
 
@@ -90,7 +94,6 @@ export class EditPhotosAccommodationDetailsComponent implements OnInit {
           }
           else {
 
-            //TODO
             //Recupero la foto e la metto nella lista photosCouples
             this.s3Service.getPhoto(response.photo_url).subscribe(
               photo => {
@@ -100,7 +103,9 @@ export class EditPhotosAccommodationDetailsComponent implements OnInit {
                   return;
                 }
 
-                let tmp: Photo = {id: 0, photo_url: response.photo_url, photo_order: response.photo_order, blob_url: URL.createObjectURL(photo)};
+                let tmp: Photo = {id: response.id, photo_url: response.photo_url, photo_order: response.photo_order, blob_url: URL.createObjectURL(photo)};
+                this.notConfirmedPhotosIDs.push(tmp.id);
+                this.notConfirmedPhotosIDsEvent.emit(this.notConfirmedPhotosIDs);
 
                 this.photosCouples = this.addPhotoToViewList(tmp, this.photosCouples);
               }
@@ -141,9 +146,9 @@ export class EditPhotosAccommodationDetailsComponent implements OnInit {
     return list;
   }
 
-  //TODO:
   public confirmPhotos(): void {
-
+    this.notConfirmedPhotosIDsEvent.emit([]);
+    this.closeThisWindowEvent.emit(true);
   }
 
   clearMessages(): void {

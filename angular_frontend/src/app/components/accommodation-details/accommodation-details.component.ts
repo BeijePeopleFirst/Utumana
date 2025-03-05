@@ -78,9 +78,7 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
   foundServices$!: Observable<Service[]>;
   private selectedServices: Service[] = [];
 
-  selectedServicesView$: BehaviorSubject<Service[]> = new BehaviorSubject<
-    Service[]
-  >([]);
+  selectedServicesView$: BehaviorSubject<Service[]> = new BehaviorSubject<Service[]>([]);
 
   //MESSAGGES:
   //-------------------------------------------------------------------------------------
@@ -99,20 +97,24 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
   updatedAccommodationServices: boolean = false;
   errorFetchingAccommodationDetails: boolean = false;
   errorFetchingAccommodationOwner: boolean = false;
+  errorCleaningNotConfirmedPhotos: boolean = false;
   //-------------------------------------------------------------------------------------
 
   iconUrl = iconURL;
   locale: string = "en";
   localeSubscription?: Subscription;
 
-  //Child Communication:
+  //Child Communication (choose book period):
   chosenAvailability?: Availability;
   queryParams?: Params;
 
-  //Child2 Communication:
+  //Child2 Communication (view more photos):
   photoToShow!: [Photo, number];
   photoList!: Photo[];
   totalPhotos!: number;
+
+  //Child3 Communication (edit photos):
+  notConfirmedPhotosIDs?: number[];
 
   //Coordinates:
   coordinates?: Coordinates;
@@ -588,6 +590,25 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
   //Need to create the perspective itself
   toggleEditPhotosPerspective() {
     this.showViewEditPhotosPerspective = !this.showViewEditPhotosPerspective;
+    
+    if(!this.showViewEditPhotosPerspective && (this.notConfirmedPhotosIDs && this.notConfirmedPhotosIDs.length > 0)) {
+
+      //I need to remove the photos that were not confirmed:
+      this.accommodationService.removePhotosFromAccommodation(this.accommodation.id!, Number(localStorage.getItem("id")!), this.notConfirmedPhotosIDs).subscribe(
+        response => {
+          if(typeof response != "boolean") {
+            this.message = "true";
+            this.errorCleaningNotConfirmedPhotos = true;
+            return;
+          }
+        }
+      )
+
+    }
+  }
+
+  handleCloseWindowEditPhotosEvent($event: boolean): void {
+    if($event) this.toggleEditPhotosPerspective();
   }
 
   toggleEditRoomsBeds() {
@@ -845,6 +866,10 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
     this.photoToShow = [this.photoList[newIndex], newIndex];
   }
 
+  handleNotConfimerdPhotosEvent($event: number[]): void {
+    this.notConfirmedPhotosIDs = $event;
+  }
+
   clearMessage() {
     this.message = undefined;
 
@@ -865,5 +890,6 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
     this.errorRejectingReview = false;
     this.successAcceptingReview = false;
     this.successRejectingReview = false;
+    this.errorCleaningNotConfirmedPhotos = false;
   }
 }

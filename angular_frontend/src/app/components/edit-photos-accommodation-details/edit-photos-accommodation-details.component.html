@@ -9,7 +9,7 @@
                 <p (click)="removePhoto(c[1]?.id)" class="absolute top-0 right-0 text-2xl text-secondary">X</p>
                 <img [src]="c[1]?.blob_url" class="mb-12 w-52" />
             </div>
-            <div class="relative mr-7" *ngIf="c[1]?.blob_url">
+            <div class="relative mr-7" *ngIf="c[2]?.blob_url">
                 <p (click)="removePhoto(c[2]?.id)" class="absolute top-0 right-0 text-2xl text-secondary">X</p>
                 <img [src]="c[2]?.blob_url" class="mb-12 w-52" />
             </div>

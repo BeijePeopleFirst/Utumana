@@ -932,7 +932,7 @@ public class AccommodationService {
 		}
 	}
 
-    public String uploadSinglePhotoToS3(Long accId, MultipartFile file) {
+    public Photo uploadSinglePhotoToS3(Long accId, MultipartFile file) {
 
         Accommodation acc = this.findById(accId);
         String original = file.getOriginalFilename();
@@ -948,7 +948,7 @@ public class AccommodationService {
         Photo p = new Photo();
         p.setAccommodation(acc);
         p.setPhotoOrder(++order);
-        p.setPhotoUrl(null);
+        p.setPhotoUrl("/temp");
 
         p = photoRepository.save(p);
 
@@ -958,7 +958,49 @@ public class AccommodationService {
 
         s3Service.uploadFile(fileKey, file);
 
-        return fileKey;
+        return p;
+    }
+
+    public boolean deletePhotosFromAccommodation(Long accommodationId, List<Long> photosIDsToRemove) {
+        Accommodation acc = this.findById(accommodationId);
+        List<Photo> photos = acc.getPhotos();
+        List<Photo> resPhotosToRemove = new ArrayList<Photo>();
+
+        for(Photo p: photos) {
+            for(Long id: photosIDsToRemove) {
+
+                if(p.getId() == id) resPhotosToRemove.add(p);
+
+            }
+        }
+
+        List<Photo> res = new ArrayList<Photo>();
+
+        for(Photo p : photos) {
+            if(!containsPhoto(p, resPhotosToRemove)) res.add(p);
+        }
+
+        acc.setPhotos(res);
+        accommodationRepository.save(acc);
+
+        for(Photo p : resPhotosToRemove) {
+            photoRepository.delete(p);
+        }
+
+        //Now lets remove the photos from S3:
+        for(Photo p : resPhotosToRemove) {
+            s3Service.deleteFile(p.getPhotoUrl());
+        }
+
+        return true;
+    }
+
+    private boolean containsPhoto(Photo p, List<Photo> list) {
+        for(Photo p1 : list) {
+            if(p1.getId() == p.getId()) return true;
+        }
+
+        return false;
     }
     
     public Page<AccommodationDTO> getActiveAccommodationsDTO(int pageNumber, int pageSize) {
