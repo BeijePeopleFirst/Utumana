@@ -3,6 +3,10 @@
 	"book": "Book now",
 	"free": "free",
 	"approve": "Approve",
+	"approve_title": "Are you sure you want to approve this accommodation?",
+	"approve_subtitle": "If you choose \"Approve\", the accommodation will be published.",
+	"reject_title": "Are you sure you want to reject this accommodation?",
+	"reject_subtitle": "If you choose \"Reject\", the accommodation will be hidden. The owner will be able to edit it and submit it for approval at a later time.",
 	"reject": "Reject",
 	"pending": "Pending",
 	"rejected": "Rejected"

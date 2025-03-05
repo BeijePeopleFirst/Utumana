@@ -31,8 +31,8 @@
         
         <button *ngIf="status != 'rejected' && status != 'pending'" type="button" (click)="book = true" class="mt-2 btn-primary">{{'accommodation-card.book' | translate}}</button>
         <div *ngIf="isAdmin && status === 'pending'" class="flex flex-row justify-around w-full">
-          <button type="button" (click)="approve()"  class="w-2/5 btn-success">{{'accommodation-card.approve' | translate}}</button>
-          <button type="button" (click)="reject()"  class="w-2/5 btn-danger">{{'accommodation-card.reject' | translate}}</button>
+          <button type="button" (click)="showAcceptRejectModal($event, 'accept')"  class="w-2/5 btn-success">{{'accommodation-card.approve' | translate}}</button>
+          <button type="button" (click)="showAcceptRejectModal($event, 'reject')"  class="w-2/5 btn-danger">{{'accommodation-card.reject' | translate}}</button>
         </div>
         <p *ngIf="status === 'rejected'">{{'accommodation-card.rejected' | translate}}</p>
         <p *ngIf="status === 'pending' && !isAdmin">{{'accommodation-card.pending' | translate}}</p>
@@ -40,3 +40,6 @@
     </div>  
   </a>
 </div>
+
+<app-admin-dashboard-accept-reject-modal [accommodationId]="accommodation.id" [isModalOpen]="isAcceptRejectModalOpen" [action]="acceptRejectAction"
+(closeModal)="closeAcceptRejectModal($event)"></app-admin-dashboard-accept-reject-modal>

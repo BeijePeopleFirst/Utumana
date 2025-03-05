@@ -71,6 +71,7 @@ import { AdminDashboardAccommodationAllComponent } from './components/admin-dash
 import { AdminDashboardUsersProfilesComponent } from './components/admin-dashboard-users-profiles/admin-dashboard-users-profiles.component';
 import { AdminDashboardUsersAddUserComponent } from './components/admin-dashboard-users-add-user/admin-dashboard-users-add-user.component';
 import { AdminDashboardUsersMakeNewAdminComponent } from './components/admin-dashboard-users-make-new-admin/admin-dashboard-users-make-new-admin.component';
+import { AdminDashboardAcceptRejectModalComponent } from './components/admin-dashboard-accept-reject-modal/admin-dashboard-accept-reject-modal.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -130,7 +131,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     AdminDashboardAccommodationAllComponent,
     AdminDashboardUsersProfilesComponent,
     AdminDashboardUsersAddUserComponent,
-    AdminDashboardUsersMakeNewAdminComponent
+    AdminDashboardUsersMakeNewAdminComponent,
+    AdminDashboardAcceptRejectModalComponent
   ],
   imports: [
     BrowserModule,

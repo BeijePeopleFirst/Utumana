@@ -1,0 +1,27 @@
+<div *ngIf="isModalOpen" class="modal">
+    <div class="justify-center px-7 pt-7 pb-5 text-center modal-dialog">
+        <ng-container *ngIf="action=='accept'">
+            <h5>{{'accommodation-card.approve_title' | translate}}</h5>
+            <p class="text-sm">{{'accommodation-card.approve_subtitle' | translate}}</p>
+        </ng-container>
+        <ng-container *ngIf="action=='reject'">
+            <h5>{{'accommodation-card.reject_title' | translate}}</h5>
+            <p class="text-sm">{{'accommodation-card.reject_subtitle' | translate}}</p>
+        </ng-container>
+  
+        <button (click)="close()" class="close-modal">
+            &times;
+        </button>
+
+        <div class="flex gap-x-5 justify-center mt-4">
+            <ng-container *ngIf="action=='accept'">
+                <button type="button" class="w-1/4 btn-success" (click)="accept()">{{'accommodation-card.approve' | translate}}</button>
+            </ng-container>
+            <ng-container *ngIf="action=='reject'">
+                <button type="button" class="w-1/4 btn-danger" (click)="reject()">{{'accommodation-card.reject' | translate}}</button>
+            </ng-container>
+            <button type="button" class="w-1/4 btn-cancel" (click)="close()">{{'cancel_button_label' | translate}}</button>
+        </div>
+        <p *ngIf="error" class="mt-4 mb-0 text-center error-message">{{'error' | translate}}</p>
+    </div>
+</div>

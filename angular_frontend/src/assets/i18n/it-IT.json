@@ -3,6 +3,10 @@
 	"book": "Prenota ora",
 	"free": "gratis",
 	"approve": "Approva",
+	"approve_title": "Approvare questa sistemazione?",
+	"approve_subtitle": "Se scegli \"Approva\", la sistemazione verrà pubblicata.",
+	"reject_title": "Rifiutare questa sistemazione?",
+	"reject_subtitle": "Se scegli \"Rifiuta\", la sistemazione verrà nascosta. L'utente proprietario potrà fare modifiche e riprovare a chiedere l'approvazione in un secondo momento.",
 	"reject": "Rifiuta",
 	"pending": "In attesa",
 	"rejected": "Rifiutato"

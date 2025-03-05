@@ -30,4 +30,8 @@ export class AccommodationCardsComponent{
       this.askForPage.emit(n);
     }
   }
+
+  refresh(){
+    this.askForPage.emit(this.pageNumber);
+  }
 }
