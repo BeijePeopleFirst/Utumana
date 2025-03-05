@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AdminDashboardAccetRejectComponent } from './admin-dashboard-accet-reject.component';
+import { AdminDashboardAccetRejectComponent } from './admin-dashboard-accept-reject.component';
 
 describe('AdminDashboardAccetRejectComponent', () => {
   let component: AdminDashboardAccetRejectComponent;

@@ -23,7 +23,7 @@ import { BookNowComponent } from './components/book-now/book-now.component';
 import { AdminDashboardMainAndSidenavComponent } from './components/admin-dashboard-main-and-sidenav/admin-dashboard-main-and-sidenav.component';
 import { AdminDashboardHomePanelComponent } from './components/admin-dashboard-home-panel-component/admin-dashboard-home-panel-component.component';
 import { AdminDashboardMetricsComponent } from './components/admin-dashboard-metrics/admin-dashboard-metrics.component';
-import { AdminDashboardAccetRejectComponent } from './components/admin-dashboard-accet-reject/admin-dashboard-accet-reject.component';
+import { AdminDashboardAcceptRejectComponent } from './components/admin-dashboard-accept-reject/admin-dashboard-accept-reject.component';
 import { AdminDashboardAccommodationActiveComponent } from './components/admin-dashboard-accommodation-active/admin-dashboard-accommodation-active.component';
 import { AdminDashboardAccommodationInactiveComponent } from './components/admin-dashboard-accommodation-inactive/admin-dashboard-accommodation-inactive.component';
 import { AdminDashboardAccommodationAllComponent } from './components/admin-dashboard-accommodation-all/admin-dashboard-accommodation-all.component';
@@ -54,7 +54,7 @@ const routes: Routes = [
     {path: '', component: AdminDashboardHomePanelComponent, canActivate: [authGuard]},
     {path: 'home', component: AdminDashboardHomePanelComponent, canActivate: [authGuard]},
     {path: 'accommodations', children: [
-      {path: 'accept-reject', component: AdminDashboardAccetRejectComponent, canActivate: [authGuard]},
+      {path: 'accept-reject', component: AdminDashboardAcceptRejectComponent, canActivate: [authGuard]},
       {path: 'active-ones', component: AdminDashboardAccommodationActiveComponent, canActivate: [authGuard]},
       {path: 'inactive-ones', component: AdminDashboardAccommodationInactiveComponent, canActivate: [authGuard]},
       {path: 'all-accommodations', component: AdminDashboardAccommodationAllComponent, canActivate: [authGuard]},

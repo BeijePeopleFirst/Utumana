@@ -64,7 +64,7 @@ import { ProfilePictureModalComponent } from './components/profile-picture-modal
 import { ImagesCarouselComponent } from './components/images-carousel/images-carousel.component';
 import { EditPhotosAccommodationDetailsComponent } from './components/edit-photos-accommodation-details/edit-photos-accommodation-details.component';
 import { AdminDashboardMetricsComponent } from './components/admin-dashboard-metrics/admin-dashboard-metrics.component';
-import { AdminDashboardAccetRejectComponent } from './components/admin-dashboard-accet-reject/admin-dashboard-accet-reject.component';
+import { AdminDashboardAcceptRejectComponent } from './components/admin-dashboard-accept-reject/admin-dashboard-accept-reject.component';
 import { AdminDashboardAccommodationActiveComponent } from './components/admin-dashboard-accommodation-active/admin-dashboard-accommodation-active.component';
 import { AdminDashboardAccommodationInactiveComponent } from './components/admin-dashboard-accommodation-inactive/admin-dashboard-accommodation-inactive.component';
 import { AdminDashboardAccommodationAllComponent } from './components/admin-dashboard-accommodation-all/admin-dashboard-accommodation-all.component';
@@ -124,7 +124,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     ImagesCarouselComponent,
     EditPhotosAccommodationDetailsComponent,
     AdminDashboardMetricsComponent,
-    AdminDashboardAccetRejectComponent,
+    AdminDashboardAcceptRejectComponent,
     AdminDashboardAccommodationActiveComponent,
     AdminDashboardAccommodationInactiveComponent,
     AdminDashboardAccommodationAllComponent,

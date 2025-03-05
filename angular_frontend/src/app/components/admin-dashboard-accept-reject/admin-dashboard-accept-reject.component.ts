@@ -4,11 +4,11 @@ import { AccommodationDTO } from 'src/app/dtos/accommodationDTO';
 import { AccommodationService } from 'src/app/services/accommodation.service';
 
 @Component({
-  selector: 'app-admin-dashboard-accet-reject',
-  templateUrl: './admin-dashboard-accet-reject.component.html',
-  styleUrls: ['./admin-dashboard-accet-reject.component.css']
+  selector: 'app-admin-dashboard-accept-reject',
+  templateUrl: './admin-dashboard-accept-reject.component.html',
+  styleUrls: ['./admin-dashboard-accept-reject.component.css']
 })
-export class AdminDashboardAccetRejectComponent implements OnInit{
+export class AdminDashboardAcceptRejectComponent implements OnInit{
   pendingAccommodations$!: Observable<AccommodationDTO[]>;
   allPendingAccommodations!: AccommodationDTO[];
   pendingAccommodationsPageNumber = 1;
