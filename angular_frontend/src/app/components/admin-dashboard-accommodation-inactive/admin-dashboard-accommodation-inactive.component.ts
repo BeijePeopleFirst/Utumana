@@ -16,6 +16,8 @@ export class AdminDashboardAccommodationInactiveComponent {
     inactiveAccommodationsPageSize: number = 6;
     inactiveAccommodationsTotalPages: number = 0;
 
+    private inactiveAccommodationsCache = new Map<number, AccommodationDTO[]>();
+
     isLoading = true;
 
     constructor(
@@ -33,6 +35,12 @@ export class AdminDashboardAccommodationInactiveComponent {
     }
 
     private fetchInactiveAccommodations(): void {
+        if(this.inactiveAccommodationsCache.has(this.inactiveAccommodationsPageNumber)) {
+            this.allInactiveAccommodations = this.inactiveAccommodationsCache.get(this.inactiveAccommodationsPageNumber)!;
+            this.inactiveAccommodations$ = of(this.allInactiveAccommodations);
+            this.isLoading = false;
+            return;
+        }
       this.isLoading = true;
       this.accommodationService.getInactiveAccommodations(
           this.inactiveAccommodationsPageNumber, 
@@ -52,6 +60,7 @@ export class AdminDashboardAccommodationInactiveComponent {
                   next: (updated) => {
                       this.allInactiveAccommodations = updated;
                       this.inactiveAccommodations$ = of(updated);
+                      this.inactiveAccommodationsCache.set(this.inactiveAccommodationsPageNumber, updated);
                   },
                   complete: () => {
                       this.isLoading = false;
@@ -76,4 +85,7 @@ export class AdminDashboardAccommodationInactiveComponent {
       });
   }
 
+  ngOnDestroy(): void {
+      this.inactiveAccommodationsCache.clear();
+  }
 }

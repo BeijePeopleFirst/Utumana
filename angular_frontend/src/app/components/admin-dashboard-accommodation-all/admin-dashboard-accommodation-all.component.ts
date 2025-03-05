@@ -16,6 +16,8 @@ export class AdminDashboardAccommodationAllComponent {
   allAccommodationsPageSize: number = 6;
   allAccommodationsTotalPages: number = 0;
 
+  private accommodationsCache = new Map<number, AccommodationDTO[]>();
+
   isLoading = true;
 
   constructor(
@@ -33,6 +35,13 @@ export class AdminDashboardAccommodationAllComponent {
   }
 
   private fetchAllAccommodations(): void {
+    if (this.accommodationsCache.has(this.allAccommodationsPageNumber)) {
+      this.allAccommodations = this.accommodationsCache.get(this.allAccommodationsPageNumber)!;
+      this.allAccommodations$ = of(this.allAccommodations);
+      this.isLoading = false;
+      return;
+  }
+
     this.isLoading = true;
     this.accommodationService.getAllAccommodations(
         this.allAccommodationsPageNumber, 
@@ -52,6 +61,7 @@ export class AdminDashboardAccommodationAllComponent {
                 next: (updated) => {
                     this.allAccommodations = updated;
                     this.allAccommodations$ = of(updated);
+                    this.accommodationsCache.set(this.allAccommodationsPageNumber, updated);
                 },
                 complete: () => {
                     this.isLoading = false;
@@ -74,5 +84,9 @@ export class AdminDashboardAccommodationAllComponent {
         },
         replaceUrl: true 
     });
+}
+
+ngOnDestroy(): void {
+  this.accommodationsCache.clear();
 }
 }
