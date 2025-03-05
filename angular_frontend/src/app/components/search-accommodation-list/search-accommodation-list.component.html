@@ -3,7 +3,7 @@
         <div class="flex flex-nowrap gap-x-5 justify-center items-start self-center p-3 align-top w-fit">
             <div class="flex flex-wrap gap-3 justify-center">
                 <div *ngFor="let accommodation of accommodations" class="flex p-2 max-w-sm rounded-lg text-start lg:max-w-4xl">
-                    <app-accommodation-card [accommodation]="accommodation"></app-accommodation-card>
+                    <app-accommodation-card [accommodation]="accommodation" [status]="status"></app-accommodation-card>
                 </div>
             </div>
             

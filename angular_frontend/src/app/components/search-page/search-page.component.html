@@ -63,7 +63,9 @@
           [accommodations$]="foundAccommodations$" 
           [pageNumber]="foundAccommodationsPageNumber" 
           [totalPages]="foundAccommodationsTotalPages" 
-          (askForPage)="loadFoundResearchPage($event)">
+          (askForPage)="loadFoundResearchPage($event)"
+          [status]="'active'"
+          >
         </app-search-accommodation-list>
       </div>
 
