@@ -73,7 +73,15 @@ export class ProfileComponent implements OnInit {
           return;
         }else{
           this.user = res;
-          this.pictureUrl = this.user.profile_picture_blob_url;
+          if(this.user.profile_picture_url){
+            this.s3Service.getPhoto(this.user.profile_picture_url).subscribe(blob => {
+              if(blob != null){
+                this.user.profile_picture_blob_url = URL.createObjectURL(blob);
+                this.pictureUrl = this.user.profile_picture_blob_url;
+                console.log("Blob url:",this.pictureUrl);
+              }
+            })
+          }
         }
       })
     }
@@ -104,14 +112,12 @@ export class ProfileComponent implements OnInit {
   loadUserReviewsPage(pageNumber: number): void {
     let offset = pageNumber * this.reviewsPageSize;
     this.reviews = this.allReviews.slice(offset, offset + this.reviewsPageSize);
-    this.reviews.forEach(review => { if(!review.author) review.author = 'User'; }); // TODO get real author
     this.reviewsPageNumber = pageNumber;
   }
 
   loadWaitingReviewsPage(pageNumber: number): void {
     let offset = pageNumber * this.waitingReviewsPageSize;
     this.waitingReviews = this.allWaitingReviews.slice(offset, offset + this.waitingReviewsPageSize);
-    this.waitingReviews.forEach(review => { if(!review.author) review.author = 'User'; }); // TODO get real author
     this.waitingReviewsPageNumber = pageNumber;
   }
 

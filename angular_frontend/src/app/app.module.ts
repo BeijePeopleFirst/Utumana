@@ -61,6 +61,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AdminDashboardMainAndSidenavComponent } from './components/admin-dashboard-main-and-sidenav/admin-dashboard-main-and-sidenav.component';
 import { AdminDashboardHomePanelComponent } from './components/admin-dashboard-home-panel-component/admin-dashboard-home-panel-component.component';
 import { ProfilePictureModalComponent } from './components/profile-picture-modal/profile-picture-modal.component';
+import { ImagesCarouselComponent } from './components/images-carousel/images-carousel.component';
+import { EditPhotosAccommodationDetailsComponent } from './components/edit-photos-accommodation-details/edit-photos-accommodation-details.component';
 import { AdminDashboardMetricsComponent } from './components/admin-dashboard-metrics/admin-dashboard-metrics.component';
 import { AdminDashboardAccetRejectComponent } from './components/admin-dashboard-accet-reject/admin-dashboard-accet-reject.component';
 import { AdminDashboardAccommodationActiveComponent } from './components/admin-dashboard-accommodation-active/admin-dashboard-accommodation-active.component';
@@ -119,6 +121,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     AdminDashboardMainAndSidenavComponent,
     AdminDashboardHomePanelComponent,
     ProfilePictureModalComponent,
+    ImagesCarouselComponent,
+    EditPhotosAccommodationDetailsComponent,
     AdminDashboardMetricsComponent,
     AdminDashboardAccetRejectComponent,
     AdminDashboardAccommodationActiveComponent,

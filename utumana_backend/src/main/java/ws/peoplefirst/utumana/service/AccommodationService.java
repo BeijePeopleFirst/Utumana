@@ -8,12 +8,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.transaction.Transactional;
 import ws.peoplefirst.utumana.criteria.SearchAccomodationCriteria;
 import ws.peoplefirst.utumana.dto.AccommodationDTO;
 import ws.peoplefirst.utumana.dto.BookingDTO;
 import ws.peoplefirst.utumana.dto.PriceDTO;
+import ws.peoplefirst.utumana.dto.ReviewUserDTO;
 import ws.peoplefirst.utumana.dto.UserDTO;
 import ws.peoplefirst.utumana.exception.ForbiddenException;
 import ws.peoplefirst.utumana.exception.IdNotFoundException;
@@ -48,6 +50,9 @@ public class AccommodationService {
 
     @Autowired
     private BookingRepository bookingRepository;
+
+    @Autowired
+    private ReviewRepository reviewRepository;
 
     @Autowired
     private AvailabilityRepository availabilityRepository;
@@ -186,8 +191,8 @@ public class AccommodationService {
         return bookingRepository.getApprovedAccommodationReviews(accommodationId);
     }
 
-    public List<Review> getAllAccommodationReviews(Long accommodationId) {
-        return bookingRepository.getAllAccommodationReviews(accommodationId);
+    public List<ReviewUserDTO> getAllAccommodationReviews(Long accommodationId) {
+        return reviewRepository.getAllAccommodationReviews(accommodationId);
     }
 
     public void deleteAllAccommodationImagesExceptMain(Long accommodationId){
@@ -894,6 +899,35 @@ public class AccommodationService {
 		}
 	}
 
+    public String uploadSinglePhotoToS3(Long accId, MultipartFile file) {
+
+        Accommodation acc = this.findById(accId);
+        String original = file.getOriginalFilename();
+        String extension = original.substring(original.lastIndexOf('.'));
+
+        if(acc == null) throw new IdNotFoundException("Invalid Accommodation ID provided");
+        
+        Integer order = 0;
+        for(Photo p : acc.getPhotos()) {
+            order = p.getPhotoOrder() > order ? p.getPhotoOrder() : order;
+        }
+
+        Photo p = new Photo();
+        p.setAccommodation(acc);
+        p.setPhotoOrder(++order);
+        p.setPhotoUrl(null);
+
+        p = photoRepository.save(p);
+
+        String fileKey = "images/accommodations/" + accId + "/" + p.getId() + extension;
+        p.setPhotoUrl(fileKey);
+        photoRepository.save(p);
+
+        s3Service.uploadFile(fileKey, file);
+
+        return fileKey;
+    }
+    
     public Page<AccommodationDTO> getActiveAccommodationsDTO(int pageNumber, int pageSize) {
         Pageable p = PageRequest.of(pageNumber, pageSize);
         return accommodationRepository.getActiveAccommodationDTO(p);

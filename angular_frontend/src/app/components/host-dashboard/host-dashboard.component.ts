@@ -97,7 +97,6 @@ export class HostDashboardComponent implements OnInit {
   loadPendingBookingsPage(pageNumber: number): void {
     this.pendingBookingsPageNumber = pageNumber;
     let offset = this.pendingBookingsPageNumber * this.pendingBookingsPageSize;
-    console.log("this.allPendingBookings", this.allPendingBookings)
     this.pendingBookings$ = of(this.allPendingBookings.slice(offset, offset + this.pendingBookingsPageSize));
   }
 

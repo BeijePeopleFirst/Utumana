@@ -1,4 +1,4 @@
-<section *ngIf="allPendingBookings.length > 0" class="flex items-center justify-center pt-8" [ngClass]="changeBgColor()">
+<section *ngIf="allPendingBookings && allPendingBookings.length > 0" class="flex justify-center items-center pt-8" [ngClass]="changeBgColor()">
     <div class="container p-5 text-center" >
         <h2>{{'host-dashboard.pending' | translate}}</h2>
         <app-booking-cards [bookings$]="pendingBookings$" [pageNumber]="pendingBookingsPageNumber" [totalPages]="pendingBookingsTotalPages" 
@@ -7,7 +7,7 @@
 </section>
 
 
-<section *ngIf="allAcceptedBookings.length > 0" class="flex items-center justify-center pt-8" [ngClass]="changeBgColor()">
+<section *ngIf="allAcceptedBookings && allAcceptedBookings.length > 0" class="flex justify-center items-center pt-8" [ngClass]="changeBgColor()">
     <div class="container p-5 text-center" >
         <h2>{{'host-dashboard.accepted' | translate}}</h2>
         <app-booking-cards [bookings$]="acceptedBookings$" [pageNumber]="acceptedBookingsPageNumber" [totalPages]="acceptedBookingsTotalPages" 
@@ -15,7 +15,7 @@
     </div>
 </section>
 
-<section *ngIf="allDoingBookings.length > 0" class="flex items-center justify-center pt-8" [ngClass]="changeBgColor()">
+<section *ngIf="allDoingBookings && allDoingBookings.length > 0" class="flex justify-center items-center pt-8" [ngClass]="changeBgColor()">
     <div class="container p-5 text-center">
         <h2>{{'host-dashboard.doing' | translate}}</h2>
         <app-booking-cards [bookings$]="doingBookings$" [pageNumber]="doingBookingsPageNumber" [totalPages]="doingBookingsTotalPages" 
@@ -23,7 +23,7 @@
     </div>
 </section>
 
-<section *ngIf="allDoneBookings.length > 0" class="flex items-center justify-center pt-8" [ngClass]="changeBgColor()">
+<section *ngIf="allDoneBookings && allDoneBookings.length > 0" class="flex justify-center items-center pt-8" [ngClass]="changeBgColor()">
     <div class="container p-5 text-center">
         <h2>{{'host-dashboard.done' | translate}}</h2>
         <app-booking-cards [bookings$]="doneBookings$" [pageNumber]="doneBookingsPageNumber" [totalPages]="doneBookingsTotalPages" 
@@ -31,7 +31,7 @@
     </div>
 </section>
 
-<section *ngIf="allRejectedBookings.length > 0" class="flex items-center justify-center pt-8" [ngClass]="changeBgColor()">
+<section *ngIf="allRejectedBookings && allRejectedBookings.length > 0" class="flex justify-center items-center pt-8" [ngClass]="changeBgColor()">
     <div class="container p-5 text-center" >
         <h2>{{'host-dashboard.rejected' | translate}}</h2>
         <app-booking-cards [bookings$]="rejectedBookings$" [pageNumber]="rejectedBookingsPageNumber" [totalPages]="rejectedBookingsTotalPages" 
@@ -39,7 +39,7 @@
     </div>
 </section>
 
-<section *ngIf="allHostBookings.length == 0" class="flex items-center justify-center pt-8" [ngClass]="changeBgColor()">
+<section *ngIf="allHostBookings && allHostBookings.length == 0" class="flex justify-center items-center pt-8" [ngClass]="changeBgColor()">
     <div class="container p-5 text-center">
         <span>{{'host-dashboard.no_bookings' | translate}}</span>
     </div>

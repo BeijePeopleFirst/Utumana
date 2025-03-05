@@ -14,13 +14,13 @@ import { AccommodationService } from 'src/app/services/accommodation.service';
 export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
 
   @Input() accommodation!: Accommodation;
-  @Output() sendChosenAvailability = new EventEmitter<{ start_date: string, end_date: string, price_per_night: number, accommodation_id: number } | {message: string}>();
+  @Output() sendChosenAvailability = new EventEmitter<Availability | {message: string}>();
 
   @Input() queryParamsFromParent?: Params;
 
   @Input() availabilities!: string[];
 
-  chosenOne: Availability = new Availability();
+  chosenOne!: Availability;
 
   currentMonth!: { name: string; days: number[]; monthIndex: number; year: number };
   previousMonth!: { name: string; days: number[]; monthIndex: number; year: number };
@@ -40,7 +40,7 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
   sendAvailability() {
     if(!this.chosenOne) return;
     console.log("Stampo valore inviato -> ", this.chosenOne.price_per_night);
-    this.sendChosenAvailability.emit({start_date: this.chosenOne.start_date, end_date: this.chosenOne.end_date, price_per_night: this.chosenOne.price_per_night, accommodation_id: this.chosenOne.accommodation_id});
+    this.sendChosenAvailability.emit(this.chosenOne);
   }
 
   ngOnInit() {
@@ -142,6 +142,8 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
   }
 
   isSelectedOrBetween(day: number, monthName: string, year: number): boolean {
+    if(!this.chosenOne || this.chosenOne.start_date == "" || this.chosenOne.end_date == "") return false;
+
     if(this.accommodationService.fetchDate(day, monthName, year) === Date.parse(this.chosenOne.start_date)
       || this.accommodationService.fetchDate(day, monthName, year) === Date.parse(this.chosenOne.end_date)) {
     
@@ -156,11 +158,12 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
   }
 
   resetChoices() {
-    this.chosenOne = new Availability();
-    this.chosenOne.accommodation_id = this.accommodation.id!;
-    this.chosenOne.price_per_night = 0;
-    this.chosenOne.start_date = "";
-    this.chosenOne.end_date = "";
+    this.chosenOne = {
+      accommodation_id: this.accommodation.id,
+      price_per_night: 0,
+      start_date: "",
+      end_date: "",
+    };
     this.alreadySelectedStart = false;
 
     this.sendAvailability();

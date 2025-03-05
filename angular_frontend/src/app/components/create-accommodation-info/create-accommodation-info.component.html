@@ -1,12 +1,12 @@
 <div class="flex flex-col justify-center items-center w-screen sm:w-auto">
-    <app-create-progress [step] = 4></app-create-progress>
+    <app-create-progress [step] = 4 [draftId]="draftId"></app-create-progress>
 
     <form class="my-4 w-screen md:max-w-md" (ngSubmit)="saveAndContinue()" #infoForm="ngForm">
         <div class="w-full">
             <label class="label-primary">{{'create.title' | translate}}*</label>
             <input class="input-primary" [ngClass]="{'alert-danger': titleField.invalid}" 
             type="text" id="title" name="title"
-            pattern="[a-zA-Z0-9 \-:\.,]+"   
+            pattern="[\w\W \-:\.,]+"   
             [(ngModel)]="title" #titleField="ngModel" />
         </div>
         <ng-container *ngIf="titleField.invalid">
@@ -17,7 +17,8 @@
 
         <div class="flex flex-col justify-center mt-4 w-full">
             <label class="label-primary">{{'create.description' | translate}}</label>
-            <textarea class="p-2 w-full rounded-md border border-gray-300 resize-y focus:outline-none" rows="10" placeholder="{{'create.description_placeholder' | translate}}"
+            <textarea class="p-2 w-full rounded-md border border-gray-300 resize-y focus:outline-none" rows="10" 
+            placeholder="{{'create.description_placeholder' | translate}}"
             [ngClass]="{'alert-danger': descriptionField.invalid}" 
             id="description" name="description" [(ngModel)]="description" #descriptionField="ngModel"></textarea>
         </div>

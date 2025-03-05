@@ -12,6 +12,8 @@ import ws.peoplefirst.utumana.model.AccommodationDraft;
 public interface AccommodationDraftRepository extends JpaRepository<AccommodationDraft, Long> {
     
     List<AccommodationDraft> findByOwnerId(Long ownerId);
+
+    Integer countByOwnerId(Long ownerId);
     
 /*     List<AccommodationDraft> findByOwnerIdAndId(Long ownerId, Long id);
     

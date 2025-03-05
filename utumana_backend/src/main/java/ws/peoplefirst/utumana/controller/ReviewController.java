@@ -27,7 +27,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-import ws.peoplefirst.utumana.dto.ReviewDTO;
+import ws.peoplefirst.utumana.dto.ReviewUserDTO;
 import ws.peoplefirst.utumana.exception.ForbiddenException;
 import ws.peoplefirst.utumana.exception.IdNotFoundException;
 import ws.peoplefirst.utumana.model.Booking;
@@ -191,9 +191,9 @@ public class ReviewController {
     })
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping("/review/user/{userId}")
-	public List<Review> getAllUserReview(@Parameter(description = "id of the user", example = "14") @PathVariable Long userId, Authentication auth) {
+	public List<ReviewUserDTO> getAllUserReview(@Parameter(description = "id of the user", example = "14") @PathVariable Long userId, Authentication auth) {
 		log.debug("GET /review/user/" + userId);
-		return reviewService.getUserReview(userId);
+		return reviewService.getReviewUserDTO(userId);
 	}
 	
 	@Operation(summary = "Get review by booking ID", description = "Get the review associated with given booking ID.", tags = { "Reviews" })

@@ -1,7 +1,5 @@
-export class PriceDTO{
-    constructor(
-        public accommodation_id: number,
-        public min_price: number,
-        public max_price: number
-        ) {  }
+export interface PriceDTO{
+    accommodation_id: number;
+    min_price: number;
+    max_price: number;
 }

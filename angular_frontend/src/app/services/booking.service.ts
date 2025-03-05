@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { Booking } from '../models/booking';
 import { HttpClient } from '@angular/common/http';
 import { BookingDTO } from '../dtos/bookingDTO';
-import { BehaviorSubject, catchError, Observable, of, Subject, tap } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, of, Subject, tap } from 'rxjs';
 import { BACKEND_URL_PREFIX } from 'src/costants';
 import { Availability } from '../models/availability';
-import { UnavailabilityDTO } from '../dtos/unavailabilityDTO';
+import { Unavailability } from '../dtos/unavailabilityDTO';
+import { S3Service } from './s3.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,10 @@ export class BookingService {
   private bookingUpdated = new Subject<void>();
   bookingUpdated$ = this.bookingUpdated.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private s3Service: S3Service
+  ) { }
 
   newBooking(createdBooking: Booking): Observable<{message: string, status: string, time: string} | BookingDTO> {
     console.log("Stampo il booking -> ", createdBooking);
@@ -31,7 +35,7 @@ export class BookingService {
 
   newUnavailability(createdBooking: Availability): Observable<{message: string, status: string, time: string} | Availability> {
     console.log("newUnavailability", createdBooking);
-    return this.http.post<UnavailabilityDTO>(BACKEND_URL_PREFIX + "/api/add_unavailability", 
+    return this.http.post<Unavailability>(BACKEND_URL_PREFIX + "/api/add_unavailability", 
       {
         start_date: createdBooking.start_date,
         end_date: createdBooking.end_date,
@@ -44,8 +48,18 @@ export class BookingService {
   }
   
   public getBookings(url: string): Observable<BookingDTO[]>{
-    // TODO get page of results from backend
     return this.http.get<BookingDTO[]>(url).pipe(
+      map(data => {
+        for(let booking of data){
+          this.s3Service.getPhoto(booking.accommodation.main_photo_url).subscribe(blob => {
+            if(blob != null){
+              booking.accommodation.main_photo_blob_url = URL.createObjectURL(blob);
+            }
+          })
+        }
+        console.log("Booking Service - Fetched bookings DTO:", data);
+        return data;
+      }),
       catchError(error => {
         console.error(error);
         return of([]);

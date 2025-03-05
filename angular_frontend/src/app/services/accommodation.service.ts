@@ -15,6 +15,7 @@ import { PaginationInfo } from '../models/paginationInfo';
 import { DefaultAddress } from '../models/defaultAddress';
 import { Coordinates } from '../models/coordinates';
 import { S3Service } from './s3.service';
+import { Photo } from '../models/photo';
 
 @Injectable({
   providedIn: 'root'
@@ -237,6 +238,25 @@ export class AccommodationService {
     }
     return params;
   }
+
+  public getAccommodationIgnoreHidingTimestamp(id: number): Observable<(Accommodation | null)> {
+    return this.http.get<Accommodation>(BACKEND_URL_PREFIX + "/api/accommodation_ignore_hidden/" + id).pipe(
+      map(acc => {
+        for(let photo of acc.photos){
+          this.s3Service.getPhoto(photo.photo_url).subscribe(blob => {
+            if(blob != null){
+              photo.blob_url = URL.createObjectURL(blob);
+            }
+          })
+        }
+        return acc;
+      }),
+      catchError(error => {
+        console.error(error);
+        return of(null);
+      })
+    )
+  }
   
   public getAccommodationById(id: number): Observable<(Accommodation | null)> {
     return this.http.get<Accommodation>(BACKEND_URL_PREFIX + "/api/accommodation/" + id).pipe(
@@ -258,7 +278,7 @@ export class AccommodationService {
 }
 
   public getAccommodationInfo(accId: number): Observable<Map<string, object> | {message: string, status: string, time: string}> {
-    return this.http.get<Map<string, object> | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/accommodation_info/" + accId);
+    return this.http.get<Map<string, object>>(BACKEND_URL_PREFIX + "/api/accommodation_info/" + accId);
   }
 
   deleteAccommodation(id: number): Observable<Accommodation | {message: string, status: string, time: string} | null> {
@@ -417,6 +437,15 @@ export class AccommodationService {
     return this.http.delete<any>(BACKEND_URL_PREFIX + "/api/accommodation-draft/delete/" + draftId);
   }
 
+  uploadPhoto(accId: number, usrId: number, photo: FormData): Observable<Photo | {message: string, status: string, time: string}> {
+    return this.http.post<Photo | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/accommodation/upload_photo/" + accId + "/" + usrId, photo).pipe(
+      catchError(error => {
+        console.error(error); 
+        return of(error.error);
+      })
+    )
+  }
+  
   getAccommodationsToBeApproved() {
     return this.getAccommodationsDTO(BACKEND_URL_PREFIX + "/api/get_accommodationsdto_to_approve");
  }

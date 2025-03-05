@@ -26,8 +26,6 @@ export class BookingCardComponent implements OnInit, OnDestroy {
     this.localeSubscription = this.translateService.onLangChange.subscribe(event => this.locale = event.lang.slice(0,2));
     if(this.isOwner == undefined) this.isOwner = false;
     this.bookingId = this.booking!.id!;
-
-    console.log(this.isOwner)
   }
 
   ngOnDestroy(): void {

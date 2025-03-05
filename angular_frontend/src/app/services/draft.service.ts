@@ -6,8 +6,8 @@ import { catchError, map, Observable, of, tap } from 'rxjs';
 import { Accommodation } from '../models/accommodation';
 import { Service } from '../models/service';
 import { AccommodationDTO } from '../dtos/accommodationDTO';
-import { Availability, AvailabilityInterface } from '../models/availability';
-import { UnavailabilityDTO, UnavailabilityInterface } from '../dtos/unavailabilityDTO';
+import { Availability } from '../models/availability';
+import { Unavailability } from '../dtos/unavailabilityDTO';
 import { GeneralAccommodationInfoDTO } from '../dtos/generalAccommodationInfoDTO';
 import { Photo } from '../models/photo';
 import { Coordinates } from '../models/coordinates';
@@ -30,7 +30,7 @@ export class DraftService {
     return this.http.post<number>(`${BACKEND_URL_PREFIX}/api/accommodation-draft/new/${userId}`, {}).pipe(
       catchError(error => {
         console.error(error);
-        return of(-1);
+        throw error;
       }),
       tap(res => {
         console.log("Created new accomnmmodation draft", res);
@@ -97,7 +97,7 @@ export class DraftService {
     );
   }
 
-  setAvailabilities(availabilities: AvailabilityInterface[] | Availability[], draftId: number): void {
+  setAvailabilities(availabilities: Availability[], draftId: number): void {
     this.http.post<any>(`${BACKEND_URL_PREFIX}/api/accommodation-draft/save-availabilities/${draftId}`, availabilities).pipe(
       catchError(error => {
         console.error(error);
@@ -113,8 +113,8 @@ export class DraftService {
     });
   }
 
-  getUnavailabilities(draftId: number): Observable<UnavailabilityInterface[] | null> {
-    return this.http.get<UnavailabilityInterface[]>(`${BACKEND_URL_PREFIX}/api/accommodation-draft/unavailabilities/${draftId}`, {}).pipe(
+  getUnavailabilities(draftId: number): Observable<Unavailability[] | null> {
+    return this.http.get<Unavailability[]>(`${BACKEND_URL_PREFIX}/api/accommodation-draft/unavailabilities/${draftId}`, {}).pipe(
       catchError(error => {
         console.error(error);
         return of(null);
@@ -122,7 +122,7 @@ export class DraftService {
     );
   }
 
-  setUnavailabilities(unavailabilities: UnavailabilityInterface[] | UnavailabilityDTO[], draftId: number): void {
+  setUnavailabilities(unavailabilities: Unavailability[], draftId: number): void {
     this.http.post<any>(`${BACKEND_URL_PREFIX}/api/accommodation-draft/save-unavailabilities/${draftId}`, unavailabilities).pipe(
       catchError(error => {
         console.error(error);

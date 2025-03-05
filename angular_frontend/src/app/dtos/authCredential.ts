@@ -1,6 +1,4 @@
-export class AuthCredentials{
-    constructor(
-        public email:string,
-        public password: string
-        ) {  }
+export interface AuthCredentials{
+    email:string;
+    password: string;
 }

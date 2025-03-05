@@ -17,9 +17,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import ws.peoplefirst.utumana.dto.AccommodationDTO;
 import ws.peoplefirst.utumana.dto.BookingDTO;
 import ws.peoplefirst.utumana.dto.PriceDTO;
+import ws.peoplefirst.utumana.dto.ReviewUserDTO;
 import ws.peoplefirst.utumana.dto.UnavailabilityDTO;
 import ws.peoplefirst.utumana.dto.UserDTO;
 import ws.peoplefirst.utumana.exception.ErrorMessage;
@@ -29,6 +32,7 @@ import ws.peoplefirst.utumana.exception.InvalidJSONException;
 import ws.peoplefirst.utumana.model.Accommodation;
 import ws.peoplefirst.utumana.model.Availability;
 import ws.peoplefirst.utumana.model.Booking;
+import ws.peoplefirst.utumana.model.Photo;
 import ws.peoplefirst.utumana.model.Review;
 import ws.peoplefirst.utumana.model.Service;
 import ws.peoplefirst.utumana.service.*;
@@ -101,6 +105,26 @@ public class AccommodationController {
 		logger.debug("GET /accommodation/" + id);
 
 		Accommodation acc = accommodationService.findByIdAndHidingTimestampIsNull(id);
+
+		if (acc != null) return acc;
+		else {
+			logger.error("Incorrect ID -- No Accommodation was found");
+			throw new IdNotFoundException("Incorrect ID -- No Accommodation was found");
+		}
+	}
+
+	@ApiResponses({
+	    @ApiResponse(responseCode = "200", description = "Accommodation was retrieved Successfully"),
+	    @ApiResponse(responseCode = "404", description = "Accommodation Not Found: illegal ID provided", content=@Content(mediaType = "application/json",
+	    		schema=@Schema(implementation=ErrorMessage.class)))
+	})
+	@Operation(summary = "Get single Accommodation by ID")
+	@PreAuthorize("hasAuthority('USER')")
+	@GetMapping(value = "/accommodation_ignore_hidden/{id}")
+	public Accommodation getSingleAccommodationIgnoreHiddenAPI(@PathVariable Long id, Authentication auth) {
+		logger.debug("GET /accommodation_ignore_hidden/" + id);
+
+		Accommodation acc = accommodationService.findById(id);
 
 		if (acc != null) return acc;
 		else {
@@ -840,7 +864,7 @@ public class AccommodationController {
 			res.put("approval", approval);
 
 			//List<Review> reviews = accommodationService.getAccommodationReviews(accommodationId);
-			List<Review> reviews = accommodationService.getAllAccommodationReviews(accommodationId);
+			List<ReviewUserDTO> reviews = accommodationService.getAllAccommodationReviews(accommodationId);
 			res.put("reviews", reviews);
 
 			boolean hasPendingBooking = bookingService.hasPendingBooking(user.getId(), accommodationId);
@@ -913,5 +937,20 @@ public class AccommodationController {
 	public void setCoordinates(@RequestBody AccommodationDTO accommodationDTO, @PathVariable(name = "accommodationId") Long accommodationId) {
 		System.out.println("set_coordinateees " + accommodationDTO.getCoordinates() + " " + accommodationId);
 		accommodationService.setCoordinates(accommodationDTO.getCoordinates(), accommodationId);
+	}
+
+	@Operation(summary = "Uploads a photo to S3 for a single Accommodation")
+	@ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Upload Completed"),
+		@ApiResponse(responseCode = "404", description = "If there is no requested ID", content=@Content(mediaType = "application/json",
+			schema=@Schema(implementation=ErrorMessage.class)))
+    })
+	@PreAuthorize("hasAuthority('USER')")
+	@PostMapping(value = "/accommodation/upload_photo/{accommodationId}/{userId}")
+	public String uploadPhoto(@PathVariable("accommodationId") Long id, @PathVariable("userId") Long userId, @RequestParam("photo") MultipartFile file, Authentication auth) {
+		
+		AuthorizationUtility.checkIsAdminOrMe(auth, userId);
+
+		return accommodationService.uploadSinglePhotoToS3(id, file);
 	}
 }

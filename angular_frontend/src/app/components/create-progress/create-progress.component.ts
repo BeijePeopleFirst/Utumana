@@ -7,4 +7,5 @@ import { Component, Input } from '@angular/core';
 })
 export class CreateProgressComponent {
   @Input() step!: number;
+  @Input() draftId!: number;
 }

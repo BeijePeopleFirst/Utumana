@@ -47,11 +47,11 @@ public class AccommodationDraftController {
 
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping(value = "/owner/{ownerId}")
-    public List<AccommodationDraft> getAccommodationDraftByOwnerId(@PathVariable("ownerId") Long ownerId, Authentication auth) {
+    public List<AccommodationDraft> getAccommodationDraftsByOwnerId(@PathVariable("ownerId") Long ownerId, Authentication auth) {
 			if (!AuthorizationUtility.getUserFromAuthentication(auth).getId().equals(ownerId)) {
 				throw new ForbiddenException("Only owners can get their accommodation draft");
 			}
-        return accommodationDraftService.getAccommodationDraftByOwnerId(ownerId);
+        return accommodationDraftService.getAccommodationDraftsByOwnerId(ownerId);
     }
 
     @PreAuthorize("hasAuthority('USER')")
