@@ -569,7 +569,27 @@ public class AccommodationController {
 	@GetMapping(value = "/accommodations/active")
 	public Page<AccommodationDTO> getActiveAccommodationsDTO(@RequestParam(value = "page", required = false) int pageNumber,
 															  @RequestParam(value = "size", required = false) int pageSize) {
+
 		return accommodationService.getActiveAccommodationsDTO(pageNumber, pageSize);
+
+	}
+
+	@Operation(summary = "Return the list of inactive accommodation")
+	@GetMapping(value = "/accommodations/inactive")
+	public Page<AccommodationDTO> getInactiveAccommodationsDTO(@RequestParam(value = "page", required = false) int pageNumber,
+															 @RequestParam(value = "size", required = false) int pageSize) {
+
+		return accommodationService.getInactiveAccommodationsDTO(pageNumber, pageSize);
+
+	}
+
+	@Operation(summary = "Return the list of all accommodation")
+	@GetMapping(value = "/accommodations/all")
+	public Page<AccommodationDTO> getAllAccommodationsDTO(@RequestParam(value = "page", required = false) int pageNumber,
+															   @RequestParam(value = "size", required = false) int pageSize) {
+
+		return accommodationService.getAllAccommodationsDTO(pageNumber, pageSize);
+
 	}
 
 	@Operation(summary = "Return the list of accommodation ordered by average review rating")
@@ -675,8 +695,9 @@ public class AccommodationController {
     })
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@GetMapping(value = "/get_accommodations_to_approve")
-	public List<Accommodation> getAccommodationsToBeApproved(Authentication auth) {
-		return accommodationService.getAccommodationsToBeApproved();
+	public Page<AccommodationDTO> getAccommodationsToBeApproved(Authentication auth, @RequestParam(value = "page", required = false) int pageNumber,
+																					@RequestParam(value = "size", required = false) int pageSize) {
+		return accommodationService.getAccommodationsToBeApproved(pageSize, pageNumber);
 	}
 
 	@Operation(summary = "Return the list of accommodation to be approved by an admin (as DTOs)")

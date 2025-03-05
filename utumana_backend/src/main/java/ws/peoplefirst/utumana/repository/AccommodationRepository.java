@@ -126,8 +126,8 @@ public interface AccommodationRepository extends JpaRepository<Accommodation, Lo
 			@Param(value="chkOut") LocalDate checkOutDate, @Param(value="numGuests") Integer numberOfGuests, Sort sort);
 
 
-	@Query("SELECT a FROM Accommodation as a WHERE a.approvalTimestamp IS NULL")
-	public List<Accommodation> getAccommodationsToBeApproved();
+	@Query("SELECT new ws.peoplefirst.utumana.dto.AccommodationDTO(a.id, a.title, a.city, a.mainPhotoUrl, a.country) FROM Accommodation as a WHERE a.approvalTimestamp IS NULL")
+	public Page<AccommodationDTO> getAccommodationsToBeApproved(Pageable pageable);
 
 	@Query("SELECT new ws.peoplefirst.utumana.dto.AccommodationDTO(a.id, a.title, a.city, a.mainPhotoUrl, a.country) "
 			+ "FROM Accommodation as a WHERE a.approvalTimestamp IS NULL AND a.hidingTimestamp IS NULL")
@@ -158,4 +158,12 @@ public interface AccommodationRepository extends JpaRepository<Accommodation, Lo
 			+ "FROM Accommodation as a "
 			+ "JOIN a.rating r WHERE a.hidingTimestamp IS NULL AND a.approvalTimestamp IS NOT NULL")
 	public Page<AccommodationDTO> getActiveAccommodationDTO(Pageable pageable);
+	@Query("SELECT new ws.peoplefirst.utumana.dto.AccommodationDTO(a.id, a.title, a.city, a.province, a.country, a.mainPhotoUrl, r.rating) "
+			+ "FROM Accommodation as a "
+			+ "JOIN a.rating r WHERE a.hidingTimestamp IS NOT NULL AND a.approvalTimestamp IS NOT NULL")
+	public Page<AccommodationDTO> getInactiveAccommodationDTO(Pageable p);
+	@Query("SELECT new ws.peoplefirst.utumana.dto.AccommodationDTO(a.id, a.title, a.city, a.province, a.country, a.mainPhotoUrl, r.rating) "
+			+ "FROM Accommodation as a "
+			+ "JOIN a.rating r")
+	public Page<AccommodationDTO> getAllAccommodationDTO(Pageable p);
 }
