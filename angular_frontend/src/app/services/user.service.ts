@@ -111,4 +111,14 @@ export class UserService {
       map(_ => true)
     );
   }
+
+  insertUser(user: User): Observable<boolean> {
+    return this.http.post<User>(`${BACKEND_URL_PREFIX}/api/user`, user).pipe(
+      map(createdUser => {
+        console.log("User created: ", createdUser);
+        return true;
+      }),
+      catchError(err => { throw(err); })
+    )
+  }
 }
