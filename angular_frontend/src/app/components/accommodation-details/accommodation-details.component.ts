@@ -39,6 +39,7 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
   invalidAccommodation: boolean = false;
   isFavourite: boolean = false;
   isAdminOrMe: boolean = false;
+  isMe: boolean = false;
   accommodationAvailabilities: string[] = [];
 
   accommodationReviews: Review[] = [];
@@ -53,14 +54,6 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
   accommodationOwner!: User;
 
   showDeleteAccommodationConfirmPopup: boolean = false;
-
-  showEditCityProvCountry: boolean = false;
-  cityInputField?: string;
-  provinceInputField?: string;
-  countryInputField?: string;
-  CAPInputField?: string;
-  streetInputField?: string;
-  strNumInputField?: string;
 
   showViewMorePhotosPerspective: boolean = false;
 
@@ -89,8 +82,6 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
   addedToFavourites: boolean = false;
   removedFromFavourites: boolean = false;
   deletedAccommodation: boolean = false;
-  countryRequired: boolean = false;
-  capRequired: boolean = false;
   updatedAccommodation: boolean = false;
   roomsBedsRequired: boolean = false;
   bookingValuesMissing: boolean = false;
@@ -246,28 +237,21 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
             }
 
             this.isAdminOrMe = tmp1.valueOf() || tmp2.valueOf();
+            this.isMe = tmp2.valueOf();
             this.isFavourite = tmp4.valueOf();
 
-            if (
-              !this.accommodation.hiding_timestamp &&
+            if (!this.accommodation.hiding_timestamp &&
               !this.accommodation.approval_timestamp &&
-              !this.isAdminOrMe
-            ) {
-              this.invalidAccommodation = true;
-              return;
-            } else if (
-              !this.accommodation.hiding_timestamp &&
-              !this.accommodation.approval_timestamp &&
-              this.isAdminOrMe
-            )
-              this.invalidAccommodation = false;
-            else if (
-              !this.accommodation.hiding_timestamp &&
-              this.accommodation.approval_timestamp
-            )
-              this.invalidAccommodation = false;
-            else {
-            }
+              !this.isAdminOrMe) {
+
+                this.invalidAccommodation = true;
+                console.log("stampo invalidAcc1 -> ", this.invalidAccommodation);
+                return;
+
+            } 
+            else if (!this.accommodation.hiding_timestamp && !this.accommodation.approval_timestamp && this.isAdminOrMe) this.invalidAccommodation = false;
+            else if (!this.accommodation.hiding_timestamp && this.accommodation.approval_timestamp) this.invalidAccommodation = false;
+            else {}
 
             this.photoList = this.accommodation.photos;
             this.photoList.sort((p1, p2) => p1.photo_order - p2.photo_order);
@@ -299,7 +283,7 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
             console.log("Reviews -> ", this.accommodationReviews);
 
             //Filtro le review in base al tipo di User loggato:
-            if (!this.isAdminOrMe)
+            if (!this.isMe)
               this.accommodationReviews = this.accommodationReviews.filter(
                 (r) => r.approval_timestamp != null
               );
@@ -380,6 +364,12 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
     if (this.localeSubscription) this.localeSubscription.unsubscribe();
   }
   
+  /**
+   * 
+   * @param monthIndexLocal 
+   * @deprecated
+   * @returns the lower-case string name of the month
+   */
   private getMonthName(monthIndexLocal: number): string {
     switch(monthIndexLocal) {
       case 0: return "january";
@@ -507,58 +497,6 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  toggleEditCityProvCountry() {
-    this.showEditCityProvCountry = !this.showEditCityProvCountry;
-  }
-
-  confirmFormCityCountryProv() {
-    if (!this.countryInputField) {
-      this.toggleEditCityProvCountry();
-
-      this.message = "true";
-      this.countryRequired = true;
-      return;
-    }
-
-    if (!this.CAPInputField) {
-      this.toggleEditCityProvCountry();
-
-      this.message = "true";
-      this.capRequired = true;
-      return;
-    }
-
-    this.accommodation.street_number = this.strNumInputField?.trim();
-    this.accommodation.street = this.streetInputField?.trim();
-    this.accommodation.province = this.provinceInputField?.trim();
-    this.accommodation.country = this.countryInputField.trim();
-    this.accommodation.city = this.cityInputField?.trim();
-    this.accommodation.cap = this.CAPInputField.trim();
-
-    if (!this.userId) {
-      this.userNotLogged = true;
-      return;
-    }
-
-    this.setCoordinates(this.accommodation);
-    if (this.errorOccurred) return;
-
-    this.accommodationService
-      .updateAccommodationAddress(this.userId, this.accommodation)
-      .subscribe((result) => {
-        if (!result) {
-          this.message = "true";
-          this.errorOccurred = true;
-        } else if ("message" in result) this.message = result.message;
-        else {
-          this.message = "true";
-          this.updatedAccommodation = true;
-        }
-
-        this.toggleEditCityProvCountry();
-      });
-  }
-
   async setCoordinates(accommodation: Accommodation) {
     const coordinates = await this.draftService.getCoordinates(
       (accommodation.street ?? "") +
@@ -573,7 +511,7 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
         ", " +
         (accommodation.country ?? "")
     );
-    console.log(coordinates);
+    
     if (coordinates && accommodation.id) {
       this.accommodationService.setCoordinates(accommodation.id, coordinates);
       this.coordinates = coordinates;
@@ -582,12 +520,11 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
       this.errorOccurred = true;
     }
   }
-  //Need to create the perspective itself
+  
   toggleViewMorePhotosPerspective() {
     this.showViewMorePhotosPerspective = !this.showViewMorePhotosPerspective;
   }
 
-  //Need to create the perspective itself
   toggleEditPhotosPerspective() {
     this.showViewEditPhotosPerspective = !this.showViewEditPhotosPerspective;
     
@@ -601,10 +538,17 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
             this.errorCleaningNotConfirmedPhotos = true;
             return;
           }
+
+          console.log("FOTO non confermate RIMOSSE");
+
+          window.location.reload();
         }
       )
 
     }
+
+    if((!this.notConfirmedPhotosIDs || this.notConfirmedPhotosIDs.length == 0) && !this.showViewEditPhotosPerspective) window.location.reload();
+
   }
 
   handleCloseWindowEditPhotosEvent($event: boolean): void {
@@ -625,8 +569,6 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
 
     this.accommodation.beds = Number(this.bedsNum);
     this.accommodation.rooms = Number(this.roomsNum);
-
-    console.log("STAMPO PRIMA DEL METODO -> ", this.accommodation);
 
     this.accommodationService
       .updateAccommodationInfo(this.accommodation)
@@ -878,8 +820,6 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
     this.addedToFavourites = false;
     this.removedFromFavourites = false;
     this.deletedAccommodation = false;
-    this.countryRequired = false;
-    this.capRequired = false;
     this.updatedAccommodation = false;
     this.roomsBedsRequired = false;
     this.bookingValuesMissing = false;

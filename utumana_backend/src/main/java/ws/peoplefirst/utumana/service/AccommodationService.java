@@ -814,7 +814,7 @@ public class AccommodationService {
         //Now lets remove isolated Dates:
         availabilities = sortAndCleanStringList(availabilities);
 
-        System.out.println("\n\n\n\n" +  availabilities + "\n\n\nGATTO\n\n\n");
+        //System.out.println("\n\n\n\n" +  availabilities + "\n\n\n\n\n");
 
         return availabilities;
     }
@@ -961,7 +961,9 @@ public class AccommodationService {
         return p;
     }
 
+    //TODO:
     public boolean deletePhotosFromAccommodation(Long accommodationId, List<Long> photosIDsToRemove) {
+        System.out.println("\n\n\n\n\n\n\nSTAMP INPUT -> " + photosIDsToRemove + "\n\n\n\n\n\n");
         Accommodation acc = this.findById(accommodationId);
         List<Photo> photos = acc.getPhotos();
         List<Photo> resPhotosToRemove = new ArrayList<Photo>();

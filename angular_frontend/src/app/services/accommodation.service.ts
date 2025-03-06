@@ -459,8 +459,16 @@ export class AccommodationService {
   }
 
   removePhotosFromAccommodation(accId: number, usrId: number, IDs: number[]): Observable<boolean | {message: string, status: string, time: string}> {
+    const authToken =  localStorage.getItem("token");
+    
     let urlParam = encodeURIComponent(JSON.stringify(IDs));
-    return this.http.delete<boolean | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/accommodation/remove_photos/" + accId + "/" + usrId + "?ids=" + urlParam);
+    return this.http.delete<boolean | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/accommodation/remove_photos/" + accId + "/" + usrId + "?ids=" + urlParam, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        ContentType: 'application/json',
+        AcceptType: 'application/json'
+      }
+    });
   }
   
   getAccommodationsToBeApproved() {

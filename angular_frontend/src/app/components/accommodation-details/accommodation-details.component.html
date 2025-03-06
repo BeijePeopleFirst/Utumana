@@ -30,7 +30,6 @@
         <!-- 📍 Località -->
         <div class="relative flex items-center">
           <p class="text-2xl text-gray-600">{{ accommodation.city }}, {{ accommodation.province }}, {{ accommodation.country }}</p>
-          <img *ngIf="isAdminOrMe" class="top-0 -right-10 w-7 h-7 icon" src="/assets/icons/pencil.png" (click)="toggleEditCityProvCountry()" />
         </div>
   
       <!-- 📆 Availabilities -->
@@ -50,15 +49,15 @@
           <!-- -------------------------------------------------------------------------------------- -->
           <img id="biggest-image" [src]="accommodation.photos[0].blob_url" class="w-96" />
 
-          <img src="/assets/icons/pencil.png" (click)="toggleEditPhotosPerspective()" class="-top-4 -right-10 w-7 h-7 icon" *ngIf="accommodation.photos.length === 1" id="pencil-one-image" />
+          <img src="/assets/icons/pencil.png" (click)="toggleEditPhotosPerspective()" class="-top-4 -right-10 w-7 h-7 icon" *ngIf="accommodation.photos.length === 1 && isMe" id="pencil-one-image" />
           
           <div *ngIf="accommodation.photos.length > 1" id="other-images" class="flex flex-col">
             <div class="flex flex-row">
               <img id="image-oth1" [src]="accommodation.photos[1].blob_url" class="w-44" />
-              <img src="/assets/icons/pencil.png" (click)="toggleEditPhotosPerspective()" class="-top-4 -right-10 w-7 h-7 icon" *ngIf="accommodation.photos.length === 2" id="pencil-two-images" />
+              <img src="/assets/icons/pencil.png" (click)="toggleEditPhotosPerspective()" class="-top-4 -right-10 w-7 h-7 icon" *ngIf="accommodation.photos.length === 2 && isMe" id="pencil-two-images" />
               <div>
                 <img id="image-oth2" [src]="accommodation.photos[2].blob_url" class="w-44" *ngIf="accommodation.photos.length > 2" />
-                <img src="/assets/icons/pencil.png" (click)="toggleEditPhotosPerspective()" *ngIf="accommodation.photos.length >= 3" id="pencil-three-images" class="-top-4 -right-10 w-7 h-7 icon" />
+                <img src="/assets/icons/pencil.png" (click)="toggleEditPhotosPerspective()" *ngIf="accommodation.photos.length >= 3 && isMe" id="pencil-three-images" class="-top-4 -right-10 w-7 h-7 icon" />
               </div>
             </div>
 
@@ -79,7 +78,7 @@
             {{ accommodation.rooms }} {{"accommodation-card-details.rooms-word" | translate}}, 
             {{ accommodation.beds }} {{"accommodation-card-details.beds-word" | translate}}
           </p>
-          <img *ngIf="isAdminOrMe" class="top-0 -right-10 w-7 h-7 icon" src="/assets/icons/pencil.png" (click)="toggleEditRoomsBeds()" />
+          <img *ngIf="isMe" class="top-0 -right-10 w-7 h-7 icon" src="/assets/icons/pencil.png" (click)="toggleEditRoomsBeds()" />
         </div>
 
         <p class="mt-10 text-2xl" *ngIf="isAdminOrMe && accommodation.approval_timestamp">{{("accommodation-card-details.approval-timestamp-text" | translate)}}: {{accommodation.approval_timestamp | date:'medium':undefined:locale}}</p>
@@ -113,7 +112,7 @@
           <!-- Matita per modificare i servizi -->
           <img src="/assets/icons/pencil.png" 
             (click)="toggleEditServicesPerspective()" 
-            *ngIf="isAdminOrMe" 
+            *ngIf="isMe" 
             class="absolute w-6 transition-transform cursor-pointer top-4 right-4 hover:scale-110"/>
 
           <h2 class="mb-4 text-2xl font-bold text-primary-light">{{ ("accommodation-card-details.services-word" | translate) }}</h2>
@@ -185,14 +184,6 @@
       {{"accommodation-card-details.deleted-accommodation" | translate}}
     </h1>
     
-    <h1 class="text-xl text-blue-800" *ngIf="countryRequired">
-      {{"accommodation-card-details.country-required" | translate}}
-    </h1>
-    
-    <h1 class="text-xl text-blue-800" *ngIf="capRequired">
-      {{"accommodation-card-details.cap-required" | translate}}
-    </h1>
-    
     <h1 class="text-xl text-blue-800" *ngIf="updatedAccommodation">
       {{"accommodation-card-details.updated-accommodation" | translate}}
     </h1>
@@ -236,95 +227,6 @@
   </ng-container>
   <!-------------------------------------------------------------------------------------------------------------------------------------------------->
   
-  <ng-template #editCityProvCountryTemplate>
-    <div class="absolute transform -translate-x-1/2 -translate-y-1/2 border-4 border-solid top-1/2 left-1/2 border-primary-dark bg-neutral-2">
-      <form #cityProvCountryForm="ngForm" class="m-5">
-        <div class="flex flex-col items-center justify-center">
-
-          <h1 class="text-2xl">{{"accommodation-card-details.edit-address-sentence" | translate}}</h1>
-
-          <div class="flex flex-row">
-            <label class="label-primary" for="city-input-popup">{{"accommodation-card-details.city-word" | translate}}: </label>
-            <div>
-              <input class="input-primary" [(ngModel)]="cityInputField" name="city-input-popup" #cityInPopup="ngModel" id="city-input-popup" type="text" 
-              [value]="accommodation.city ? accommodation.city : ('accommodation-card-details.city-placeholder-input-field' | translate)"
-              pattern="^[a-zA-Z]+( [a-zA-Z]+)*$" />
-              <div class="error-message" *ngIf="cityInPopup.invalid && (!cityInPopup.pristine && cityInPopup.dirty) && cityInPopup.hasError('pattern')">
-                {{"accommodation-card-details.city-input-field-error" | translate}}
-              </div>
-            </div>
-          </div>
-
-          <div class="flex flex-row">
-            <label class="label-primary" for="cap-input-popup">{{"accommodation-card-details.cap-word" | translate}}: </label>
-            <div>
-              <input name="cap-input-popup" class="input-primary" [(ngModel)]="CAPInputField" #CAPInPopup="ngModel" id="cap-input-popup" type="text" 
-              [value]="accommodation.cap" pattern="[0-9]{5}" required />
-              <div class="error-message" *ngIf="CAPInPopup.invalid && (!CAPInPopup.pristine && CAPInPopup.dirty) && (CAPInPopup.hasError('pattern') || CAPInPopup.hasError('required'))">
-                {{"accommodation-card-details.cap-input-field-error" | translate}}
-              </div>
-            </div>
-          </div>
-
-          <div class="flex flex-row">
-            <label class="label-primary" for="street-input-popup">{{"accommodation-card-details.street-word" | translate}}: </label>
-            <div>
-              <input name="street-input-popup" class="input-primary" [(ngModel)]="streetInputField" #streetInPopup="ngModel" id="street-input-popup" type="text" 
-              [value]="accommodation.street ? accommodation.street : ('accommodation-card-details.street-placeholder-input-field' | translate)"
-              pattern="^[a-zA-Z]+( [a-zA-Z]+)*$" />
-              <div class="error-message" *ngIf="streetInPopup.invalid && (!streetInPopup.pristine && streetInPopup.dirty) && streetInPopup.hasError('pattern')">
-                {{"accommodation-card-details.street-input-field-error" | translate}}
-              </div>
-            </div>
-          </div>
-
-          <div class="flex flex-row">
-            <label class="label-primary" for="street-number-input-popup">{{"accommodation-card-details.street-number-word" | translate}}: </label>
-            <div>
-              <input name="street-number-input-popup" class="input-primary" [(ngModel)]="strNumInputField" #streetNumInPopup="ngModel" id="street-number-input-popup" type="text" 
-              [value]="accommodation.street_number ? accommodation.street_number : ('accommodation-card-details.street-number-placeholder-input-field' | translate)"
-              pattern="[0-9]+[/]?[a-zA-Z]?" />
-              <div class="error-message" *ngIf="streetNumInPopup.invalid && (!streetNumInPopup.pristine && streetNumInPopup.dirty) && streetNumInPopup.hasError('pattern')">
-                {{"accommodation-card-details.street-number-input-field-error" | translate}}
-              </div>
-            </div>
-          </div>
-  
-          <div class="flex flex-row">
-            <label class="label-primary" for="prov-input-popup">{{"accommodation-card-details.province-word" | translate}}: </label>
-            <div>
-              <input name="prov-input-popup" class="input-primary" [(ngModel)]="provinceInputField" #provInPopup="ngModel" id="prov-input-popup" type="text" 
-              [value]="accommodation.province ? accommodation.province : ('accommodation-card-details.province-placeholder-input-field' | translate)"
-              pattern="^[a-zA-Z]+( [a-zA-Z]+)*$" />
-              <div class="error-message" *ngIf="provInPopup.invalid && (!provInPopup.pristine && provInPopup.dirty) && provInPopup.hasError('pattern')">
-                {{"accommodation-card-details.province-input-field-error" | translate}}
-              </div>
-            </div>
-          </div>
-  
-          <div class="flex flex-row">
-            <label class="label-primary" for="country-input-popup">{{"accommodation-card-details.country-word" | translate}}: </label>
-            <div>
-              <input name="country-input-popup" class="input-primary" [(ngModel)]="countryInputField" #countryInPopup="ngModel" id="country-input-popup" type="text" [value]="accommodation.country" required pattern="^[a-zA-Z]+( [a-zA-Z]+)*$" />
-              <div class="error-message" *ngIf="countryInPopup.invalid && (!countryInPopup.pristine && countryInPopup.dirty) && (countryInPopup.hasError('pattern') || countryInPopup.hasError('required'))">
-                {{"accommodation-card-details.country-input-field-error" | translate}}
-              </div>
-            </div>
-          </div>
-  
-          <div class="flex flex-row items-center mt-6">
-            <button class="mr-2 btn-primary" type="button" (click)="toggleEditCityProvCountry()" >{{("accommodation-card-details.close-btn-city-prov-country-form" | translate)}}</button>
-            <button [disabled]="cityProvCountryForm.invalid" class="btn-primary" type="button" (click)="confirmFormCityCountryProv()" >{{("accommodation-card-details.submit-btn-city-prov-country-form" | translate)}}</button>
-          </div>
-        </div>
-      </form>
-    </div>
-  </ng-template>
-  
-  <ng-container *ngIf="showEditCityProvCountry">
-    <ng-container *ngTemplateOutlet="editCityProvCountryTemplate"></ng-container>
-  </ng-container>
-
   <ng-template #viewMorePhotos>
     <div id="view-more-photos-main-container" class="fixed w-full h-full top-0 left-0 z-[999] bg-neutral-1/75">
       <div class="absolute top-0 right-0">

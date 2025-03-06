@@ -16,7 +16,7 @@ export class EditPhotosAccommodationDetailsComponent implements OnInit {
   @Output() notConfirmedPhotosIDsEvent: EventEmitter<number[]> = new EventEmitter<number[]>();
   @Output() closeThisWindowEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  photosCouples: [Photo, (Photo | null), (Photo | null)][] = [];
+  photosRows: [Photo, (Photo | null), (Photo | null)][] = [];
 
   private notConfirmedPhotosIDs: number[] = [];
 
@@ -25,6 +25,8 @@ export class EditPhotosAccommodationDetailsComponent implements OnInit {
   public messages: boolean = false;
   public errorWhileSelectingFiles: boolean = false;
   public errorWhileUploadingToS3: boolean = false;
+  public errorRemovingPhoto: boolean = false;
+  public successPhotoRemoved: boolean = false;
   //----------------------------------------------------
 
 
@@ -39,26 +41,67 @@ export class EditPhotosAccommodationDetailsComponent implements OnInit {
 
     while(i < this.accomodation.photos.length) {
       if(i < this.accomodation.photos.length - 2) {
-        this.photosCouples.push([this.accomodation.photos[i], this.accomodation.photos[i+1], this.accomodation.photos[i+2]]);
+        this.photosRows.push([this.accomodation.photos[i], this.accomodation.photos[i+1], this.accomodation.photos[i+2]]);
         i += 3;
         continue;
       }
       else {
         if(i < this.accomodation.photos.length - 1) {
-          this.photosCouples.push([this.accomodation.photos[i], this.accomodation.photos[i+1], null]);
+          this.photosRows.push([this.accomodation.photos[i], this.accomodation.photos[i+1], null]);
           break;
         }
         else {
-          this.photosCouples.push([this.accomodation.photos[i], null, null]);
+          this.photosRows.push([this.accomodation.photos[i], null, null]);
           break;
         }
       }
     }
   }
 
-  //TODO:
   public removePhoto(id?: number): void {
+    if(!id) {
+      this.errorRemovingPhoto = true;
+      this.messages = true;
+      return;
+    }
 
+    this.accommodationService.removePhotosFromAccommodation(this.accomodation.id!, Number(localStorage.getItem("id")!),
+                                                              Array.of(id))
+            .subscribe(
+
+              response => {
+                if(typeof response != "boolean") {
+                  this.errorRemovingPhoto = true;
+                  this.messages = true;
+                  console.error(response);
+                  return;
+                }
+
+                //Adesso rimuovo la foto dalla lista di photosCouples:
+                this.photosRows = this.removePhotoFromRows(id, this.photosRows);
+
+                this.messages = true;
+                this.successPhotoRemoved = true;
+              }
+              
+            )
+  }
+
+  private removePhotoFromRows(id: number, l: [Photo, (Photo | null), (Photo | null)][]): [Photo, (Photo | null), (Photo | null)][] {
+    let result: [Photo, (Photo | null), (Photo | null)][] = [];
+    let support: Photo[] = [];
+
+    l.forEach(r => {
+      if(r[0]) support.push(r[0]);
+      if(r[1]) support.push(r[1]);
+      if(r[2]) support.push(r[2]);
+    })
+    
+    for(let p of support) {
+      if(p.id != id) result = this.addPhotoToViewList(p, result);
+    }
+
+    return result;
   }
 
   public uploadPhotosToS3($event: Event): void {
@@ -94,7 +137,7 @@ export class EditPhotosAccommodationDetailsComponent implements OnInit {
           }
           else {
 
-            //Recupero la foto e la metto nella lista photosCouples
+            //Recupero la foto e la metto nella lista photosRows
             this.s3Service.getPhoto(response.photo_url).subscribe(
               photo => {
                 if(!photo) {
@@ -107,7 +150,7 @@ export class EditPhotosAccommodationDetailsComponent implements OnInit {
                 this.notConfirmedPhotosIDs.push(tmp.id);
                 this.notConfirmedPhotosIDsEvent.emit(this.notConfirmedPhotosIDs);
 
-                this.photosCouples = this.addPhotoToViewList(tmp, this.photosCouples);
+                this.photosRows = this.addPhotoToViewList(tmp, this.photosRows);
               }
             )
 
@@ -155,6 +198,8 @@ export class EditPhotosAccommodationDetailsComponent implements OnInit {
     this.messages = false;
     this.errorWhileSelectingFiles = false;
     this.errorWhileUploadingToS3 = false;
+    this.errorRemovingPhoto = false;
+    this.successPhotoRemoved = false;
   }
 
 }

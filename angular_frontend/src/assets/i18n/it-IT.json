@@ -230,7 +230,9 @@
 	"confirm-button": "Conferma",
 	"clear-messages": "Cancella Messaggi",
 	"file-selection-error": "Errore durante la selezione delle Foto",
-	"S3-upload-error": "Errore durante l' elaborazione delle Foto"
+	"S3-upload-error": "Errore durante l' elaborazione delle Foto",
+	"remove-photo-error": "Errore durante l' eliminazione della Foto",
+	"remove-photo-success": "Foto rimossa con Successo"
 },
 "error": "Errore sconosciuto. Per favore, riprova.",
 "favourites": {

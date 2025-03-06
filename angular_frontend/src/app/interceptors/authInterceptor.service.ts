@@ -57,7 +57,7 @@ export class AuthInterceptor implements HttpInterceptor {
         }
       });
 
-      console.log("Request with image:", authReq);
+      //console.log("Request with image:", authReq);
 
       return next.handle(authReq).pipe(
         catchError(error => {

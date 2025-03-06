@@ -230,7 +230,9 @@
 	"confirm-button": "Confirm",
 	"clear-messages": "Clear",
 	"file-selection-error": "Error while choosing Files",
-	"S3-upload-error": "Error occurred while processing Files"
+	"S3-upload-error": "Error occurred while processing Files",
+	"remove-photo-error": "Error occurred while removing selected Photo",
+	"remove-photo-success": "Photo Successfully removed"
 },
 "error": "Unexpected error. Please retry.",
 "favourites": {

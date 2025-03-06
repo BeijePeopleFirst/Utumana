@@ -869,17 +869,17 @@ public class AccommodationController {
 			String approval = accommodation.getApprovalTimestamp().format(formatter);
 			res.put("approval", approval);
 
-			//List<Review> reviews = accommodationService.getAccommodationReviews(accommodationId);
-			List<ReviewUserDTO> reviews = accommodationService.getAllAccommodationReviews(accommodationId);
-			res.put("reviews", reviews);
-
-			boolean hasPendingBooking = bookingService.hasPendingBooking(user.getId(), accommodationId);
+			/*boolean hasPendingBooking = bookingService.hasPendingBooking(user.getId(), accommodationId);
 			res.put("hasPendingBooking", hasPendingBooking);
 
 			Long pendingId = bookingService.pendingBooking(user.getId(), accommodationId);
 			if (pendingId != null)
-				res.put("bookingId", pendingId);
+				res.put("bookingId", pendingId);*/
 		}
+
+		//List<Review> reviews = accommodationService.getAccommodationReviews(accommodationId);
+		List<ReviewUserDTO> reviews = accommodationService.getAllAccommodationReviews(accommodationId);System.out.println("\n\nDEBUG: Altro debug5\n\n");
+		res.put("reviews", reviews);
 
 		boolean isFavourite = accommodationService.isFavourite(accommodationId, user.getId());
 		res.put("isFavourite", isFavourite);
@@ -957,7 +957,7 @@ public class AccommodationController {
     })
 	@PreAuthorize("hasAuthority('USER')")
 	@DeleteMapping(value = "/accommodation/remove_photos/{accommodationId}/{userId}")
-	public boolean removePhotos(@PathVariable("accommodationId") Long id, @PathVariable("userId") Long userId, @RequestParam("ids") String ids, Authentication auth) {
+	public boolean removePhotos(@PathVariable("accommodationId") Long id, @PathVariable() Long userId, @RequestParam() String ids, Authentication auth) {
 		
 		AuthorizationUtility.checkIsAdminOrMe(auth, userId);
 
