@@ -107,7 +107,8 @@
 	"invalid_surname": "Cognome non valido",
 	"required": "Campo obbligatorio",
 	"password_instructions": "La password deve contenere almeno 8 caratteri, fra cui almeno una lettera minuscola, una lettera maiuscola, un numero e un simbolo fra !\"#$%&'()*+,-.:;<=>?@",
-	"created": "Utente creato"
+	"created": "Utente creato",
+	"is_admin": "è amministratore"
 },
 "adminProfile":  {
 	"name": "Nome",

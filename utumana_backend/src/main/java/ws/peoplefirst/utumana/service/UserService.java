@@ -182,8 +182,9 @@ public class UserService implements UserDetailsService {
 		checkUser(user);
 		log.trace("User OK");
 		
-		log.trace("Setting user.isAdmin to false");		 // DA TOGLIERE POI
-		user.setIsAdmin(false); 						 // DA TOGLIERE POI
+		if(user.getIsAdmin() == null){
+			user.setIsAdmin(false);
+		}
 
 		user = userRepository.save(user);
 		
@@ -191,10 +192,16 @@ public class UserService implements UserDetailsService {
 		
 		userAuthority.setUserId(user.getId());
 		userAuthority.setAuthorityId(1); //USER
-		
 		userAuthorityRepository.save(userAuthority);
+
+		if(user.getIsAdmin() == true){
+			userAuthority = new UserAuthority();
+			userAuthority.setUserId(user.getId());
+			userAuthority.setAuthorityId(2); //ADMIN
+			userAuthorityRepository.save(userAuthority);
+		}
 		
-		log.debug("Inserted user: " + user + " with authority \"USER\"");
+		log.debug("Inserted user: " + user);
 
 		return user;
 	}

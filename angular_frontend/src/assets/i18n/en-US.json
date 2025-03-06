@@ -107,7 +107,8 @@
 	"invalid_surname": "Invalid surname",
 	"required": "Required field",
 	"password_instructions": "Password must be at least 8 characters long and contain at least one lowercase letter,  one uppercase letter, one number and one symbol of !\"#$%&'()*+,-.:;<=>?@",
-	"created": "User created successfully"
+	"created": "User created successfully",
+	"is_admin": "is admin"
 },
 "adminProfile":  {
 	"name": "Name",
