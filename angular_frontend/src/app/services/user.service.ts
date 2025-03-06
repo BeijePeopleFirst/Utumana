@@ -38,10 +38,10 @@ export class UserService {
       map(users => {
         console.log("users",users);
         users.forEach(user => {
-          if(user.profilePictureUrl){
-            this.s3Service.getPhoto(user.profilePictureUrl).subscribe(blob => {
+          if(user.profile_picture_url){
+            this.s3Service.getPhoto(user.profile_picture_url).subscribe(blob => {
               if(blob != null){
-                user.profilePictureUrl = URL.createObjectURL(blob);
+                user.profile_picture_url = URL.createObjectURL(blob);
               }
             })
           }
@@ -84,7 +84,20 @@ export class UserService {
   }
 
   editUserInfo(updatePayload: Partial<UserDTO>): Observable<UserDTO> {
-    return this.http.patch<User>(`${BACKEND_URL_PREFIX}/api/user`, {...updatePayload}).pipe(
+    return this.http.patch<UserDTO>(`${BACKEND_URL_PREFIX}/api/user`, {...updatePayload}).pipe(
+      map(user => {
+        console.log("updatePayload",user.profile_picture_url); 
+        if(user.profile_picture_url){
+          console.log("profilePictureUrl",user.profile_picture_url);
+          this.s3Service.getPhoto(user.profile_picture_url).subscribe(blob => {
+            if(blob != null){
+              user.profile_picture_url = URL.createObjectURL(blob);
+            }
+          })
+        }
+        console.log("user",user);
+        return user;
+      }),
       catchError(error => {
         console.log(error.error);
         return of(error.error);

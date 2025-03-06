@@ -33,7 +33,7 @@ export class AccommodationCardComponent implements OnInit {
   ngOnInit(): void {
     this.priceRange = this.accommodation.max_price - this.accommodation.min_price > 0;
     this.free = !this.priceRange && this.accommodation.max_price < 0.01;
-    this.authService.isAdmin().subscribe(is_admin => {
+    this.authService.isUserAdmin$.asObservable().subscribe(is_admin => {
       this.isAdmin = is_admin;
     });
   }
