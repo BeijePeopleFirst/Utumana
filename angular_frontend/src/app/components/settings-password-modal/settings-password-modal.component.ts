@@ -21,6 +21,10 @@ export class SettingsPasswordModalComponent {
   invalidPassword: boolean = false;
   showPasswordConfirmError: boolean = false;
   passwordConfirmDifferent: boolean = false;
+
+  visibleOldPassword: boolean = false;
+  visibleNewPassword: boolean = false;
+  visibleConfirmPassword: boolean = false;
   
   constructor(private userService: UserService){}
 

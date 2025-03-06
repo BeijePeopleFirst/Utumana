@@ -17,6 +17,7 @@ export class LoginComponent implements OnInit {
   showPasswordError: boolean = false;
   user: AuthCredentials = {email: '', password: ''};
   @ViewChild('loginForm', { static: true }) loginForm!: NgForm;
+  visiblePassword: boolean = false;
 
   returnUrl: string = '';
 
