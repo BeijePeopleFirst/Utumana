@@ -14,6 +14,7 @@ import { LoginResponse } from '../utils/loginResponse';
 })
 export class AuthService {
   isLoggedIn: boolean = localStorage.getItem("token") != null;
+  isUserAdmin$ = new BehaviorSubject<boolean>(false);
 
   private refreshInProgress = false;
   private refreshTokenSubject = new BehaviorSubject<string | null>(null);
@@ -35,9 +36,11 @@ export class AuthService {
         console.log(json);
         localStorage.setItem('id',json.id.toString());
         localStorage.setItem("email", json.email);
-        localStorage.setItem("roles", JSON.stringify(json.permission));
 			  localStorage.setItem("token", json.token);
 			  document.cookie = "refresh_token=" + json.refresh_token;
+        if(json.permission.includes("ADMIN")){
+          this.isUserAdmin$.next(true);
+        }
         return {ok: true, status: 200, message: 'Successfully logged in'};
       }),
       tap(() => this.isLoggedIn = true),
@@ -50,6 +53,7 @@ export class AuthService {
 
   logout(returnUrl?:string): void {
     this.isLoggedIn = false;
+    this.isUserAdmin$.next(false);
     localStorage.clear();
     sessionStorage.clear();
     this.deleteCookies();
