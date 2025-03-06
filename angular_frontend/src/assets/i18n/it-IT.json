@@ -100,6 +100,14 @@
 
 	"metrics": "Statistiche"
 },
+"admin-dashboard-users": {
+	"name": "Nome",
+	"invalid_name": "Nome non valido",
+	"surname": "Cognome",
+	"invalid_surname": "Cognome non valido",
+	"required": "Campo obbligatorio",
+	"password_instructions": "La password deve contenere almeno 8 caratteri, fra cui almeno una lettera minuscola, una lettera maiuscola, un numero e un simbolo fra !\"#$%&'()*+,-.:;<=>?@"
+},
 "bookings":{
 	"checkIn":"Check-in",
 	"checkOut":"Check-out",
@@ -179,6 +187,7 @@
 	},
 "common": {
 	"cancel": "Annulla",
+	"create": "Crea",
 	"delete": "Elimina"
 	},
 "create": {
@@ -364,7 +373,7 @@
 	"reject_subtitle": "Se scegli \"Rifiuta\", la recensione verrà eliminata definitivamente",
 	"accept_button_label": "Accetta",
 	"reject_button_label": "Rifiuta",
-	"see_accommodation": "Vedi sistemazione"
+	"see_accommodation": "Visualizza sistemazione"
 	},
 "save_button_label": "Salva",
 "search": {

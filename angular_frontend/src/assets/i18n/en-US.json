@@ -100,6 +100,14 @@
 
 	"metrics": "Metrics"
 },
+"admin-dashboard-users": {
+	"name": "Name",
+	"invalid_name": "Invalid name",
+	"surname": "Surname",
+	"invalid_surname": "Invalid surname",
+	"required": "Required field",
+	"password_instructions": "Password must be at least 8 characters long and contain at least one lowercase letter,  one uppercase letter, one number and one symbol of !\"#$%&'()*+,-.:;<=>?@"
+},
 "bookings": {
 	"checkIn":"Check-in",
 	"checkOut":"Check-out",
@@ -179,6 +187,7 @@
 	},
 "common": {
 	"cancel": "Cancel",
+	"create": "Create",
 	"delete": "Delete"
 	},
 "create": {
@@ -364,7 +373,7 @@
 	"reject_subtitle": "If you choose \"Reject\", the review will be permanently deleted",
 	"accept_button_label": "Accept",
 	"reject_button_label": "Reject",
-	"see_accommodation": "See accommodation"
+	"see_accommodation": "View accommodation"
 },
 "save_button_label": "Save",
 "search": {

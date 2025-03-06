@@ -40,41 +40,33 @@ public class UserService implements UserDetailsService {
 	private S3Service s3Service;
 
 
-	public boolean isUserOK(User user) {
+	public void checkUser(User user) {
 		if(user == null) {
-			log.trace("User is null");
-			return false;
+			throw new InvalidJSONException("Error: user is null.");
 		}
 		
-		boolean isNameOK = isValidName(user.getName());
-		if(!isNameOK) {
-			log.trace("Invalid user name: " + user.getName());
+		if(!isValidName(user.getName())) {
+			throw new InvalidJSONException("Error: invalid name.");
 		}
 		
-		boolean isSurnameOK = isValidSurname(user.getSurname());
-		if(!isSurnameOK) {
-			log.trace("Invalid user surname: " + user.getSurname());
+		if(!isValidSurname(user.getSurname())) {
+			throw new InvalidJSONException("Error: invalid surname.");
 		}
 		
-		boolean isEmailOK = isValidEmail(user.getEmail());
-		if(!isEmailOK) {
-			log.trace("Invalid user email: " + user.getEmail());
+		if(!isValidEmail(user.getEmail())) {
+			throw new InvalidJSONException("Error: invalid email.");
 		}
 		if(user.getId() == null) {
 			if(userRepository.findUserByEmail(user.getEmail()) != null) {
-				isEmailOK = false;
-				log.trace("Email is not unique: " + user.getEmail());
+				throw new InvalidJSONException("Error: email is already registered.");
 			}
 		} else if(!isEmailUnique(user.getEmail(), user.getId())) {
-			isEmailOK = false;
-			log.trace("Email is not unique: " + user.getEmail());
+			throw new InvalidJSONException("Error: email is not unique.");
 		}
 		
-		boolean isPasswordOK = isValidPassword(user.getPassword());
-		if(!isPasswordOK) {
-			log.trace("Invalid password: " + user.getPassword());		}
-		
-		return isNameOK && isSurnameOK && isEmailOK && isPasswordOK;
+		if(!isValidPassword(user.getPassword())) {
+			throw new InvalidJSONException("Error: invalid password.");
+		}
 	}
 	
 	public boolean isValidName(String name) {
@@ -93,6 +85,11 @@ public class UserService implements UserDetailsService {
 		return userRepository.findUserByEmailExceptMe(email, userId) == null;
 	}
 	
+	/*
+	 * Allowed symbols are:
+	 * - characters c where 33 <= c <= 46: !"#$%&'()*+,-.
+	 * - characters c where 58 <= c <= 64: :;<=>?@
+	 */
 	public boolean isValidPassword(String password) {
 		if(password == null || password.isBlank())
 			return false;
@@ -112,7 +109,7 @@ public class UserService implements UserDetailsService {
 				countLower++;
 			}else if(c >= 48 && c <= 57) {	// 0-9
 				countNumbers++;
-				} else if(c >= 33 && c <= 46 || c >= 50 && c <= 64) {
+				} else if(c >= 33 && c <= 46 || c >= 58 && c <= 64) {
 					countSymbols++;
 				}
 		}
@@ -181,11 +178,8 @@ public class UserService implements UserDetailsService {
     }
 
 	public User insertUser(User user) {	
-		
 		log.trace("Checking if user to insert is OK...");
-		if(!isUserOK(user)) {
-			throw new InvalidJSONException("Error: could not create new user. Invalid user.");
-		}
+		checkUser(user);
 		log.trace("User OK");
 		
 		log.trace("Setting user.isAdmin to false");		 // DA TOGLIERE POI
