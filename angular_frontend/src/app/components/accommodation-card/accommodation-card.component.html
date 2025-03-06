@@ -30,7 +30,7 @@
         </p>
         
         <button *ngIf="status === 'active'" type="button" (click)="book = true" class="mt-2 btn-primary">{{'accommodation-card.book' | translate}}</button>
-        <div *ngIf="isAdmin && status === 'pending'" class="flex flex-row justify-around w-full">
+        <div *ngIf="isAdmin && status === 'pending'" class="flex flex-row justify-around mt-2 w-full">
           <button type="button" (click)="showAcceptRejectModal($event, 'accept')"  class="w-2/5 btn-success">{{'accommodation-card.approve' | translate}}</button>
           <button type="button" (click)="showAcceptRejectModal($event, 'reject')"  class="w-2/5 btn-danger">{{'accommodation-card.reject' | translate}}</button>
         </div>

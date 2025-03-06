@@ -13,6 +13,7 @@ export const adminGuard = async () => {
     let isAdmin;
     await lastValueFrom(checkIsAdmin).then(isUserAdmin => {
       isAdmin = isUserAdmin;
+      authService.isUserAdmin$.next(isAdmin);
     });
     console.log("Checking if is admin");
     if (isAdmin){
