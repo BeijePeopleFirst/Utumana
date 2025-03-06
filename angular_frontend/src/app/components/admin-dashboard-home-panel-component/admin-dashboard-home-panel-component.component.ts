@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { imagesURL } from 'src/costants';
 
 @Component({
   selector: 'app-admin-dashboard-home-panel-component',
@@ -6,5 +7,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./admin-dashboard-home-panel-component.component.css']
 })
 export class AdminDashboardHomePanelComponent {
-
+  url = imagesURL + "\\house_manager.jpg";
 }
