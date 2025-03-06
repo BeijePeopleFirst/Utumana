@@ -22,16 +22,11 @@ $utumana-app-warn:    mat.define-palette(mat.$red-palette);
 /*   typography: (
     brand-family: 'Parkinsans'
   ), */
-  typography: (mat.define-typography-config('Parkinsans')),
-  density: (
-    scale: 0
-  )
+  typography: (mat.define-typography-config('Parkinsans'))
 ));
 
 /* Include theme styles for core and each component used in your app.
  Alternatively, you can import and @include the theme mixins for each 
  component that you are using. */
 @include mat.core-theme($utumana-app-theme);
-@include mat.sidenav-theme($utumana-app-theme);
-@include mat.list-theme($utumana-app-theme);
-@include mat.progress-spinner-theme($utumana-app-theme);
+@include mat.all-component-themes($utumana-app-theme);

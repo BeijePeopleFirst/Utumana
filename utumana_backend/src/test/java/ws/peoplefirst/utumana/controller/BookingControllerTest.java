@@ -65,7 +65,7 @@ public class BookingControllerTest {
     }
 
     private UserDTO getUnautorizedUser() {
-        return new UserDTO(1L, "", "", "");
+        return new UserDTO(1L, "", "", "", "");
     }
 
     private BookingDTO getBookingDTO() {

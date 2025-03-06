@@ -108,6 +108,17 @@
 	"required": "Campo obbligatorio",
 	"password_instructions": "La password deve contenere almeno 8 caratteri, fra cui almeno una lettera minuscola, una lettera maiuscola, un numero e un simbolo fra !\"#$%&'()*+,-.:;<=>?@"
 },
+"adminProfile":  {
+	"name": "Nome",
+	"surname": "Cognome",
+	"email": "Email",
+	"required": "Campo obbligatorio",
+	"nonValid": "Email non valida",
+	"newPassword": "Nuova password (Opzionale)",
+	"passwordMessage": "Lascia vuoto per mantenere la password corrente",
+	"cancel": "Annulla",
+	"save": "Salva"
+},
 "bookings":{
 	"checkIn":"Check-in",
 	"checkOut":"Check-out",

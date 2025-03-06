@@ -108,6 +108,17 @@
 	"required": "Required field",
 	"password_instructions": "Password must be at least 8 characters long and contain at least one lowercase letter,  one uppercase letter, one number and one symbol of !\"#$%&'()*+,-.:;<=>?@"
 },
+"adminProfile":  {
+	"name": "Name",
+	"surname": "Surname",
+	"email": "Email",
+	"required": "Required",
+	"nonValid": "Non valid email",
+	"newPassword": "New password (Optional)",
+	"passwordMessage": "Leave empty to keep the current password",
+	"cancel": "Cancel",
+	"save": "Save"
+},
 "bookings": {
 	"checkIn":"Check-in",
 	"checkOut":"Check-out",

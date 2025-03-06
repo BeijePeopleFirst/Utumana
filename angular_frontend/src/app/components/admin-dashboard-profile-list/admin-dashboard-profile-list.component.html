@@ -1,0 +1,10 @@
+<mat-list>
+  <div mat-list-item *ngFor="let user of users" class="mb-4">
+    <div mat-line>
+      <app-admin-dashboard-profile
+        [user]="user" 
+        (updateUser)="updateUser($event)">
+      </app-admin-dashboard-profile>
+    </div>
+  </div>
+</mat-list>
