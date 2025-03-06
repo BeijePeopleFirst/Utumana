@@ -229,12 +229,6 @@ public class UserController {
 					user.setBio((String) value);
 					log.trace("Set new bio: " + (String) value);
 					break;
-					
-				case "profile_picture" :
-					if(value == null || ("" + value).isEmpty()) throw new InvalidJSONException("The new URL must be a String");
-					user.setProfilePictureUrl("" + value);
-					log.trace("Set new profile picture: " + "" + value);
-					break;
 				
 				case "archived_timestamp": 
 					if(AuthorizationUtility.hasAdminRole(auth)) {

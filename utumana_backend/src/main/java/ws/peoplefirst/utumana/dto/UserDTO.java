@@ -16,12 +16,16 @@ public class UserDTO {
 
 	@Schema(description = "User's email address",  example = "john.doe@example.com", pattern = "^[A-Za-z0-9+_.-]+@(.+)$")
 	private final String email;
+
+	@Schema(description = "User's profile picture URL", example = "https://example.com/picture.jpg")
+	private final String profilePictureUrl;
 	
-	public UserDTO(Long id, String name, String surname, String email) {
+	public UserDTO(Long id, String name, String surname, String email, String profilePictureUrl) {
 		this.id = id;
 		this.name = name;
 		this.surname = surname;
 		this.email = email;
+		this.profilePictureUrl = profilePictureUrl;
 	}
 	
 	public Long getId() {
@@ -41,9 +45,13 @@ public class UserDTO {
 		return email;
 	}
 
+	public String getProfilePictureUrl() {
+		return profilePictureUrl;
+	}
+
 	@Override
 	public String toString() {
-		return "UserDTO [id=" + id + ", name=" + name + ", surname=" + surname + ", email=" + email + "]";
+		return "UserDTO [id=" + id + ", name=" + name + ", surname=" + surname + ", email=" + email + ", profilePictureUrl=" + profilePictureUrl + "]";
 	}
 	
 	

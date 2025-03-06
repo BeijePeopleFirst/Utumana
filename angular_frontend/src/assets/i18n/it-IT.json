@@ -99,6 +99,17 @@
 
 	"metrics": "Statistiche"
 },
+"adminProfile":  {
+	"name": "Nome",
+	"surname": "Cognome",
+	"email": "Email",
+	"required": "Campo obbligatorio",
+	"nonValid": "Email non valida",
+	"newPassword": "Nuova password (Opzionale)",
+	"passwordMessage": "Lascia vuoto per mantenere la password corrente",
+	"cancel": "Annulla",
+	"save": "Salva"
+},
 "bookings":{
 	"checkIn":"Check-in",
 	"checkOut":"Check-out",

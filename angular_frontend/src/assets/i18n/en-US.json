@@ -99,6 +99,17 @@
 
 	"metrics": "Metrics"
 },
+"adminProfile":  {
+	"name": "Name",
+	"surname": "Surname",
+	"email": "Email",
+	"required": "Required",
+	"nonValid": "Non valid email",
+	"newPassword": "New password (Optional)",
+	"passwordMessage": "Leave empty to keep the current password",
+	"cancel": "Cancel",
+	"save": "Save"
+},
 "bookings": {
 	"checkIn":"Check-in",
 	"checkOut":"Check-out",

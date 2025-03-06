@@ -76,7 +76,7 @@ public class AccommodationControllerTest {
     }
 
     private UserDTO getUnautorizedUser() {
-        return new UserDTO(1L, "", "", "");
+        return new UserDTO(1L, "", "", "", "");
     }
 
     private <T> Page<T> getPage(List<T> pageValues) {
@@ -279,7 +279,7 @@ public class AccommodationControllerTest {
         Accommodation mockAccomodation = getInstance(Accommodation.class);
         mockAccomodation.setOwnerId(0L);
         mockAccomodation.setId(0L);
-        UserDTO mockUserDto = new UserDTO(1L, "", "", "");
+        UserDTO mockUserDto = new UserDTO(1L, "", "", "", "");
         when(authentication.getPrincipal()).thenReturn(mockUserDto);
         assertThrows(ForbiddenException.class, () -> accommodationController.setAccommodationAddress(mockAccomodation, 0L, authentication));
     }
@@ -746,7 +746,7 @@ public class AccommodationControllerTest {
     void getAccomodationInfo() {
         Accommodation accommodationMock = new Accommodation();
         accommodationMock.setOwnerId(1L);
-        UserDTO userDTO = new UserDTO(1L, "","","");
+        UserDTO userDTO = new UserDTO(1L, "","","", "");
         when(accommodationService.findById(anyLong())).thenReturn(accommodationMock);
         when(authentication.getPrincipal()).thenReturn(userDTO);
         assertDoesNotThrow(() -> accommodationController.getAccomodationInfo(authentication,anyLong()));
@@ -761,7 +761,7 @@ public class AccommodationControllerTest {
     void getAccomodationAddress() {
         Accommodation accommodationMock = new Accommodation();
         accommodationMock.setOwnerId(1L);
-        UserDTO userDTO = new UserDTO(1L, "","","");
+        UserDTO userDTO = new UserDTO(1L, "","","", "");
         when(accommodationService.findById(anyLong())).thenReturn(accommodationMock);
         when(authentication.getPrincipal()).thenReturn(userDTO);
         assertDoesNotThrow(() -> accommodationController.getAccomodationAddress(authentication,anyLong()));
@@ -797,7 +797,7 @@ public class AccommodationControllerTest {
 
     @Test
     void getPendingAccommodationsDTOKo() {
-        UserDTO userDTO = new UserDTO(1L, "","","");
+        UserDTO userDTO = new UserDTO(1L, "","","", "");
         when(authentication.getPrincipal()).thenReturn(userDTO);
         when(usrService.findById(anyLong())).thenReturn(null);
         assertThrows(IdNotFoundException.class, ()  -> accommodationController.getPendingAccommodationsDTO(1L, authentication));
@@ -805,7 +805,7 @@ public class AccommodationControllerTest {
 
     @Test
     void getPendingAccommodationsDTO() {
-        UserDTO userDTO = new UserDTO(1L, "","","");
+        UserDTO userDTO = new UserDTO(1L, "","","", "");
         when(authentication.getPrincipal()).thenReturn(userDTO);
         when(usrService.findById(anyLong())).thenReturn(getInstance(User.class));
         assertDoesNotThrow(() -> accommodationController.getPendingAccommodationsDTO(1L, authentication));
@@ -817,7 +817,7 @@ public class AccommodationControllerTest {
      */
     @Test
     void getRejectedAccommodationsDTOKo() {
-        UserDTO userDTO = new UserDTO(1L, "","","");
+        UserDTO userDTO = new UserDTO(1L, "","","", "");
         when(authentication.getPrincipal()).thenReturn(userDTO);
         when(usrService.findById(anyLong())).thenReturn(null);
         assertThrows(IdNotFoundException.class, ()  -> accommodationController.getRejectedAccommodationsDTO(1L, authentication));
@@ -825,7 +825,7 @@ public class AccommodationControllerTest {
 
     @Test
     void getRejectedAccommodationsDTO() {
-        UserDTO userDTO = new UserDTO(1L, "","","");
+        UserDTO userDTO = new UserDTO(1L, "","","", "");
         when(authentication.getPrincipal()).thenReturn(userDTO);
         when(usrService.findById(anyLong())).thenReturn(getInstance(User.class));
         assertDoesNotThrow(() -> accommodationController.getRejectedAccommodationsDTO(1L, authentication));

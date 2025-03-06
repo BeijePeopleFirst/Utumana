@@ -41,10 +41,10 @@ public interface UserRepository extends JpaRepository<User,Long>{
     @Query("SELECT DISTINCT u FROM User u WHERE u.id <> :userId AND u.archivedTimestamp is null")
     public List<User> findAllUserExceptMe(@Param("userId") Long userId);
 
-    @Query("SELECT new ws.peoplefirst.utumana.dto.UserDTO(u.id, u.name, u.surname, u.email) FROM User as u WHERE u.archivedTimestamp is null")
+    @Query("SELECT new ws.peoplefirst.utumana.dto.UserDTO(u.id, u.name, u.surname, u.email, u.profilePictureUrl) FROM User as u WHERE u.archivedTimestamp is null")
 	public List<UserDTO> findAllDTO();
     
-    @Query("SELECT new ws.peoplefirst.utumana.dto.UserDTO(u.id, u.name, u.surname, u.email) FROM User as u WHERE u.archivedTimestamp is not null")
+    @Query("SELECT new ws.peoplefirst.utumana.dto.UserDTO(u.id, u.name, u.surname, u.email, u.profilePictureUrl) FROM User as u WHERE u.archivedTimestamp is not null")
     public List<UserDTO> findAllArchivedUsers();
 
     @Query("SELECT b FROM BadgeAward AS b LEFT JOIN FETCH b.user WHERE b.user.id = :userId ORDER BY b.awardDate DESC, b.badge.score DESC")

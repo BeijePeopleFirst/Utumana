@@ -1,0 +1,65 @@
+<mat-card class="p-6 mb-4 bg-white rounded-lg shadow-md">
+  <div *ngIf="!isEditing; else editFormTemplate" class="relative flex items-center space-x-6"> 
+    <img [src]="user.profilePictureUrl" alt="Profile Picture" 
+         class="!object-cover !w-24 !h-24 !border-4 !rounded-full !border-primary">
+    
+    <div class="relative flex-grow"> 
+      <p class="text-xl font-bold text-gray-800">{{ user.name }} {{ user.surname }}</p>
+      <p class="text-base text-gray-600">{{ user.email }}</p>
+    </div>
+    <mat-list-item>
+      <button mat-icon-button (click)="toggleEdit()" class="cursor-pointer">
+        <mat-icon class="text-primary">edit</mat-icon>
+      </button>
+    </mat-list-item>
+  </div>
+
+  <ng-template #editFormTemplate>
+    <form [formGroup]="editForm" (ngSubmit)="onSubmit()" class="relative z-20 space-y-4"> 
+      <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <mat-form-field>
+          <mat-label>{{'adminProfile.name' | translate}}</mat-label>
+          <input matInput formControlName="name" required>
+          <mat-error *ngIf="editForm.get('name')?.hasError('required')">
+            {{'adminProfile.required' | translate}}
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>{{'adminProfile.surname' | translate}}</mat-label>
+          <input matInput formControlName="surname" required>
+          <mat-error *ngIf="editForm.get('surname')?.hasError('required')">
+            {{'adminProfile.required' | translate}}
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field  class="col-span-full">
+          <mat-label>{{'adminProfile.email' | translate}}</mat-label>
+          <input matInput formControlName="email" type="email" required>
+          <mat-error *ngIf="editForm.get('email')?.hasError('email')">
+            {{'adminProfile.nonValid' | translate}}
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="col-span-full">
+          <mat-label>{{'adminProfile.newPassword' | translate}}</mat-label>
+          <input matInput type="password" formControlName="password">
+          <mat-hint>{{'adminProfile.passwordMessage' | translate}}</mat-hint>
+        </mat-form-field>
+      </div>
+
+      <div class="flex justify-end space-x-2">
+        <button mat-button type="button" (click)="cancelEdit()" 
+                class="btn-cancel">
+          {{'adminProfile.cancel' | translate}}
+        </button>
+        <button mat-raised-button color="primary" type="submit" 
+                [disabled]="editForm.invalid" 
+                class="btn-primary">
+          {{'adminProfile.save' | translate}}
+        </button>
+      </div>
+    </form>
+  </ng-template>
+</mat-card>
+

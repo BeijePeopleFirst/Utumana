@@ -5,12 +5,12 @@ import { BACKEND_URL_PREFIX } from 'src/costants';
 import { User } from '../models/user';
 import { LoginResponse } from '../utils/loginResponse';
 import { S3Service } from './s3.service';
+import { UserDTO } from '../dtos/userDTO';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-
   constructor(
     private http: HttpClient,
     private s3Service: S3Service
@@ -29,6 +29,28 @@ export class UserService {
           }
         })
         return user;
+      })
+    )
+  }
+
+  getAllUsersDto(): Observable<UserDTO[]> {
+    return this.http.get<UserDTO[]>(BACKEND_URL_PREFIX + "/api/users").pipe(
+      map(users => {
+        console.log("users",users);
+        users.forEach(user => {
+          if(user.profilePictureUrl){
+            this.s3Service.getPhoto(user.profilePictureUrl).subscribe(blob => {
+              if(blob != null){
+                user.profilePictureUrl = URL.createObjectURL(blob);
+              }
+            })
+          }
+        })
+        return users;
+      }),
+      catchError(error => {
+        console.error(error.error);
+        return of(error.error);
       })
     )
   }
@@ -59,6 +81,15 @@ export class UserService {
       }),        
       catchError(_ => of(401))
     );   
+  }
+
+  editUserInfo(updatePayload: Partial<UserDTO>): Observable<UserDTO> {
+    return this.http.patch<User>(`${BACKEND_URL_PREFIX}/api/user`, {...updatePayload}).pipe(
+      catchError(error => {
+        console.log(error.error);
+        return of(error.error);
+      })
+    )
   }
 
   updatePicture(pictureFile: File): Observable<boolean> {
