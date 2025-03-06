@@ -2,7 +2,7 @@
     <div class="container p-5 text-center">
       <h2>{{'my_accommodations.title' | translate}}</h2>
       <app-accommodation-cards [accommodations$]="accommodations$" [pageNumber]="accommodationsPageNumber" [totalPages]="accommodationsTotalPages" 
-        (askForPage)="loadAccommodationsPage($event)" [status]="'accepted'"></app-accommodation-cards>
+        (askForPage)="loadAccommodationsPage($event)" [status]="'active'"></app-accommodation-cards>
     </div>
 </section>
 <section *ngIf="allPendingAccommodations && allPendingAccommodations.length > 0" class="flex justify-center items-center pt-8 bg-neutral-2">

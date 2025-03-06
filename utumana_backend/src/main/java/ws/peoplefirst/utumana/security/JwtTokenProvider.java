@@ -60,7 +60,7 @@ public class JwtTokenProvider {
 
 	public Authentication getAuthentication(String token) {
 		User user = userService.loadUserByUsername(getUsername(token));
-		UserDTO userDTO = new UserDTO(user.getId(), user.getName(), user.getSurname(), user.getEmail());
+		UserDTO userDTO = new UserDTO(user.getId(), user.getName(), user.getSurname(), user.getEmail(), user.getProfilePictureUrl());
 		return new UsernamePasswordAuthenticationToken(userDTO, "", user.getAuthorities());
 	}    
 

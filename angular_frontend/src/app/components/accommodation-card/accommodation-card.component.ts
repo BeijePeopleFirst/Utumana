@@ -20,6 +20,10 @@ export class AccommodationCardComponent implements OnInit {
   isAdmin: boolean = false;
   @Input() status!: string;
 
+  isAcceptRejectModalOpen: boolean = false;
+  acceptRejectAction: string = '';
+  @Output() refresh = new EventEmitter<void>();
+
   constructor(
     private router: Router,
     private accommodationService: AccommodationService,
@@ -64,17 +68,24 @@ export class AccommodationCardComponent implements OnInit {
     }
   }
 
-  approve() {
-    this.status = 'accepted';
-    this.accommodationService.approveAccommodation(this.accommodation.id).subscribe({
-      next: () => this.router.navigate(['/admin-dashboard/accommodations/accept-reject'])
-    })
+  closeAcceptRejectModal(shouldRefresh: boolean): void {
+    this.isAcceptRejectModalOpen = false;
+    document.body.style.overflow = 'auto';
+    if(shouldRefresh == true){
+      this.status = this.acceptRejectAction == 'accept' ? 'accepted' : 'rejected';
+      this.refresh.emit();
+      //this.router.navigate(['/admin-dashboard/accommodations/accept-reject'])
+    }
   }
 
-  reject() {
-    this.status = 'rejected';
-    this.accommodationService.rejectAccommodation(this.accommodation.id).subscribe({
-      next: () => this.router.navigate(['/admin-dashboard/accommodations/accept-reject'])
-    })
+  showAcceptRejectModal(event: Event, action: string): void {
+    event.stopImmediatePropagation();
+    if(action != 'accept' && action != 'reject'){
+      console.log("Error: unknown action on accommodation: ", action);
+      return;
+    }
+    this.isAcceptRejectModalOpen = true;
+    this.acceptRejectAction = action;
+    document.body.style.overflow = 'hidden';
   }
 }

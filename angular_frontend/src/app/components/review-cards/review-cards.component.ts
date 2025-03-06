@@ -10,6 +10,7 @@ export class ReviewCardsComponent {
   @Input() reviews!: Review[];  // one page of reviews
   @Input() pageNumber!: number;
   @Input() totalPages!: number;
+  @Input() showAccommodationLinks!: boolean;
   @Output() askForPage = new EventEmitter<number>();
   @Output() reviewAction = new EventEmitter<{ id:number, action:string }>();
 

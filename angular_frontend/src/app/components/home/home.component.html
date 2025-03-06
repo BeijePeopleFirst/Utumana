@@ -7,13 +7,13 @@
   <div class="py-5 w-screen text-center">
     <h1 class="text-4xl text-gray-800 sm:text-5xl">{{'home.latest' | translate}}</h1>
     <app-accommodation-cards [accommodations$]="latestUploads$" [pageNumber]="latestUploadsPageNumber" [totalPages]="latestUploadsTotalPages" 
-      (askForPage)="loadLatestAccommodationsPage($event)"></app-accommodation-cards>
+      (askForPage)="loadLatestAccommodationsPage($event)" [status]="'active'"></app-accommodation-cards>
   </div>
 </section>
 <section class="flex justify-center items-center pt-8 bg-neutral-2">
   <div class="py-5 w-screen text-center">
     <h1 class="text-4xl text-gray-800 sm:text-5xl">{{'home.liked' | translate}}</h1>
     <app-accommodation-cards [accommodations$]="mostLiked$" [pageNumber]="mostLikedPageNumber" [totalPages]="mostLikedTotalPages" 
-      (askForPage)="loadMostLikedAccommodationsPage($event)"></app-accommodation-cards>
+      (askForPage)="loadMostLikedAccommodationsPage($event)" [status]="'active'"></app-accommodation-cards>
   </div>
 </section>  

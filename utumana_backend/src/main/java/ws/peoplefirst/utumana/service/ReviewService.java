@@ -101,6 +101,6 @@ public class ReviewService {
 	}
 
 	public List<ReviewUserDTO> getReviewUserDTO(Long userId) {
-		return reviewRepository.findReviewUserById(userId);
+		return reviewRepository.findReviewsReceivedByUserByUserId(userId);
 	}
 }

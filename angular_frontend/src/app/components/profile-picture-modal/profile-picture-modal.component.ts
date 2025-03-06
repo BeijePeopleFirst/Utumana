@@ -17,6 +17,7 @@ export class ProfilePictureModalComponent {
   constructor(private userService: UserService){}
 
   close(): void {
+    this.picturePreview = null;
     this.closeModal.emit(false);
   }
 

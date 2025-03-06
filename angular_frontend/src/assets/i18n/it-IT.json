@@ -3,9 +3,14 @@
 	"book": "Prenota ora",
 	"free": "gratis",
 	"approve": "Approva",
+	"approve_title": "Approvare questa sistemazione?",
+	"approve_subtitle": "Se scegli \"Approva\", la sistemazione verrà pubblicata.",
+	"reject_title": "Rifiutare questa sistemazione?",
+	"reject_subtitle": "Se scegli \"Rifiuta\", la sistemazione verrà nascosta. L'utente proprietario potrà fare modifiche e riprovare a chiedere l'approvazione in un secondo momento.",
 	"reject": "Rifiuta",
 	"pending": "In attesa",
-	"rejected": "Rifiutato"
+	"rejected": "Rifiutato",
+	"deleted": "Eliminato"
 	},
 "accommodations_cards": {
 	"notFound": "Nessuna offerta disponibile"
@@ -70,6 +75,49 @@
 	"services-word": "Servizi",
 	"confirm-acc-deletion-btn-text": "Conferma Eliminazione",
 	"ABORT-acc-deletion-btn-text": "Annulla Operazione"
+},
+"admin-dashboard-accommodations": {
+	"approve_reject_title": "Approva/Rifiuta sistemazioni",
+	"active_title": "Sistemazioni attive",
+	"inactive_title": "Sistemazioni inattive",
+	"inactive_subtitle": "Le sistemazioni inattive sono le sistemazioni che sono state eliminate dal proprietario. Non sono più visibili agli utenti normali, ma possono essere visualizzate dagli admin in questa pagina.",
+	"all_title": "Tutte le sistemazioni"
+},
+"admin-dashboard-sidenav": {
+	"title": "Area admin",
+	"home": "Home",
+
+	"accommodations": "Sistemazioni",
+	"accept_reject": "Approva/Rifiuta",
+	"active": "Attive",
+	"inactive": "Inattive",
+	"all": "Tutte",
+
+	"users": "Utenti",
+	"profiles":"Profili",
+	"add_user":"Aggiungi utente",
+	"new_admin":"Nuovo amministratore",
+
+	"metrics": "Statistiche"
+},
+"admin-dashboard-users": {
+	"name": "Nome",
+	"invalid_name": "Nome non valido",
+	"surname": "Cognome",
+	"invalid_surname": "Cognome non valido",
+	"required": "Campo obbligatorio",
+	"password_instructions": "La password deve contenere almeno 8 caratteri, fra cui almeno una lettera minuscola, una lettera maiuscola, un numero e un simbolo fra !\"#$%&'()*+,-.:;<=>?@"
+},
+"adminProfile":  {
+	"name": "Nome",
+	"surname": "Cognome",
+	"email": "Email",
+	"required": "Campo obbligatorio",
+	"nonValid": "Email non valida",
+	"newPassword": "Nuova password (Opzionale)",
+	"passwordMessage": "Lascia vuoto per mantenere la password corrente",
+	"cancel": "Annulla",
+	"save": "Salva"
 },
 "bookings":{
 	"checkIn":"Check-in",
@@ -151,6 +199,7 @@
 	},
 "common": {
 	"cancel": "Annulla",
+	"create": "Crea",
 	"delete": "Elimina"
 	},
 "create": {
@@ -335,7 +384,8 @@
 	"reject_title": "Rifiutare questa recensione?",
 	"reject_subtitle": "Se scegli \"Rifiuta\", la recensione verrà eliminata definitivamente",
 	"accept_button_label": "Accetta",
-	"reject_button_label": "Rifiuta"
+	"reject_button_label": "Rifiuta",
+	"see_accommodation": "Visualizza sistemazione"
 	},
 "save_button_label": "Salva",
 "search": {

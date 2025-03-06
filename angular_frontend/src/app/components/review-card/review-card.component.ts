@@ -11,6 +11,7 @@ import iconURL from 'src/costants';
 })
 export class ReviewCardComponent implements OnInit, OnDestroy {
   @Input() review!: Review;
+  @Input() showAccommodationLink!: boolean;
   @Output() reviewChange = new EventEmitter<{id:number, action:string}>();
   iconsUrl: string = iconURL;
   locale: string = 'en';
