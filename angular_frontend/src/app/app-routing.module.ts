@@ -30,6 +30,7 @@ import { AdminDashboardAccommodationAllComponent } from './components/admin-dash
 import { AdminDashboardUsersProfilesComponent } from './components/admin-dashboard-users-profiles/admin-dashboard-users-profiles.component';
 import { AdminDashboardUsersAddUserComponent } from './components/admin-dashboard-users-add-user/admin-dashboard-users-add-user.component';
 import { AdminDashboardUsersMakeNewAdminComponent } from './components/admin-dashboard-users-make-new-admin/admin-dashboard-users-make-new-admin.component';
+import { adminGuard } from './services/admin.guard';
 
 const routes: Routes = [
   {path: 'login', title: "Login", component: LoginComponent},
@@ -50,21 +51,21 @@ const routes: Routes = [
   {path: 'accommodation/:id', title: "Accommodation Details", component: AccommodationDetailsComponent, canActivate: [authGuard]},
   {path: 'book/:id', component: BookNowComponent, canActivate: [authGuard]},
   {path: 'confirm_booking_on_creation', component: ConfirmBookingBooknowComponent, canActivate: [authGuard]},
-  {path: 'admin-dashboard', component: AdminDashboardMainAndSidenavComponent, canActivate: [authGuard], children: [
-    {path: '', component: AdminDashboardHomePanelComponent, canActivate: [authGuard]},
-    {path: 'home', component: AdminDashboardHomePanelComponent, canActivate: [authGuard]},
+  {path: 'admin-dashboard', component: AdminDashboardMainAndSidenavComponent, canActivate: [adminGuard], children: [
+    {path: '', component: AdminDashboardHomePanelComponent, canActivate: [adminGuard]},
+    {path: 'home', component: AdminDashboardHomePanelComponent, canActivate: [adminGuard]},
     {path: 'accommodations', children: [
-      {path: 'accept-reject', component: AdminDashboardAcceptRejectComponent, canActivate: [authGuard]},
-      {path: 'active-ones', component: AdminDashboardAccommodationActiveComponent, canActivate: [authGuard]},
-      {path: 'inactive-ones', component: AdminDashboardAccommodationInactiveComponent, canActivate: [authGuard]},
-      {path: 'all-accommodations', component: AdminDashboardAccommodationAllComponent, canActivate: [authGuard]},
+      {path: 'accept-reject', component: AdminDashboardAcceptRejectComponent, canActivate: [adminGuard]},
+      {path: 'active-ones', component: AdminDashboardAccommodationActiveComponent, canActivate: [adminGuard]},
+      {path: 'inactive-ones', component: AdminDashboardAccommodationInactiveComponent, canActivate: [adminGuard]},
+      {path: 'all-accommodations', component: AdminDashboardAccommodationAllComponent, canActivate: [adminGuard]},
     ]},
     {path: 'users', children: [
-      {path: 'profiles', component: AdminDashboardUsersProfilesComponent, canActivate: [authGuard]},
-      {path: 'add-user', component: AdminDashboardUsersAddUserComponent, canActivate: [authGuard]},
-      {path: 'make-new-admin', component: AdminDashboardUsersMakeNewAdminComponent, canActivate: [authGuard]},
+      {path: 'profiles', component: AdminDashboardUsersProfilesComponent, canActivate: [adminGuard]},
+      {path: 'add-user', component: AdminDashboardUsersAddUserComponent, canActivate: [adminGuard]},
+      {path: 'make-new-admin', component: AdminDashboardUsersMakeNewAdminComponent, canActivate: [adminGuard]},
     ]},
-    {path: 'metrics', component: AdminDashboardMetricsComponent, canActivate: [authGuard]}
+    {path: 'metrics', component: AdminDashboardMetricsComponent, canActivate: [adminGuard]}
   ]}
   // { path: '**', title: "Error", component: PageNotFoundComponent }
 ];

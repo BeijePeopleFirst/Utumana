@@ -90,19 +90,23 @@ public class AccommodationDraftService {
 
 
     public void deleteById(Long id) {
-        accommodationDraftRepository.deleteById(id);
+        AccommodationDraft draft = getDraftById(id);
+        delete(draft);
+    }
+
+    public void delete(AccommodationDraft draft){
+        for(PhotoDraft photo : draft.getPhotos()){
+            s3Service.deleteFile(photo.getPhotoUrl());
+        }
+        accommodationDraftRepository.deleteById(draft.getId());
     }
 
     @Transactional
     public AccommodationDraft saveAddressInfo(Long draftId, AddressDTO address) {
         AccommodationDraft draft = getDraftById(draftId);
         BeanUtils.copyProperties(address, draft);
-        System.out.println("AddressDTO values:");
-        System.out.println("Province: " + address.getProvince());
-        System.out.println("Cap: " + address.getCap());
-        System.out.println("Country: " + address.getCountry());
         
-        System.out.println("draft: " + draft);
+        System.out.println("Draft after address update: " + draft);
         return accommodationDraftRepository.save(draft);
     }
 

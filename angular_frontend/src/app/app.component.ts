@@ -23,6 +23,8 @@ export class AppComponent implements DoCheck {
   title= 'Utumana'; 
   currentYear: number = new Date().getFullYear();
 
+  isAdmin: boolean;
+
   languages = [
     { code: 'en-US', name: 'English' },
     { code: 'it-IT', name: 'Italiano' },
@@ -38,7 +40,13 @@ export class AppComponent implements DoCheck {
     this.selectedLanguage = this.translate.currentLang || 'en-US';
     //this.translate.use(this.selectedLanguage);
     this.selectedLanguage = localStorage.getItem("currLan") ?? 'en-US';
-    this.translate.use(this.selectedLanguage)
+    this.translate.use(this.selectedLanguage);
+
+    this.isAdmin = false;
+    let roles = localStorage.getItem("roles");
+    if(roles != null){
+      this.isAdmin = JSON.parse(roles).includes("ADMIN");
+    }
   }
 
   ngDoCheck(): void {

@@ -106,7 +106,7 @@
                 <a routerLink="/my_accommodations" (click)="closeMenus()" 
                 class="drop-box"
                 [ngClass]="{'drop-box-menu-open': isMenuOpen === true}">{{'header.accommodations' | translate}}</a>
-                <a routerLink="/admin-dashboard" (click)="closeMenus()" 
+                <a *ngIf="isAdmin" routerLink="/admin-dashboard" (click)="closeMenus()" 
                 class="drop-box"
                 [ngClass]="{'drop-box-menu-open': isMenuOpen === true}">{{'header.admin' | translate}}</a>
                 <a (click)="authService.logout()" (click)="closeMenus()" 

@@ -35,6 +35,7 @@ export class AuthService {
         console.log(json);
         localStorage.setItem('id',json.id.toString());
         localStorage.setItem("email", json.email);
+        localStorage.setItem("roles", JSON.stringify(json.permission));
 			  localStorage.setItem("token", json.token);
 			  document.cookie = "refresh_token=" + json.refresh_token;
         return {ok: true, status: 200, message: 'Successfully logged in'};

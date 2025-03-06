@@ -80,6 +80,7 @@
 	"approve_reject_title": "Approva/Rifiuta sistemazioni",
 	"active_title": "Sistemazioni attive",
 	"inactive_title": "Sistemazioni inattive",
+	"inactive_subtitle": "Le sistemazioni inattive sono le sistemazioni che sono state eliminate dal proprietario. Non sono più visibili agli utenti normali, ma possono essere visualizzate dagli admin in questa pagina.",
 	"all_title": "Tutte le sistemazioni"
 },
 "admin-dashboard-sidenav": {
@@ -373,7 +374,8 @@
 	"reject_title": "Rifiutare questa recensione?",
 	"reject_subtitle": "Se scegli \"Rifiuta\", la recensione verrà eliminata definitivamente",
 	"accept_button_label": "Accetta",
-	"reject_button_label": "Rifiuta"
+	"reject_button_label": "Rifiuta",
+	"see_accommodation": "Vedi sistemazione"
 	},
 "save_button_label": "Salva",
 "search": {

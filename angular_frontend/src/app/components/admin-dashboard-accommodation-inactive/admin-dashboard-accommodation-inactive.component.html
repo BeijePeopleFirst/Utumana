@@ -1,10 +1,11 @@
 <h2>{{"admin-dashboard-accommodations.inactive_title" | translate}}</h2>
+<p>{{"admin-dashboard-accommodations.inactive_subtitle" | translate}}</p>
 
-<div *ngIf="isLoading" class="flex justify-center items-center min-h-screen">
+<div *ngIf="isLoading" class="flex justify-center items-center mt-4 min-h-screen">
     <mat-progress-spinner class="text-primary" mode="indeterminate"></mat-progress-spinner>
   </div>
 
-<section *ngIf="!isLoading && allInactiveAccommodations && allInactiveAccommodations.length > 0" class="flex justify-center items-center pt-8 bg-neutral-2">
+<section *ngIf="!isLoading && allInactiveAccommodations && allInactiveAccommodations.length > 0" class="flex justify-center items-center pt-8 mt-4 bg-neutral-2">
     <div class="container p-5 text-center">
       <app-search-accommodation-list [accommodations$]="inactiveAccommodations$" [pageNumber]="inactiveAccommodationsPageNumber" [totalPages]="inactiveAccommodationsTotalPages" 
         (askForPage)="loadInactiveAccommodationsPage($event)" [status] = "'deleted'"></app-search-accommodation-list>

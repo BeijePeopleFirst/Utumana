@@ -22,14 +22,23 @@ export class AdminDashboardAcceptRejectComponent implements OnInit{
   ngOnInit() {
     this.pendingAccommodationsPageSize = 3;
     this.pendingAccommodationsPageNumber = 0;
+    this.loadPendingAccommodations();
+  }
+
+  loadPendingAccommodations(): void {
     this.accommodationService.getAccommodationsToBeApproved().subscribe(accommodations => {
       this.pendingAccommodationsTotalPages = Math.ceil( accommodations.length / this.pendingAccommodationsPageSize );
       this.accommodationService.getPrices(accommodations).subscribe(updated => {
         this.allPendingAccommodations = updated;
-        this.pendingAccommodations$ = of(updated.slice(0, this.pendingAccommodationsPageSize));
+        this.pendingAccommodations$ = of(updated.slice(this.pendingAccommodationsPageNumber * this.pendingAccommodationsPageSize, this.pendingAccommodationsPageSize));
         this.isLoading = false;
       });
     });
+  }
+
+  refresh(pageNumber: number): void {
+    this.pendingAccommodationsPageNumber = pageNumber;
+    this.loadPendingAccommodations();
   }
 
   loadPendingAccommodationsPage(pageNumber: number): void {
