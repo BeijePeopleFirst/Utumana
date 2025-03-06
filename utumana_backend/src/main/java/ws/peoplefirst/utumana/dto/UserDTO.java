@@ -1,5 +1,7 @@
 package ws.peoplefirst.utumana.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "Data Transfer Object for User information")
@@ -17,6 +19,7 @@ public class UserDTO {
 	@Schema(description = "User's email address",  example = "john.doe@example.com", pattern = "^[A-Za-z0-9+_.-]+@(.+)$")
 	private final String email;
 
+	@JsonProperty("profile_picture_url")
 	@Schema(description = "User's profile picture URL", example = "https://example.com/picture.jpg")
 	private final String profilePictureUrl;
 	

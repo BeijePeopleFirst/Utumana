@@ -4,5 +4,5 @@ export interface UserDTO {
     password: string
     name: string
     surname: string
-    profilePictureUrl?: string
+    profile_picture_url?: string
 }
