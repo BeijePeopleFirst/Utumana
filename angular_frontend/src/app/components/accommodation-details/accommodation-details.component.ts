@@ -3,6 +3,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, debounceTime, distinctUntilChanged, map, Observable, of, Subject, Subscription, switchMap } from 'rxjs';
 import { AccommodationDTO } from 'src/app/dtos/accommodationDTO';
+import { AccommodationOwnerDTO } from 'src/app/dtos/accommodationOwnerDTO';
 import { BookingDTO, PartialBooking } from 'src/app/dtos/bookingDTO';
 import { Accommodation } from 'src/app/models/accommodation';
 import { Availability } from 'src/app/models/availability';
@@ -51,8 +52,8 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
   successAcceptingReview: boolean = false;
   successRejectingReview: boolean = false;
 
-  accommodationOwner!: User;
-  defaultPictureUrl: string = `${imagesURL}\\default_profile.png`;
+  accommodationOwner!: AccommodationOwnerDTO;
+  defaultPictureUrl: string = (`${imagesURL}\\default_profile.png`);
 
   showDeleteAccommodationConfirmPopup: boolean = false;
 
@@ -253,7 +254,7 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
             else if (!this.accommodation.hiding_timestamp && this.accommodation.approval_timestamp) this.invalidAccommodation = false;
             else {}
 
-            this.photoList = this.accommodation.photos;
+            this.photoList = this.accommodation.photos;console.log("PHOTOSSSSSSS -> ", this.accommodation.photos);
             this.photoList.sort((p1, p2) => p1.photo_order - p2.photo_order);
             this.photoToShow = [this.photoList[0], 0];
             this.totalPhotos = this.photoList.length;
@@ -317,15 +318,15 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
 
             //Ora recupero l' Owner dell' Accommodation:
             this.userService
-              .getUserById(this.accommodation.owner_id)
+              .getAccommodationOwner(this.accommodation.owner_id, this.accommodation.id!)
               .subscribe((foundUser) => {
                 if (!foundUser) {
                   this.message = "true";
                   this.accommodationEntityError = true;
                   this.invalidAccommodation = true;
                   return;
-                } else if ("message" in foundUser) {
-                  this.message = foundUser.message;
+                } else if ("message" in foundUser || !this.isCorrectAccommodationOwnerType(foundUser)) {
+                  if("message" in foundUser) this.message = foundUser.message;
                   this.invalidAccommodation = true;
                   this.errorFetchingAccommodationOwner = true;
                   return;
@@ -358,6 +359,15 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
               });
           });
       });
+  }
+
+  private isCorrectAccommodationOwnerType(o: any): boolean {
+    return o &&
+           typeof o.id! == "number" &&
+           typeof o.name! == "string" &&
+           typeof o.surname! == "string" &&
+           typeof o.bio! == "string" &&
+           typeof o.profile_picture_url! == "string";
   }
 
   ngOnDestroy(): void {

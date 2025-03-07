@@ -980,18 +980,14 @@ public class AccommodationService {
         return p;
     }
 
-    //TODO:
     public boolean deletePhotosFromAccommodation(Long accommodationId, List<Long> photosIDsToRemove) {
-        System.out.println("\n\n\n\n\n\n\nSTAMP INPUT -> " + photosIDsToRemove + "\n\n\n\n\n\n");
         Accommodation acc = this.findById(accommodationId);
         List<Photo> photos = acc.getPhotos();
         List<Photo> resPhotosToRemove = new ArrayList<Photo>();
 
-        for(Photo p: photos) {
-            for(Long id: photosIDsToRemove) {
-
-                if(p.getId() == id) resPhotosToRemove.add(p);
-
+        for(Long id: photosIDsToRemove) {
+            for(Photo p: photos) {
+                if(id.equals(p.getId())) resPhotosToRemove.add(p);
             }
         }
 
