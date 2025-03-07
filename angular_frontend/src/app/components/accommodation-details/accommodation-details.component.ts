@@ -254,7 +254,7 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
             else if (!this.accommodation.hiding_timestamp && this.accommodation.approval_timestamp) this.invalidAccommodation = false;
             else {}
 
-            this.photoList = this.accommodation.photos;
+            this.photoList = this.accommodation.photos;console.log("PHOTOSSSSSSS -> ", this.accommodation.photos);
             this.photoList.sort((p1, p2) => p1.photo_order - p2.photo_order);
             this.photoToShow = [this.photoList[0], 0];
             this.totalPhotos = this.photoList.length;
