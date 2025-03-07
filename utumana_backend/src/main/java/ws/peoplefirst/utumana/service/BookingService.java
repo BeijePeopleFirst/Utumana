@@ -160,9 +160,8 @@ public class BookingService {
 		return !bookingRepository.findByUserIdAndAccommodationIdAndStatus(userId, accommodationId, BookingStatus.PENDING).isEmpty();
 	}
 	
-	public Long pendingBooking(Long userId, Long accommodationId) {
-		List<Booking> pending = bookingRepository.findByUserIdAndAccommodationIdAndStatus(userId, accommodationId, BookingStatus.PENDING);
-		return !pending.isEmpty() ? pending.get(0).getId() : null;
+	public List<Booking> pendingBooking(Long userId, Long accommodationId) {
+		return bookingRepository.findByUserIdAndAccommodationIdAndStatus(userId, accommodationId, BookingStatus.PENDING);
 	}
 
 	public Booking deleteBookingFromId(Long userId, Long bookingId) {

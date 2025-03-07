@@ -1,3 +1,4 @@
+import { Accommodation } from "../models/accommodation";
 import { BookingStatus } from "../utils/enums";
 import { AccommodationDTO } from "./accommodationDTO";
 
@@ -18,7 +19,7 @@ export interface PartialBooking {
   price?: number;
   status?: string;
   review_id?: number;
-  accommodation?: AccommodationDTO;
+  accommodation?: Accommodation;
   price_info?: {
     nights: number,
     price_per_night: number

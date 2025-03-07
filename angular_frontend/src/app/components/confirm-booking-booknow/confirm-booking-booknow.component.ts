@@ -17,6 +17,10 @@ export class ConfirmBookingBooknowComponent implements OnInit {
   chosenAvailability: any;
   pricePerNight!: number;
   nightsNumber!: number;
+  priceInfo!: {
+    nights: number,
+    price_per_night: number
+  }[];
   postOperation!: number;
 
   mainPhotoBlobUrl!: string;
@@ -47,6 +51,9 @@ export class ConfirmBookingBooknowComponent implements OnInit {
     this.tmp = JSON.parse(localStorage.getItem("created_booking")!);
     this.createdBooking = this.tmp;
     //console.log(this.createdBooking.accommodation);
+
+    this.tmp = JSON.parse(localStorage.getItem("price_info")!);
+    this.priceInfo = this.tmp;
 
     if (this.route.snapshot.queryParams["userId"] && this.createdBooking.accommodation.owner_id === +this.route.snapshot.queryParams["userId"]) this.isMe = true;
     else this.isMe = false;

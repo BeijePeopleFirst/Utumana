@@ -335,12 +335,15 @@ public class AccommodationController {
 	@GetMapping(value = "/availabilities/{accommodation_id}")
 	public Map<LocalDate, Double> getAvailabilities(@PathVariable (name = "accommodation_id") Long accommodationId,
 												@RequestParam(name = "check_in") String checkIn,
-												@RequestParam(name = "check_out") String checkOut) {
+												@RequestParam(name = "check_out") String checkOut,
+												Authentication auth) {
 
 		Accommodation acc = this.accommodationService.findById(accommodationId);
 		if(acc == null) throw new IdNotFoundException("Accommodation with id " + accommodationId + " not found");
 
-		return avService.findAvailableDatesByMonth(accommodationId, checkIn, checkOut);
+		Long userId = AuthorizationUtility.getUserFromAuthentication(auth).getId();
+
+		return avService.findAvailableDatesByMonth(accommodationId, checkIn, checkOut, userId);
 	}
 	
 	
@@ -913,6 +916,8 @@ public class AccommodationController {
 		List<Booking> values = bookingService.findByStatusInAndAccommodationId(Arrays.asList(
                 BookingStatus.DOING, BookingStatus.ACCEPTED
         ), accommodationId);
+
+		values.addAll(bookingService.pendingBooking(user.getId(), accommodationId));
 		
 		List<String> availabilities = this.accommodationService.fetchFullAvailabilityListForAccommodation(accommodationId, user, values);
 		res.put("availabilities_post_elaboration", availabilities);

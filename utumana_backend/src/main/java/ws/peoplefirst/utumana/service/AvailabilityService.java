@@ -1,5 +1,7 @@
 package ws.peoplefirst.utumana.service;
 
+import static org.mockito.Answers.values;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -123,7 +125,7 @@ public class AvailabilityService {
 		return availabilityRepository.findByAccommodationId(accommodationId);
 	}
 	
-	public Map<LocalDate, Double> findAvailableDatesByMonth(Long accommodationId, String startDateString,  String endDateString) {
+	public Map<LocalDate, Double> findAvailableDatesByMonth(Long accommodationId, String startDateString,  String endDateString, Long userId) {
 		LocalDate startDate = JsonFormatter.parseStringIntoDate(startDateString);
 		LocalDate endDate = JsonFormatter.parseStringIntoDate(endDateString);    
 		
@@ -135,6 +137,8 @@ public class AvailabilityService {
 	    List<Booking> bookings = bookingRepository.findByStatusInAndAccommodationId(Arrays.asList(
                 BookingStatus.DOING, BookingStatus.ACCEPTED
         ), accommodationId);
+
+		bookings.addAll(bookingRepository.findByUserIdAndAccommodationIdAndStatus(userId, accommodationId, BookingStatus.PENDING));
 	    
 	    for (Availability av : availabilities) {
 	        LocalDate currentDate = av.getStartDate();

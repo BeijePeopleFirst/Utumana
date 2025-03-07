@@ -103,7 +103,9 @@
 	"add_user":"Aggiungi utente",
 	"new_admin":"Nuovo amministratore",
 
-	"metrics": "Statistiche"
+	"metrics": "Statistiche",
+
+	"customization": "Personalizzazione"
 },
 "admin-dashboard-users": {
 	"name": "Nome",

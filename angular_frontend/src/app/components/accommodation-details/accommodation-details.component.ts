@@ -608,7 +608,7 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
     let booking: Booking = {
       accommodation: this.accommodation, 
       timestamp: (new Date()).toLocaleDateString(), 
-      price: this.postOperation$.value, 
+      price: this.chosenPeriod.price ?? 0, 
       status: BookingStatus.PENDING, 
       check_in: this.chosenPeriod?.check_in!.getDate() + "-" + this.chosenPeriod?.check_in!.getMonth() + "-" + this.chosenPeriod?.check_in!.getFullYear(), 
       check_out: this.chosenPeriod?.check_out!.getDate() + "-" + this.chosenPeriod?.check_out!.getMonth() + "-" + this.chosenPeriod?.check_out!.getFullYear(), 
@@ -623,6 +623,7 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
                    = {chosen_availability: this.chosenPeriod!, nights_number: this.nightsNumber$.value, post_operation: this.postOperation$.value};
 
     localStorage.setItem("created_booking", JSON.stringify(booking));
+    localStorage.setItem("price_info", JSON.stringify(this.chosenPeriod.price_info));
     localStorage.setItem("num_guests", JSON.stringify(this.guestsNumber));
     localStorage.setItem("chosen_availability_data", JSON.stringify(container));
     this.router.navigate(["/confirm_booking_on_creation"], {

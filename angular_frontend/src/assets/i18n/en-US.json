@@ -103,7 +103,9 @@
 	"add_user":"Add user",
 	"new_admin":"New admin",
 
-	"metrics": "Metrics"
+	"metrics": "Metrics",
+
+	"customization": "Customization"
 },
 "admin-dashboard-users": {
 	"name": "Name",
