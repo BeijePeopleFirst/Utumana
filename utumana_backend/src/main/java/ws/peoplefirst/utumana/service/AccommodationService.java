@@ -991,8 +991,6 @@ public class AccommodationService {
             }
         }
 
-        System.out.println("STAMPO LE TO-REMOVE -> " + resPhotosToRemove + "\n\n\n\n\n");
-
         List<Photo> res = new ArrayList<Photo>();
 
         for(Photo p : photos) {
