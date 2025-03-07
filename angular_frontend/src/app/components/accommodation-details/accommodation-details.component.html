@@ -6,19 +6,19 @@
     <h1 class="text-3xl text-orange-700">{{"accommodation-card-details.user-error" | translate}}</h1>
   </ng-container>
   
-  <ng-container *ngIf="!invalidAccommodation && !userNotLogged" id="accommodation-details-container">
+  <ng-container *ngIf="!invalidAccommodation && !userNotLogged" id="accommodation-details-container" class="w-screen">
     <div class="flex relative flex-col justify-center items-center">
       <section class="flex flex-col justify-center items-center pt-8 pb-4 space-y-6 w-full bg-neutral-1">
         <!-- 🏠 Titolo + Preferiti -->
-        <div class="flex items-center mb-4 space-x-6">
+        <div class="flex flex-row flex-wrap gap-y-6 justify-center items-center px-2 mb-4 space-x-6 text-center">
           <h1 class="mb-0">{{ accommodation.title }}</h1>
-          <div id="heart" class="flex justify-center items-center">
+          <div id="heart" class="flex justify-center items-center shrink-0">
             <img 
               class="w-8 transition-transform cursor-pointer hover:scale-110" 
               [src]="isFavourite ? '/assets/icons/heart-full.png' : '/assets/icons/heart-empty.png'" 
               (click)="toggleIsFavourite()" />
           </div>
-          <button *ngIf="isAdminOrMe" id="bin-icon" class="flex absolute right-20 flex-row btn-danger w-fit group" (click)="toggleDeleteAccommodation()">
+          <button *ngIf="isAdminOrMe" id="bin-icon" class="flex flex-row xl:absolute xl:right-20 btn-danger w-fit group" (click)="toggleDeleteAccommodation()">
             <!-- <img class="w-10 transition-transform cursor-pointer hover:scale-110" src="/assets/icons/bin.png" (click)="toggleDeleteAccommodation()" /> -->
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor" class="mr-2 group-hover:scale-105">
               <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/>
@@ -28,7 +28,7 @@
         </div>
   
         <!-- 📍 Località -->
-        <div class="flex relative items-center">
+        <div class="flex relative items-center px-2">
           <p class="text-2xl text-gray-600">
             <span *ngIf="accommodation.city">{{ accommodation.city }}</span>
             <span *ngIf="accommodation.city && accommodation.province">, </span> 
@@ -39,7 +39,7 @@
         </div>
   
         <!-- 🖼️ Carousel Immagini -->
-        <div id="images" class="flex relative flex-row gap-1.5 mt-8">
+        <div id="images" class="flex relative flex-row flex-wrap gap-1.5 justify-center mt-8">
 
           <!-- TODO ALL IMAGES + CAROUSEL -->
           <!-- -------------------------------------------------------------------------------------- -->
@@ -77,7 +77,7 @@
           <img *ngIf="isMe" class="top-0 -right-10 w-6 h-6 icon" src="/assets/icons/pencil.png" (click)="toggleEditRoomsBeds()" />
         </div>
 
-        <p class="mt-10 text-2xl" *ngIf="isAdminOrMe && accommodation.approval_timestamp">{{("accommodation-card-details.approval-timestamp-text" | translate)}}: {{accommodation.approval_timestamp | date:'medium':undefined:locale}}</p>
+        <p class="px-4 mt-10 text-2xl" *ngIf="isAdminOrMe && accommodation.approval_timestamp">{{("accommodation-card-details.approval-timestamp-text" | translate)}}: {{accommodation.approval_timestamp | date:'medium':undefined:locale}}</p>
       
         <!-- 👤 Info Host -->
         <div id="host-info-div" class="flex items-start p-6 space-x-6 w-screen max-w-3xl rounded-lg shadow-md bg-neutral-1">
