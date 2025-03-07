@@ -56,6 +56,7 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
     }
 
     this.initializeCalendars(new Date().getFullYear(), new Date().getMonth());
+    this.navigateMonths(+1);
   }
 
   initializeCalendars(year: number, month: number) {

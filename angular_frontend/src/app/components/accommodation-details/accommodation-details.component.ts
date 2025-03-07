@@ -19,7 +19,7 @@ import { S3Service } from 'src/app/services/s3.service';
 import { ServiceService } from 'src/app/services/service.service';
 import { UserService } from 'src/app/services/user.service';
 import { BookingStatus } from 'src/app/utils/enums';
-import iconURL from 'src/costants';
+import iconURL, { imagesURL } from 'src/costants';
 
 @Component({
   selector: "app-accommodation-details",
@@ -52,6 +52,7 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
   successRejectingReview: boolean = false;
 
   accommodationOwner!: User;
+  defaultPictureUrl: string = `${imagesURL}\\default_profile.png`;
 
   showDeleteAccommodationConfirmPopup: boolean = false;
 

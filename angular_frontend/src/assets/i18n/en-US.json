@@ -40,6 +40,8 @@
 	"contact-word": "Contact",
 	"book-now": "Book Now!",
 	"availabilities-word": "Availabilities",
+	"choose-dates": "Choose dates for your stay",
+	"no-availabilities": "Unfortunately, there are currently no availability periods for this accommodation.",
 	"description-word": "Description",
 	"guests-word": "Guests",
 	"nights-word": "Nights",
@@ -73,6 +75,8 @@
 	"success-accepting-review": "Review accepted Successfully",
 	"success-rejecting-review": "Review rejected Successfully",
 	"services-word": "Services",
+	"no-services": "No services specified",
+	"reviews-word": "Reviews",
 	"confirm-acc-deletion-btn-text": "Confirm Deletion",
 	"ABORT-acc-deletion-btn-text": "Cancel Operation"
 	},
