@@ -97,8 +97,16 @@
           </div>
         </div>
 
+        <!-- 📝 Descrizione -->
+        <ng-container *ngIf="accommodation.description">
+          <div class="p-6 w-full max-w-3xl rounded-lg shadow-md bg-neutral-2">
+            <h3>{{ ("accommodation-card-details.description-word" | translate) }}</h3>
+            <p class="mt-3">{{ accommodation.description }}</p>
+          </div>
+        </ng-container>
+
         <!-- 📆 Availabilities -->
-        <div class="p-6 w-full max-w-3xl rounded-lg shadow-md bg-neutral-1">
+        <div id="avail" class="p-6 w-full max-w-3xl rounded-lg shadow-md bg-neutral-1">
           <ng-container *ngIf="accommodation.availabilities && accommodation.availabilities.length > 0">
             <h3>{{ ("accommodation-card-details.choose-dates" | translate) }}:</h3>
             <app-choose-book-period-from-acc-details 
@@ -113,14 +121,6 @@
             <p>{{ ("accommodation-card-details.no-availabilities" | translate) }}</p>
           </ng-container>
         </div>
-    
-        <!-- 📝 Descrizione -->
-        <ng-container *ngIf="accommodation.description">
-          <div class="p-6 w-full max-w-3xl rounded-lg shadow-md bg-neutral-2">
-            <h3>{{ ("accommodation-card-details.description-word" | translate) }}</h3>
-            <p class="mt-3">{{ accommodation.description }}</p>
-          </div>
-        </ng-container>
       </section>
   
       <section class="flex flex-col justify-center items-center py-4 space-y-6 w-full bg-neutral-1">

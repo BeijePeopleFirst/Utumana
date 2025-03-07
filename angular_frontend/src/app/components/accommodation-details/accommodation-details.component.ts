@@ -601,6 +601,7 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
     ) {
       this.message = "true";
       this.bookingValuesMissing = true;
+      document.getElementById("avail")?.scrollIntoView({ behavior: "smooth" });
       return;
     }
 
