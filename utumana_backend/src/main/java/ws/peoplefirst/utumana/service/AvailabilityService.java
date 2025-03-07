@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,7 @@ import ws.peoplefirst.utumana.model.Booking;
 import ws.peoplefirst.utumana.repository.AccommodationRepository;
 import ws.peoplefirst.utumana.repository.AvailabilityRepository;
 import ws.peoplefirst.utumana.repository.BookingRepository;
+import ws.peoplefirst.utumana.utility.BookingStatus;
 import ws.peoplefirst.utumana.utility.JsonFormatter;
 
 @Service
@@ -129,25 +131,27 @@ public class AvailabilityService {
 		    
 	    List<Availability> availabilities = findByAccommodationIdAndDateRange(accommodationId, startDate, endDate);
 
-	    List<Booking> acceptedBookings = bookingRepository.findAcceptedBookings(accommodationId, LocalDateTime.of(startDate, LocalTime.of(14, 0)), LocalDateTime.of(endDate, LocalTime.of(10, 0)));
-	    
+	    //List<Booking> bookings = bookingRepository.findAcceptedBookings(accommodationId, LocalDateTime.of(startDate, LocalTime.of(14, 0)), LocalDateTime.of(endDate, LocalTime.of(10, 0)));
+	    List<Booking> bookings = bookingRepository.findByStatusInAndAccommodationId(Arrays.asList(
+                BookingStatus.DOING, BookingStatus.ACCEPTED
+        ), accommodationId);
 	    
 	    for (Availability av : availabilities) {
 	        LocalDate currentDate = av.getStartDate();
-	        while (!currentDate.isAfter(av.getEndDate()) && !currentDate.isAfter(endDate)) {
-	            if (isDateAvailable(LocalDateTime.of(currentDate, LocalTime.of(18, 0)), acceptedBookings)) {
+	        while (currentDate.isBefore(av.getEndDate()) && !currentDate.isAfter(endDate)) {
+	            if (isDateAvailable(LocalDateTime.of(currentDate, LocalTime.of(18, 0)), bookings)) {
 	                availableDates.put(currentDate, av.getPricePerNight());
 	            }
 	            currentDate = currentDate.plusDays(1);
 	        }
 	    }
+		System.out.println("Available dates: " + availableDates);
 	    
 	    return availableDates;
 	}
 
-	private boolean isDateAvailable(LocalDateTime date, List<Booking> acceptedBookings) {
-		for(Booking b: acceptedBookings) {
-
+	private boolean isDateAvailable(LocalDateTime date, List<Booking> bookings) {
+		for(Booking b: bookings) {
 			if(date.isAfter(b.getCheckIn()) && date.isBefore(b.getCheckOut())) {
 				return false;
 			}

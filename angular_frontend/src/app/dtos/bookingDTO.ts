@@ -10,3 +10,17 @@ export interface BookingDTO {
   review_id?: number;
   accommodation: AccommodationDTO;
 }
+
+export interface PartialBooking {
+  id?: number;
+  check_in?: Date;
+  check_out?: Date;
+  price?: number;
+  status?: string;
+  review_id?: number;
+  accommodation?: AccommodationDTO;
+  price_info?: {
+    nights: number,
+    price_per_night: number
+  }[]
+}

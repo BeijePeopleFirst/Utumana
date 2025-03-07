@@ -105,7 +105,7 @@
               [availabilities]="accommodationAvailabilities"
               [queryParamsFromParent]="queryParams" 
               [accommodation]="accommodation" 
-              (sendChosenAvailability)="receiveAvailabilityFromChild($event)">
+              (sendChosenPeriod)="receiveBookingFromChild($event)">
             </app-choose-book-period-from-acc-details>
           </ng-container>
           <ng-container *ngIf="!accommodation.availabilities || accommodation.availabilities.length === 0">
@@ -162,17 +162,21 @@
       <!-- 🏷️ Prezzo e Prenotazione -->
       <div *ngIf="accommodation.availabilities && accommodation.availabilities.length > 0" class="z-50 p-6 my-3 w-full rounded-lg border shadow-md md:w-1/2 lg:w-auto xl:fixed xl:top-1/2 xl:left-3/4 bg-neutral-2">
         <div class="flex flex-col justify-between">
-          <p class="text-lg font-bold">Check-In: {{ chosenAvailability?.start_date | date:'shortDate':undefined:locale }}</p>
-          <p class="text-lg font-bold">Check-Out: {{ chosenAvailability?.end_date | date:'shortDate':undefined:locale }}</p>
+          <p class="text-lg font-bold">Check-In: {{ chosenPeriod?.check_in | date:'shortDate':undefined:locale }}</p>
+          <p class="text-lg font-bold">Check-Out: {{ chosenPeriod?.check_out | date:'shortDate':undefined:locale }}</p>
         </div>
-        <div class="flex items-center mt-4 space-x-3">
+        <div class="flex items-center mt-4 mb-2 space-x-3">
           <label for="guests-number" class="font-semibold">{{ ("accommodation-card-details.guests-word" | translate) }}:</label>
           <input id="guests-number" type="number" min="1" [max]="accommodation.beds" [(ngModel)]="guestsNumber" class="p-2 rounded-md border" />
         </div>
-        <p class="mt-4 text-xl font-semibold">
-          {{ chosenAvailability?.price_per_night }}€ x {{ nightsNumber$ | async }} {{ ("accommodation-card-details.nights-word" | translate) }} = {{ postOperation$ | async }} €
+
+        <p *ngFor="let p of chosenPeriod?.price_info" class="mt-2">
+          {{ p.price_per_night | currency:'EUR':'symbol-narrow':'1.2-2':'it-IT'}} x {{ p.nights }} {{ ("accommodation-card-details.nights-word" | translate) }} = {{ p.price_per_night * p.nights | currency:'EUR':'symbol-narrow':'1.2-2':'it-IT'}}
         </p>
-        <button (click)="bookNow()" class="py-3 mt-4 w-full text-white rounded-lg shadow bg-primary hover:bg-primary-dark">
+        <p *ngIf="chosenPeriod && chosenPeriod.price_info && chosenPeriod.price_info.length > 1" class="mt-4 text-lg font-bold">
+          {{'accommodation-card-details.total-price' | translate}}: {{chosenPeriod.price | currency:'EUR':'symbol-narrow':'1.2-2':'it-IT'}}
+        </p>
+        <button (click)="bookNow()" class="mt-4 w-full btn-primary">
           {{ ("accommodation-card-details.book-now" | translate) }}
         </button>
       </div>
