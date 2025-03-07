@@ -20,8 +20,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import ws.peoplefirst.utumana.AddressConfiguration;
+import ws.peoplefirst.utumana.criteria.AdminSearchCriteria;
 import ws.peoplefirst.utumana.criteria.SearchAccomodationCriteria;
 import ws.peoplefirst.utumana.dto.AccommodationDTO;
 import ws.peoplefirst.utumana.exception.TheJBeansException;
@@ -264,4 +266,66 @@ public class QAccommodationRepositoryImpl implements QAccommodationRepository {
 
         return new PageImpl<>(results, pageable, total);
     }
+
+    @Override
+public Page<AccommodationDTO> adminSearch(AdminSearchCriteria adminSearchCriteria) {
+    QAccommodation accommodation = QAccommodation.accommodation;
+    QUser owner = QUser.user;
+    QAccommodationRating accommodationRating = QAccommodationRating.accommodationRating;
+
+    BooleanBuilder accommodationBuilder = new BooleanBuilder();
+
+    // Existing conditions
+    if (StringUtils.hasText(adminSearchCriteria.getTitle())) {
+        accommodationBuilder.and(accommodation.title.containsIgnoreCase(adminSearchCriteria.getTitle()));
+    }
+    if (StringUtils.hasText(adminSearchCriteria.getCity())) {
+        accommodationBuilder.and(accommodation.city.containsIgnoreCase(adminSearchCriteria.getCity()));
+    }
+
+    // Join User entity and add owner conditions
+    if (StringUtils.hasText(adminSearchCriteria.getOwnerName()) 
+        || StringUtils.hasText(adminSearchCriteria.getOwnerSurname())) {
+        
+        accommodationBuilder.and(accommodation.ownerId.isNotNull()); // Ensure ownerId exists
+        
+        if (StringUtils.hasText(adminSearchCriteria.getOwnerName())) {
+            accommodationBuilder.and(owner.name.containsIgnoreCase(adminSearchCriteria.getOwnerName()));
+        }
+        if (StringUtils.hasText(adminSearchCriteria.getOwnerSurname())) {
+            accommodationBuilder.and(owner.surname.containsIgnoreCase(adminSearchCriteria.getOwnerSurname()));
+        }
+    }
+
+    JPAQuery<AccommodationDTO> query = new JPAQuery<>(entityManager)
+        .select(Projections.constructor(AccommodationDTO.class,
+            accommodation.id,
+            accommodation.title,
+            accommodation.city,
+            accommodation.province,
+            accommodation.country,
+            accommodation.mainPhotoUrl,
+            accommodationRating.rating,
+            accommodation.coordinates))
+        .from(accommodation)
+        .join(accommodation.rating, accommodationRating)
+        .leftJoin(owner).on(accommodation.ownerId.eq(owner.id)) // Join User entity
+        .where(accommodationBuilder)
+        .orderBy(accommodation.id.desc());
+
+    // Pagination
+    Pageable pageable = adminSearchCriteria.getPageable();
+    query.offset(pageable.getOffset()).limit(pageable.getPageSize());
+
+    List<AccommodationDTO> results = query.fetch();
+    // Count query with same joins and conditions
+    Long total = new JPAQuery<>(entityManager)
+        .select(accommodation.count())
+        .from(accommodation)
+        .leftJoin(owner).on(accommodation.ownerId.eq(owner.id))
+        .where(accommodationBuilder)
+        .fetchOne();
+
+    return new PageImpl<>(results, pageable, total);
+}
 }

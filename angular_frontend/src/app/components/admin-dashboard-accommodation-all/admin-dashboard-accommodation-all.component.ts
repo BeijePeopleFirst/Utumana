@@ -2,7 +2,10 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { AccommodationDTO } from 'src/app/dtos/accommodationDTO';
+import { AdminSearchParams } from 'src/app/models/adminSearchParams';
+import { PageResponse } from 'src/app/models/paginatedResponse';
 import { AccommodationService } from 'src/app/services/accommodation.service';
+import { AdminDashboardSearchService } from 'src/app/services/admin-dashboard-search.service';
 
 @Component({
   selector: 'app-admin-dashboard-accommodation-all',
@@ -16,6 +19,8 @@ export class AdminDashboardAccommodationAllComponent {
   allAccommodationsPageSize: number = 6;
   allAccommodationsTotalPages: number = 0;
 
+  isSearchBarVisible: boolean = false;
+
   private accommodationsCache = new Map<number, AccommodationDTO[]>();
 
   isLoading = true;
@@ -23,7 +28,8 @@ export class AdminDashboardAccommodationAllComponent {
   constructor(
       private accommodationService: AccommodationService,
       private route: ActivatedRoute,
-      private router: Router
+      private router: Router,
+      private adminDashboardSearchService: AdminDashboardSearchService
   ) {}
 
   ngOnInit(): void {
@@ -83,6 +89,30 @@ export class AdminDashboardAccommodationAllComponent {
             size: this.allAccommodationsPageSize 
         },
         replaceUrl: true 
+    });
+}
+
+toggleSearchBar(): void {
+    this.isSearchBarVisible = !this.isSearchBarVisible;
+  }
+
+search(params: AdminSearchParams) {
+    this.isLoading = true;
+    this.adminDashboardSearchService.search(params).subscribe({
+        next: (foundAccommodations: PageResponse<AccommodationDTO>) => {
+            if(foundAccommodations) {
+                this.allAccommodations = foundAccommodations.content;
+                this.allAccommodations$ = of(foundAccommodations.content);
+                this.allAccommodationsPageNumber = foundAccommodations.number;
+                this.allAccommodationsPageSize = foundAccommodations.size;
+                this.allAccommodationsTotalPages = foundAccommodations.totalPages;
+                this.accommodationsCache.set(this.allAccommodationsPageNumber, this.allAccommodations);
+                this.isLoading = false;
+            }
+        },
+        error: () => {
+            this.isLoading = false;
+        }
     });
 }
 

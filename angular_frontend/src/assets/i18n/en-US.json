@@ -117,6 +117,14 @@
 	"created": "User created successfully",
 	"is_admin": "is admin"
 },
+"admin-dashdoard-search-bar": {
+	"title": "Title",
+	"owner": "Owner",
+	"search": "Search",
+	"ownerName": "Owner Name",
+	"ownerSurname": "Owner Surname",
+	"city": "City"
+},
 "adminProfile":  {
 	"name": "Name",
 	"surname": "Surname",

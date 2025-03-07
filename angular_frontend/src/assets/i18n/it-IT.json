@@ -117,6 +117,14 @@
 	"created": "Utente creato",
 	"is_admin": "è amministratore"
 },
+"admin-dashdoard-search-bar": {
+	"title": "Titolo",
+	"owner": "Proprietario",
+	"search": "Cerca",
+	"ownerName": "Nome Proprietario",
+	"ownerSurname": "Cognome Proprietario",
+	"city": "Città"
+},
 "adminProfile":  {
 	"name": "Nome",
 	"surname": "Cognome",

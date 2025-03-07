@@ -1017,4 +1017,18 @@ public class AccommodationController {
 
 		return accommodationService.deletePhotosFromAccommodation(id, decodedList);
 	}
+
+	@PreAuthorize("hasAuthority('ADMIN')")
+	@GetMapping(value = "/admin/search")
+	public Page<AccommodationDTO> findByAdminInputDTO(@RequestParam(value = "title", required = false) String title,
+														@RequestParam(value = "ownerName", required = false) String ownerName,
+														@RequestParam(value = "ownerSurname", required = false) String ownerSurname,
+														@RequestParam(value = "city", required = false) String city,
+														@RequestParam(value = "page", required = false) Integer pageNumber,
+														@RequestParam(value = "size", required = false) Integer pageSize) {
+		if(pageNumber == null) pageNumber = 0;
+		if(pageSize == null) pageSize = 10;
+		Pageable pageable = PageRequest.of(pageNumber, pageSize);
+		return accommodationService.findByAdminInputDTO(title, ownerName, ownerSurname, city, pageable);
+	}
 }
