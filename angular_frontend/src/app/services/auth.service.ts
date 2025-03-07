@@ -26,9 +26,7 @@ export class AuthService {
   constructor(
     private router: Router,
     private http: HttpClient
-  ){
-    
-   }
+  ){ }
 
   login(user: AuthCredentials): Observable<{ok: boolean, status: number, message: string}> {
     return this.http.post<LoginResponse>(`${BACKEND_URL_PREFIX}/api/signin`, user, this.httpOptions).pipe(

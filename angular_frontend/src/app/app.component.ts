@@ -46,9 +46,17 @@ export class AppComponent implements OnInit, DoCheck, OnDestroy {
   }
 
   ngOnInit(): void {
+    // update isAdmin after user logs in
     this.checkIsAdmin = this.authService.isUserAdmin$.subscribe(isUserAdmin => {
       this.isAdmin = isUserAdmin;
     });
+
+    // update isAdmin if logged user refreshes page
+    if(this.isAdmin === false){
+      this.authService.isAdmin().subscribe(isUserAdmin => {
+        this.isAdmin = isUserAdmin;
+      });
+    }
   }
 
   ngOnDestroy(): void {

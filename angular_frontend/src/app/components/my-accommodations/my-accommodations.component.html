@@ -22,13 +22,13 @@
 </section>
 
 <div id="drafts" #drafts class="flex flex-col w-full">
-<section *ngIf="allMyDrafts && allMyDrafts.length > 0" class="flex justify-center items-center pt-8 bg-neutral-1">
-  <div class="container p-5 text-center">
-    <h2>{{'my_accommodations.drafts' | translate}}</h2>
-    <app-draft-cards [accommodations$]="myDrafts$" [pageNumber]="myDraftsPageNumber" [totalPages]="myDraftsTotalPages" 
-      (askForPage)="loadMyDraftsPage($event)" [draggable]="true" (dragStart)="onDraftDragStart($event)"></app-draft-cards>
-  </div>
-</section>
+  <section *ngIf="allMyDrafts && allMyDrafts.length > 0" class="flex justify-center items-center pt-8 bg-neutral-1">
+    <div class="container p-5 text-center">
+      <h2>{{'my_accommodations.drafts' | translate}}</h2>
+      <app-draft-cards [accommodations$]="myDrafts$" [pageNumber]="myDraftsPageNumber" [totalPages]="myDraftsTotalPages" 
+        (askForPage)="loadMyDraftsPage($event)" [draggable]="true" (dragStart)="onDraftDragStart($event)"></app-draft-cards>
+    </div>
+  </section>
   <div *ngIf="allMyDrafts && allMyDrafts.length > 0"
       class="flex justify-center mt-4 mb-8 trash-container"
       (dragover)="onDragOver($event)"
@@ -37,8 +37,8 @@
         <i class="text-3xl text-gray-500 transition-colors duration-300 fas fa-trash hover:text-red-500"></i>
         <p class="mt-2 text-sm text-gray-500">{{'my_accommodations.drop_to_delete' | translate}}</p>
       </div>
-    </div>
   </div>
+</div>
  
 <div *ngIf="showDeleteModal" class="flex fixed inset-0 z-50 justify-center items-center delete-confirmation-modal">
   <div class="fixed inset-0 bg-black bg-opacity-50 modal-backdrop" (click)="cancelDelete()"></div>
