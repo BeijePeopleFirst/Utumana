@@ -6,6 +6,7 @@ import { User } from '../models/user';
 import { LoginResponse } from '../utils/loginResponse';
 import { S3Service } from './s3.service';
 import { UserDTO } from '../dtos/userDTO';
+import { AccommodationOwnerDTO } from '../dtos/accommodationOwnerDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -132,6 +133,23 @@ export class UserService {
         return true;
       }),
       catchError(err => { throw(err); })
+    )
+  }
+
+  getAccommodationOwner(userId: number, accId: number): Observable<AccommodationOwnerDTO | {message: string, status: string, time: string}> {
+    return this.http.get<AccommodationOwnerDTO>(BACKEND_URL_PREFIX + "/api/user/owner/" + userId + "/" + accId).pipe(
+      catchError(error => {
+        console.error(error);
+        return of(error.error);
+      }),
+      map(user => {
+        this.s3Service.getPhoto(user.profile_picture_url).subscribe(blob => {
+          if(blob != null){
+            user.profile_picture_blob_url = URL.createObjectURL(blob);
+          }
+        })
+        return user;
+      })
     )
   }
 }

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import ws.peoplefirst.utumana.dto.AccommodationOwnerDTO;
 import ws.peoplefirst.utumana.dto.ReviewDTO;
 import ws.peoplefirst.utumana.dto.UserDTO;
 import ws.peoplefirst.utumana.model.BadgeAward;
@@ -49,5 +50,12 @@ public interface UserRepository extends JpaRepository<User,Long>{
 
     @Query("SELECT b FROM BadgeAward AS b LEFT JOIN FETCH b.user WHERE b.user.id = :userId ORDER BY b.awardDate DESC, b.badge.score DESC")
     public List<BadgeAward> findAllUserBadges(@Param("userId") Long userId);
+
+	@Query(
+		"SELECT new ws.peoplefirst.utumana.dto.AccommodationOwnerDTO(u.id, u.name, u.surname, u.bio, u.profilePictureUrl) " +
+		"FROM Accommodation a JOIN User u ON a.ownerId = u.id " +
+		"WHERE a.id = :accId AND u.id = :usrId"
+	)
+	public AccommodationOwnerDTO findAccommodationOwner(@Param("usrId") Long usrId, @Param("accId") Long accId);
 
 }

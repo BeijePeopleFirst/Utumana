@@ -12,13 +12,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import ws.peoplefirst.utumana.dto.AccommodationOwnerDTO;
 import ws.peoplefirst.utumana.dto.ReviewDTO;
 import ws.peoplefirst.utumana.dto.UserDTO;
+import ws.peoplefirst.utumana.exception.ForbiddenException;
 import ws.peoplefirst.utumana.exception.IdNotFoundException;
 import ws.peoplefirst.utumana.exception.InvalidJSONException;
+import ws.peoplefirst.utumana.model.Accommodation;
 import ws.peoplefirst.utumana.model.BadgeAward;
 import ws.peoplefirst.utumana.model.User;
 import ws.peoplefirst.utumana.model.UserAuthority;
+import ws.peoplefirst.utumana.repository.AccommodationRepository;
 import ws.peoplefirst.utumana.repository.UserAuthorityRepository;
 import ws.peoplefirst.utumana.repository.UserRepository;
 import ws.peoplefirst.utumana.utility.Constants;
@@ -35,6 +39,9 @@ public class UserService implements UserDetailsService {
 	
 	@Autowired
 	private UserAuthorityRepository userAuthorityRepository;
+
+	@Autowired
+	private AccommodationRepository accommodationRepository;
 
 	@Autowired
 	private S3Service s3Service;
@@ -240,6 +247,19 @@ public class UserService implements UserDetailsService {
 
 	public List<User> findAllUsers() {
 		return userRepository.findAll();
+	}
+
+	public AccommodationOwnerDTO getAccommodationOwner(Long usrId, Long accId) {
+		Optional<Accommodation> a = accommodationRepository.findById(accId);
+
+		if(a.isPresent()) {
+			Accommodation a1 = a.get();
+
+			if(a1.getOwnerId() != usrId) throw new ForbiddenException("The UserID must correspond with the Accommodation's OwnerID");
+
+			return userRepository.findAccommodationOwner(usrId, accId);
+		}
+		else throw new IdNotFoundException("Incorrect Accomodation ID provided");
 	}
 
 }

@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Params } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, map, Observable, tap } from 'rxjs';
+import { PartialBooking } from 'src/app/dtos/bookingDTO';
 import { Accommodation } from 'src/app/models/accommodation';
 import { Availability } from 'src/app/models/availability';
 import { AccommodationService } from 'src/app/services/accommodation.service';
@@ -14,13 +15,13 @@ import { AccommodationService } from 'src/app/services/accommodation.service';
 export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
 
   @Input() accommodation!: Accommodation;
-  @Output() sendChosenAvailability = new EventEmitter<Availability | {message: string}>();
+  @Output() sendChosenPeriod = new EventEmitter<PartialBooking | {message: string}>();
 
   @Input() queryParamsFromParent?: Params;
 
   @Input() availabilities!: string[];
 
-  chosenOne: Availability = {start_date: "", end_date: "", price_per_night: 0};
+  chosenOne: PartialBooking = {};
 
   currentMonth!: { name: string; days: number[]; monthIndex: number; year: number };
   previousMonth!: { name: string; days: number[]; monthIndex: number; year: number };
@@ -30,6 +31,8 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
   //availabilityCacheImproved: Map<string, boolean> = new Map<string, boolean>();
   selectedDays: Map<string, boolean> = new Map<string, boolean>();
 
+  check_in_time: number = 14; // hours
+  check_out_time: number = 10; // hours
 
   constructor(
     private accommodationService: AccommodationService,
@@ -37,22 +40,19 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
   )
   {}
 
-  sendAvailability() {
-    if(!this.chosenOne) return;
-    console.log("Stampo valore inviato -> ", this.chosenOne.price_per_night);
-    this.sendChosenAvailability.emit(this.chosenOne);
+  sendBookingPeriod() {
+    if(this.chosenOne == null) return;
+    console.log("Sending booking period -> ", this.chosenOne);
+    this.sendChosenPeriod.emit(this.chosenOne);
   }
 
   ngOnInit() {
-
+    console.log("Availabilities received: ", this.availabilities);
     if(this.queryParamsFromParent && this.queryParamsFromParent["start_date"] && this.queryParamsFromParent["end_date"]) {
-      let tmp1: Date = new Date(this.queryParamsFromParent["start_date"]);
-      let tmp2: Date = new Date(this.queryParamsFromParent["end_date"]);
-      tmp1.setHours(0, 0, 0, 0);
-      tmp2.setHours(0, 0, 0, 0);
-
-      this.chosenOne.start_date = tmp1 + "";
-      this.chosenOne.end_date = tmp2 + "";
+      this.chosenOne.check_in = new Date(this.queryParamsFromParent["start_date"]);
+      this.chosenOne.check_in.setHours(this.check_in_time, 0, 0, 0);
+      this.chosenOne.check_out = new Date(this.queryParamsFromParent["end_date"]);
+      this.chosenOne.check_out.setHours(this.check_out_time, 0, 0, 0);
     }
 
     this.initializeCalendars(new Date().getFullYear(), new Date().getMonth());
@@ -95,106 +95,86 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
     this.initializeCalendars(newYear, newMonth);
   }
 
-  private checkInDate: string = "";
   selectDay(day: number, month: string, monthName: string, year: number) {
-    this.chosenOne.accommodation_id = this.accommodation.id!;
-
-    if(this.chosenOne.start_date != "" && this.chosenOne.end_date != "") {
-      this.alreadySelectedStart = false;
-      this.chosenOne.start_date = "";
-      this.chosenOne.end_date = "";
-    }
-
     if(!this.alreadySelectedStart) {
-      this.chosenOne.start_date = new Date(this.accommodationService.fetchDate(day, monthName, year)) + "";
-      //this.selectedDays.set(day + '-' + month + '-' + year, true);
-      console.log(this.chosenOne.start_date);
-      this.checkInDate = year + "-" + monthName + "-" + day;
-    }
-    else {
-      if(Date.parse(this.chosenOne.start_date.split("T")[0]) >= this.accommodationService.fetchDate(day, monthName, year)) {
-        if(this.translateService.currentLang === 'en-US') this.sendChosenAvailability.emit({message: "Start Date must be BEFORE End Date"});
-        if(this.translateService.currentLang === 'it-IT') this.sendChosenAvailability.emit({message: "La data di inizio deve essere precedente alla data di fine"});
-        return;
-      }
-      this.chosenOne.end_date = new Date(this.accommodationService.fetchDate(day, monthName, year)) + "";
-      console.log("FINAL VALUES -> " + this.chosenOne.start_date, this.chosenOne.end_date);
-      this.sendAvailability();
-    }
-
-    if(!this.alreadySelectedStart) {
+      this.chosenOne.check_in = new Date(this.accommodationService.fetchDate(day, monthName, year) + this.check_in_time*60*60*1000);
       this.alreadySelectedStart = true;
-      
-      this.accommodationService.getAvailabilities(this.accommodation).subscribe(
-        response1 => {
-          if("message" in response1) {
-            this.sendChosenAvailability.emit({message: response1.message});
-            return;
-          }
-          else {
-            let date = this.accommodationService.fetchDate(day, monthName, year);
-            let support: Date = new Date(date);
-            let res2 = new Map<Date, number>(Object.entries(response1).map(([key, value]) => [new Date(key), value as number]));
-            //console.log(res2);
-            
-            for(let [a, b] of res2) {
-              if((a.setHours(0, 0, 0, 0)) == support.setHours(0, 0, 0, 0)) {
-                console.log("Entro in IF");
-                this.chosenOne.price_per_night = b;
-                console.log("Stampo valore impostato -> ", this.chosenOne.price_per_night);
-                break;
-              }
-            }
+      this.sendBookingPeriod();
+      return;
+    }
 
+    if(this.chosenOne.check_in && this.chosenOne.check_in.getTime() >= this.accommodationService.fetchDate(day, monthName, year)) {
+      // // send error
+      // if(this.translateService.currentLang === 'en-US') this.sendChosenPeriod.emit({message: "Start Date must be BEFORE End Date"});
+      // if(this.translateService.currentLang === 'it-IT') this.sendChosenPeriod.emit({message: "La data di inizio deve essere precedente alla data di fine"});
+      // return;
+
+      // move check-in date
+      this.chosenOne.check_in = new Date(this.accommodationService.fetchDate(day, monthName, year) + this.check_in_time*60*60*1000);
+    }else{
+      // set check-out date
+      this.chosenOne.check_out = new Date(this.accommodationService.fetchDate(day, monthName, year) + this.check_out_time*60*60*1000);
+    }
+
+    this.getPriceInfoAndSendUpdatedPeriod();
+  }
+
+  getPriceInfoAndSendUpdatedPeriod(){
+    this.chosenOne.price_info = [];
+
+    this.accommodationService.getAvailabilities(this.accommodation).subscribe(
+      response1 => {
+        if("message" in response1) {
+          this.sendChosenPeriod.emit({message: response1.message});
+          return;
+        }
+
+        if(!this.chosenOne.check_in || !this.chosenOne.check_out) return;
+
+        console.log("response1", response1);
+        let dayPriceMap = new Map<Date, number>(Object.entries(response1).map(([key, value]) => [new Date(key), value as number]));
+        console.log("dayPriceMap", dayPriceMap);
+        
+        for(let [a, b] of dayPriceMap) {
+          a.setHours(this.check_out_time + 1, 0, 0, 0);
+          if( ( a.getDate() == this.chosenOne.check_in?.getDate() && a.getMonth() == this.chosenOne.check_in?.getMonth() && a.getFullYear() == this.chosenOne.check_in?.getFullYear()) // check-in day
+          || (this.chosenOne.check_in.getTime() < a.getTime() && a.getTime() < this.chosenOne.check_out.getTime())) { // day between check-in and check-out
+            this.addToPriceInfo(b);
           }
         }
-      )
-    }
-    
+        this.chosenOne.price = this.chosenOne.price_info?.reduce((total, info) => total + info.price_per_night * info.nights, 0);
+        this.sendBookingPeriod();
+      }
+    )
   }
 
-  toCompatibleStringFormat(s: string): string {
-    if(s.includes("/")) {
-      let tmp: string[] = s.split("/");
-      return tmp[2] + "-" + tmp[1] + "-" + tmp[0];
+  addToPriceInfo(b: number){
+    let added = false;
+    for(let info of this.chosenOne.price_info ?? []){
+      if(info.price_per_night === b){
+        info.nights++;
+        added = true;
+      }
     }
-    else if(s.includes("T")) return s.split("T")[0];
-    else return s;
-  }
-
-  getDateNumberValue(d: Date): number {
-    return d.setHours(0,0,0,0);
+    if(!added) this.chosenOne.price_info?.push({nights: 1, price_per_night: b});
   }
 
   isSelectedOrBetween(day: number, monthName: string, year: number): boolean {
+    if(!this.chosenOne || !this.chosenOne.check_in) return false;
 
-    let sup: string = year + "-" + monthName + "-" + day;
-    if(sup === this.checkInDate) return true;
+    let currNumber: number = this.accommodationService.fetchDate(day, monthName, year);
 
-    /*let currDate: Date = new Date(this.accommodationService.fetchDate(day, monthName, year));
-    currDate.setHours(0,0,0,0);
-    let currNumber: number = currDate.getTime();*/
-
-    let currNumber: number = this.getDateNumberValue(new Date(this.accommodationService.fetchDate(day, monthName, year)));
-
-    let outNumber: number = -1;
-    if(this.chosenOne.end_date != "") {
-      outNumber = this.getDateNumberValue(new Date(Date.parse(this.toCompatibleStringFormat(this.chosenOne.end_date))));
+    // current day is check-in day
+    if(this.chosenOne.check_in?.getTime() - this.check_in_time*60*60*1000 == currNumber){
+      return true;
     }
-    
-    let inNumber: number = -1;
-    if(this.chosenOne.start_date != "") {
-      inNumber = this.getDateNumberValue(new Date(Date.parse(this.toCompatibleStringFormat(this.chosenOne.start_date))));
-    }
-    
-    if(!this.chosenOne || this.chosenOne.start_date == "") return false;
 
-    if(currNumber === inNumber || currNumber === outNumber) {
-    
-        return true;
-    }
-    else if(currNumber >= inNumber && this.chosenOne.end_date !== "" && currNumber <= outNumber) {
-        return true;
+    // current day is not check-in and check-out hasn't been specified yet
+    if(!this.chosenOne.check_out) return false;
+
+    // current day is between check-in and check-out
+    if(currNumber >= this.chosenOne.check_in.getTime() && currNumber <= this.chosenOne.check_out.getTime()) {
+      return true;
     }
     else {
       return false;
@@ -202,16 +182,10 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
   }
 
   resetChoices() {
-    this.chosenOne = {
-      accommodation_id: this.accommodation.id,
-      price_per_night: 0,
-      start_date: "",
-      end_date: "",
-    };
+    this.chosenOne = {};
     this.alreadySelectedStart = false;
-    this.checkInDate = "";
 
-    this.sendAvailability();
+    this.sendBookingPeriod();
   }
 
 }

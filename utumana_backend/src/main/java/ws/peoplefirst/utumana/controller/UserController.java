@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import ws.peoplefirst.utumana.dto.AccommodationOwnerDTO;
 import ws.peoplefirst.utumana.dto.UserDTO;
 import ws.peoplefirst.utumana.exception.DBException;
 import ws.peoplefirst.utumana.exception.ErrorMessage;
@@ -323,6 +324,18 @@ public class UserController {
 		// map.put("url", res);
 
 		// return map;
+	}
+
+	@Operation(summary = "Get accommodation Owner")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Owner retrieved successfully"),
+        @ApiResponse(responseCode = "404", description = "IdNotFoundException(\"accommodation not found\")", content=@Content(mediaType = "application/json",
+		schema=@Schema(implementation=ErrorMessage.class))),
+    })
+	@PreAuthorize("hasAuthority('USER')")
+	@GetMapping(value = "/user/owner/{usrId}/{accId}")
+	public AccommodationOwnerDTO getAccommodationOwner(@PathVariable Long usrId, @PathVariable Long accId, Authentication auth) {
+		return userService.getAccommodationOwner(usrId, accId);
 	}
 }
 	

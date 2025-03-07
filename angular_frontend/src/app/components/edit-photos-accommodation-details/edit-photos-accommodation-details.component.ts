@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { lastValueFrom } from 'rxjs';
 import { Accommodation } from 'src/app/models/accommodation';
 import { Photo } from 'src/app/models/photo';
 import { AccommodationService } from 'src/app/services/accommodation.service';
@@ -19,6 +20,8 @@ export class EditPhotosAccommodationDetailsComponent implements OnInit {
   photosRows: [Photo, (Photo | null), (Photo | null)][] = [];
 
   private notConfirmedPhotosIDs: number[] = [];
+
+  displaySpinner: boolean = false;
 
   //Messagges:
   //----------------------------------------------------
@@ -104,7 +107,7 @@ export class EditPhotosAccommodationDetailsComponent implements OnInit {
     return result;
   }
 
-  public uploadPhotosToS3($event: Event): void {
+  public async uploadPhotosToS3($event: Event): Promise<void> {
     const PHOTOS: HTMLInputElement = $event.target as HTMLInputElement;
 
     if(!PHOTOS.files || PHOTOS.files.length <= 0) {
@@ -113,6 +116,7 @@ export class EditPhotosAccommodationDetailsComponent implements OnInit {
       return;
     }
 
+    this.displaySpinner = true;
     let single: File | null;
     let formData: FormData;
     for(let i = 0; i < PHOTOS.files.length; i++) {
@@ -127,38 +131,38 @@ export class EditPhotosAccommodationDetailsComponent implements OnInit {
       formData = new FormData();
       formData.append("photo", single);
 
-      this.accommodationService.uploadPhoto(this.accomodation.id!, Number(localStorage.getItem("id")!), formData).subscribe(
-        response => {
-          if("message" in response) {
-            console.error(response);
-            this.messages = true;
-            this.errorWhileUploadingToS3 = true;
-            return;
+      let response1: (Photo | {message: string, status: string, time: string}) = await lastValueFrom(this.accommodationService.uploadPhoto(this.accomodation.id!, Number(localStorage.getItem("id")!), formData));
+
+      if("message" in response1) {
+        console.error(response1);
+        this.messages = true;
+        this.errorWhileUploadingToS3 = true;
+        return;
+      }
+      else {
+
+        let response = response1 as Photo;
+
+        //Recupero la foto e la metto nella lista photosRows
+        this.s3Service.getPhoto(response.photo_url).subscribe(
+          photo => {
+            if(!photo) {
+              this.errorWhileUploadingToS3 = true;
+              this.messages = true;
+              return;
+            }
+
+            let tmp: Photo = {id: response.id, photo_url: response.photo_url, photo_order: response.photo_order, blob_url: URL.createObjectURL(photo)};
+            this.notConfirmedPhotosIDs.push(tmp.id);
+            this.notConfirmedPhotosIDsEvent.emit(this.notConfirmedPhotosIDs);
+
+            this.photosRows = this.addPhotoToViewList(tmp, this.photosRows);
           }
-          else {
-
-            //Recupero la foto e la metto nella lista photosRows
-            this.s3Service.getPhoto(response.photo_url).subscribe(
-              photo => {
-                if(!photo) {
-                  this.errorWhileUploadingToS3 = true;
-                  this.messages = true;
-                  return;
-                }
-
-                let tmp: Photo = {id: response.id, photo_url: response.photo_url, photo_order: response.photo_order, blob_url: URL.createObjectURL(photo)};
-                this.notConfirmedPhotosIDs.push(tmp.id);
-                this.notConfirmedPhotosIDsEvent.emit(this.notConfirmedPhotosIDs);
-
-                this.photosRows = this.addPhotoToViewList(tmp, this.photosRows);
-              }
-            )
-
-          }
-
-        }
-      )
+        )
+      }
     }
+
+    this.displaySpinner = false;
   }
 
   addPhotoToViewList(p: Photo, list: [Photo, (Photo | null), (Photo | null)][]): [Photo, (Photo | null), (Photo | null)][] {

@@ -329,7 +329,8 @@ public class AccommodationController {
 	    @ApiResponse(responseCode = "404", description = "Accommodation ID does not exist", content=@Content(mediaType = "application/json",
 	    		schema=@Schema(implementation=ErrorMessage.class)))
 	})
-	@Operation(summary = "Get single Accommodation availabilities list by Accommodation ID in a fixed period of time (the returned result will consider the accepted bookings as well")
+	@Operation(summary = "Get single Accommodation availabilities list by Accommodation ID in a fixed period of time (the returned result will consider the accepted bookings as well",
+	description = "The return type is not a list of availabilities. It is a map where, for each available day, the key is the date and the value is the price.")
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping(value = "/availabilities/{accommodation_id}")
 	public Map<LocalDate, Double> getAvailabilities(@PathVariable (name = "accommodation_id") Long accommodationId,
@@ -870,7 +871,7 @@ public class AccommodationController {
         return accommodationService.findByUserInputDTO(destination, checkInDate, checkOutDate, numberOfGuests, freeOnly, serviceIds, minRating, maxRating, minPrice, maxPrice, orderBy, oderDirection, addressName, userId, pageable);
 	}
 	
-	@Operation(summary = "Return the full accommodation with utility fields such as : if the logged user is and admin or owner, hasPendingBooking,"
+	@Operation(summary = "Get accommodation info", description = "Return the full accommodation with utility fields such as : if the logged user is and admin or owner, hasPendingBooking,"
 			+ " the id of the pending booking, a formatted approval timestamp, all the reviews ")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "If the accomomodation is found"),
@@ -910,7 +911,7 @@ public class AccommodationController {
 		res.put("isFavourite", isFavourite);
 
 		List<Booking> values = bookingService.findByStatusInAndAccommodationId(Arrays.asList(
-                BookingStatus.DOING, BookingStatus.ACCEPTED, BookingStatus.PENDING
+                BookingStatus.DOING, BookingStatus.ACCEPTED
         ), accommodationId);
 		
 		List<String> availabilities = this.accommodationService.fetchFullAvailabilityListForAccommodation(accommodationId, user, values);

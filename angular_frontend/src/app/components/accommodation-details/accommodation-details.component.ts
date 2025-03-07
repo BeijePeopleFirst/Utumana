@@ -3,7 +3,8 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, debounceTime, distinctUntilChanged, map, Observable, of, Subject, Subscription, switchMap } from 'rxjs';
 import { AccommodationDTO } from 'src/app/dtos/accommodationDTO';
-import { BookingDTO } from 'src/app/dtos/bookingDTO';
+import { AccommodationOwnerDTO } from 'src/app/dtos/accommodationOwnerDTO';
+import { BookingDTO, PartialBooking } from 'src/app/dtos/bookingDTO';
 import { Accommodation } from 'src/app/models/accommodation';
 import { Availability } from 'src/app/models/availability';
 import { Booking } from 'src/app/models/booking';
@@ -51,8 +52,8 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
   successAcceptingReview: boolean = false;
   successRejectingReview: boolean = false;
 
-  accommodationOwner!: User;
-  defaultPictureUrl: string = `${imagesURL}\\default_profile.png`;
+  accommodationOwner!: AccommodationOwnerDTO;
+  defaultPictureUrl: string = (`${imagesURL}\\default_profile.png`);
 
   showDeleteAccommodationConfirmPopup: boolean = false;
 
@@ -97,7 +98,7 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
   localeSubscription?: Subscription;
 
   //Child Communication (choose book period):
-  chosenAvailability?: Availability;
+  chosenPeriod?: PartialBooking;
   queryParams?: Params;
 
   //Child2 Communication (view more photos):
@@ -142,11 +143,10 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
     let tmp: any;
     if ((tmp = localStorage.getItem("chosen_availability_data"))) {
       let dataSession = JSON.parse(tmp!);
-      this.chosenAvailability = {
-        start_date: dataSession.chosen_availability.start_date,
-        end_date: dataSession.chosen_availability.end_date,
-        price_per_night: dataSession.chosen_availability.price_per_night,
-        accommodation_id: dataSession.chosen_availability.accommodation_id,
+      this.chosenPeriod = {
+        check_in: dataSession.chosen_availability.start_date,
+        check_out: dataSession.chosen_availability.end_date,
+        price_info: dataSession.chosen_availability.price_info,
       };
       this.postOperation$.next(dataSession.post_operation);
       this.nightsNumber$.next(dataSession.nights_number);
@@ -254,7 +254,7 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
             else if (!this.accommodation.hiding_timestamp && this.accommodation.approval_timestamp) this.invalidAccommodation = false;
             else {}
 
-            this.photoList = this.accommodation.photos;
+            this.photoList = this.accommodation.photos;console.log("PHOTOSSSSSSS -> ", this.accommodation.photos);
             this.photoList.sort((p1, p2) => p1.photo_order - p2.photo_order);
             this.photoToShow = [this.photoList[0], 0];
             this.totalPhotos = this.photoList.length;
@@ -318,15 +318,15 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
 
             //Ora recupero l' Owner dell' Accommodation:
             this.userService
-              .getUserById(this.accommodation.owner_id)
+              .getAccommodationOwner(this.accommodation.owner_id, this.accommodation.id!)
               .subscribe((foundUser) => {
                 if (!foundUser) {
                   this.message = "true";
                   this.accommodationEntityError = true;
                   this.invalidAccommodation = true;
                   return;
-                } else if ("message" in foundUser) {
-                  this.message = foundUser.message;
+                } else if ("message" in foundUser || !this.isCorrectAccommodationOwnerType(foundUser)) {
+                  if("message" in foundUser) this.message = foundUser.message;
                   this.invalidAccommodation = true;
                   this.errorFetchingAccommodationOwner = true;
                   return;
@@ -361,6 +361,15 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
       });
   }
 
+  private isCorrectAccommodationOwnerType(o: any): boolean {
+    return o &&
+           typeof o.id! == "number" &&
+           typeof o.name! == "string" &&
+           typeof o.surname! == "string" &&
+           typeof o.bio! == "string" &&
+           typeof o.profile_picture_url! == "string";
+  }
+
   ngOnDestroy(): void {
     if (this.localeSubscription) this.localeSubscription.unsubscribe();
   }
@@ -389,28 +398,23 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  receiveAvailabilityFromChild($event: Availability | {message: string}) {
+  receiveBookingFromChild($event: PartialBooking | {message: string}) {
     if($event && !("message" in $event)) {
-      this.chosenAvailability = $event;
+      this.chosenPeriod = $event;
 
-      if($event.start_date != "" && $event.end_date != "") {
+      if($event.check_in && $event.check_out) {
         // Calcola il numero di notti
-        const startDate = new Date($event.start_date);
-        const endDate = new Date($event.end_date);
+        const startDate = new Date($event.check_in);
+        const endDate = new Date($event.check_out);
         const nights = Math.floor((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
-
-        this.chosenAvailability.start_date = new Date(this.chosenAvailability.start_date).toLocaleDateString();
-        this.chosenAvailability.end_date = new Date(this.chosenAvailability.end_date).toLocaleDateString();
 
         // Aggiorna i BehaviorSubject
         this.nightsNumber$.next(nights);
-        console.log("Stampo price per night -> ", $event.price_per_night);
-        this.postOperation$.next(nights * $event.price_per_night);
+        // this.postOperation$.next(nights * $event.price_info);
       }
     }
-    else {
-      if($event && 'message' in $event) this.message = $event.message;
-    }
+
+    if($event && 'message' in $event) this.message = $event.message;
   }
 
   toggleIsFavourite() {
@@ -589,14 +593,15 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
 
   bookNow() {
     if (
-      !this.chosenAvailability ||
-      !this.chosenAvailability.start_date ||
-      !this.chosenAvailability.end_date ||
+      !this.chosenPeriod ||
+      !this.chosenPeriod.check_in ||
+      !this.chosenPeriod.check_out ||
       !this.userId ||
       !this.accommodation
     ) {
       this.message = "true";
       this.bookingValuesMissing = true;
+      document.getElementById("avail")?.scrollIntoView({ behavior: "smooth" });
       return;
     }
 
@@ -605,17 +610,17 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
       timestamp: (new Date()).toLocaleDateString(), 
       price: this.postOperation$.value, 
       status: BookingStatus.PENDING, 
-      check_in: this.chosenAvailability?.start_date!, 
-      check_out: this.chosenAvailability?.end_date!, 
+      check_in: this.chosenPeriod?.check_in!.getDate() + "-" + this.chosenPeriod?.check_in!.getMonth() + "-" + this.chosenPeriod?.check_in!.getFullYear(), 
+      check_out: this.chosenPeriod?.check_out!.getDate() + "-" + this.chosenPeriod?.check_out!.getMonth() + "-" + this.chosenPeriod?.check_out!.getFullYear(), 
       is_unavailability: false, 
       user_id: this.userId!
     };
 
-    let container: {chosen_availability: Availability,
+    let container: {chosen_availability: PartialBooking,
                     nights_number: number, post_operation: number
                    }
 
-                   = {chosen_availability: this.chosenAvailability!, nights_number: this.nightsNumber$.value, post_operation: this.postOperation$.value};
+                   = {chosen_availability: this.chosenPeriod!, nights_number: this.nightsNumber$.value, post_operation: this.postOperation$.value};
 
     localStorage.setItem("created_booking", JSON.stringify(booking));
     localStorage.setItem("num_guests", JSON.stringify(this.guestsNumber));
