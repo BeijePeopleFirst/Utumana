@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.transaction.Transactional;
+import ws.peoplefirst.utumana.criteria.AdminSearchCriteria;
 import ws.peoplefirst.utumana.criteria.SearchAccomodationCriteria;
 import ws.peoplefirst.utumana.dto.AccommodationDTO;
 import ws.peoplefirst.utumana.dto.BookingDTO;
@@ -283,6 +284,11 @@ public class AccommodationService {
         }
 
         return results;
+    }
+
+    public Page<AccommodationDTO> findByAdminInputDTO(String title, String ownerName, String ownerSurname, String city, Pageable pageable) {
+        AdminSearchCriteria adminSearchCriteria = new AdminSearchCriteria(title, ownerName, ownerSurname, city, pageable);
+        return accommodationRepository.adminSearch(adminSearchCriteria);
     }
 
     public Accommodation insertAccommodation(Accommodation accommodation) {

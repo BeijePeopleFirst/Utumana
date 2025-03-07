@@ -70,6 +70,7 @@ import { AdminDashboardAcceptRejectModalComponent } from './components/admin-das
 import { AdminDashboardProfileComponent } from './components/admin-dashboard-profile/admin-dashboard-profile.component';
 import { AdminDashboardProfileListComponent } from './components/admin-dashboard-profile-list/admin-dashboard-profile-list.component';
 import { AdminDashboardMetricsComponent } from './components/admin-dashboard-metrics/admin-dashboard-metrics.component';
+import { AdminDashdoardSearchBarComponent } from './components/admin-dashdoard-search-bar/admin-dashdoard-search-bar.component';
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
@@ -131,7 +132,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     AdminDashboardAcceptRejectModalComponent,
     AdminDashboardProfileComponent,
     AdminDashboardProfileListComponent,
-    AdminDashboardMetricsComponent
+    AdminDashboardMetricsComponent,
+    AdminDashdoardSearchBarComponent
   ],
   imports: [
     BrowserModule,

@@ -1,4 +1,15 @@
-<h2>{{"admin-dashboard-accommodations.all_title" | translate}}</h2>
+<div class="flex items-center gap-4 mb-4">
+    <h2 class="mb-0">{{"admin-dashboard-accommodations.all_title" | translate}}</h2>
+    <button class="p-2 rounded" (click)="toggleSearchBar()">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+      </svg>
+    </button>
+</div>
+
+<div *ngIf="isSearchBarVisible" class="sticky top-0 z-20 bg-neutral-1 shadow-md p-4 rounded-lg">
+    <app-admin-dashdoard-search-bar (searchSubmitted)="search($event)"></app-admin-dashdoard-search-bar>
+</div>
 
 <div *ngIf="isLoading" class="flex justify-center items-center min-h-screen">
     <div class="flex justify-center items-center h-full">
