@@ -1,0 +1,10 @@
+<ul class="divide-y-2 divide-neutral-2">
+  <li *ngFor="let user of users" class="py-4">
+    <div class="flex flex-col">
+      <app-admin-dashboard-profile
+        [user]="user" 
+        (updateUser)="updateUser($event)">
+      </app-admin-dashboard-profile>
+    </div>
+  </li>
+</ul>

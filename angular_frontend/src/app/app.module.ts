@@ -6,10 +6,7 @@ import { AccommodationCardComponent } from './components/accommodation-card/acco
 import {HttpClientModule,HttpClient, HTTP_INTERCEPTORS} from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthInterceptor } from './interceptors/authInterceptor.service';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatListModule } from '@angular/material/list';
-import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
 
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -57,21 +54,22 @@ import { DraftCardComponent } from './components/draft-card/draft-card.component
 import { DraftCardsComponent } from './components/draft-cards/draft-cards.component';
 import { CreateAccommodationConfirmModalComponent } from './components/create-accommodation-confirm-modal/create-accommodation-confirm-modal.component';
 import { MapComponent } from './components/map/map.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AdminDashboardMainAndSidenavComponent } from './components/admin-dashboard-main-and-sidenav/admin-dashboard-main-and-sidenav.component';
 import { AdminDashboardHomePanelComponent } from './components/admin-dashboard-home-panel-component/admin-dashboard-home-panel-component.component';
 import { ProfilePictureModalComponent } from './components/profile-picture-modal/profile-picture-modal.component';
 import { ImagesCarouselComponent } from './components/images-carousel/images-carousel.component';
 import { EditPhotosAccommodationDetailsComponent } from './components/edit-photos-accommodation-details/edit-photos-accommodation-details.component';
-import { AdminDashboardMetricsComponent } from './components/admin-dashboard-metrics/admin-dashboard-metrics.component';
-import { AdminDashboardAccetRejectComponent } from './components/admin-dashboard-accet-reject/admin-dashboard-accet-reject.component';
+import { AdminDashboardAcceptRejectComponent } from './components/admin-dashboard-accept-reject/admin-dashboard-accept-reject.component';
 import { AdminDashboardAccommodationActiveComponent } from './components/admin-dashboard-accommodation-active/admin-dashboard-accommodation-active.component';
 import { AdminDashboardAccommodationInactiveComponent } from './components/admin-dashboard-accommodation-inactive/admin-dashboard-accommodation-inactive.component';
 import { AdminDashboardAccommodationAllComponent } from './components/admin-dashboard-accommodation-all/admin-dashboard-accommodation-all.component';
 import { AdminDashboardUsersProfilesComponent } from './components/admin-dashboard-users-profiles/admin-dashboard-users-profiles.component';
 import { AdminDashboardUsersAddUserComponent } from './components/admin-dashboard-users-add-user/admin-dashboard-users-add-user.component';
 import { AdminDashboardUsersMakeNewAdminComponent } from './components/admin-dashboard-users-make-new-admin/admin-dashboard-users-make-new-admin.component';
-
+import { AdminDashboardAcceptRejectModalComponent } from './components/admin-dashboard-accept-reject-modal/admin-dashboard-accept-reject-modal.component';
+import { AdminDashboardProfileComponent } from './components/admin-dashboard-profile/admin-dashboard-profile.component';
+import { AdminDashboardProfileListComponent } from './components/admin-dashboard-profile-list/admin-dashboard-profile-list.component';
+import { AdminDashboardMetricsComponent } from './components/admin-dashboard-metrics/admin-dashboard-metrics.component';
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
@@ -123,14 +121,17 @@ export function HttpLoaderFactory(http: HttpClient) {
     ProfilePictureModalComponent,
     ImagesCarouselComponent,
     EditPhotosAccommodationDetailsComponent,
-    AdminDashboardMetricsComponent,
-    AdminDashboardAccetRejectComponent,
+    AdminDashboardAcceptRejectComponent,
     AdminDashboardAccommodationActiveComponent,
     AdminDashboardAccommodationInactiveComponent,
     AdminDashboardAccommodationAllComponent,
     AdminDashboardUsersProfilesComponent,
     AdminDashboardUsersAddUserComponent,
-    AdminDashboardUsersMakeNewAdminComponent
+    AdminDashboardUsersMakeNewAdminComponent,
+    AdminDashboardAcceptRejectModalComponent,
+    AdminDashboardProfileComponent,
+    AdminDashboardProfileListComponent,
+    AdminDashboardMetricsComponent
   ],
   imports: [
     BrowserModule,
@@ -144,12 +145,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         useFactory:HttpLoaderFactory,
         deps:[HttpClient]
       }
-    }),
-    BrowserAnimationsModule,
-    MatSidenavModule,
-    MatListModule,
-    MatIconModule,
-    MatProgressSpinnerModule
+    })
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }

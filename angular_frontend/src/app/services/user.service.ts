@@ -5,12 +5,12 @@ import { BACKEND_URL_PREFIX } from 'src/costants';
 import { User } from '../models/user';
 import { LoginResponse } from '../utils/loginResponse';
 import { S3Service } from './s3.service';
+import { UserDTO } from '../dtos/userDTO';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-
   constructor(
     private http: HttpClient,
     private s3Service: S3Service
@@ -29,6 +29,28 @@ export class UserService {
           }
         })
         return user;
+      })
+    )
+  }
+
+  getAllUsersDto(): Observable<UserDTO[]> {
+    return this.http.get<UserDTO[]>(BACKEND_URL_PREFIX + "/api/users").pipe(
+      map(users => {
+        console.log("users",users);
+        users.forEach(user => {
+          if(user.profile_picture_url){
+            this.s3Service.getPhoto(user.profile_picture_url).subscribe(blob => {
+              if(blob != null){
+                user.profile_picture_url = URL.createObjectURL(blob);
+              }
+            })
+          }
+        })
+        return users;
+      }),
+      catchError(error => {
+        console.error(error.error);
+        return of(error.error);
       })
     )
   }
@@ -61,6 +83,28 @@ export class UserService {
     );   
   }
 
+  editUserInfo(updatePayload: Partial<UserDTO>): Observable<UserDTO> {
+    return this.http.patch<UserDTO>(`${BACKEND_URL_PREFIX}/api/user`, {...updatePayload}).pipe(
+      map(user => {
+        console.log("updatePayload",user.profile_picture_url); 
+        if(user.profile_picture_url){
+          console.log("profilePictureUrl",user.profile_picture_url);
+          this.s3Service.getPhoto(user.profile_picture_url).subscribe(blob => {
+            if(blob != null){
+              user.profile_picture_url = URL.createObjectURL(blob);
+            }
+          })
+        }
+        console.log("user",user);
+        return user;
+      }),
+      catchError(error => {
+        console.log(error.error);
+        return of(error.error);
+      })
+    )
+  }
+
   updatePicture(pictureFile: File): Observable<boolean> {
     const authToken =  localStorage.getItem("token");
     const formData: FormData = new FormData();
@@ -79,5 +123,15 @@ export class UserService {
       }),
       map(_ => true)
     );
+  }
+
+  insertUser(user: User): Observable<boolean> {
+    return this.http.post<User>(`${BACKEND_URL_PREFIX}/api/user`, user).pipe(
+      map(createdUser => {
+        console.log("User created: ", createdUser);
+        return true;
+      }),
+      catchError(err => { throw(err); })
+    )
   }
 }

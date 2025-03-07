@@ -530,7 +530,7 @@ public class AccommodationController {
 	@PreAuthorize("hasAuthority('USER')")
 	@PatchMapping(value = "/delete_accommodation/{id}")
 	public Accommodation deleteAccommodationAPI(@PathVariable Long id, Authentication auth) {
-		logger.debug("DELETE /delete_accommodation/" + id);
+		logger.debug("PATCH /delete_accommodation/" + id);
 		Accommodation toDelete = accommodationService.findByIdAndHidingTimestampIsNull(id);
 
 		if (toDelete == null) {
@@ -572,10 +572,34 @@ public class AccommodationController {
 	}
 
 	@Operation(summary = "Return the list of active accommodation")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	@GetMapping(value = "/accommodations/active")
 	public Page<AccommodationDTO> getActiveAccommodationsDTO(@RequestParam(value = "page", required = false) int pageNumber,
 															  @RequestParam(value = "size", required = false) int pageSize) {
+
 		return accommodationService.getActiveAccommodationsDTO(pageNumber, pageSize);
+
+	}
+
+	@Operation(summary = "Return the list of inactive accommodations", 
+	description = "Return the list of inactive accommodations. Inactive accommodations are accommodations that have been deleted by their owner. They are unreachable for normal users but can be seen by admins. They are still in the databse to keep track of past bookings.")
+	@PreAuthorize("hasAuthority('ADMIN')")
+	@GetMapping(value = "/accommodations/inactive")
+	public Page<AccommodationDTO> getInactiveAccommodationsDTO(@RequestParam(value = "page", required = false) int pageNumber,
+															 @RequestParam(value = "size", required = false) int pageSize) {
+
+		return accommodationService.getInactiveAccommodationsDTO(pageNumber, pageSize);
+
+	}
+
+	@Operation(summary = "Return the list of all accommodation")
+	@PreAuthorize("hasAuthority('ADMIN')")
+	@GetMapping(value = "/accommodations/all")
+	public Page<AccommodationDTO> getAllAccommodationsDTO(@RequestParam(value = "page", required = false) int pageNumber,
+															   @RequestParam(value = "size", required = false) int pageSize) {
+
+		return accommodationService.getAllAccommodationsDTO(pageNumber, pageSize);
+
 	}
 
 	@Operation(summary = "Return the list of accommodation ordered by average review rating")
@@ -681,8 +705,9 @@ public class AccommodationController {
     })
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@GetMapping(value = "/get_accommodations_to_approve")
-	public List<Accommodation> getAccommodationsToBeApproved(Authentication auth) {
-		return accommodationService.getAccommodationsToBeApproved();
+	public Page<AccommodationDTO> getAccommodationsToBeApproved(Authentication auth, @RequestParam(value = "page", required = false) int pageNumber,
+																					@RequestParam(value = "size", required = false) int pageSize) {
+		return accommodationService.getAccommodationsToBeApproved(pageSize, pageNumber);
 	}
 
 	@Operation(summary = "Return the list of accommodation to be approved by an admin (as DTOs)")
@@ -894,17 +919,30 @@ public class AccommodationController {
 		return ok(res);
 	}
 
-	@Operation(summary = "Return the house that has been approved")
+	@Operation(summary = "Return the accommodation that has been approved")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "If the list of searched accommodations is correctly returned"),
+        @ApiResponse(responseCode = "200", description = "If the approved accommodation is correctly returned"),
         @ApiResponse(responseCode = "404", description = "If the accommodation_id does not match any accommodation with null approval_timestamp", content=@Content(mediaType = "application/json",
 			schema=@Schema(implementation=ErrorMessage.class)))
     })
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@PatchMapping(value = "/approve_accommodation/{accommodation_id}")
-	public Accommodation approveHouse(@PathVariable(name = "accommodation_id") Long accommodationId) {
+	public Accommodation approveAccommodation(@PathVariable(name = "accommodation_id") Long accommodationId) {
 
 		return accommodationService.approveAccommodation(accommodationId);
+	}
+
+	@Operation(summary = "Return the accommodation that has been rejected")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "If the rejected accommodation is correctly returned"),
+        @ApiResponse(responseCode = "404", description = "If the accommodation_id does not match any accommodation with null approval_timestamp", content=@Content(mediaType = "application/json",
+			schema=@Schema(implementation=ErrorMessage.class)))
+    })
+	@PreAuthorize("hasAuthority('ADMIN')")
+	@PatchMapping(value = "/reject_accommodation/{accommodation_id}")
+	public Accommodation rejectAccommodation(@PathVariable(name = "accommodation_id") Long accommodationId) {
+
+		return accommodationService.rejectAccommodation(accommodationId);
 	}
 
 	@Operation(summary = "Return the set of cities where accommodations are located")

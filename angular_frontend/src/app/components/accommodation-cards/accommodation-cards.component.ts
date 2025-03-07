@@ -14,6 +14,7 @@ export class AccommodationCardsComponent{
   @Input() totalPages!: number;
   @Input() status!: string;
   @Output() askForPage = new EventEmitter<number>();
+  @Output() refresh = new EventEmitter<number>();
 
   constructor( ){ }
 
@@ -29,5 +30,9 @@ export class AccommodationCardsComponent{
     if(this.pageNumber != n){
       this.askForPage.emit(n);
     }
+  }
+
+  propagateRefresh(){
+    this.refresh.emit(this.pageNumber);
   }
 }

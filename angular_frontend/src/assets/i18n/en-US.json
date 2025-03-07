@@ -3,12 +3,17 @@
 	"book": "Book now",
 	"free": "free",
 	"approve": "Approve",
+	"approve_title": "Are you sure you want to approve this accommodation?",
+	"approve_subtitle": "If you choose \"Approve\", the accommodation will be published.",
+	"reject_title": "Are you sure you want to reject this accommodation?",
+	"reject_subtitle": "If you choose \"Reject\", the accommodation will be hidden. The owner will be able to edit it and submit it for approval at a later time.",
 	"reject": "Reject",
 	"pending": "Pending",
-	"rejected": "Rejected"
+	"rejected": "Rejected",
+	"deleted": "Deleted"
 	},
 "accommodations_cards": {
-	"notFound": "No accommodation found"
+	"notFound": "No accommodations found"
 	},
 "accommodation-card-details": {
 	"delete": "Delete",
@@ -71,6 +76,51 @@
 	"confirm-acc-deletion-btn-text": "Confirm Deletion",
 	"ABORT-acc-deletion-btn-text": "Cancel Operation"
 	},
+"admin-dashboard-accommodations": {
+	"approve_reject_title": "Approve/Reject accommodations",
+	"active_title": "Active accommodations",
+	"inactive_title": "Inactive accommodations",
+	"inactive_subtitle": "Inactive accommodations are accommodations that have been deleted by their owner. They are unreachable for normal users but can be seen by admins here.",
+	"all_title": "All accommodations"
+},
+"admin-dashboard-sidenav": {
+	"title": "Admin Panel",
+	"home": "Home",
+
+	"accommodations": "Accommodations",
+	"accept_reject": "Approve/Reject",
+	"active": "Active",
+	"inactive": "Inactive",
+	"all": "All",
+
+	"users": "Users",
+	"profiles":"Profiles",
+	"add_user":"Add user",
+	"new_admin":"New admin",
+
+	"metrics": "Metrics"
+},
+"admin-dashboard-users": {
+	"name": "Name",
+	"invalid_name": "Invalid name",
+	"surname": "Surname",
+	"invalid_surname": "Invalid surname",
+	"required": "Required field",
+	"password_instructions": "Password must be at least 8 characters long and contain at least one lowercase letter,  one uppercase letter, one number and one symbol of !\"#$%&'()*+,-.:;<=>?@",
+	"created": "User created successfully",
+	"is_admin": "is admin"
+},
+"adminProfile":  {
+	"name": "Name",
+	"surname": "Surname",
+	"email": "Email",
+	"required": "Required",
+	"nonValid": "Non valid email",
+	"newPassword": "New password (Optional)",
+	"passwordMessage": "Leave empty to keep the current password",
+	"cancel": "Cancel",
+	"save": "Save"
+},
 "bookings": {
 	"checkIn":"Check-in",
 	"checkOut":"Check-out",
@@ -151,6 +201,7 @@
 	},
 "common": {
 	"cancel": "Cancel",
+	"create": "Create",
 	"delete": "Delete"
 	},
 "create": {
@@ -337,7 +388,8 @@
 	"reject_title": "Are you sure you want to reject this review?",
 	"reject_subtitle": "If you choose \"Reject\", the review will be permanently deleted",
 	"accept_button_label": "Accept",
-	"reject_button_label": "Reject"
+	"reject_button_label": "Reject",
+	"see_accommodation": "View accommodation"
 },
 "save_button_label": "Save",
 "search": {

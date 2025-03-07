@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { User } from 'src/app/models/user';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-admin-dashboard-users-add-user',
@@ -6,5 +9,35 @@ import { Component } from '@angular/core';
   styleUrls: ['./admin-dashboard-users-add-user.component.css']
 })
 export class AdminDashboardUsersAddUserComponent {
+  genericError: boolean = false;
+  createdMessage: boolean = false;
+  user: User = {name: '', surname: '', email: '', password: ''};
+  visiblePassword: boolean = false;
+  @ViewChild('form', { static: true }) form!: NgForm;
 
+  constructor(private userService: UserService){  }
+
+  createUser(){
+    if(this.form.invalid){
+      return;
+    }
+    console.log("Creating user");
+
+    this.userService.insertUser(this.user).subscribe({
+      next: ok => {
+        if(ok){
+          this.form.resetForm();
+          this.createdMessage = true;
+          setTimeout(() => {
+            this.createdMessage = false;
+          }, 3000);
+        }else{
+          this.genericError = true;
+        }
+      }, error: error => {
+        console.log(error);
+        this.genericError = true;
+      }
+    });
+  }
 }

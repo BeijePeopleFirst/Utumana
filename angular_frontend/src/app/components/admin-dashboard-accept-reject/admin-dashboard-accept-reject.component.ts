@@ -4,11 +4,11 @@ import { AccommodationDTO } from 'src/app/dtos/accommodationDTO';
 import { AccommodationService } from 'src/app/services/accommodation.service';
 
 @Component({
-  selector: 'app-admin-dashboard-accet-reject',
-  templateUrl: './admin-dashboard-accet-reject.component.html',
-  styleUrls: ['./admin-dashboard-accet-reject.component.css']
+  selector: 'app-admin-dashboard-accept-reject',
+  templateUrl: './admin-dashboard-accept-reject.component.html',
+  styleUrls: ['./admin-dashboard-accept-reject.component.css']
 })
-export class AdminDashboardAccetRejectComponent implements OnInit{
+export class AdminDashboardAcceptRejectComponent implements OnInit{
   pendingAccommodations$!: Observable<AccommodationDTO[]>;
   allPendingAccommodations!: AccommodationDTO[];
   pendingAccommodationsPageNumber = 1;
@@ -22,14 +22,23 @@ export class AdminDashboardAccetRejectComponent implements OnInit{
   ngOnInit() {
     this.pendingAccommodationsPageSize = 3;
     this.pendingAccommodationsPageNumber = 0;
+    this.loadPendingAccommodations();
+  }
+
+  loadPendingAccommodations(): void {
     this.accommodationService.getAccommodationsToBeApproved().subscribe(accommodations => {
       this.pendingAccommodationsTotalPages = Math.ceil( accommodations.length / this.pendingAccommodationsPageSize );
       this.accommodationService.getPrices(accommodations).subscribe(updated => {
         this.allPendingAccommodations = updated;
-        this.pendingAccommodations$ = of(updated.slice(0, this.pendingAccommodationsPageSize));
+        this.pendingAccommodations$ = of(updated.slice(this.pendingAccommodationsPageNumber * this.pendingAccommodationsPageSize, this.pendingAccommodationsPageSize));
         this.isLoading = false;
       });
     });
+  }
+
+  refresh(pageNumber: number): void {
+    this.pendingAccommodationsPageNumber = pageNumber;
+    this.loadPendingAccommodations();
   }
 
   loadPendingAccommodationsPage(pageNumber: number): void {

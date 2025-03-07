@@ -91,7 +91,7 @@ public class ReviewControllerTest {
         mockAccommodation.setOwnerId(hostId);
         mockBooking.setAccommodation(mockAccommodation);
 
-        UserDTO mockUser = new UserDTO(userId, "User", "Test", "user@example.com");
+        UserDTO mockUser = new UserDTO(userId, "User", "Test", "user@example.com", "");
 
         when(reviewService.getReviewById(reviewId)).thenReturn(mockReview);
         when(authentication.getPrincipal()).thenReturn(mockUser);
@@ -112,7 +112,7 @@ public class ReviewControllerTest {
         mockReview.setId(reviewId);
         mockReview.setBookingId(bookingId);
 
-        UserDTO mockUser = new UserDTO(userId, "User", "Test", "user@example.com");
+        UserDTO mockUser = new UserDTO(userId, "User", "Test", "user@example.com", "");
 
         when(reviewService.getReviewById(reviewId)).thenReturn(mockReview);
         when(authentication.getPrincipal()).thenReturn(mockUser);
@@ -188,7 +188,7 @@ public class ReviewControllerTest {
         user.setId(1L);
         mockBooking.setUser(user);
 
-        UserDTO mockUser = new UserDTO(1L, "User", "Test", "user@example.com");
+        UserDTO mockUser = new UserDTO(1L, "User", "Test", "user@example.com", "");
 
         when(authentication.getPrincipal()).thenReturn(mockUser);
         when(bookingService.findById(anyLong())).thenReturn(mockBooking);
@@ -217,7 +217,7 @@ public class ReviewControllerTest {
         Accommodation mockAccommodation = new Accommodation();
         mockAccommodation.setOwnerId(hostId);
         mockBooking.setAccommodation(mockAccommodation);
-        UserDTO mockUser = new UserDTO(userId, "User", "Test", "user@example.com");
+        UserDTO mockUser = new UserDTO(userId, "User", "Test", "user@example.com", "");
 
         when(reviewService.getReviewById(anyLong())).thenReturn(mockReview);
         when(authentication.getPrincipal()).thenReturn(mockUser);
@@ -240,7 +240,7 @@ public class ReviewControllerTest {
         Accommodation mockAccommodation = new Accommodation();
         mockAccommodation.setOwnerId(hostId);
         mockBooking.setAccommodation(mockAccommodation);
-        UserDTO mockUser = new UserDTO(userId, "User", "Test", "user@example.com");
+        UserDTO mockUser = new UserDTO(userId, "User", "Test", "user@example.com", "");
 
         when(reviewService.getReviewById(anyLong())).thenReturn(mockReview);
         when(authentication.getPrincipal()).thenReturn(mockUser);
@@ -281,7 +281,8 @@ public class ReviewControllerTest {
         Accommodation mockAccommodation = new Accommodation();
         mockAccommodation.setOwnerId(hostId);
         mockBooking.setAccommodation(mockAccommodation);
-        UserDTO mockUser = new UserDTO(userId, "User", "Test", "user@example.com");
+        UserDTO mockUser = new UserDTO(userId, "User", "Test", "user@example.com", "");
+
         when(reviewService.getReviewById(anyLong())).thenReturn(mockReview);
         when(authentication.getPrincipal()).thenReturn(mockUser);
         when(bookingService.findById(bookingId)).thenReturn(mockBooking);
@@ -303,7 +304,7 @@ public class ReviewControllerTest {
         Accommodation mockAccommodation = new Accommodation();
         mockAccommodation.setOwnerId(hostId);
         mockBooking.setAccommodation(mockAccommodation);
-        UserDTO mockUser = new UserDTO(userId, "User", "Test", "user@example.com");
+        UserDTO mockUser = new UserDTO(userId, "User", "Test", "user@example.com", "");
 
         when(reviewService.getReviewById(anyLong())).thenReturn(mockReview);
         when(authentication.getPrincipal()).thenReturn(mockUser);

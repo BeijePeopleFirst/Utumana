@@ -1,10 +1,11 @@
 import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router';
-import { Component, DoCheck, HostListener, OnInit } from '@angular/core';
+import { Component, DoCheck, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { iconURL } from 'src/costants';
 import { Location } from '@angular/common';
 import { AuthService } from './services/auth.service';
 import { DraftService } from './services/draft.service';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -12,7 +13,7 @@ import { DraftService } from './services/draft.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements DoCheck {
+export class AppComponent implements OnInit, DoCheck, OnDestroy {
   isLogin: boolean = false;
   isProfileMenuOpen = false;
   isLanguageMenuOpen = false;
@@ -22,6 +23,9 @@ export class AppComponent implements DoCheck {
   iconUrl = iconURL
   title= 'Utumana'; 
   currentYear: number = new Date().getFullYear();
+
+  isAdmin: boolean = false;
+  checkIsAdmin!: Subscription;
 
   languages = [
     { code: 'en-US', name: 'English' },
@@ -38,7 +42,17 @@ export class AppComponent implements DoCheck {
     this.selectedLanguage = this.translate.currentLang || 'en-US';
     //this.translate.use(this.selectedLanguage);
     this.selectedLanguage = localStorage.getItem("currLan") ?? 'en-US';
-    this.translate.use(this.selectedLanguage)
+    this.translate.use(this.selectedLanguage);
+  }
+
+  ngOnInit(): void {
+    this.checkIsAdmin = this.authService.isUserAdmin$.subscribe(isUserAdmin => {
+      this.isAdmin = isUserAdmin;
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.checkIsAdmin.unsubscribe();
   }
 
   ngDoCheck(): void {

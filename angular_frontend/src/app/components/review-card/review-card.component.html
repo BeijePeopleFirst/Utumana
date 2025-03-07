@@ -113,4 +113,8 @@
   </div>
   <a class="mx-4 mb-2 text-sm font-semibold" *ngIf="!expanded" (click)="expanded = true">{{'review.see_more' | translate}}  &#9660;</a>
   <a class="mx-4 mb-2 text-sm font-semibold" *ngIf="expanded" (click)="expanded = false">{{'review.see_less' | translate}}  &#9650;</a>
+
+  <div *ngIf="showAccommodationLink && review.accommodation_id" class="flex justify-center items-center mt-2">
+    <button class="btn-primary w-fit" routerLink="/accommodation/{{review.accommodation_id}}">{{'review.see_accommodation' | translate}}</button>
+  </div>
 </div>

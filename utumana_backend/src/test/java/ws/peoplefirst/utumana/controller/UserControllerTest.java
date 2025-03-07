@@ -57,7 +57,7 @@ public class UserControllerTest {
     }
 
     private UserDTO getUnautorizedUser() {
-        return new UserDTO(1L, "", "", "");
+        return new UserDTO(1L, "", "", "", "");
     }
 
     @BeforeEach

@@ -1,90 +1,120 @@
-<mat-sidenav-container class="h-screen">
-    <mat-sidenav mode="side" opened class="bg-neutral-1 w-64 shadow-md">
-      <div class="py-1 border-b border-neutral-2">
-        <h2 class="text-center">Admin Panel</h2>
+<div class="flex h-screen">
+  <div class="w-72 shadow-md bg-neutral-1 border-r border-neutral-2">
+    <div class="pt-3 border-b border-neutral-2">
+      <h3 class="text-center">{{'admin-dashboard-sidenav.title' | translate}}</h3>
+    </div>
+    
+    <nav class="py-2">
+      <a routerLink="/{{PREFIX_ADMIN}}/home" class="flex items-center my-1 h-12 rounded-lg hover:bg-neutral-2 px-3">
+        <div class="flex items-center w-full">
+          <div class="mx-3 text-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+          </div>
+          <span class="flex-grow text-secondary-dark">{{'admin-dashboard-sidenav.home' | translate}}</span>
+        </div>
+      </a>
+      
+      <div class="my-1">
+        <button (click)="toggleAccommodationsMenu()" class="flex w-full h-12 rounded-lg hover:bg-neutral-2 px-3">
+          <div class="flex items-center w-full">
+            <div class="mx-3 text-primary">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+            </div>
+            <span class="text-secondary-dark">{{'admin-dashboard-sidenav.accommodations' | translate}}</span>
+            <div class="mx-3">
+              <svg *ngIf="!isAccommodationMenuOpen" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+              <svg *ngIf="isAccommodationMenuOpen" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
+        </button>
+        
+        <div *ngIf="isAccommodationMenuOpen" class="py-1 pl-4 ml-4 rounded-lg border-l-2 bg-neutral-1 border-secondary">
+          <a routerLink="/{{PREFIX_ADMIN}}/accommodations/accept-reject" class="flex items-center h-10 text-sm hover:bg-neutral-2 px-3 rounded">
+            <div class="flex items-center w-full">
+              <span class="ml-6 text-secondary">{{'admin-dashboard-sidenav.accept_reject' | translate}}</span>
+            </div>
+          </a>
+          <a routerLink="/{{PREFIX_ADMIN}}/accommodations/active-ones" class="flex items-center h-10 text-sm hover:bg-neutral-2 px-3 rounded">
+            <div class="flex items-center w-full">
+              <span class="ml-6 text-secondary">{{'admin-dashboard-sidenav.active' | translate}}</span>
+            </div>
+          </a>
+          <a routerLink="/{{PREFIX_ADMIN}}/accommodations/inactive-ones" class="flex items-center h-10 text-sm hover:bg-neutral-2 px-3 rounded">
+            <div class="flex items-center w-full">
+              <span class="ml-6 text-secondary ">{{'admin-dashboard-sidenav.inactive' | translate}}</span>
+            </div>
+          </a>
+          <a routerLink="/{{PREFIX_ADMIN}}/accommodations/all-accommodations" class="flex items-center h-10 text-sm hover:bg-neutral-2 px-3 rounded">
+            <div class="flex items-center w-full">
+              <span class="ml-6 text-secondary">{{'admin-dashboard-sidenav.all' | translate}}</span>
+            </div>
+          </a>
+        </div>
       </div>
       
-      <mat-nav-list class="py-2">
-        <a mat-list-item routerLink="/{{PREFIX_ADMIN}}/home" class="my-1 hover:bg-neutral-2 rounded-lg flex items-center h-12">
+      <div class="my-1">
+        <button (click)="toggleUsersMenu()" class="flex items-center w-full h-12 rounded-lg hover:bg-neutral-2 px-3">
           <div class="flex items-center w-full">
-            <mat-icon class="text-primary mx-3">home</mat-icon>
-            <span class="flex-grow">Home</span>
+            <div class="mx-3 text-primary">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+            </div>
+            <span class="text-secondary-dark">{{'admin-dashboard-sidenav.users' | translate}}</span>
+            <div class="mx-3">
+              <svg *ngIf="!isUsersMenuOpen" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+              <svg *ngIf="isUsersMenuOpen" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
           </div>
-        </a>
+        </button>
         
-        <div class="my-1">
-          <a mat-list-item (click)="toggleAccommodationsMenu()" class="flex items-center h-12 hover:bg-neutral-2 rounded-lg">
+        <div *ngIf="isUsersMenuOpen" class="py-1 pl-4 ml-4 rounded-lg border-l-2 bg-neutral-1 border-secondary">
+          <a routerLink="/{{PREFIX_ADMIN}}/users/profiles" class="flex items-center h-10 text-sm hover:bg-neutral-2 px-3 rounded">
             <div class="flex items-center w-full">
-              <mat-icon class="text-primary mx-3">apartment</mat-icon>
-              <span class="flex-grow">Accommodations</span>
-              <mat-icon class="mx-3">{{ isAccommodationMenuOpen ? 'expand_more' : 'chevron_right' }}</mat-icon>
+              <span class="ml-6">{{'admin-dashboard-sidenav.profiles' | translate}}</span>
             </div>
           </a>
-          
-          <div *ngIf="isAccommodationMenuOpen" class="pl-4 py-1 bg-neutral-1 rounded-lg ml-4 border-l-2 border-secondary">
-            <a mat-list-item routerLink="/{{PREFIX_ADMIN}}/accommodations/accept-reject" class="flex items-center h-10 text-sm hover:bg-neutral-2">
-              <div class="flex items-center w-full">
-                <span class="ml-6">Accept/Reject</span>
-              </div>
-            </a>
-            <a mat-list-item routerLink="/{{PREFIX_ADMIN}}/accommodations/active-ones" class="flex items-center h-10 text-sm hover:bg-neutral-2">
-              <div class="flex items-center w-full">
-                <span class="ml-6">Active ones</span>
-              </div>
-            </a>
-            <a mat-list-item routerLink="/{{PREFIX_ADMIN}}/accommodations/inactive-ones" class="flex items-center h-10 text-sm hover:bg-neutral-2">
-              <div class="flex items-center w-full">
-                <span class="ml-6">Inactive ones</span>
-              </div>
-            </a>
-            <a mat-list-item routerLink="/{{PREFIX_ADMIN}}/accommodations/all-accommodations" class="flex items-center h-10 text-sm hover:bg-neutral-2">
-              <div class="flex items-center w-full">
-                <span class="ml-6">All</span>
-              </div>
-            </a>
-          </div>
-        </div>
-        
-        <div class="my-1">
-          <a mat-list-item (click)="toggleUsersMenu()" class="flex items-center h-12 hover:bg-neutral-2 rounded-lg">
+          <a routerLink="/{{PREFIX_ADMIN}}/users/add-user" class="flex items-center h-10 text-sm hover:bg-neutral-2 px-3 rounded">
             <div class="flex items-center w-full">
-              <mat-icon class="text-primary mx-3">people</mat-icon>
-              <span class="flex-grow">Users</span>
-              <mat-icon class="mx-3">{{ isUsersMenuOpen ? 'expand_more' : 'chevron_right' }}</mat-icon>
+              <span class="ml-6">{{'admin-dashboard-sidenav.add_user' | translate}}</span>
             </div>
           </a>
-          
-          <div *ngIf="isUsersMenuOpen" class="pl-4 py-1 bg-neutral-1 rounded-lg ml-4 border-l-2 border-secondary">
-            <a mat-list-item routerLink="/{{PREFIX_ADMIN}}/users/profiles" class="flex items-center h-10 text-sm hover:bg-neutral-2 ">
-              <div class="flex items-center w-full">
-                <span class="ml-6">Profiles</span>
-              </div>
-            </a>
-            <a mat-list-item routerLink="/{{PREFIX_ADMIN}}/users/add-user" class="flex items-center h-10 text-sm hover:bg-neutral-2 ">
-              <div class="flex items-center w-full">
-                <span class="ml-6">Add user</span>
-              </div>
-            </a>
-            <a mat-list-item routerLink="/{{PREFIX_ADMIN}}/users/make-new-admin" class="flex items-center h-10 text-sm hover:bg-neutral-2 ">
-              <div class="flex items-center w-full">
-                <span class="ml-6">Make new admin</span>
-              </div>
-            </a>
-          </div>
+          <a routerLink="/{{PREFIX_ADMIN}}/users/make-new-admin" class="flex items-center h-10 text-sm hover:bg-neutral-2 px-3 rounded">
+            <div class="flex items-center w-full">
+              <span class="ml-6">{{'admin-dashboard-sidenav.new_admin' | translate}}</span>
+            </div>
+          </a>
         </div>
-        
-        <a mat-list-item routerLink="/{{PREFIX_ADMIN}}/metrics" class="my-1 hover:bg-neutral-2 rounded-lg flex items-center h-12">
-          <div class="flex items-center w-full">
-            <mat-icon class="text-primary mx-3">insert_chart</mat-icon>
-            <span class="flex-grow">Metrics</span>
-          </div>
-        </a>
-      </mat-nav-list>
-    </mat-sidenav>
-    
-    <mat-sidenav-content class="bg-gray-50">
-      <div class="p-6">
-        <router-outlet></router-outlet>
       </div>
-    </mat-sidenav-content>
-  </mat-sidenav-container>
+      
+      <a routerLink="/{{PREFIX_ADMIN}}/metrics" class="flex items-center my-1 h-12 rounded-lg hover:bg-neutral-2 px-3">
+        <div class="flex items-center w-full">
+          <div class="mx-3 text-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+          </div>
+          <span class="flex-grow text-secondary-dark">{{'admin-dashboard-sidenav.metrics' | translate}}</span>
+        </div>
+      </a>
+    </nav>
+  </div>
+  
+  <div class="flex-grow overflow-auto bg-neutral-1">
+    <div class="p-6">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
