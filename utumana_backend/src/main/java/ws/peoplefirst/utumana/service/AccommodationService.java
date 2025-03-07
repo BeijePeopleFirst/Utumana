@@ -980,7 +980,6 @@ public class AccommodationService {
         return p;
     }
 
-    //TODO:
     public boolean deletePhotosFromAccommodation(Long accommodationId, List<Long> photosIDsToRemove) {
         Accommodation acc = this.findById(accommodationId);
         List<Photo> photos = acc.getPhotos();
