@@ -833,7 +833,6 @@ public class AccommodationService {
         //Now lets remove isolated Dates:
         availabilities = sortAndCleanStringList(availabilities);
 
-        //System.out.println("\n\n\n\n" +  availabilities + "\n\n\n\n\n");
 
         return availabilities;
     }
@@ -841,8 +840,6 @@ public class AccommodationService {
     private static List<String> sortAndCleanStringList(List<String> l) {
         List<LocalDate> converted = convertToLocalDateList(l);
         converted.sort((a, b) -> a.compareTo(b));
-
-        //System.out.println("\n\n\n\n" +  converted + "\n\n\n\n\n\n");
         
         List<LocalDate> filtered = new ArrayList<LocalDate>();
         for(int i = 1; i < converted.size() - 1; i++) {
@@ -850,7 +847,8 @@ public class AccommodationService {
             else filtered.add(converted.get(i));
         }
 
-        //System.out.println("\n\n\n\n" +  filtered + "\n\n\n\n\n\n");
+        //Now I check the latest date:
+        if(!isAnIsolatedDate(converted.get(converted.size() - 1), converted.get(converted.size() - 2))) filtered.add(converted.get(converted.size() - 1));
 
         //The List will be sorted already
         List<String> result = new ArrayList<String>();
@@ -858,9 +856,13 @@ public class AccommodationService {
             result.add(createDateString(filtered.get(i)));
         }
 
-        //System.out.println("\n\n\n\n" +  result + "\n\n\n\n\n\n");
-
         return result;
+    }
+
+    private static boolean isAnIsolatedDate(LocalDate test, LocalDate previous) {
+        Period p = Period.ofDays(1);
+
+        return (!(test.minus(p)).isEqual(previous));
     }
 
     private static boolean isAnIsolatedDate(LocalDate test, LocalDate previous, LocalDate next) {
@@ -875,8 +877,6 @@ public class AccommodationService {
         for(String s: l) {
             result.add(convertFromDateStringToLocalDate(s));
         }
-
-        //System.out.println("\n\n\n\n" +  result + l + "\n\n\n\n\n\n");
         
         return result;
     }
