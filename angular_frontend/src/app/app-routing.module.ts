@@ -63,7 +63,7 @@ const routes: Routes = [
     {path: 'users', children: [
       {path: 'profiles', component: AdminDashboardUsersProfilesComponent, canActivate: [adminGuard]},
       {path: 'add-user', component: AdminDashboardUsersAddUserComponent, canActivate: [adminGuard]},
-      {path: 'make-new-admin', component: AdminDashboardUsersMakeNewAdminComponent, canActivate: [adminGuard]},
+      {path: 'admins', component: AdminDashboardUsersMakeNewAdminComponent, canActivate: [adminGuard]},
     ]},
     {path: 'metrics', component: AdminDashboardMetricsComponent, canActivate: [adminGuard]}
   ]}

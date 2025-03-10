@@ -101,7 +101,7 @@
 	"users": "Users",
 	"profiles":"Profiles",
 	"add_user":"Add user",
-	"new_admin":"New admin",
+	"admins":"Admins",
 
 	"metrics": "Metrics",
 
@@ -115,7 +115,25 @@
 	"required": "Required field",
 	"password_instructions": "Password must be at least 8 characters long and contain at least one lowercase letter,  one uppercase letter, one number and one symbol of !\"#$%&'()*+,-.:;<=>?@",
 	"created": "User created successfully",
-	"is_admin": "is admin"
+	"is_admin": "is admin",
+
+	"current_admins": "Current admins",
+	"revoke_privileges": "Revoke admin privileges",
+	"make_new_admin": "Issue admin privileges",
+	"search_user": "Search user",
+	"no_users_found": "No users found",
+
+	"revoke_privileges_title": "Are you sure you want to revoke admin privileges for user ",
+	"revoke_privileges_subtitle": "If you choose \"Revoke\", the user will no longer have admin privileges.",
+	"revoke": "Revoke",
+	"revoking_privileges_to_yourself": "ALERT: You're revoking your own admin privileges!",
+	"revoking_privileges_to_yourself_subtitle": "If you choose \"Revoke\", you will be logged out.",
+	"revoked_privileges_success": "Admin privileges revoked successfully!",
+	
+	"make_admin_title": "Are you sure you want to issue admin privileges to this user?",
+	"make_admin_subtitle": "If you choose \"Issue\", the user will have admin privileges the next time they log in.",
+	"make_admin": "Issue",
+	"make_admin_success": "Admin privileges issued successfully!"
 },
 "admin-dashdoard-search-bar": {
 	"title": "Title",

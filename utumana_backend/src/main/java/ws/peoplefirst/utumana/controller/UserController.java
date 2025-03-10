@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import software.amazon.awssdk.services.s3.endpoints.internal.Value.Bool;
 import ws.peoplefirst.utumana.dto.AccommodationOwnerDTO;
 import ws.peoplefirst.utumana.dto.UserDTO;
 import ws.peoplefirst.utumana.exception.DBException;
@@ -71,6 +72,18 @@ public class UserController {
 	@GetMapping(value = "/users_full_obj")
 	public List<User> getAllUsersFullObj(Authentication auth){
 		return userService.findAllUsers();
+	}
+
+	@Operation(summary = "Get a list of admin users")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "List of admin users successfully fetched"),
+        @ApiResponse(responseCode = "500", description = "Internal server error", content=@Content(mediaType = "application/json",
+			schema=@Schema(implementation=ErrorMessage.class)))
+    })
+	@PreAuthorize("hasAuthority('ADMIN')")
+	@GetMapping(value = "/users/admins")
+	public List<UserDTO> getAllAdmins(Authentication auth){
+		return userService.findAllActiveAdmins();
 	}
 	
     @Operation(summary = "Get user by ID")
@@ -147,6 +160,43 @@ public class UserController {
 			throw new IdNotFoundException("user with email "+email+" not found");
 		}
 				
+	}
+
+	@Operation(summary = "Revoke admin privileges", description = "Revokes admin privileges from a user. If the user is not admin, nothing happens.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Admin privileges revoked successfully"),
+        @ApiResponse(responseCode = "404", description = "User with given ID doesn't exist", content=@Content(mediaType = "application/json",
+		schema=@Schema(implementation=ErrorMessage.class)))
+    })
+	@PreAuthorize("hasAuthority('ADMIN')")
+	@PatchMapping(value = "/user/revoke_admin/{id}")
+	public @ResponseBody Boolean revokeAdminPrivileges(@Parameter(description = "the user id", schema = @Schema(implementation = Long.class)) @PathVariable Long id) {
+		log.debug("PATCH /user/revoke_admin/" + id);
+		return userService.revokeAdminPrivileges(id);
+	}
+
+	@Operation(summary = "Issue admin privileges", description = "Issues admin privileges to a user. If the user is already admin, nothing happens.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Admin privileges issued successfully"),
+        @ApiResponse(responseCode = "404", description = "User with given ID doesn't exist", content=@Content(mediaType = "application/json",
+		schema=@Schema(implementation=ErrorMessage.class)))
+    })
+	@PreAuthorize("hasAuthority('ADMIN')")
+	@PatchMapping(value = "/user/make_admin/{id}")
+	public @ResponseBody Boolean issueAdminPrivileges(@Parameter(description = "the user id", schema = @Schema(implementation = Long.class)) @PathVariable Long id) {
+		log.debug("PATCH /user/make_admin/" + id);
+		return userService.issueAdminPrivileges(id);
+	}
+
+	@Operation(summary = "Search users", description = "Searches users. A user is returned in the results if the term searched is contained in their name, surname or email.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Search results returned correctly")
+    })
+	@PreAuthorize("hasAuthority('ADMIN')")
+	@GetMapping(value = "/user/search")
+	public List<UserDTO> searchUserDTOs(@Parameter(description = "the search term", schema = @Schema(implementation = String.class)) @RequestParam String term) {
+		log.debug("PATCH /user/search");
+		return userService.searchUserDTOs(term);
 	}
     
     @Operation(summary = "Update user information")

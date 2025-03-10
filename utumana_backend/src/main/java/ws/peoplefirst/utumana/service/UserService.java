@@ -1,5 +1,6 @@
 package ws.peoplefirst.utumana.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -249,6 +250,45 @@ public class UserService implements UserDetailsService {
 		return userRepository.findAll();
 	}
 
+	public List<UserDTO> findAllActiveAdmins() {
+		return userRepository.findAllActiveAdmins();
+	}
+
+	// if user is admin, revoke admin privileges
+	// if user is not admin, nothing happens
+	public Boolean revokeAdminPrivileges(Long userId) {
+		User user = findById(userId);
+		if(user == null) throw new IdNotFoundException("User not found with id: " + userId);
+		
+		user.setIsAdmin(false);
+		userRepository.save(user);
+		
+		List<UserAuthority> userAuthorities = userAuthorityRepository.findByUserId(userId);
+		for(UserAuthority userAuthority : userAuthorities) {
+			if(userAuthority.getAuthorityId() == 2) {
+				userAuthorityRepository.delete(userAuthority);
+			}
+		}
+		return true;
+	}
+
+	public Boolean issueAdminPrivileges(Long userId) {
+		User user = findById(userId);
+		if(user == null) throw new IdNotFoundException("User not found with id: " + userId);
+
+		if(user.getIsAdmin() == true) return true;
+		
+		user.setIsAdmin(true);
+		userRepository.save(user);
+		
+		UserAuthority userAuthority = new UserAuthority();
+		userAuthority.setUserId(userId);
+		userAuthority.setAuthorityId(2); //ADMIN
+		userAuthorityRepository.save(userAuthority);
+		
+		return true;
+	}
+
 	public AccommodationOwnerDTO getAccommodationOwner(Long usrId, Long accId) {
 		Optional<Accommodation> a = accommodationRepository.findById(accId);
 
@@ -262,4 +302,8 @@ public class UserService implements UserDetailsService {
 		else throw new IdNotFoundException("Incorrect Accomodation ID provided");
 	}
 
+	public List<UserDTO> searchUserDTOs(String term) {
+		if(term.isBlank()) return new ArrayList<>();
+		return userRepository.searchUserDTOs(term);
+	}
 }

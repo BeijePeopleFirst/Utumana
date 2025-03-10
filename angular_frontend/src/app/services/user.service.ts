@@ -35,7 +35,19 @@ export class UserService {
   }
 
   getAllUsersDto(): Observable<UserDTO[]> {
-    return this.http.get<UserDTO[]>(BACKEND_URL_PREFIX + "/api/users").pipe(
+    return this.getUserDTOs(BACKEND_URL_PREFIX + "/api/users");
+  }
+
+  getAllAdminsDTO(): Observable<UserDTO[]> {
+    return this.getUserDTOs(BACKEND_URL_PREFIX + "/api/users/admins");
+  }
+
+  searchUsers(term: string): Observable<UserDTO[]> {
+    return this.getUserDTOs(`${BACKEND_URL_PREFIX}/api/user/search?term=${term}`);
+  }
+
+  private getUserDTOs(url: string): Observable<UserDTO[]> {
+    return this.http.get<UserDTO[]>(url).pipe(
       map(users => {
         console.log("users",users);
         users.forEach(user => {
@@ -51,7 +63,7 @@ export class UserService {
       }),
       catchError(error => {
         console.error(error.error);
-        return of(error.error);
+        return of([]);
       })
     )
   }
@@ -151,5 +163,25 @@ export class UserService {
         return user;
       })
     )
+  }
+
+  revokeAdminPrivileges(userId: number): Observable<boolean> {
+    return this.http.patch<boolean>(`${BACKEND_URL_PREFIX}/api/user/revoke_admin/${userId}`, {}).pipe(
+      map(_ => true),
+      catchError(error => {
+        console.error(error);
+        return of(false);
+      })
+    );
+  }
+
+  issueAdminPrivilegesTo(userId: number): Observable<boolean> {
+    return this.http.patch<boolean>(`${BACKEND_URL_PREFIX}/api/user/make_admin/${userId}`, {}).pipe(
+      map(_ => true),
+      catchError(error => {
+        console.error(error);
+        return of(false);
+      })
+    );
   }
 }

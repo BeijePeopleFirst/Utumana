@@ -101,7 +101,7 @@
 	"users": "Utenti",
 	"profiles":"Profili",
 	"add_user":"Aggiungi utente",
-	"new_admin":"Nuovo amministratore",
+	"admins":"Amministratori",
 
 	"metrics": "Statistiche",
 
@@ -115,7 +115,25 @@
 	"required": "Campo obbligatorio",
 	"password_instructions": "La password deve contenere almeno 8 caratteri, fra cui almeno una lettera minuscola, una lettera maiuscola, un numero e un simbolo fra !\"#$%&'()*+,-.:;<=>?@",
 	"created": "Utente creato",
-	"is_admin": "è amministratore"
+	"is_admin": "è amministratore",
+
+	"current_admins": "Amministratori attivi",
+	"revoke_privileges": "Revoca privilegi amministratore",
+	"make_new_admin": "Assegna privilegi da amministratore",
+	"search_user": "Cerca utente",
+	"no_users_found": "Nessun utente trovato",
+
+	"revoke_privileges_title": "Revocare i privilegi da amministratore per l'utente ",
+	"revoke_privileges_subtitle": "Se scegli \"Revoca\", l'utente non avrà più i privilegi da amministratore.",
+	"revoke": "Revoca",
+	"revoking_privileges_to_yourself": "ATTENZIONE: Stai revocando i privilegi da amministratore a te stesso/a!",
+	"revoking_privileges_to_yourself_subtitle": "Se scegli \"Revoca\", verrà effettuato il logout.",
+	"revoked_privileges_success": "Privilegi da amministratore revocati con successo!",
+	
+	"make_admin_title": "Assegnare i privilegi da amministratore a questo utente?",
+	"make_admin_subtitle": "Se scegli \"Assegna\", l'utente avrà i privilegi da amministratore al suo prossimo accesso.",
+	"make_admin": "Assegna",
+	"make_admin_success": "Privilegi da amministratore assegnati con successo!"
 },
 "admin-dashdoard-search-bar": {
 	"title": "Titolo",

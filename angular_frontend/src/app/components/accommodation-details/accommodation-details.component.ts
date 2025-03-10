@@ -366,7 +366,7 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
            typeof o.id! == "number" &&
            typeof o.name! == "string" &&
            typeof o.surname! == "string" &&
-           typeof o.bio! == "string" &&
+           ( typeof o.bio! == "string" || o.bio == undefined ) &&
            typeof o.profile_picture_url! == "string";
   }
 
