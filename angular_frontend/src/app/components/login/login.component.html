@@ -28,7 +28,7 @@
                 <div class="mt-4">
                     <div class="flex justify-between">
                         <label class="label-primary">{{'login.password_label' | translate}}</label>
-                        <a href="#" class="self-center text-xs text-gray-500">{{'login.forget_password' | translate}}</a>
+                        <a (click)="forgotPassword()" class="self-center text-xs text-gray-500">{{'login.forget_password' | translate}}</a>
                     </div>
                     <div class="relative">
                     <input class="input-primary" [ngClass]="{'alert-danger': password.invalid && showPasswordError}" 

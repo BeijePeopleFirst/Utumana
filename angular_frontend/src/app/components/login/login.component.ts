@@ -65,4 +65,9 @@ export class LoginComponent implements OnInit {
       }
     })
   }
+
+  forgotPassword(): void {
+    console.log("Clicked forgot password");
+    // TODO
+  }
 }
