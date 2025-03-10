@@ -46,6 +46,7 @@ export class AccommodationCardComponent implements OnInit {
       this.toggleFavourite();
       this.heartClick = false;
     }else{
+      if(this.status === 'deleted') return;
       this.router.navigate(['accommodation', this.accommodation.id]);
     }
   }
