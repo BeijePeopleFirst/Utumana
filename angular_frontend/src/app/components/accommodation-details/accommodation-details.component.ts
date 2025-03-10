@@ -327,7 +327,7 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
               for (let s of tmp6) {
                 this.accommodationCheckOuts.push(s);
               }
-              //console.log("Stampo le availabilities -> ", this.accommodationAvailabilities);
+              console.log("PROVA DEBUG DETAILS CHECKOUTS -> ", this.accommodationCheckOuts);
             }
 
             //Ora recupero l' Owner dell' Accommodation:

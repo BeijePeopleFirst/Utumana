@@ -800,7 +800,7 @@ public class AccommodationService {
             Collections.sort(occupiedDates);
 
             LocalDate d = availableDates.get(0);
-            while(d.isBefore(availableDates.get(availableDates.size() -1))) {
+            while(d.isBefore(availableDates.get(availableDates.size() -1)) || d.isEqual(availableDates.get(availableDates.size() -1))) {
 
                 if(availableDates.contains(d) && !occupiedDates.contains(d)) availabilities.add(createDateString(d));
 
@@ -880,6 +880,8 @@ public class AccommodationService {
 
             }
 
+            System.out.println("Stampo available -> " + availableDates);
+
             Collections.sort(availableDates);
             
             for (Booking b : copy2) {
@@ -896,11 +898,13 @@ public class AccommodationService {
 
             }
 
+            System.out.println("Stampo occupied -> " + occupiedDates);
+
             // Now I sort the dates list for the occupied ones:
             Collections.sort(occupiedDates);
 
             LocalDate d = availableDates.get(0);
-            while(d.isBefore(availableDates.get(availableDates.size() -1))) {
+            while(d.isBefore(availableDates.get(availableDates.size() -1)) || d.isEqual(availableDates.get(availableDates.size() -1))) {
 
                 if(availableDates.contains(d) && !occupiedDates.contains(d)) availabilities.add(createDateString(d));
 

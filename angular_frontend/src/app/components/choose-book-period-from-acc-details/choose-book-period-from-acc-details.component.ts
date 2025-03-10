@@ -116,13 +116,16 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
       console.log(this.chosenOne.start_date);
       this.checkInDate = year + "-" + monthName + "-" + day;
 
-      console.log("Sono QUI miao");
+      console.log("Sono QUI");
 
       let stringTest: string = this.getStringFromInputParams(day, monthName, year);
 
-      let latestIndex: number = this.getFirstNotLecitCheckOutDate(this.checkOutList);
+      let latestIndex: number = this.getFirstNotLecitCheckOutDate(this.checkOutList, this.chosenOne.start_date);
 
-      this.currentList = this.checkOutList.slice(this.checkInList.indexOf(stringTest) - 2, latestIndex);
+      console.log("PROVA -> ", latestIndex, this.checkOutList[latestIndex]);
+
+      this.currentList = this.checkOutList.slice(this.checkInList.indexOf(stringTest)-1, latestIndex);
+      console.log(this.currentList);
       console.log(this.checkOutList);
     }
     else {
@@ -169,15 +172,29 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
     
   }
 
-  private getFirstNotLecitCheckOutDate(list: string[]): number {
+  private getFirstNotLecitCheckOutDate(list: string[], checkIn: string): number {
     let tmp1: Date;
     let tmp2: Date;
 
+    let chkInDate: Date = new Date(Date.parse(checkIn));
+
+    console.log("checkIn -> ", chkInDate);
+
     for(let i = 0; i < list.length - 1; i++) {
+
+      if(this.getDateFromDateString(list[i]).getTime() <= chkInDate.getTime()) continue;
+
+      //console.log();
+
       tmp1 = this.getDateFromDateString(list[i]);
       tmp2 = this.getDateFromDateString(list[i+1]);
 
-      if(tmp1.getTime() !== (tmp2.getTime() + 86400000)) return i+1;
+      const timeDiff = Math.abs(tmp2.getTime() - tmp1.getTime());
+      const diffDays = Math.round(timeDiff / (1000 * 3600 * 24));
+      console.log("Stampo diffDays -> ", diffDays)
+      
+      // If dates are not consecutive (1 day apart), we found our boundary
+      if(diffDays !== 1) return i+1;
     }
 
     return list.length;
@@ -190,7 +207,8 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
     let month: number = this.getMonthIndexFromName(tokens[1]);
     let year: number = Number(tokens[2]);
 
-    let res: Date = new Date(day, month, year);
+    let res: Date = new Date(year, month, day);
+
     return res;
   }
 
@@ -322,7 +340,7 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
     let testStr: Date = new Date(this.accommodationService.fetchDate(day, monthName, year));
     let chkOutSel: Date = new Date(this.chosenOne.end_date);
     let chkInSel: Date = new Date(this.chosenOne.start_date);
-    console.log("stampa debug -> ", testStr, this.chosenOne.end_date);
+    //console.log("stampa debug -> ", testStr, this.chosenOne.end_date);
     return (testStr.setHours(0, 0, 0, 0) != chkOutSel.setHours(0, 0, 0, 0)) && (testStr.setHours(0, 0, 0, 0) != chkInSel.setHours(0, 0, 0, 0));
   }
 
