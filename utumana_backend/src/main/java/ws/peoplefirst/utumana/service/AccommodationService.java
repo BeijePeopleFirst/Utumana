@@ -987,6 +987,7 @@ public class AccommodationService {
     }
 
     public boolean deletePhotosFromAccommodation(Long accommodationId, List<Long> photosIDsToRemove) {
+        // TODO aggiornare gli ordini delle foto che rimangono
         Accommodation acc = this.findById(accommodationId);
         List<Photo> photos = acc.getPhotos();
         List<Photo> resPhotosToRemove = new ArrayList<Photo>();
@@ -1024,6 +1025,36 @@ public class AccommodationService {
         }
 
         return false;
+    }
+
+    public void deletePhoto(Long accommodationId, Long photoId) {
+        Accommodation acc = this.findById(accommodationId);
+        if(acc == null) throw new IdNotFoundException("Accommodation with id " + accommodationId + " not found");
+        Photo photo = photoRepository.findById(photoId).orElse(null);
+        if(photo == null) throw new IdNotFoundException("Photo with id " + photoId + " not found");
+
+        List<Photo> photos = acc.getPhotos();
+        int index = 0;
+        for(int i=0; i<photos.size(); i++){
+            if(photos.get(i).getId() == photoId){
+                index = i;
+            }else if(photos.get(i).getPhotoOrder() > photo.getPhotoOrder()){
+                photos.get(i).setPhotoOrder(photos.get(i).getPhotoOrder() - 1);
+
+                // if new photo order == 0, update mainPhotoUrl
+                if(photos.get(i).getPhotoOrder() == 0){
+                    acc.setMainPhotoUrl(photos.get(i).getPhotoUrl());
+                }
+            }
+        }
+        photos.remove(index);
+        acc.setPhotos(photos);
+        accommodationRepository.save(acc);
+
+        // delete file from s3
+        s3Service.deleteFile(photo.getPhotoUrl());
+
+        photoRepository.delete(photo);
     }
     
     public Page<AccommodationDTO> getActiveAccommodationsDTO(int pageNumber, int pageSize) {

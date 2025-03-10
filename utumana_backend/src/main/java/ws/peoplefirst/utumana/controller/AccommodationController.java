@@ -1018,6 +1018,21 @@ public class AccommodationController {
 		return accommodationService.deletePhotosFromAccommodation(id, decodedList);
 	}
 
+	// method created to prepare demo
+	// delete a single photo
+	@PreAuthorize("hasAuthority('USER')")
+	@DeleteMapping(value = "accommodation/{accommodationId}/remove_photo/{photoId}")
+	public void removePhoto(
+		@PathVariable("accommodationId") Long id, 
+		@PathVariable("photoId") Long photoId, 
+		Authentication auth) {
+
+		Accommodation accommodation = accommodationService.findById(id);
+		AuthorizationUtility.checkIsAdminOrMe(auth, accommodation.getOwnerId());
+		
+		accommodationService.deletePhoto(id, photoId);
+	}
+
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@GetMapping(value = "/admin/search")
 	public Page<AccommodationDTO> findByAdminInputDTO(@RequestParam(value = "title", required = false) String title,
