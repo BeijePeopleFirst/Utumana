@@ -110,11 +110,20 @@ export class AppComponent implements OnInit, DoCheck, OnDestroy {
 
   @HostListener('document:click', ['$event'])
   closeMenus() {
-      this.isProfileMenuOpen = false;
-      this.isLanguageMenuOpen = false;
-      this.isCreateMenuOpen = false;
-      this.isMenuOpen = false;
-    }
+    console.log("In closeMenus");
+    this.isProfileMenuOpen = false;
+    this.isLanguageMenuOpen = false;
+    this.isCreateMenuOpen = false;
+    this.isMenuOpen = false;
+    console.log("profileMenuOpen =" + this.isProfileMenuOpen, ", languageMenuOpen =" + this.isLanguageMenuOpen, ", createMenuOpen =" + this.isCreateMenuOpen, ", menuOpen =" + this.isMenuOpen);
+  }
+
+  closeMenusAndNavigateTo(url: string, event: Event) {
+    event.stopPropagation();
+    console.log("In closeMenusAndNavigateTo");
+    this.closeMenus();
+    this.router.navigate([url]);
+  }
 
   createAccommodationDraft(){
     this.draftService.createAccommodationDraft().subscribe(draftId => {

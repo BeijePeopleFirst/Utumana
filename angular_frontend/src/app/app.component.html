@@ -97,19 +97,19 @@
             <div *ngIf="isProfileMenuOpen" class="dropdown-container"
             [ngClass]="{'relative right-auto top-auto w-fit shadow-none ring-none ring-transparent mt-0 bg-inherit': isMenuOpen === true}">
               <div class="p-4 space-y-2" [ngClass]="{'py-2 space-y-0 w-full': isMenuOpen === true}">
-                <a routerLink="/profile" (click)="closeMenus()" 
+                <a (click)="closeMenusAndNavigateTo('/profile', $event)" 
                 class="drop-box"
                 [ngClass]="{'drop-box-menu-open': isMenuOpen === true}">{{'header.profile' | translate}}</a>
-                <a routerLink="/favourites" (click)="closeMenus()" 
+                <a (click)="closeMenusAndNavigateTo('/favourites', $event)" 
                 class="drop-box"
                 [ngClass]="{'drop-box-menu-open': isMenuOpen === true}">{{'header.favourites' | translate}}</a>
-                <a routerLink="/my_accommodations" (click)="closeMenus()" 
+                <a (click)="closeMenusAndNavigateTo('/my_accommodations', $event)" 
                 class="drop-box"
                 [ngClass]="{'drop-box-menu-open': isMenuOpen === true}">{{'header.accommodations' | translate}}</a>
-                <a *ngIf="isAdmin" routerLink="/admin-dashboard" (click)="closeMenus()" 
+                <a *ngIf="isAdmin" (click)="closeMenusAndNavigateTo('/admin-dashboard', $event)" 
                 class="drop-box"
                 [ngClass]="{'drop-box-menu-open': isMenuOpen === true}">{{'header.admin' | translate}}</a>
-                <a (click)="authService.logout()" (click)="closeMenus()" 
+                <a (click)="authService.logout()"
                 class="drop-box"
                 [ngClass]="{'drop-box-menu-open': isMenuOpen === true}">{{'header.logout' | translate}}</a>       
               </div>

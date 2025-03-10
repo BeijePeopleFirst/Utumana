@@ -24,6 +24,11 @@ export class FavouritesComponent implements OnInit {
     this.favouritesPageNumber = 0;
     this.accommodationService.getFavourites().subscribe(favourites => {
       this.favouritesTotalPages = Math.ceil( favourites.length / this.favouritesPageSize );
+      if(favourites.length === 0){
+        this.allFavourites = [];
+        this.favourites$ = of([]);
+        return;
+      }
       this.accommodationService.getPrices(favourites).subscribe(updatedFavs => {
         this.allFavourites = updatedFavs;
         this.favourites$ = of(updatedFavs.slice(0, this.favouritesPageSize));
