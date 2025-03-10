@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserDTO } from 'src/app/dtos/userDTO';
 import { UserService } from 'src/app/services/user.service';
+import { imagesURL } from 'src/costants';
 
 @Component({
   selector: 'app-admin-dashboard-profile',
@@ -14,6 +15,8 @@ export class AdminDashboardProfileComponent implements OnChanges {
   
   isEditing = false;
   editForm: FormGroup;
+
+  defaultPictureUrl: string = `${imagesURL}\\default_profile.png`;
 
   constructor(
     private fb: FormBuilder, 
