@@ -18,8 +18,10 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
 
   @Input() queryParamsFromParent?: Params;
 
-  @Input() availabilities!: string[];
-
+  @Input() checkInList!: string[];
+  @Input() checkOutList!: string[];
+  currentList: string[] = [];
+  
   chosenOne: Availability = {start_date: "", end_date: "", price_per_night: 0};
 
   currentMonth!: { name: string; days: number[]; monthIndex: number; year: number };
@@ -54,6 +56,8 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
       this.chosenOne.start_date = tmp1 + "";
       this.chosenOne.end_date = tmp2 + "";
     }
+
+    this.currentList = this.checkInList;
 
     this.initializeCalendars(new Date().getFullYear(), new Date().getMonth());
     this.navigateMonths(+1);
@@ -96,6 +100,7 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
   }
 
   private checkInDate: string = "";
+  isCheckOutSelected: boolean = false;
   selectDay(day: number, month: string, monthName: string, year: number) {
     this.chosenOne.accommodation_id = this.accommodation.id!;
 
@@ -110,6 +115,15 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
       //this.selectedDays.set(day + '-' + month + '-' + year, true);
       console.log(this.chosenOne.start_date);
       this.checkInDate = year + "-" + monthName + "-" + day;
+
+      console.log("Sono QUI miao");
+
+      let stringTest: string = this.getStringFromInputParams(day, monthName, year);
+
+      let latestIndex: number = this.getFirstNotLecitCheckOutDate(this.checkOutList);
+
+      this.currentList = this.checkOutList.slice(this.checkInList.indexOf(stringTest) - 2, latestIndex);
+      console.log(this.checkOutList);
     }
     else {
       if(Date.parse(this.chosenOne.start_date.split("T")[0]) >= this.accommodationService.fetchDate(day, monthName, year)) {
@@ -118,6 +132,8 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
         return;
       }
       this.chosenOne.end_date = new Date(this.accommodationService.fetchDate(day, monthName, year)) + "";
+      this.isCheckOutSelected = true;
+      this.currentList = this.generateSelectedPeriodOfDates(this.chosenOne.start_date, this.chosenOne.end_date);
       console.log("FINAL VALUES -> " + this.chosenOne.start_date, this.chosenOne.end_date);
       this.sendAvailability();
     }
@@ -151,6 +167,106 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
       )
     }
     
+  }
+
+  private getFirstNotLecitCheckOutDate(list: string[]): number {
+    let tmp1: Date;
+    let tmp2: Date;
+
+    for(let i = 0; i < list.length - 1; i++) {
+      tmp1 = this.getDateFromDateString(list[i]);
+      tmp2 = this.getDateFromDateString(list[i+1]);
+
+      if(tmp1.getTime() !== (tmp2.getTime() + 86400000)) return i+1;
+    }
+
+    return list.length;
+  }
+
+  //Parses dd-Month-yyyy:
+  private getDateFromDateString(s: string): Date {
+    let tokens: string[] = s.split("-");
+    let day: number = Number(tokens[0]);
+    let month: number = this.getMonthIndexFromName(tokens[1]);
+    let year: number = Number(tokens[2]);
+
+    let res: Date = new Date(day, month, year);
+    return res;
+  }
+
+  private getMonthIndexFromName(s: string): number {
+    switch(s) {
+      case "January": return 0;
+      case "February": return 1;
+      case "March": return 2;
+      case "April": return 3;
+      case "May": return 4;
+      case "June": return 5;
+      case "July": return 6;
+      case "August": return 7;
+      case "September": return 8;
+      case "October": return 9;
+      case "November": return 10;
+      case "December": return 11;
+      default: return -1;
+    }
+  }
+
+  private generateSelectedPeriodOfDates(checkIn: string, checkOut: string): string[] {
+    let tmp: Date = new Date(Date.parse(checkIn));
+    let chkOut: Date = new Date(Date.parse(checkOut));
+    let resultSupport: string[] = [];
+
+    let day: number;
+    let month: number;
+    let year: number;
+
+    while(tmp.getTime() <= chkOut.getTime()) {
+      resultSupport.push(this.generateStringFromDate(tmp));
+      
+      day = tmp.getDate();
+      month = tmp.getMonth();
+      year = tmp.getFullYear();
+
+      tmp = new Date(year, month, day+1);
+    }
+
+    return resultSupport;
+  }
+
+  private generateStringFromDate(d: Date): string {
+    let day: number = d.getDate();
+    let month: number = d.getMonth();
+    let year: number = d.getFullYear();
+
+    let monthName: string = this.getMonthNameFromMonthIndex(month);
+
+    return (day < 10 ? "0" + day : day) + "-" + monthName + "-" + year;
+  }
+
+  private getMonthNameFromMonthIndex(index: number): string {
+
+    switch(index) {
+
+      case 0: return "January";
+      case 1: return "February";
+      case 2: return "March";
+      case 3: return "April";
+      case 4: return "May";
+      case 5: return "June";
+      case 6: return "July";
+      case 7: return "August";
+      case 8: return "September";
+      case 9: return "October";
+      case 10: return "November";
+      case 11: return "December";
+      default: return "Error";
+      
+    }
+  }
+
+  private getStringFromInputParams(day: number, monthName: string, year: number): string {
+    return "" + (day < 10? "0"+day : day) + "-" + monthName + "-" + year;
   }
 
   toCompatibleStringFormat(s: string): string {
@@ -201,6 +317,15 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
     }
   }
 
+  isNotCheckOut(day: number, monthName: string, year: number): boolean {
+
+    let testStr: Date = new Date(this.accommodationService.fetchDate(day, monthName, year));
+    let chkOutSel: Date = new Date(this.chosenOne.end_date);
+    let chkInSel: Date = new Date(this.chosenOne.start_date);
+    console.log("stampa debug -> ", testStr, this.chosenOne.end_date);
+    return (testStr.setHours(0, 0, 0, 0) != chkOutSel.setHours(0, 0, 0, 0)) && (testStr.setHours(0, 0, 0, 0) != chkInSel.setHours(0, 0, 0, 0));
+  }
+
   resetChoices() {
     this.chosenOne = {
       accommodation_id: this.accommodation.id,
@@ -209,7 +334,9 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
       end_date: "",
     };
     this.alreadySelectedStart = false;
+    this.isCheckOutSelected = false;
     this.checkInDate = "";
+    this.currentList = this.checkInList;
 
     this.sendAvailability();
   }

@@ -31,6 +31,7 @@ import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -748,208 +749,282 @@ public class AccommodationService {
         accommodationRepository.setCoordinates(coordinates, accommodationId);
     }
 
-    public List<String> fetchFullAvailabilityListForAccommodation(Long accommodationId, UserDTO user, List<Booking> values) {
-        List<Booking> copy2 = new ArrayList<>();
+        public List<String> fetchCheckInListForAccommodation(Long accommodationId, UserDTO user, List<Booking> values) {
+            List<Booking> copy2 = new ArrayList<>();
 
-        for (Booking b : values) {
-            if (b.getStatus().equals(BookingStatus.PENDING) && b.getUser().getId() != user.getId());
-            else copy2.add(b);
-        }
-
-        // Now lets retrieve the Accommodation Availabilities and remove from those the occupied days:
-        List<Availability> avs = this.availabilityService.findByAccommodationId(accommodationId);
-
-        List<List<LocalDate>> occupiedDates = new ArrayList<List<LocalDate>>(); // From Booking Obj to List of Dates
-        List<LocalDate> availableDates = new ArrayList<LocalDate>(); // From Availability Obj to List of Dates
-
-        List<String> availabilities = new ArrayList<String>(); // RESULT: dd-Month-yyyy
-
-        LocalDate checkIn = null;
-        LocalDate checkOut = null;
-        LocalDate cursor = null;
-        for (Booking b : copy2) {
-            checkIn = b.getCheckIn().toLocalDate();
-            checkOut = b.getCheckOut().toLocalDate();
-            cursor = checkIn;
-
-            while (cursor.isBefore(checkOut) || cursor.isEqual(checkOut)) {
-                occupiedDates = addToOccupiedDates(occupiedDates, cursor, b.getUserId());
-                cursor = cursor.plus(Period.ofDays(1));
+            for (Booking b : values) {
+                if (b.getStatus().equals(BookingStatus.PENDING) && b.getUser().getId() != user.getId());
+                else copy2.add(b);
             }
 
-        }
+            // Now lets retrieve the Accommodation Availabilities and remove from those the occupied days:
+            List<Availability> avs = this.availabilityService.findByAccommodationId(accommodationId);
 
-        for (Availability a : avs) {
-            checkIn = a.getStartDate();
-            checkOut = a.getEndDate();
-            cursor = checkIn;
+            List<LocalDate> occupiedDates = new ArrayList<LocalDate>(); // From Booking Obj to List of Dates
+            List<LocalDate> availableDates = new ArrayList<LocalDate>(); // From Availability Obj to List of Dates
 
-            while (cursor.isBefore(checkOut) || cursor.isEqual(checkOut)) {
-                availableDates.add(cursor);
-                cursor = cursor.plus(Period.ofDays(1));
-            }
+            List<String> availabilities = new ArrayList<String>(); // RESULT: dd-Month-yyyy
 
-        }
+            LocalDate checkIn = null;
+            LocalDate checkOut = null;
+            LocalDate cursor = null;
+            for (Availability a : avs) {
+                checkIn = a.getStartDate();
+                checkOut = a.getEndDate();
+                cursor = checkIn;
 
-        // Now I sort the dates list for the occupied ones:
-        for (List<LocalDate> l : occupiedDates)
-            l.sort((d1, d2) -> d1.compareTo(d2));
-
-        // Now I add the avaiable days from the occupied ones:
-        List<String> possibleRemovals = new ArrayList<String>();
-        for (List<LocalDate> l : occupiedDates) {
-            for (int cursorIndex = 0; cursorIndex < l.size(); cursorIndex++) {
-                for (LocalDate dAv : availableDates) {
-                    if ((l.get(cursorIndex)).isEqual(dAv) && cursorIndex != (l.size() - 1)) {
-                        if (availabilities.indexOf(createDateString(l.get(cursorIndex))) != -1) possibleRemovals.add(createDateString(l.get(cursorIndex)));
-                    } 
-                    else if((l.get(cursorIndex)).isEqual(dAv) && cursorIndex == (l.size() - 1) && 
-                    ((l.get(cursorIndex)).isEqual(LocalDate.now()) || (l.get(cursorIndex)).isAfter(LocalDate.now()))) {
-                        availabilities.add(createDateString(l.get(cursorIndex)));
-                    }
+                while (cursor.isBefore(checkOut)) {
+                    availableDates.add(cursor);
+                    cursor = cursor.plus(Period.ofDays(1));
                 }
+
             }
+
+            Collections.sort(availableDates);
+            
+            for (Booking b : copy2) {
+                checkIn = b.getCheckIn().toLocalDate();
+                checkOut = b.getCheckOut().toLocalDate();
+                cursor = checkIn;
+
+                while (cursor.isBefore(checkOut)) {
+                    occupiedDates.add(cursor);
+                    cursor = cursor.plus(Period.ofDays(1));
+                }
+
+                if(!availableDates.contains(checkOut.plus(Period.ofDays(1)))) occupiedDates.add(checkOut);
+
+            }
+
+            // Now I sort the dates list for the occupied ones:
+            Collections.sort(occupiedDates);
+
+            LocalDate d = availableDates.get(0);
+            while(d.isBefore(availableDates.get(availableDates.size() -1))) {
+
+                if(availableDates.contains(d) && !occupiedDates.contains(d)) availabilities.add(createDateString(d));
+
+                d = d.plus(Period.ofDays(1));
+            }
+
+            // // Now I add the avaiable days from the occupied ones:
+            // List<String> possibleRemovals = new ArrayList<String>();
+            // for (List<LocalDate> l : occupiedDates) {
+            //     for (int cursorIndex = 0; cursorIndex < l.size(); cursorIndex++) {
+            //         for (LocalDate dAv : availableDates) {
+            //             if ((l.get(cursorIndex)).isEqual(dAv) && cursorIndex != (l.size() - 1)) {
+            //                 if (availabilities.indexOf(createDateString(l.get(cursorIndex))) != -1) possibleRemovals.add(createDateString(l.get(cursorIndex)));
+            //             } 
+            //             else if((l.get(cursorIndex)).isEqual(dAv) && cursorIndex == (l.size() - 1) && 
+            //             ((l.get(cursorIndex)).isEqual(LocalDate.now()) || (l.get(cursorIndex)).isAfter(LocalDate.now()))) {
+            //                 availabilities.add(createDateString(l.get(cursorIndex)));
+            //             }
+            //         }
+            //     }
+            // }
+
+            // // Now I remove the incorrect dates:
+            // List<String> copySupport = new ArrayList<String>(availabilities);
+
+            // for (String c : copySupport)
+            //     if (possibleRemovals.indexOf(c) != -1) availabilities = recursiveRemoval(availabilities, c);
+
+            // // Now I add all the available dates:
+
+            // Set<LocalDate> notAdd = new HashSet<LocalDate>();
+            // for (List<LocalDate> occ : occupiedDates)
+            //     for (LocalDate occD : occ)
+            //         notAdd.add(occD);
+
+            // for (LocalDate add : availableDates)
+            //     if (!(notAdd.contains(add)) && 
+            //     (add.isEqual(LocalDate.now()) || add.isAfter(LocalDate.now()))) {
+            //         availabilities.add(createDateString(add));
+            //     };
+
+            // //Now lets remove isolated Dates:
+            // availabilities = sortAndCleanStringList(availabilities);
+
+
+            return availabilities;
         }
 
-        // Now I remove the incorrect dates:
-        List<String> copySupport = new ArrayList<String>(availabilities);
+        public List<String> fetchCheckOutListForAccommodation(Long accommodationId, UserDTO user, List<Booking> values) {
+            List<Booking> copy2 = new ArrayList<>();
 
-        for (String c : copySupport)
-            if (availabilities.indexOf(c) != -1) availabilities = recursiveRemoval(availabilities, c);
+            for (Booking b : values) {
+                if (b.getStatus().equals(BookingStatus.PENDING) && b.getUser().getId() != user.getId());
+                else copy2.add(b);
+            }
 
-        // Now I add all the available dates:
+            // Now lets retrieve the Accommodation Availabilities and remove from those the occupied days:
+            List<Availability> avs = this.availabilityService.findByAccommodationId(accommodationId);
 
-        Set<LocalDate> notAdd = new HashSet<LocalDate>();
-        for (List<LocalDate> occ : occupiedDates)
-            for (LocalDate occD : occ)
-                notAdd.add(occD);
+            List<LocalDate> occupiedDates = new ArrayList<LocalDate>(); // From Booking Obj to List of Dates
+            List<LocalDate> availableDates = new ArrayList<LocalDate>(); // From Availability Obj to List of Dates
 
-        for (LocalDate add : availableDates)
-            if (!(notAdd.contains(add)) && 
-            (add.isEqual(LocalDate.now()) || add.isAfter(LocalDate.now()))) {
-                availabilities.add(createDateString(add));
+            List<String> availabilities = new ArrayList<String>(); // RESULT: dd-Month-yyyy
+
+            LocalDate checkIn = null;
+            LocalDate checkOut = null;
+            LocalDate cursor = null;
+            for (Availability a : avs) {
+                checkIn = a.getStartDate();
+                checkOut = a.getEndDate();
+                cursor = checkIn.plusDays(1);
+
+                while (cursor.isBefore(checkOut) || cursor.isEqual(checkOut)) {
+                    availableDates.add(cursor);
+                    cursor = cursor.plus(Period.ofDays(1));
+                }
+
+            }
+
+            Collections.sort(availableDates);
+            
+            for (Booking b : copy2) {
+                checkIn = b.getCheckIn().toLocalDate();
+                checkOut = b.getCheckOut().toLocalDate();
+                cursor = checkIn.plusDays(1);
+
+                while (cursor.isBefore(checkOut) || cursor.isEqual(checkOut)) {
+                    occupiedDates.add(cursor);
+                    cursor = cursor.plus(Period.ofDays(1));
+                }
+
+                if(!availableDates.contains(checkIn.minus(Period.ofDays(1)))) occupiedDates.add(checkIn);
+
+            }
+
+            // Now I sort the dates list for the occupied ones:
+            Collections.sort(occupiedDates);
+
+            LocalDate d = availableDates.get(0);
+            while(d.isBefore(availableDates.get(availableDates.size() -1))) {
+
+                if(availableDates.contains(d) && !occupiedDates.contains(d)) availabilities.add(createDateString(d));
+
+                d = d.plus(Period.ofDays(1));
+            }
+
+            System.out.println("CHECK OUT LIST -> " + availabilities);
+
+            return availabilities;
+        }
+
+        // private static List<String> sortAndCleanStringList(List<String> l) {
+        //     List<LocalDate> converted = convertToLocalDateList(l);
+        //     converted.sort((a, b) -> a.compareTo(b));
+            
+        //     List<LocalDate> filtered = new ArrayList<LocalDate>();
+        //     for(int i = 1; i < converted.size() - 1; i++) {
+        //         if(isAnIsolatedDate(converted.get(i), converted.get(i-1), converted.get(i+1)));
+        //         else filtered.add(converted.get(i));
+        //     }
+
+        //     //Now I check the latest date:
+        //     if(!isAnIsolatedDate(converted.get(converted.size() - 1), converted.get(converted.size() - 2))) filtered.add(converted.get(converted.size() - 1));
+
+        //     //The List will be sorted already
+        //     List<String> result = new ArrayList<String>();
+        //     for(int i = 0; i < filtered.size(); i++) {
+        //         result.add(createDateString(filtered.get(i)));
+        //     }
+
+        //     return result;
+        // }
+
+        // private static boolean isAnIsolatedDate(LocalDate test, LocalDate previous) {
+        //     Period p = Period.ofDays(1);
+
+        //     return (!(test.minus(p)).isEqual(previous));
+        // }
+
+        // private static boolean isAnIsolatedDate(LocalDate test, LocalDate previous, LocalDate next) {
+        //     Period p = Period.ofDays(1);
+
+        //     return (!(test.minus(p)).isEqual(previous) && !(test.plus(p)).isEqual(next));
+        // }
+
+        // private static List<LocalDate> convertToLocalDateList(List<String> l) {
+        //     List<LocalDate> result = new ArrayList<LocalDate>();
+
+        //     for(String s: l) {
+        //         result.add(convertFromDateStringToLocalDate(s));
+        //     }
+            
+        //     return result;
+        // }
+
+        // //Parses dd-Month-yyyy:
+        // private static LocalDate convertFromDateStringToLocalDate(String s) {
+        //     return LocalDate.parse(s, DateTimeFormatter.ofPattern("dd-MMMM-yyyy", Locale.ENGLISH));
+        // }
+
+        //dd-Month-yyyy:
+        private static String createDateString(LocalDate date) {
+            String[] tmp = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).split("-");
+            String monthName = getMonthNameByNumber(Integer.parseInt(tmp[1]));
+
+            return tmp[2] + "-" + monthName + "-" + tmp[0];
+        }
+
+        private static String getMonthNameByNumber(int monthNumber) {
+            return switch(monthNumber) {
+                case 1 -> "January";
+                case 2 -> "February";
+                case 3 -> "March";	
+                case 4 -> "April";
+                case 5 -> "May";
+                case 6 -> "June";
+                case 7 -> "July";
+                case 8 -> "August";
+                case 9 -> "September";
+                case 10 -> "October";
+                case 11 -> "November";
+                case 12 -> "December";		
+                default -> "Error";
             };
-
-        //Now lets remove isolated Dates:
-        availabilities = sortAndCleanStringList(availabilities);
-
-
-        return availabilities;
-    }
-
-    private static List<String> sortAndCleanStringList(List<String> l) {
-        List<LocalDate> converted = convertToLocalDateList(l);
-        converted.sort((a, b) -> a.compareTo(b));
-        
-        List<LocalDate> filtered = new ArrayList<LocalDate>();
-        for(int i = 1; i < converted.size() - 1; i++) {
-            if(isAnIsolatedDate(converted.get(i), converted.get(i-1), converted.get(i+1)));
-            else filtered.add(converted.get(i));
         }
 
-        //Now I check the latest date:
-        if(!isAnIsolatedDate(converted.get(converted.size() - 1), converted.get(converted.size() - 2))) filtered.add(converted.get(converted.size() - 1));
+        // private static List<String> recursiveRemoval(List<String> list, String factor) {
+        //     if (list.contains(factor)) {
+        //         list.remove(factor);
+        //         return recursiveRemoval(list, factor);
+        //     }
+        //     return list;
+        // }
 
-        //The List will be sorted already
-        List<String> result = new ArrayList<String>();
-        for(int i = 0; i < filtered.size(); i++) {
-            result.add(createDateString(filtered.get(i)));
-        }
+        // private static List<List<LocalDate>> addToOccupiedDates(List<List<LocalDate>> occupiedDates, LocalDate cursor, Long userId) {
+        //     if(occupiedDates.isEmpty()) {
 
-        return result;
-    }
+        //         int index = 0;
+        //         while(index <= userId) {
+        //             occupiedDates.add(new ArrayList<LocalDate>());
+        //             index++;
+        //         }
 
-    private static boolean isAnIsolatedDate(LocalDate test, LocalDate previous) {
-        Period p = Period.ofDays(1);
+        //         occupiedDates.get(userId.intValue()).add(cursor);
+        //         return occupiedDates;
+        //     }
+        //     else {
+        //         if(occupiedDates.size() <= userId) {
 
-        return (!(test.minus(p)).isEqual(previous));
-    }
+        //             int index = occupiedDates.size();
+        //             while(index <= userId) {
+        //                 occupiedDates.add(new ArrayList<LocalDate>());
+        //                 index++;
+        //             }
 
-    private static boolean isAnIsolatedDate(LocalDate test, LocalDate previous, LocalDate next) {
-        Period p = Period.ofDays(1);
-
-        return (!(test.minus(p)).isEqual(previous) && !(test.plus(p)).isEqual(next));
-    }
-
-    private static List<LocalDate> convertToLocalDateList(List<String> l) {
-        List<LocalDate> result = new ArrayList<LocalDate>();
-
-        for(String s: l) {
-            result.add(convertFromDateStringToLocalDate(s));
-        }
-        
-        return result;
-    }
-
-    //Parses dd-Month-yyyy:
-    private static LocalDate convertFromDateStringToLocalDate(String s) {
-        return LocalDate.parse(s, DateTimeFormatter.ofPattern("dd-MMMM-yyyy", Locale.ENGLISH));
-    }
-
-    //dd-Month-yyyy:
-	private static String createDateString(LocalDate date) {
-		String[] tmp = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).split("-");
-		String monthName = getMonthNameByNumber(Integer.parseInt(tmp[1]));
-
-		return tmp[2] + "-" + monthName + "-" + tmp[0];
-	}
-
-	private static String getMonthNameByNumber(int monthNumber) {
-		return switch(monthNumber) {
-			case 1 -> "January";
-			case 2 -> "February";
-			case 3 -> "March";	
-			case 4 -> "April";
-			case 5 -> "May";
-			case 6 -> "June";
-			case 7 -> "July";
-			case 8 -> "August";
-			case 9 -> "September";
-			case 10 -> "October";
-			case 11 -> "November";
-			case 12 -> "December";		
-			default -> "Error";
-		};
-	}
-
-	private static List<String> recursiveRemoval(List<String> list, String factor) {
-		if (list.contains(factor)) {
-			list.remove(factor);
-			return recursiveRemoval(list, factor);
-		}
-		return list;
-	}
-
-	private static List<List<LocalDate>> addToOccupiedDates(List<List<LocalDate>> occupiedDates, LocalDate cursor, Long userId) {
-		if(occupiedDates.isEmpty()) {
-
-			int index = 0;
-			while(index <= userId) {
-				occupiedDates.add(new ArrayList<LocalDate>());
-				index++;
-			}
-
-			occupiedDates.get(userId.intValue()).add(cursor);
-			return occupiedDates;
-		}
-		else {
-			if(occupiedDates.size() <= userId) {
-
-				int index = occupiedDates.size();
-				while(index <= userId) {
-					occupiedDates.add(new ArrayList<LocalDate>());
-					index++;
-				}
-
-				occupiedDates.get(userId.intValue()).add(cursor);
-				return occupiedDates;
-			}
-			else {
-				occupiedDates.get(userId.intValue()).add(cursor);
-				return occupiedDates;
-			}
-		}
-	}
+        //             occupiedDates.get(userId.intValue()).add(cursor);
+        //             return occupiedDates;
+        //         }
+        //         else {
+        //             occupiedDates.get(userId.intValue()).add(cursor);
+        //             return occupiedDates;
+        //         }
+        //     }
+        // }
 
     public Photo uploadSinglePhotoToS3(Long accId, MultipartFile file) {
 
