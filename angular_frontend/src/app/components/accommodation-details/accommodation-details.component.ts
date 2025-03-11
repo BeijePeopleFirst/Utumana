@@ -610,11 +610,13 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
       timestamp: (new Date()).toLocaleDateString(), 
       price: this.chosenPeriod.price ?? 0, 
       status: BookingStatus.PENDING, 
-      check_in: this.chosenPeriod?.check_in!.getDate() + "-" + this.chosenPeriod?.check_in!.getMonth() + "-" + this.chosenPeriod?.check_in!.getFullYear(), 
-      check_out: this.chosenPeriod?.check_out!.getDate() + "-" + this.chosenPeriod?.check_out!.getMonth() + "-" + this.chosenPeriod?.check_out!.getFullYear(), 
+      check_in: this.chosenPeriod?.check_in!.getDate() + "-" + (this.chosenPeriod?.check_in!.getMonth()+1) + "-" + this.chosenPeriod?.check_in!.getFullYear(), 
+      check_out: this.chosenPeriod?.check_out!.getDate() + "-" + (this.chosenPeriod?.check_out!.getMonth()+1) + "-" + this.chosenPeriod?.check_out!.getFullYear(), 
       is_unavailability: false, 
       user_id: this.userId!
     };
+
+    console.log("Stampoil booking -> ", booking, this.chosenPeriod?.check_in, this.chosenPeriod?.check_out);
 
     let container: {chosen_availability: PartialBooking,
                     nights_number: number, post_operation: number

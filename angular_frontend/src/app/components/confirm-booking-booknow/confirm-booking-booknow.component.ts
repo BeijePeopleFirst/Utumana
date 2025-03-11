@@ -201,6 +201,17 @@ export class ConfirmBookingBooknowComponent implements OnInit {
 
   //From dd/MM/yyyy to yyyy-MM-dd:
   private convertToCompatibleDateStringFormat(date: string): string {
+
+    let test: string[];
+
+    if(date.includes("-")) {
+      test = date.split("-");
+      
+      if(test[0].length == 2 || test[0].length == 1) {
+        date = (test[0].length === 1 ? "0" + test[0] : test[0]) + "/" + (test[1].length === 1 ? "0" + test[1] : test[1]) + "/" + test[2];
+      }
+    }
+
     try {
       this.checkDateInput(date);
     } catch (ex: any) {
