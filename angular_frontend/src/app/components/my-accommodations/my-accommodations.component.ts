@@ -145,6 +145,8 @@ export class MyAccommodationsComponent implements OnInit {
         next: () => {
           this.allMyDrafts = this.allMyDrafts.filter(draft => draft.id !== draftId);
           this.showDeleteModal = false;
+          this.draftService.hasOpenDrafts$.next(this.allMyDrafts.length > 0);
+          localStorage.setItem("hasOpenDrafts", (this.allMyDrafts.length > 0).toString());
           this.loadMyDraftsPage(this.myDraftsPageNumber);
         },
         error: () => {

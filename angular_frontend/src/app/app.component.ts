@@ -26,6 +26,8 @@ export class AppComponent implements OnInit, DoCheck, OnDestroy {
 
   isAdmin: boolean = false;
   checkIsAdmin!: Subscription;
+  hasOpenDrafts: boolean = true;
+  checkOpenDrafts!: Subscription;
 
   languages = [
     { code: 'en-US', name: 'English' },
@@ -49,6 +51,11 @@ export class AppComponent implements OnInit, DoCheck, OnDestroy {
     // update isAdmin after user logs in
     this.checkIsAdmin = this.authService.isUserAdmin$.subscribe(isUserAdmin => {
       this.isAdmin = isUserAdmin;
+      // after login, get hasOpenDrafts from local storage
+      this.draftService.loggedUserHasOpenDrafts().subscribe(hasOpen => {
+        localStorage.setItem("hasOpenDrafts", hasOpen.toString());
+        this.hasOpenDrafts = hasOpen;
+      })
     });
 
     // update isAdmin if logged user refreshes page
@@ -57,10 +64,22 @@ export class AppComponent implements OnInit, DoCheck, OnDestroy {
         this.isAdmin = isUserAdmin;
       });
     }
+
+    // update hasOpenDrafts if logged user refreshes page
+    const savedHasOpen = localStorage.getItem("hasOpenDrafts");
+    if(savedHasOpen !== null){
+      this.draftService.hasOpenDrafts$.next(savedHasOpen === "true");
+    }
+
+    // subscribe to hasOpenDrafts$
+    this.checkOpenDrafts = this.draftService.hasOpenDrafts$.subscribe(hasOpen => {
+      this.hasOpenDrafts = hasOpen;
+    });
   }
 
   ngOnDestroy(): void {
     this.checkIsAdmin.unsubscribe();
+    this.checkOpenDrafts.unsubscribe();
   }
 
   ngDoCheck(): void {

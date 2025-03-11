@@ -37,7 +37,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="flex-none text-gray-400 select-none size-5" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
                     {{ 'header.new_draft' | translate }}
                   </button>
-                  <button (click)="openDrafts()" class="flex gap-x-2 items-center px-4 py-2 w-full text-sm text-left text-gray-900 hover:bg-gray-50" 
+                  <button *ngIf="hasOpenDrafts === true" (click)="openDrafts()" class="flex gap-x-2 items-center px-4 py-2 w-full text-sm text-left text-gray-900 hover:bg-gray-50" 
                   [ngClass]="{'py-1 rounded-md hover:ring-2 hover:bg-inherit hover:ring-secondary-light/50 hover:text-secondary-dark': isMenuOpen === true}">
                     <svg xmlns="http://www.w3.org/2000/svg" class="flex-none text-gray-400 select-none size-5" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H600v-80h160v-480H200v480h160v80H200Zm240 0v-246l-64 64-56-58 160-160 160 160-56 58-64-64v246h-80Z"/></svg>
                     {{ 'header.open_draft' | translate }}

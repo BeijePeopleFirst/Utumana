@@ -387,5 +387,17 @@ public class UserController {
 	public AccommodationOwnerDTO getAccommodationOwner(@PathVariable Long usrId, @PathVariable Long accId, Authentication auth) {
 		return userService.getAccommodationOwner(usrId, accId);
 	}
+
+	@Operation(summary = "Checks if the user has open drafts", description = "Returns true if the user has at least one accommodation draft; false otherwise.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Information retrieved correctly"),
+        @ApiResponse(responseCode = "404", description = "IdNotFoundException(\"user not found\")", content=@Content(mediaType = "application/json",
+		schema=@Schema(implementation=ErrorMessage.class))),
+    })
+	@PreAuthorize("hasAuthority('USER')")
+	@GetMapping(value = "/user/{userId}/has-open-drafts")
+	public @ResponseBody boolean hasOpenDrafts(@PathVariable Long userId, Authentication auth) {
+		return userService.hasOpenDrafts(userId);
+	}
 }
 	

@@ -23,6 +23,7 @@ import ws.peoplefirst.utumana.model.Accommodation;
 import ws.peoplefirst.utumana.model.BadgeAward;
 import ws.peoplefirst.utumana.model.User;
 import ws.peoplefirst.utumana.model.UserAuthority;
+import ws.peoplefirst.utumana.repository.AccommodationDraftRepository;
 import ws.peoplefirst.utumana.repository.AccommodationRepository;
 import ws.peoplefirst.utumana.repository.UserAuthorityRepository;
 import ws.peoplefirst.utumana.repository.UserRepository;
@@ -43,6 +44,9 @@ public class UserService implements UserDetailsService {
 
 	@Autowired
 	private AccommodationRepository accommodationRepository;
+
+	@Autowired
+	private AccommodationDraftRepository accommodationDraftRepository;
 
 	@Autowired
 	private S3Service s3Service;
@@ -305,5 +309,9 @@ public class UserService implements UserDetailsService {
 	public List<UserDTO> searchUserDTOs(String term) {
 		if(term.isBlank()) return new ArrayList<>();
 		return userRepository.searchUserDTOs(term);
+	}
+
+	public boolean hasOpenDrafts(Long userId) {
+		return accommodationDraftRepository.countByOwnerId(userId) > 0;
 	}
 }

@@ -7,6 +7,7 @@ import { BACKEND_URL_PREFIX } from 'src/costants';
 import { AuthCredentials } from '../dtos/authCredential';
 import { RefreshToken } from '../models/refreshToken';
 import { LoginResponse } from '../utils/loginResponse';
+import { DraftService } from './draft.service';
 
 
 @Injectable({
@@ -25,7 +26,8 @@ export class AuthService {
 
   constructor(
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private draftService: DraftService
   ){ }
 
   login(user: AuthCredentials): Observable<{ok: boolean, status: number, message: string}> {
@@ -39,6 +41,10 @@ export class AuthService {
         if(json.permission.includes("ADMIN")){
           this.isUserAdmin$.next(true);
         }
+        this.draftService.loggedUserHasOpenDrafts().subscribe(hasOpen => {
+          localStorage.setItem("hasOpenDrafts", hasOpen.toString());
+          this.draftService.hasOpenDrafts$.next(hasOpen);
+        })
         return {ok: true, status: 200, message: 'Successfully logged in'};
       }),
       tap(() => this.isLoggedIn = true),

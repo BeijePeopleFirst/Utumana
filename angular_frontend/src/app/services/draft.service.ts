@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AddressDTO } from '../dtos/addressDTO';
 import { BACKEND_URL_PREFIX, s3Prefix } from 'src/costants';
-import { catchError, map, Observable, of, tap } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, of, tap } from 'rxjs';
 import { Accommodation } from '../models/accommodation';
 import { Service } from '../models/service';
 import { AccommodationDTO } from '../dtos/accommodationDTO';
@@ -17,6 +17,7 @@ import { S3Service } from './s3.service';
   providedIn: 'root'
 })
 export class DraftService {
+  hasOpenDrafts$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private http: HttpClient,
@@ -34,6 +35,8 @@ export class DraftService {
       }),
       tap(res => {
         console.log("Created new accomnmmodation draft", res);
+        this.hasOpenDrafts$.next(true);
+        localStorage.setItem("hasOpenDrafts", "true");
       })
     );
   }
@@ -272,5 +275,16 @@ export class DraftService {
       };
     }
     return null;
+  }
+
+  loggedUserHasOpenDrafts(): Observable<boolean> {
+    const userId = localStorage.getItem("id");
+    if(!userId) return of(false);
+    return this.http.get<boolean>(`${BACKEND_URL_PREFIX}/api/user/${userId}/has-open-drafts`, {}).pipe(
+      catchError(error => {
+        console.error(error);
+        return of(false);
+      })
+    );
   }
 }
