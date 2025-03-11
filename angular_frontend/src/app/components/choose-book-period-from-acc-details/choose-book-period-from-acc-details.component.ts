@@ -124,7 +124,7 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
 
       console.log("PROVA -> ", latestIndex, this.checkOutList[latestIndex]);
 
-      this.currentList = this.checkOutList.slice(this.checkInList.indexOf(stringTest)-1, latestIndex);
+      this.currentList = this.checkOutList.slice(this.checkInList.indexOf(stringTest)-1, latestIndex);  //Togliere -1 ?
       console.log(this.currentList);
       console.log(this.checkOutList);
     }
