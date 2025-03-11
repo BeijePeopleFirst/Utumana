@@ -74,8 +74,10 @@ export class AdminDashboardUsersMakeNewAdminComponent {
             this.admins = users;
           });
           setTimeout(() => {
+            if(this.selectedUser && this.selectedUser.id && this.selectedUser.id === this.currentUserId){
+              this.authService.logout();
+            }
             this.closeRevokePrivilegesModal();
-            this.authService.logout();
           }, 3000);
         }else{
           this.error = true;

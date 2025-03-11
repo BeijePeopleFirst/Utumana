@@ -55,7 +55,7 @@
         </div>
         
         <!-- menu icons -->
-        <div class="justify-center lg:flex lg:flex-1 lg:gap-x-7" [hidden]="isMenuOpen === false">
+        <div class="justify-center items-center lg:flex lg:flex-1 lg:gap-x-7" [hidden]="isMenuOpen === false">
           <!-- notifications -->
           <a routerLink="/notifications" class="font-semibold text-sm/6 text-primary" 
           [ngClass]="{'drop-menu-open': isMenuOpen === true}">
@@ -65,7 +65,7 @@
           </a>
     
           <!-- language -->
-          <div class="relative w-fit" [ngClass]="{'p-2': isMenuOpen === true}" (click)="toggleLanguageMenu($event)">
+          <div class="relative w-fit h-fit" [ngClass]="{'p-2': isMenuOpen === true}" (click)="toggleLanguageMenu($event)">
             <button type="button" class="flex gap-x-1 items-center font-semibold select-none text-sm/6 text-primary">
               <img class="w-auto h-8 select-none" [ngClass]="{'h-4': isMenuOpen === true}" [src]="iconUrl + '/flags/' + selectedLanguage + '.png'" alt="">
               <svg class="flex-none text-gray-400 select-none size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -88,7 +88,7 @@
           <!-- user -->
           <div class="relative w-fit" [ngClass]="{'p-2': isMenuOpen === true}" (click)="toggleProfileMenu($event)">
             <button type="button" class="flex gap-x-1 items-center font-semibold text-sm/6 text-primary">
-              <img class="w-auto h-8" [ngClass]="{'h-4': isMenuOpen === true}" [src]="iconUrl + '/profile.png'" alt="">
+              <img class="object-cover w-10 h-10 rounded-full shrink-0" [ngClass]="{'h-4': isMenuOpen === true}" [src]="profileUrl" alt="Menu" (error)="profileUrl = defaultProfileUrl">
               <svg class="flex-none text-gray-400 size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                 <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
               </svg>

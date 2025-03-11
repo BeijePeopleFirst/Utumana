@@ -3,5 +3,6 @@ export interface LoginResponse {
   permission: string,
   token: string,
   refresh_token: string,
-  id: number
+  id: number,
+  profile_picture_url: string
 }

@@ -8,6 +8,7 @@ import { AuthCredentials } from '../dtos/authCredential';
 import { RefreshToken } from '../models/refreshToken';
 import { LoginResponse } from '../utils/loginResponse';
 import { DraftService } from './draft.service';
+import { S3Service } from './s3.service';
 
 
 @Injectable({
@@ -16,6 +17,7 @@ import { DraftService } from './draft.service';
 export class AuthService {
   isLoggedIn: boolean = localStorage.getItem("token") != null;
   isUserAdmin$ = new BehaviorSubject<boolean>(false);
+  profilePictureUrl$ = new BehaviorSubject<string>('');
 
   private refreshInProgress = false;
   private refreshTokenSubject = new BehaviorSubject<string | null>(null);
@@ -27,24 +29,38 @@ export class AuthService {
   constructor(
     private router: Router,
     private http: HttpClient,
-    private draftService: DraftService
+    private draftService: DraftService,
+    private s3Service: S3Service
   ){ }
 
   login(user: AuthCredentials): Observable<{ok: boolean, status: number, message: string}> {
     return this.http.post<LoginResponse>(`${BACKEND_URL_PREFIX}/api/signin`, user, this.httpOptions).pipe(
       map(json => {
         console.log(json);
+        // save user information
         localStorage.setItem('id',json.id.toString());
         localStorage.setItem("email", json.email);
 			  localStorage.setItem("token", json.token);
 			  document.cookie = "refresh_token=" + json.refresh_token;
+
+        // notify subscribers if user is admin
         if(json.permission.includes("ADMIN")){
           this.isUserAdmin$.next(true);
         }
+
+        // notify subscribers if user has open drafts
         this.draftService.loggedUserHasOpenDrafts().subscribe(hasOpen => {
           localStorage.setItem("hasOpenDrafts", hasOpen.toString());
           this.draftService.hasOpenDrafts$.next(hasOpen);
-        })
+        });
+
+        // get profile picture blob and notify subscribers
+        this.s3Service.getPhoto(json.profile_picture_url).subscribe(blob => {
+          if(blob != null){  
+            localStorage.setItem("profilePictureUrl", json.profile_picture_url);
+            this.profilePictureUrl$.next(json.profile_picture_url);
+          }
+        });
         return {ok: true, status: 200, message: 'Successfully logged in'};
       }),
       tap(() => this.isLoggedIn = true),

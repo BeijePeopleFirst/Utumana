@@ -6,6 +6,7 @@ import { Location } from '@angular/common';
 import { AuthService } from './services/auth.service';
 import { DraftService } from './services/draft.service';
 import { Subscription } from 'rxjs';
+import { S3Service } from './services/s3.service';
 
 
 @Component({
@@ -20,7 +21,9 @@ export class AppComponent implements OnInit, DoCheck, OnDestroy {
   isCreateMenuOpen = false;
   isMenuOpen = false;
   selectedLanguage = 'en-US'; 
-  iconUrl = iconURL
+  iconUrl = iconURL;
+  defaultProfileUrl: string = iconURL + '/profile.png';
+  profileUrl: string = this.defaultProfileUrl;
   title= 'Utumana'; 
   currentYear: number = new Date().getFullYear();
 
@@ -28,6 +31,7 @@ export class AppComponent implements OnInit, DoCheck, OnDestroy {
   checkIsAdmin!: Subscription;
   hasOpenDrafts: boolean = true;
   checkOpenDrafts!: Subscription;
+  getProfilePictureUrl!: Subscription;
 
   languages = [
     { code: 'en-US', name: 'English' },
@@ -39,6 +43,7 @@ export class AppComponent implements OnInit, DoCheck, OnDestroy {
     private location: Location,
     public authService: AuthService,
     private draftService: DraftService,
+    private s3Service: S3Service,
     private router: Router
   ) {
     this.selectedLanguage = this.translate.currentLang || 'en-US';
@@ -51,13 +56,7 @@ export class AppComponent implements OnInit, DoCheck, OnDestroy {
     // update isAdmin after user logs in
     this.checkIsAdmin = this.authService.isUserAdmin$.subscribe(isUserAdmin => {
       this.isAdmin = isUserAdmin;
-      // after login, get hasOpenDrafts from local storage
-      this.draftService.loggedUserHasOpenDrafts().subscribe(hasOpen => {
-        localStorage.setItem("hasOpenDrafts", hasOpen.toString());
-        this.hasOpenDrafts = hasOpen;
-      })
     });
-
     // update isAdmin if logged user refreshes page
     if(this.isAdmin === false){
       this.authService.isAdmin().subscribe(isUserAdmin => {
@@ -65,16 +64,43 @@ export class AppComponent implements OnInit, DoCheck, OnDestroy {
       });
     }
 
+    // subscribe to hasOpenDrafts$
+    this.checkOpenDrafts = this.draftService.hasOpenDrafts$.subscribe(hasOpen => {
+      this.hasOpenDrafts = hasOpen;
+    });
     // update hasOpenDrafts if logged user refreshes page
     const savedHasOpen = localStorage.getItem("hasOpenDrafts");
     if(savedHasOpen !== null){
       this.draftService.hasOpenDrafts$.next(savedHasOpen === "true");
     }
 
-    // subscribe to hasOpenDrafts$
-    this.checkOpenDrafts = this.draftService.hasOpenDrafts$.subscribe(hasOpen => {
-      this.hasOpenDrafts = hasOpen;
+    let pictureUrl: string = '';
+    // subscribe to get profile picture url
+    this.getProfilePictureUrl = this.authService.profilePictureUrl$.subscribe(url => {
+      pictureUrl = url;
+      // get profile picture
+      if(pictureUrl !== ''){
+        this.s3Service.getPhoto(pictureUrl).subscribe(blob => {
+          if(blob != null){
+            this.profileUrl = URL.createObjectURL(blob);
+          }
+        })
+      }
     });
+    // update profile picture url if logged user refreshes page
+    const savedProfileUrl = localStorage.getItem("profilePictureUrl");
+    console.log("Retrieved url from storage:", savedProfileUrl);
+    if(savedProfileUrl){
+      pictureUrl = savedProfileUrl;
+    }
+    // get profile picture
+    if(pictureUrl !== ''){
+      this.s3Service.getPhoto(pictureUrl).subscribe(blob => {
+        if(blob != null){
+          this.profileUrl = URL.createObjectURL(blob);
+        }
+      })
+    }
   }
 
   ngOnDestroy(): void {

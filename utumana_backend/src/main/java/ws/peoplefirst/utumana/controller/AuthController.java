@@ -124,6 +124,7 @@ public class AuthController {
 			res.put("token", token);
 			res.put("refresh_token", refreshToken.getRefreshToken());
 			res.put("id", user.getId());
+			res.put("profile_picture_url", user.getProfilePictureUrl());
 
 			return ok(res);
 		} catch (UsernameNotFoundException e) {

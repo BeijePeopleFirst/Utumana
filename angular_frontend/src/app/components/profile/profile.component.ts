@@ -40,7 +40,8 @@ export class ProfileComponent implements OnInit {
   constructor(
     private userService: UserService,
     private reviewService: ReviewService,
-    private s3Service: S3Service
+    private s3Service: S3Service,
+    private authService: AuthService
   ){}
 
   ngOnInit(): void {
@@ -75,10 +76,12 @@ export class ProfileComponent implements OnInit {
           this.user = res;
           if(this.user.profile_picture_url){
             this.s3Service.getPhoto(this.user.profile_picture_url).subscribe(blob => {
-              if(blob != null){
+              if(blob != null && this.user.profile_picture_url){
                 this.user.profile_picture_blob_url = URL.createObjectURL(blob);
                 this.pictureUrl = this.user.profile_picture_blob_url;
                 console.log("Blob url:",this.pictureUrl);
+                localStorage.setItem("profilePictureUrl", this.user.profile_picture_url);
+                this.authService.profilePictureUrl$.next(this.user.profile_picture_url);
               }
             })
           }

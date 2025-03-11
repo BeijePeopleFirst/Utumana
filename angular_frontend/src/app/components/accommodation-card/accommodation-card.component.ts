@@ -36,6 +36,12 @@ export class AccommodationCardComponent implements OnInit {
     this.authService.isUserAdmin$.asObservable().subscribe(is_admin => {
       this.isAdmin = is_admin;
     });
+    // update isAdmin if logged user refreshes page
+    if(this.isAdmin === false){
+      this.authService.isAdmin().subscribe(isUserAdmin => {
+        this.isAdmin = isUserAdmin;
+      });
+    }
   }
 
   onClick(event: Event): void {
