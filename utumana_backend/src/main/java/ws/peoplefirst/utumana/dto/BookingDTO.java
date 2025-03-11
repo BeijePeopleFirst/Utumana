@@ -2,6 +2,8 @@ package ws.peoplefirst.utumana.dto;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Min;
@@ -17,9 +19,11 @@ public class BookingDTO {
 	@Schema(description = "DTO of the booked accommodation")
 	private AccommodationDTO accommodation;
 	
+	@JsonProperty(value = "check_in")
 	@Schema(description = "check-in's date and time in ISO format", example = "2024-11-18T14:00:00")
 	private String checkIn;
 	
+	@JsonProperty(value = "check_out")
 	@Schema(description = "check-out's date and time in ISO format", example = "2024-11-25T10:00:00")
 	private String checkOut;
 	

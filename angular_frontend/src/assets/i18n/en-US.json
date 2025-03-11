@@ -155,8 +155,8 @@
 	"save": "Save"
 },
 "bookings": {
-	"checkIn":"Check-in",
-	"checkOut":"Check-out",
+	"check_in":"Check-in",
+	"check_out":"Check-out",
 	"price":"price",
 	"free": "free",
 	"review": "Write review",

@@ -155,8 +155,8 @@
 	"save": "Salva"
 },
 "bookings":{
-	"checkIn":"Check-in",
-	"checkOut":"Check-out",
+	"check_in":"Check-in",
+	"check_out":"Check-out",
 	"price":"prezzo",
 	"free": "gratis",
 	"review": "Lascia una recensione",
