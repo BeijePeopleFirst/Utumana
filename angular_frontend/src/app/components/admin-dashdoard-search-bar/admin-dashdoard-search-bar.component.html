@@ -1,27 +1,27 @@
-<form [formGroup]="searchForm" (ngSubmit)="search()" class="w-full mb-1">
-    <div class="grid grid-cols-1 md:grid-cols-4 sm:grid-cols-2 gap-4 mb-4">
+<form [formGroup]="searchForm" (ngSubmit)="search()" class="flex flex-row flex-wrap gap-4 justify-center mb-1 w-full">
+    <div class="grid grid-cols-1 gap-4 mb-4 lg:grid-cols-4 sm:grid-cols-2 grow">
       <div class="flex flex-col">
-        <label class="label-primary mb-1">{{'admin-dashdoard-search-bar.title' | translate}}</label>
+        <label class="mb-1 label-primary">{{'admin-dashdoard-search-bar.title' | translate}}</label>
         <input type="text" formControlName="title" class="input-primary" />
       </div>
       
       <div class="flex flex-col">
-        <label class="label-primary mb-1">{{'admin-dashdoard-search-bar.ownerName' | translate}}</label>
+        <label class="mb-1 label-primary">{{'admin-dashdoard-search-bar.ownerName' | translate}}</label>
         <input type="text" formControlName="ownerName" class="input-primary" />
       </div>
       
       <div class="flex flex-col">
-        <label class="label-primary mb-1">{{'admin-dashdoard-search-bar.ownerSurname' | translate}}</label>
+        <label class="mb-1 label-primary">{{'admin-dashdoard-search-bar.ownerSurname' | translate}}</label>
         <input type="text" formControlName="ownerSurname" class="input-primary" />
       </div>
       
       <div class="flex flex-col">
-        <label class="label-primary mb-1">{{'admin-dashdoard-search-bar.city' | translate}}</label>
+        <label class="mb-1 label-primary">{{'admin-dashdoard-search-bar.city' | translate}}</label>
         <input type="text" formControlName="city" class="input-primary" />
       </div>
     </div>
     
-    <div class="flex justify-end">
-      <button type="submit" class="btn-primary">{{'admin-dashdoard-search-bar.search' | translate}}</button>
+    <div class="justify-self-end self-center">
+      <button type="submit" class="mt-1.5 h-10 btn-primary w-fit">{{'admin-dashdoard-search-bar.search' | translate}}</button>
     </div>
   </form>

@@ -71,6 +71,7 @@ import { AdminDashboardProfileComponent } from './components/admin-dashboard-pro
 import { AdminDashboardProfileListComponent } from './components/admin-dashboard-profile-list/admin-dashboard-profile-list.component';
 import { AdminDashboardMetricsComponent } from './components/admin-dashboard-metrics/admin-dashboard-metrics.component';
 import { AdminDashdoardSearchBarComponent } from './components/admin-dashdoard-search-bar/admin-dashdoard-search-bar.component';
+import { AdminDashboardCustomizeComponent } from './components/admin-dashboard-customize/admin-dashboard-customize.component';
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
@@ -133,7 +134,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     AdminDashboardProfileComponent,
     AdminDashboardProfileListComponent,
     AdminDashboardMetricsComponent,
-    AdminDashdoardSearchBarComponent
+    AdminDashdoardSearchBarComponent,
+    AdminDashboardCustomizeComponent
   ],
   imports: [
     BrowserModule,
