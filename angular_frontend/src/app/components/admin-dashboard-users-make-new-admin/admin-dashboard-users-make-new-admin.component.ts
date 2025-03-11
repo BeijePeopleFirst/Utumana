@@ -1,6 +1,7 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { debounceTime, distinctUntilChanged, map, Observable, Subject, switchMap } from 'rxjs';
 import { UserDTO } from 'src/app/dtos/userDTO';
+import { AuthService } from 'src/app/services/auth.service';
 import { UserService } from 'src/app/services/user.service';
 import { imagesURL } from 'src/costants';
 
@@ -23,7 +24,10 @@ export class AdminDashboardUsersMakeNewAdminComponent {
   private searchTerms = new Subject<string>();
   @ViewChild('searchBox') searchBox!: ElementRef<HTMLInputElement>;
 
-  constructor(private userService: UserService) {
+  constructor(
+    private userService: UserService,
+    private authService: AuthService
+  ) {
     this.currentUserId = localStorage.getItem('id') ? Number(localStorage.getItem('id')) : 0;
   }
 
@@ -71,6 +75,7 @@ export class AdminDashboardUsersMakeNewAdminComponent {
           });
           setTimeout(() => {
             this.closeRevokePrivilegesModal();
+            this.authService.logout();
           }, 3000);
         }else{
           this.error = true;
