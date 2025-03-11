@@ -1,7 +1,8 @@
+import { FormStyle, TranslationWidth, getLocaleDayNames } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Params } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, map, Observable, tap } from 'rxjs';
+import { BehaviorSubject, map, Observable, Subscription, tap } from 'rxjs';
 import { PartialBooking } from 'src/app/dtos/bookingDTO';
 import { Accommodation } from 'src/app/models/accommodation';
 import { Availability } from 'src/app/models/availability';
@@ -23,17 +24,23 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
 
   chosenOne: PartialBooking = {};
 
-  currentMonth!: { name: string; days: number[]; monthIndex: number; year: number };
-  previousMonth!: { name: string; days: number[]; monthIndex: number; year: number };
+  currentMonth!: { name: string; days: number[]; monthIndex: number; year: number; firstDayIndex: number };
+  previousMonth!: { name: string; days: number[]; monthIndex: number; year: number; firstDayIndex: number };
 
+  // Weekday names for the calendar headers
+  
   alreadySelectedStart: boolean = false;
-
+  
   //availabilityCacheImproved: Map<string, boolean> = new Map<string, boolean>();
   selectedDays: Map<string, boolean> = new Map<string, boolean>();
-
+  
   check_in_time: number = 14; // hours
   check_out_time: number = 10; // hours
-
+  
+  locale: string = 'en';
+  localeSubscription?: Subscription;
+  
+  weekdays: readonly string[] = getLocaleDayNames(this.locale, FormStyle.Standalone, TranslationWidth.Short);
   constructor(
     private accommodationService: AccommodationService,
     private translateService: TranslateService
@@ -47,6 +54,7 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
+
     console.log("Availabilities received: ", this.availabilities);
     if(this.queryParamsFromParent && this.queryParamsFromParent["start_date"] && this.queryParamsFromParent["end_date"]) {
       this.chosenOne.check_in = new Date(this.queryParamsFromParent["start_date"]);
@@ -54,6 +62,13 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
       this.chosenOne.check_out = new Date(this.queryParamsFromParent["end_date"]);
       this.chosenOne.check_out.setHours(this.check_out_time, 0, 0, 0);
     }
+    this.localeSubscription = this.translateService.onLangChange.subscribe(
+      event =>  {
+        this.locale = event.lang.slice(0,2);
+        this.weekdays = getLocaleDayNames(this.locale, FormStyle.Standalone, TranslationWidth.Short);
+      }
+    );
+
 
     this.initializeCalendars(new Date().getFullYear(), new Date().getMonth());
     this.navigateMonths(+1);
@@ -72,11 +87,15 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
       'July', 'August', 'September', 'October', 'November', 'December'
     ];
     const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const firstDay = new Date(year, month, 1);
+    const firstDayIndex = (firstDay.getDay()) ; // gerDay() 0 = Sunday, 1 = Monday, etc.
+    
     return {
       name: monthNames[month],
       days: Array.from({ length: daysInMonth }, (_, i) => i + 1),
       monthIndex: month,
-      year: year
+      year: year,
+      firstDayIndex: firstDayIndex
     };
   }
 
@@ -186,6 +205,11 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
     this.alreadySelectedStart = false;
 
     this.sendBookingPeriod();
+  }
+
+  // Helper method to generate empty cells for the calendar grid
+  getEmptyCells(firstDayIndex: number): number[] {
+    return Array.from({ length: firstDayIndex }, (_, i) => i);
   }
 
 }
