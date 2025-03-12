@@ -55,6 +55,7 @@ export class AdminDashboardUsersMakeNewAdminComponent {
   showRevokePrivilegesModal(user: UserDTO) {
     this.selectedUser = user;
     this.isRevokePrivilegeseModalOpen = true;
+    document.body.style.overflow = 'hidden';
     console.log("User: ", user, ", currentUserId: ", this.currentUserId);
   }
 
@@ -63,6 +64,7 @@ export class AdminDashboardUsersMakeNewAdminComponent {
     this.selectedUser = null;
     this.error = false;
     this.success = false;
+    document.body.style.overflow = 'auto';
   }
 
   revokeAdminPrivileges() {
@@ -93,6 +95,7 @@ export class AdminDashboardUsersMakeNewAdminComponent {
   showMakeAdminModal(user: UserDTO) {
     this.selectedUser = user;
     this.isMakeAdminModalOpen = true;
+    document.body.style.overflow = 'hidden';
   }
 
   closeMakeAdminModal(){
@@ -100,6 +103,7 @@ export class AdminDashboardUsersMakeNewAdminComponent {
     this.selectedUser = null;
     this.error = false;
     this.success = false;
+    document.body.style.overflow = 'auto';
   }
 
   makeAdmin(){

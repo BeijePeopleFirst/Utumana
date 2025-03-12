@@ -534,6 +534,11 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
   
   toggleViewMorePhotosPerspective() {
     this.showViewMorePhotosPerspective = !this.showViewMorePhotosPerspective;
+    if(this.showViewMorePhotosPerspective === true){
+      document.body.style.overflow = 'hidden';
+    }else{
+      document.body.style.overflow = 'auto';
+    }
   }
 
   toggleEditPhotosPerspective() {
