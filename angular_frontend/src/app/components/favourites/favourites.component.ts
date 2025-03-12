@@ -8,12 +8,13 @@ import { AccommodationService } from 'src/app/services/accommodation.service';
   templateUrl: './favourites.component.html',
   styleUrls: ['./favourites.component.css']
 })
-export class FavouritesComponent implements OnInit {
+export class FavouritesComponent implements OnInit, OnDestroy {
   favourites$!: Observable<AccommodationDTO[]> ;
   allFavourites!: AccommodationDTO[];
   favouritesPageSize!: number;
   favouritesPageNumber!: number;
   favouritesTotalPages!: number;
+  refreshFavourites!: Subscription;
 
   constructor(
       private accommodationService: AccommodationService
@@ -22,6 +23,18 @@ export class FavouritesComponent implements OnInit {
   ngOnInit(): void {
     this.favouritesPageSize = 4;
     this.favouritesPageNumber = 0;
+    this.loadFavourites();
+
+    this.refreshFavourites = this.accommodationService.refreshFavourites$.subscribe(() => {
+      this.loadFavourites();
+    })
+  }
+
+  ngOnDestroy(): void {
+    this.refreshFavourites.unsubscribe();
+  }
+
+  loadFavourites(): void {
     this.accommodationService.getFavourites().subscribe(favourites => {
       this.favouritesTotalPages = Math.ceil( favourites.length / this.favouritesPageSize );
       if(favourites.length === 0){

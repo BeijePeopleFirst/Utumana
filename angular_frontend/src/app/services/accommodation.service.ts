@@ -27,8 +27,9 @@ export class AccommodationService {
   private mostLikedAccommodationsSubject = new BehaviorSubject<AccommodationDTO[]>([]);
   public mostLikedAccommodations$ = this.mostLikedAccommodationsSubject.asObservable();
   
-  private favouritesSubject = new BehaviorSubject<AccommodationDTO[]>([]);
-  public favourites$ = this.favouritesSubject.asObservable();
+  // private favouritesSubject = new BehaviorSubject<AccommodationDTO[]>([]);
+  // public favourites$ = this.favouritesSubject.asObservable();
+  public refreshFavourites$ = new Subject<void>();
   
   private foundAccommodationsSubject = new BehaviorSubject<AccommodationDTO[]>([]);
   public foundAccommodations$ = this.foundAccommodationsSubject.asObservable();
@@ -385,38 +386,40 @@ export class AccommodationService {
     
     return this.http.patch<Accommodation | null | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/remove-favourite/" + userId + "/" + id, {})
     .pipe(
+      tap(_ => this.refreshFavourites$.next()),
       catchError(
         error => {
-                            console.error(error);
-                            return of();
-                          }
-                        )
-                      )
-                      
-                    }
-                    
-                    ///add-favourite/{user_id}/{accommodation_id}
-                    addFavourite(userId: number, id: number): Observable<Accommodation | null | {message: string, status: string, time: string}> {
-                      //let headers = this.getAuth();
-                      
-                      return this.http.patch<Accommodation | null | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/add-favourite/" + userId + "/" + id, {})
-                      .pipe(
-                        catchError(
-                          error => {
-                            console.error(error);
-                            return of();
-                          }
-                        )
-                      )
-                    }
-                    
-                    addFavouriteToCurrentUser(accommodationId: number): Observable<Boolean> {
-                      const userId = localStorage.getItem("id");
-                      if(!userId){
-                        return of(false);
+            console.error(error);
+            return of();
+          }
+      )
+    )
+  }
+    
+  ///add-favourite/{user_id}/{accommodation_id}
+  addFavourite(userId: number, id: number): Observable<Accommodation | null | {message: string, status: string, time: string}> {
+    //let headers = this.getAuth();
+    
+    return this.http.patch<Accommodation | null | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/add-favourite/" + userId + "/" + id, {})
+    .pipe(
+      tap(_ => this.refreshFavourites$.next()),
+      catchError(
+        error => {
+          console.error(error);
+          return of();
+        }
+      )
+    )
+  }
+    
+  addFavouriteToCurrentUser(accommodationId: number): Observable<Boolean> {
+    const userId = localStorage.getItem("id");
+    if(!userId){
+      return of(false);
     }
     return this.http.patch<Accommodation>(`${BACKEND_URL_PREFIX}/api/add-favourite/${userId}/${accommodationId}`, {}).pipe(
       map(_ =>  true),
+      tap(_ => this.refreshFavourites$.next()),
       catchError(err => {
         console.log(err.error);
         return of(false);
@@ -431,6 +434,7 @@ export class AccommodationService {
     }
     return this.http.patch<Accommodation>(`${BACKEND_URL_PREFIX}/api/remove-favourite/${userId}/${accommodationId}`, {}).pipe(
       map(_ =>  true),
+      tap(_ => this.refreshFavourites$.next()),
       catchError(err => {
         console.log(err.error);
         return of(false);

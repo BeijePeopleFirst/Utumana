@@ -78,6 +78,14 @@ export class ConfirmBookingBooknowComponent implements OnInit {
     )
   }
 
+  goToMyBookings() {
+    localStorage.removeItem("created_booking");
+    
+
+    this.router.navigate(["/my_bookings/"]);
+    return;
+  }
+
   invalidDateProvided!: boolean;
   goBack() {
     localStorage.removeItem("created_booking");
@@ -155,7 +163,7 @@ export class ConfirmBookingBooknowComponent implements OnInit {
             this.messagesCommunications = true;
             this.redirectInFewSeconds = true;
 
-            setTimeout(() => this.goBack(), 3500);
+            setTimeout(() => this.goToMyBookings(), 3500);
           }
         });
     else {
@@ -193,7 +201,7 @@ export class ConfirmBookingBooknowComponent implements OnInit {
             this.messagesCommunications = true;
             this.redirectInFewSeconds = true;
 
-            setTimeout(() => this.goBack(), 3500);
+            setTimeout(() => this.goToMyBookings(), 3500);
           }
         });
     }
