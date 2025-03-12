@@ -80,7 +80,7 @@ export class AdminDashboardUsersMakeNewAdminComponent {
               this.authService.logout();
             }
             this.closeRevokePrivilegesModal();
-          }, 3000);
+          }, 1500);
         }else{
           this.error = true;
         }
@@ -118,7 +118,7 @@ export class AdminDashboardUsersMakeNewAdminComponent {
           this.searchTerms.next('');
           setTimeout(() => {
             this.closeMakeAdminModal();
-          }, 3000);
+          }, 1500);
         }else{
           this.error = true;
         }
