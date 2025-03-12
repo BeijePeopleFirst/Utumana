@@ -19,7 +19,7 @@ export class AccommodationCardComponent implements OnInit {
   iconsUrl: string = iconURL;
   isAdmin: boolean | null = null;
   @Input() status!: string;
-
+  genericHouseUrl: string = iconURL + '/no-picture.png';
   isAcceptRejectModalOpen: boolean = false;
   acceptRejectAction: string = '';
   @Output() refresh = new EventEmitter<void>();

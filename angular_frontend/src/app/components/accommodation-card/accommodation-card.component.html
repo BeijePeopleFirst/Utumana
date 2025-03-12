@@ -1,7 +1,16 @@
 <div *ngIf="accommodation" class="w-72 group hover:-translate-y-2">
   <a class="clickable_card" (click)="onClick($event)">
     <div class="flex overflow-hidden flex-col flex-1 bg-white rounded-lg shadow-lg" >
-        <img [src]="accommodation.main_photo_blob_url" [alt]="accommodation.main_photo_url" class="object-cover h-64">
+        <img *ngIf="accommodation.main_photo_blob_url; else no_photo" [src]="accommodation.main_photo_blob_url" [alt]="accommodation.main_photo_url" class="object-cover h-64">
+        <ng-template #no_photo>
+          <div class="flex justify-center items-center h-64">
+            <div class="loader"></div>
+        </div>
+        </ng-template>
+
+
+
+      
         <button class="heart" (click)="heartClick = true">
           <img *ngIf="!accommodation.is_favourite" src="{{iconsUrl}}\\heart-empty.png" alt="add to favorites">
           <img *ngIf="accommodation.is_favourite" src="{{iconsUrl}}\\heart-full.png" alt="remove from favorites">
