@@ -85,7 +85,8 @@
 	"title-label": "Title",
 	"error-title": "Invalid Title",
 	"error-edit-title": "Error occurred while updating Title",
-	"success-edit-title": "Title Updated Successfully"
+	"success-edit-title": "Title Updated Successfully",
+	"selected-services": "Selected Services"
 },
 "admin-dashboard-accommodations": {
 	"approve_reject_title": "Approve/Reject accommodations",
