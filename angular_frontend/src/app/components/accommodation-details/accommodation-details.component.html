@@ -43,28 +43,28 @@
         </div>
   
         <!-- 🖼️ Carousel Immagini -->
-        <div id="images" class="flex relative flex-row flex-wrap gap-1.5 justify-center mt-8">
+        <div id="images" class="flex relative flex-row flex-wrap gap-1.5 justify-center mt-8 w-fit">
 
           <!-- TODO ALL IMAGES + CAROUSEL -->
           <!-- -------------------------------------------------------------------------------------- -->
-          <img id="biggest-image" [src]="accommodation.photos[0].blob_url" class="w-96" />
+          <img id="biggest-image" [src]="accommodation.photos[0].blob_url" class="h-96" />
 
           <img src="/assets/icons/pencil.png" (click)="toggleEditPhotosPerspective()" class="-top-4 -right-10 w-6 h-6 icon" *ngIf="accommodation.photos.length === 1 && isMe" id="pencil-one-image" />
           
           <div *ngIf="accommodation.photos.length > 1" id="other-images" class="flex flex-col gap-1.5">
             <div class="flex flex-row gap-1.5">
-              <img id="image-oth1" [src]="accommodation.photos[1].blob_url" class="w-44" />
+              <img id="image-oth1" [src]="accommodation.photos[1].blob_url" class="h-44" />
               <img src="/assets/icons/pencil.png" (click)="toggleEditPhotosPerspective()" class="-top-4 -right-10 w-6 h-6 icon" *ngIf="accommodation.photos.length === 2 && isMe" id="pencil-two-images" />
               <div>
-                <img id="image-oth2" [src]="accommodation.photos[2].blob_url" class="w-44" *ngIf="accommodation.photos.length > 2" />
+                <img id="image-oth2" [src]="accommodation.photos[2].blob_url" class="h-44" *ngIf="accommodation.photos.length > 2" />
                 <img src="/assets/icons/pencil.png" (click)="toggleEditPhotosPerspective()" *ngIf="accommodation.photos.length >= 3 && isMe" id="pencil-three-images" class="-top-4 -right-10 w-6 h-6 icon" />
               </div>
             </div>
 
             <div class="flex flex-row gap-1.5" *ngIf="accommodation.photos.length > 3">
-              <img id="image-oth3" [src]="accommodation.photos[3].blob_url" class="w-44" />
+              <img id="image-oth3" [src]="accommodation.photos[3].blob_url" class="h-44" />
               <div>
-                <img id="image-oth4" [src]="accommodation.photos[4].blob_url" class="w-44" *ngIf="accommodation.photos.length > 4" />
+                <img id="image-oth4" [src]="accommodation.photos[4].blob_url" class="h-44" *ngIf="accommodation.photos.length > 4" />
                 <div class="absolute right-0 bottom-0 cursor-pointer" (click)="toggleViewMorePhotosPerspective()" *ngIf="accommodation.photos.length > 5">{{("accommodation-card-details.view-more-photos" | translate)}}</div>
               </div>
             </div>
