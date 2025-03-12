@@ -12,10 +12,13 @@ export class AdminDashboardAcceptRejectModalComponent {
   @Input() action!: string;
   @Output() closeModal = new EventEmitter<boolean>();
   error: boolean = false;
+  success: boolean = false;
 
   constructor(private accommodationService: AccommodationService){}
 
   close(): void {
+    this.success = false;
+    this.error = false;
     this.closeModal.emit(false);
   }
 
@@ -25,7 +28,10 @@ export class AdminDashboardAcceptRejectModalComponent {
     this.accommodationService.approveAccommodation(this.accommodationId).subscribe({
       next: (acc) => {
         if(acc){
-          this.closeModal.emit(true);
+          this.success = true;
+          setTimeout(() => {
+            this.closeModal.emit(true);
+          }, 1500);
         }else{
           // show error message
           this.error = true;
@@ -44,7 +50,10 @@ export class AdminDashboardAcceptRejectModalComponent {
     this.accommodationService.rejectAccommodation(this.accommodationId).subscribe({
       next: (acc) => {
         if(acc){
-          this.closeModal.emit(true);
+          this.success = true;
+          setTimeout(() => {
+            this.closeModal.emit(true);
+          }, 1500);
         }else{
           // show error message
           this.error = true;
