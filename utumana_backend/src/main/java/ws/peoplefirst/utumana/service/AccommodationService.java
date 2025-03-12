@@ -27,6 +27,7 @@ import ws.peoplefirst.utumana.utility.BookingStatus;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -888,10 +889,12 @@ public class AccommodationService {
                 checkIn = b.getCheckIn().toLocalDate();
                 checkOut = b.getCheckOut().toLocalDate();
                 cursor = checkIn.plusDays(1);
+                System.out.println("Stampo CHECKIN ->" + checkIn.plusDays(1));
 
                 while (cursor.isBefore(checkOut) || cursor.isEqual(checkOut)) {
                     occupiedDates.add(cursor);
                     cursor = cursor.plus(Period.ofDays(1));
+                    System.out.println("Stampo la lista in costruzione -> " + cursor);
                 }
 
                 if(!availableDates.contains(checkIn.minus(Period.ofDays(1)))) occupiedDates.add(checkIn);
@@ -902,13 +905,22 @@ public class AccommodationService {
 
             // Now I sort the dates list for the occupied ones:
             Collections.sort(occupiedDates);
+            System.out.println("Stampo occupied coomeback -> " + occupiedDates);
+
+
 
             LocalDate d = availableDates.get(0);
-            while(d.isBefore(availableDates.get(availableDates.size() -1)) || d.isEqual(availableDates.get(availableDates.size() -1))) {
 
-                if(availableDates.contains(d) && !occupiedDates.contains(d)) availabilities.add(createDateString(d));
+            int i = 0;
+            while(i < availableDates.size()) {
 
-                d = d.plus(Period.ofDays(1));
+                if(d.isEqual(LocalDate.of(2026, Month.JANUARY, 2))) System.out.println(availableDates.contains(d) + "" + occupiedDates.contains(d));
+
+                //System.out.println("\n\nStampo occupied ancora -> " + occupiedDates);
+
+                if(!occupiedDates.contains(d)) availabilities.add(createDateString(d));
+
+                d = availableDates.get(i++);
             }
 
             System.out.println("CHECK OUT LIST -> " + availabilities);

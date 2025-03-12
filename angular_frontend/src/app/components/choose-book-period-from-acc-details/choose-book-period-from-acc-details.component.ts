@@ -120,12 +120,19 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
 
       let stringTest: string = this.getStringFromInputParams(day, monthName, year);
 
-      let latestIndex: number = this.getFirstNotLecitCheckOutDate(this.checkOutList, this.chosenOne.start_date);
+      let lastIndex: number = this.getFirstNotLecitCheckOutDate(this.checkOutList, this.chosenOne.start_date);
 
-      console.log("PROVA -> ", latestIndex, this.checkOutList[latestIndex]);
+      console.log("PROVA -> ", lastIndex, this.checkOutList[lastIndex]);
 
-      this.currentList = this.checkOutList.slice(this.checkInList.indexOf(stringTest)-1, latestIndex);  //Togliere -1 ?
-      console.log(this.currentList);
+      //this.currentList = this.checkOutList.slice(this.checkInList.indexOf(stringTest)-1, latestIndex);
+
+      let indexStringTest: number = this.checkInList.indexOf(stringTest);
+
+      if(indexStringTest !== 0 && this.checkOutList.includes(stringTest)) this.currentList = this.checkOutList.slice(this.checkInList.indexOf(stringTest)-1, lastIndex);
+      else this.currentList = this.checkOutList.slice(this.checkInList.indexOf(stringTest), lastIndex);
+
+      //this.currentList = this.checkOutList.slice(-1, indexStringTest);
+      console.log("ciccio",this.currentList);
       console.log(this.checkOutList);
     }
     else {
