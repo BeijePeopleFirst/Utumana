@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { firstValueFrom, forkJoin, map, Observable, of } from 'rxjs';
 import { AccommodationDTO } from 'src/app/dtos/accommodationDTO';
 import { AccommodationService } from 'src/app/services/accommodation.service';
 import { DraftService } from 'src/app/services/draft.service';
@@ -42,7 +43,8 @@ export class MyAccommodationsComponent implements OnInit {
 
   constructor(
       private accommodationService: AccommodationService,
-      private draftService: DraftService
+      private draftService: DraftService,
+      private route: ActivatedRoute
     ){
       this.ownerId = this.draftService.getOwnerId();
   }
@@ -50,41 +52,64 @@ export class MyAccommodationsComponent implements OnInit {
   ngOnInit(): void {
     this.accommodationsPageSize = 4;
     this.accommodationsPageNumber = 0;
-    this.accommodationService.getMyAccommodations().subscribe(accommodations => {
-      this.accommodationsTotalPages = Math.ceil( accommodations.length / this.accommodationsPageSize );
-      this.accommodationService.getPrices(accommodations).subscribe(updated => {
-        this.allAccommodations = updated;
-        this.accommodations$ = of(updated.slice(0, this.accommodationsPageSize));
-      });
-    });
+    const getAccommodations = this.accommodationService.getMyAccommodations().pipe(
+      map((async accommodations => {
+        this.accommodationsTotalPages = Math.ceil( accommodations.length / this.accommodationsPageSize );
+        const getPrices = this.accommodationService.getPrices(accommodations);
+        await firstValueFrom(getPrices).then(updated => {
+          this.allAccommodations = updated;
+          this.accommodations$ = of(updated.slice(0, this.accommodationsPageSize));
+        });
+        return this.allAccommodations;
+    })));
 
     this.pendingAccommodationsPageSize = 4;
     this.pendingAccommodationsPageNumber = 0;
-    this.accommodationService.getMyPendingAccommodations().subscribe(accommodations => {
-      this.pendingAccommodationsTotalPages = Math.ceil( accommodations.length / this.pendingAccommodationsPageSize );
-      this.accommodationService.getPrices(accommodations).subscribe(updated => {
-        this.allPendingAccommodations = updated;
-        this.pendingAccommodations$ = of(updated.slice(0, this.pendingAccommodationsPageSize));
-      });
-    });
+    const getPending = this.accommodationService.getMyPendingAccommodations().pipe(
+      map((async accommodations => {
+        this.pendingAccommodationsTotalPages = Math.ceil( accommodations.length / this.pendingAccommodationsPageSize );
+        const getPrices = this.accommodationService.getPrices(accommodations);
+        await firstValueFrom(getPrices).then(updated => {
+          this.allPendingAccommodations = updated;
+          this.pendingAccommodations$ = of(updated.slice(0, this.pendingAccommodationsPageSize));
+        });
+        return this.allPendingAccommodations;
+      })))
 
     this.rejectedAccommodationsPageSize = 4;
     this.rejectedAccommodationsPageNumber = 0;
-    this.accommodationService.getMyRejectedAccommodations().subscribe(accommodations => {
-      this.rejectedAccommodationsTotalPages = Math.ceil( accommodations.length / this.rejectedAccommodationsPageSize );
-      this.accommodationService.getPrices(accommodations).subscribe(updated => {
-        this.allRejectedAccommodations = updated;
-        this.rejectedAccommodations$ = of(updated.slice(0, this.rejectedAccommodationsPageSize));
-      });
-    });
+    const getRejected = this.accommodationService.getMyRejectedAccommodations().pipe(
+      map((async accommodations => {
+        this.rejectedAccommodationsTotalPages = Math.ceil( accommodations.length / this.rejectedAccommodationsPageSize );
+        const getPrices = this.accommodationService.getPrices(accommodations);
+        await firstValueFrom(getPrices).then(updated => {
+          this.allRejectedAccommodations = updated;
+          this.rejectedAccommodations$ = of(updated.slice(0, this.rejectedAccommodationsPageSize));
+        });
+    })));
 
     this.myDraftsPageSize = 4;
     this.myDraftsPageNumber = 0;
-    this.draftService.getDraftsByOwnerId(this.ownerId).subscribe(accommodations => {
-      this.myDraftsTotalPages = Math.ceil( accommodations.length / this.myDraftsPageSize );
-      this.allMyDrafts = accommodations;
-      this.myDrafts$ = of(accommodations.slice(0, this.myDraftsPageSize));
-    });
+    const getDrafts = this.draftService.getDraftsByOwnerId(this.ownerId).pipe(
+      map((accommodations => {
+        this.myDraftsTotalPages = Math.ceil( accommodations.length / this.myDraftsPageSize );
+        this.allMyDrafts = accommodations;
+        this.myDrafts$ = of(accommodations.slice(0, this.myDraftsPageSize));
+        return this.allMyDrafts;
+    })));
+
+    if(this.route.snapshot.fragment === 'drafts') {
+      forkJoin({
+        accommodations: getAccommodations,
+        pendingAccommodations: getPending,
+        rejectedAccommodations: getRejected,
+        drafts: getDrafts
+      }).subscribe(() => {
+          setTimeout(() => {
+            document.getElementById("drafts")?.scrollIntoView({ behavior: "smooth" });
+          }, 450);
+      })
+    }
   }
 
   loadAccommodationsPage(pageNumber: number): void {
