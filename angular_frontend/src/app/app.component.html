@@ -106,7 +106,7 @@
                 <a (click)="closeMenusAndNavigateTo('/my_accommodations', $event)" 
                 class="drop-box"
                 [ngClass]="{'drop-box-menu-open': isMenuOpen === true}">{{'header.accommodations' | translate}}</a>
-                <a *ngIf="isAdmin" (click)="closeMenusAndNavigateTo('/admin-dashboard', $event)" 
+                <a *ngIf="isAdmin === true" (click)="closeMenusAndNavigateTo('/admin-dashboard', $event)" 
                 class="drop-box"
                 [ngClass]="{'drop-box-menu-open': isMenuOpen === true}">{{'header.admin' | translate}}</a>
                 <a (click)="authService.logout()"
