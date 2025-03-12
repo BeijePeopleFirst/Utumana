@@ -7,76 +7,76 @@
   </ng-container>
   
   <ng-container *ngIf="!invalidAccommodation && !userNotLogged" id="accommodation-details-container" class="w-screen">
-    <div class="flex relative flex-col justify-center items-center">
-      <section class="flex flex-col justify-center items-center pt-8 pb-4 space-y-6 w-full bg-neutral-1">
-        <!-- 🏠 Titolo + Preferiti -->
-        <div class="flex flex-row flex-wrap gap-y-6 justify-center items-center px-2 mb-4 space-x-6 text-center">
-          <div class="flex relative flex-row items-center">
-            <h1 class="mb-0">{{ accommodation.title }}</h1>
-            <img *ngIf="isMe" class="ml-2 w-6 h-6 cursor-pointer" src="/assets/icons/pencil.png" (click)="toggleEditTitlePerspective()" />
+    <div class="flex relative flex-col justify-center items-center">      
+      <div class="flex flex-row flex-wrap gap-y-6 justify-center w-full bg-neutral-1">
+        <section class="flex flex-col justify-center items-center pt-8 pb-4 space-y-6 w-full bg-neutral-1">
+          <!-- 🏠 Titolo + Preferiti -->
+          <div class="flex flex-row flex-wrap gap-y-6 justify-center items-center px-2 mb-4 space-x-6 text-center">
+            <div class="flex relative flex-row items-center">
+              <h1 class="mb-0">{{ accommodation.title }}</h1>
+              <img *ngIf="isMe" class="ml-2 w-6 h-6 cursor-pointer" src="/assets/icons/pencil.png" (click)="toggleEditTitlePerspective()" />
+            </div>
+            
+            <div id="heart" class="flex justify-center items-center shrink-0">
+              <img 
+                class="w-8 transition-transform cursor-pointer hover:scale-110" 
+                [src]="isFavourite ? '/assets/icons/heart-full.png' : '/assets/icons/heart-empty.png'" 
+                (click)="toggleIsFavourite()" />
+            </div>
+            <button *ngIf="isAdminOrMe" id="bin-icon" class="flex flex-row xl:absolute xl:right-20 btn-danger w-fit group" (click)="toggleDeleteAccommodation()">
+              <!-- <img class="w-10 transition-transform cursor-pointer hover:scale-110" src="/assets/icons/bin.png" (click)="toggleDeleteAccommodation()" /> -->
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor" class="mr-2 group-hover:scale-105">
+                <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/>
+              </svg>
+              <span class="group-hover:scale-105">{{"accommodation-card-details.delete" | translate}}</span>
+            </button>
           </div>
-          
-          <div id="heart" class="flex justify-center items-center shrink-0">
-            <img 
-              class="w-8 transition-transform cursor-pointer hover:scale-110" 
-              [src]="isFavourite ? '/assets/icons/heart-full.png' : '/assets/icons/heart-empty.png'" 
-              (click)="toggleIsFavourite()" />
+    
+          <!-- 📍 Località -->
+          <div class="flex relative items-center px-2">
+            <p class="text-2xl text-gray-600">
+              <span *ngIf="accommodation.city">{{ accommodation.city }}</span>
+              <span *ngIf="accommodation.city && accommodation.province">, </span> 
+              <span *ngIf="accommodation.province">{{ accommodation.province }}</span>
+              <span *ngIf="(accommodation.province || accommodation.city) && accommodation.country">, </span>
+              <span *ngIf="accommodation.country">{{ accommodation.country }}</span>
+            </p>
           </div>
-          <button *ngIf="isAdminOrMe" id="bin-icon" class="flex flex-row xl:absolute xl:right-20 btn-danger w-fit group" (click)="toggleDeleteAccommodation()">
-            <!-- <img class="w-10 transition-transform cursor-pointer hover:scale-110" src="/assets/icons/bin.png" (click)="toggleDeleteAccommodation()" /> -->
-            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor" class="mr-2 group-hover:scale-105">
-              <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/>
-            </svg>
-            <span class="group-hover:scale-105">{{"accommodation-card-details.delete" | translate}}</span>
-          </button>
-        </div>
-  
-        <!-- 📍 Località -->
-        <div class="flex relative items-center px-2">
-          <p class="text-2xl text-gray-600">
-            <span *ngIf="accommodation.city">{{ accommodation.city }}</span>
-            <span *ngIf="accommodation.city && accommodation.province">, </span> 
-            <span *ngIf="accommodation.province">{{ accommodation.province }}</span>
-            <span *ngIf="(accommodation.province || accommodation.city) && accommodation.country">, </span>
-            <span *ngIf="accommodation.country">{{ accommodation.country }}</span>
-          </p>
-        </div>
-  
+        </section>
+        
+        <div class="flex flex-col gap-y-6 justify-center items-center">
         <!-- 🖼️ Carousel Immagini -->
-        <div id="images" class="flex relative flex-row flex-wrap gap-1.5 justify-center mt-8">
+        <div id="images" class="flex relative flex-row flex-wrap gap-1.5 justify-center mt-8 w-fit">
 
           <!-- TODO ALL IMAGES + CAROUSEL -->
           <!-- -------------------------------------------------------------------------------------- -->
-          <img id="biggest-image" [src]="accommodation.photos[0].blob_url" class="w-96" />
+          <img id="biggest-image" [src]="accommodation.photos[0].blob_url" class="h-96" />
 
           <img src="/assets/icons/pencil.png" (click)="toggleEditPhotosPerspective()" class="-top-4 -right-10 w-6 h-6 icon" *ngIf="accommodation.photos.length === 1 && isMe" id="pencil-one-image" />
           
           <div *ngIf="accommodation.photos.length > 1" id="other-images" class="flex flex-col gap-1.5">
             <div class="flex flex-row gap-1.5">
-              <img id="image-oth1" [src]="accommodation.photos[1].blob_url" class="w-44" />
+              <img id="image-oth1" [src]="accommodation.photos[1].blob_url" class="h-44" />
               <img src="/assets/icons/pencil.png" (click)="toggleEditPhotosPerspective()" class="-top-4 -right-10 w-6 h-6 icon" *ngIf="accommodation.photos.length === 2 && isMe" id="pencil-two-images" />
               <div>
-                <img id="image-oth2" [src]="accommodation.photos[2].blob_url" class="w-44" *ngIf="accommodation.photos.length > 2" />
+                <img id="image-oth2" [src]="accommodation.photos[2].blob_url" class="h-44" *ngIf="accommodation.photos.length > 2" />
                 <img src="/assets/icons/pencil.png" (click)="toggleEditPhotosPerspective()" *ngIf="accommodation.photos.length >= 3 && isMe" id="pencil-three-images" class="-top-4 -right-10 w-6 h-6 icon" />
               </div>
             </div>
 
             <div class="flex flex-row gap-1.5" *ngIf="accommodation.photos.length > 3">
-              <img id="image-oth3" [src]="accommodation.photos[3].blob_url" class="w-44" />
+              <img id="image-oth3" [src]="accommodation.photos[3].blob_url" class="h-44" />
               <div>
-                <img id="image-oth4" [src]="accommodation.photos[4].blob_url" class="w-44" *ngIf="accommodation.photos.length > 4" />
+                <img id="image-oth4" [src]="accommodation.photos[4].blob_url" class="h-44" *ngIf="accommodation.photos.length > 4" />
                 <div class="absolute right-0 bottom-0 cursor-pointer" (click)="toggleViewMorePhotosPerspective()" *ngIf="accommodation.photos.length > 5">{{("accommodation-card-details.view-more-photos" | translate)}}</div>
               </div>
             </div>
           </div>
           <!-- -------------------------------------------------------------------------------------- -->
-        </div>
-      </section>
-      
-      <div class="flex flex-row flex-wrap gap-y-6 justify-center w-full bg-neutral-1">
-        <div class="flex flex-col gap-y-6 justify-center items-center text-center">
+          </div>
+          
           <!-- 🏡 Info Camere -->
-          <div class="flex relative items-center">
+          <div class="flex relative items-center text-center">
             <p class="text-xl">
               {{ accommodation.rooms }} {{"accommodation-card-details.rooms-word" | translate}}, 
               {{ accommodation.beds }} {{"accommodation-card-details.beds-word" | translate}}
@@ -84,7 +84,7 @@
             <img *ngIf="isMe" class="top-0 -right-10 w-6 h-6 icon" src="/assets/icons/pencil.png" (click)="toggleEditRoomsBeds()" />
           </div>
 
-          <p class="px-4 mt-10 text-2xl" *ngIf="isAdminOrMe && accommodation.approval_timestamp">{{("accommodation-card-details.approval-timestamp-text" | translate)}}: {{accommodation.approval_timestamp | date:'medium':undefined:locale}}</p>
+          <p class="px-4 mt-10 text-2xl text-center" *ngIf="isAdminOrMe && accommodation.approval_timestamp">{{("accommodation-card-details.approval-timestamp-text" | translate)}}: {{accommodation.approval_timestamp | date:'medium':undefined:locale}}</p>
     
           <!-- 👤 Info Host -->
           <div id="host-info-div" class="flex items-start p-6 space-x-6 w-screen max-w-3xl rounded-lg shadow-md bg-neutral-1">

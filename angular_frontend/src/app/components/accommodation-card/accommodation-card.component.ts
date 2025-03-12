@@ -17,7 +17,7 @@ export class AccommodationCardComponent implements OnInit {
   book: boolean = false;
   heartClick: boolean = false;
   iconsUrl: string = iconURL;
-  isAdmin: boolean = false;
+  isAdmin: boolean | null = null;
   @Input() status!: string;
 
   isAcceptRejectModalOpen: boolean = false;
@@ -37,7 +37,7 @@ export class AccommodationCardComponent implements OnInit {
       this.isAdmin = is_admin;
     });
     // update isAdmin if logged user refreshes page
-    if(this.isAdmin === false){
+    if(this.isAdmin == null){
       this.authService.isAdmin().subscribe(isUserAdmin => {
         this.isAdmin = isUserAdmin;
       });

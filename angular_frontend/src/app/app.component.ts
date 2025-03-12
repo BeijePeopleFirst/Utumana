@@ -27,7 +27,7 @@ export class AppComponent implements OnInit, DoCheck, OnDestroy {
   title= 'Utumana'; 
   currentYear: number = new Date().getFullYear();
 
-  isAdmin: boolean = false;
+  isAdmin: boolean | null = null;
   checkIsAdmin!: Subscription;
   hasOpenDrafts: boolean = true;
   checkOpenDrafts!: Subscription;
@@ -56,11 +56,12 @@ export class AppComponent implements OnInit, DoCheck, OnDestroy {
     // update isAdmin after user logs in
     this.checkIsAdmin = this.authService.isUserAdmin$.subscribe(isUserAdmin => {
       this.isAdmin = isUserAdmin;
+      console.log("Updated value for isAdmin: ", this.isAdmin);
     });
     // update isAdmin if logged user refreshes page
-    if(this.isAdmin === false){
+    if(this.isAdmin === null){
       this.authService.isAdmin().subscribe(isUserAdmin => {
-        this.isAdmin = isUserAdmin;
+        this.authService.isUserAdmin$.next(isUserAdmin);
       });
     }
 

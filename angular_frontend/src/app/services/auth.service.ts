@@ -16,7 +16,7 @@ import { S3Service } from './s3.service';
 })
 export class AuthService {
   isLoggedIn: boolean = localStorage.getItem("token") != null;
-  isUserAdmin$ = new BehaviorSubject<boolean>(false);
+  isUserAdmin$ = new BehaviorSubject<boolean | null>(null);
   profilePictureUrl$ = new BehaviorSubject<string>('');
 
   private refreshInProgress = false;
@@ -46,6 +46,8 @@ export class AuthService {
         // notify subscribers if user is admin
         if(json.permission.includes("ADMIN")){
           this.isUserAdmin$.next(true);
+        }else{
+          this.isUserAdmin$.next(false);
         }
 
         // notify subscribers if user has open drafts
