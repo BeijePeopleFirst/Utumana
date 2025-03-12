@@ -217,6 +217,18 @@ export class EditPhotosAccommodationDetailsComponent implements OnInit {
   public confirmPhotos(): void {
     this.notConfirmedPhotosIDsEvent.emit([]);
     this.closeThisWindowEvent.emit(true);
+
+    this.accomodation.approval_timestamp = undefined;
+    this.accommodationService.updateAccommodationInfo(this.accomodation).subscribe(
+      response => {
+        if(response && "message" in response) {
+          console.error(response);
+          this.messages = true;
+          this.errorWhileUploadingToS3 = true;
+          return;
+        }
+      }
+    )
   }
 
   clearMessages(): void {

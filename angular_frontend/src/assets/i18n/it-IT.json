@@ -79,7 +79,13 @@
 	"no-services": "Nessun servizio specificato",
 	"reviews-word": "Recensioni",
 	"confirm-acc-deletion-btn-text": "Conferma Eliminazione",
-	"ABORT-acc-deletion-btn-text": "Annulla Operazione"
+	"ABORT-acc-deletion-btn-text": "Annulla Operazione",
+	"confirm-title": "Conferma Titolo",
+	"close-title-gui": "Chiudi",
+	"title-label": "Titolo",
+	"error-title": "Titolo non Valido",
+	"error-edit-title": "Errore durante l' aggiornamento del Titolo",
+	"success-edit-title": "Titolo aggiornato con Successo"
 },
 "admin-dashboard-accommodations": {
 	"approve_reject_title": "Approva/Rifiuta sistemazioni",

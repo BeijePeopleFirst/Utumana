@@ -79,8 +79,14 @@
 	"no-services": "No services specified",
 	"reviews-word": "Reviews",
 	"confirm-acc-deletion-btn-text": "Confirm Deletion",
-	"ABORT-acc-deletion-btn-text": "Cancel Operation"
-	},
+	"ABORT-acc-deletion-btn-text": "Cancel Operation",
+	"confirm-title": "Confirm Title",
+	"close-title-gui": "Close",
+	"title-label": "Title",
+	"error-title": "Invalid Title",
+	"error-edit-title": "Error occurred while updating Title",
+	"success-edit-title": "Title Updated Successfully"
+},
 "admin-dashboard-accommodations": {
 	"approve_reject_title": "Approve/Reject accommodations",
 	"active_title": "Active accommodations",

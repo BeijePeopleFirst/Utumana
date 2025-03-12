@@ -11,7 +11,11 @@
       <section class="flex flex-col items-center justify-center w-full pt-8 pb-4 space-y-6 bg-neutral-1">
         <!-- 🏠 Titolo + Preferiti -->
         <div class="flex flex-row flex-wrap items-center justify-center px-2 mb-4 space-x-6 text-center gap-y-6">
-          <h1 class="mb-0">{{ accommodation.title }}</h1>
+          <div class="relative flex flex-row items-center">
+            <h1 class="mb-0">{{ accommodation.title }}</h1>
+            <img *ngIf="isMe" class="w-6 h-6 ml-2 cursor-pointer" src="/assets/icons/pencil.png" (click)="toggleEditTitlePerspective()" />
+          </div>
+          
           <div id="heart" class="flex items-center justify-center shrink-0">
             <img 
               class="w-8 transition-transform cursor-pointer hover:scale-110" 
@@ -248,6 +252,14 @@
     <h1 class="text-xl text-blue-800" *ngIf="successRejectingReview">
       {{"accommodation-card-details.success-rejecting-review" | translate}}
     </h1>
+
+    <h1 class="text-xl text-blue-800" *ngIf="errorOccurredTitle">
+      {{"accommodation-card-details.error-edit-title" | translate}}
+    </h1>
+
+    <h1 class="text-xl text-blue-800" *ngIf="successUpdateTitle">
+      {{"accommodation-card-details.success-edit-title" | translate}}
+    </h1>
     
   </ng-container>
   <!-------------------------------------------------------------------------------------------------------------------------------------------------->
@@ -380,4 +392,27 @@
   <ng-container *ngIf="showDeleteAccommodationConfirmPopup">
     <ng-container *ngTemplateOutlet="deleteAccommodationConfirmPopup"></ng-container>
   </ng-container>
-  
+
+  <ng-template #editTitlePerspective>
+    <div id="edit-title-main-container" class="fixed inset-0 z-[999] bg-neutral-1/75 overflow-auto flex justify-center items-center">
+      <div class="absolute flex flex-col items-center content-center justify-center p-6 align-middle border-4 border-solid border-primary-dark bg-neutral-2 top-1/2 left-1/2">
+        <div id="edit-title-input-field" class="flex flex-row items-center">
+          <label for="title-input-field" class="text-3xl label-primary">{{('accommodation-card-details.title-label' | translate)}}: </label>
+          <div class="flex flex-col">
+            <input type="text" id="title-input-field" class="p-2 border rounded-md" [(ngModel)]="titleInputField" required />
+            <div *ngIf="titleInputFieldError" class="border-2 alert-danger">
+              {{('accommodation-card-details.error-title' | translate)}}
+            </div>
+          </div>
+        </div>
+        <div id="edit-title-btns" class="flex flex-row items-center align-middle mt-7">
+          <button id="edit-title-confirm" class="h-16 mr-3 btn-primary" (click)="confirmTitleEdit()">{{('accommodation-card-details.confirm-title' | translate)}}</button>
+          <button id="edit-title-close" class="h-16 ml-3 btn-cancel" (click)="toggleEditTitlePerspective()">{{('accommodation-card-details.close-title-gui' | translate)}}</button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-container *ngIf="showEditTitlePerspective">
+    <ng-container *ngTemplateOutlet="editTitlePerspective"></ng-container>
+  </ng-container>
