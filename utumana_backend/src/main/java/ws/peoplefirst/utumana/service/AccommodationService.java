@@ -987,7 +987,7 @@ public class AccommodationService {
     }
 
     public boolean deletePhotosFromAccommodation(Long accommodationId, List<Long> photosIDsToRemove) {
-        // TODO aggiornare gli ordini delle foto che rimangono
+        
         Accommodation acc = this.findById(accommodationId);
         List<Photo> photos = acc.getPhotos();
         List<Photo> resPhotosToRemove = new ArrayList<Photo>();
@@ -1004,6 +1004,19 @@ public class AccommodationService {
             if(!containsPhoto(p, resPhotosToRemove)) res.add(p);
         }
 
+        res = adjustPhotosOrders(res);
+
+        String mainUrl = null;
+        for(Photo p : res) {
+            if(p.getPhotoOrder() == 0) {
+                mainUrl = p.getPhotoUrl();
+                break;
+            }
+        }
+
+
+        acc.setMainPhotoUrl(mainUrl);
+
         acc.setPhotos(res);
         accommodationRepository.save(acc);
 
@@ -1017,6 +1030,15 @@ public class AccommodationService {
         }
 
         return true;
+    }
+
+    private static List<Photo> adjustPhotosOrders(List<Photo> list) {
+
+        for(int i = 0; i < list.size(); i++) {
+            list.get(i).setPhotoOrder(i);
+        }
+
+        return list;
     }
 
     private boolean containsPhoto(Photo p, List<Photo> list) {
