@@ -56,10 +56,9 @@ export class MyAccommodationsComponent implements OnInit {
       map((async accommodations => {
         this.accommodationsTotalPages = Math.ceil( accommodations.length / this.accommodationsPageSize );
         const getPrices = this.accommodationService.getPrices(accommodations);
-        await firstValueFrom(getPrices).then(updated => {
-          this.allAccommodations = updated;
-          this.accommodations$ = of(updated.slice(0, this.accommodationsPageSize));
-        });
+        let updated = await firstValueFrom(getPrices);
+        this.allAccommodations = updated;
+        this.accommodations$ = of(updated.slice(0, this.accommodationsPageSize));
         return this.allAccommodations;
     })));
 
@@ -69,10 +68,9 @@ export class MyAccommodationsComponent implements OnInit {
       map((async accommodations => {
         this.pendingAccommodationsTotalPages = Math.ceil( accommodations.length / this.pendingAccommodationsPageSize );
         const getPrices = this.accommodationService.getPrices(accommodations);
-        await firstValueFrom(getPrices).then(updated => {
-          this.allPendingAccommodations = updated;
-          this.pendingAccommodations$ = of(updated.slice(0, this.pendingAccommodationsPageSize));
-        });
+        let updated = await firstValueFrom(getPrices);
+        this.allPendingAccommodations = updated;
+        this.pendingAccommodations$ = of(updated.slice(0, this.pendingAccommodationsPageSize));
         return this.allPendingAccommodations;
       })))
 
@@ -82,11 +80,11 @@ export class MyAccommodationsComponent implements OnInit {
       map((async accommodations => {
         this.rejectedAccommodationsTotalPages = Math.ceil( accommodations.length / this.rejectedAccommodationsPageSize );
         const getPrices = this.accommodationService.getPrices(accommodations);
-        await firstValueFrom(getPrices).then(updated => {
-          this.allRejectedAccommodations = updated;
-          this.rejectedAccommodations$ = of(updated.slice(0, this.rejectedAccommodationsPageSize));
-        });
-    })));
+        let updated = await firstValueFrom(getPrices);
+        this.allRejectedAccommodations = updated;
+        this.rejectedAccommodations$ = of(updated.slice(0, this.rejectedAccommodationsPageSize));
+        return this.allRejectedAccommodations;
+      })))
 
     this.myDraftsPageSize = 4;
     this.myDraftsPageNumber = 0;
@@ -98,18 +96,19 @@ export class MyAccommodationsComponent implements OnInit {
         return this.allMyDrafts;
     })));
 
-    if(this.route.snapshot.fragment === 'drafts') {
-      forkJoin({
-        accommodations: getAccommodations,
-        pendingAccommodations: getPending,
-        rejectedAccommodations: getRejected,
-        drafts: getDrafts
-      }).subscribe(() => {
-          setTimeout(() => {
-            document.getElementById("drafts")?.scrollIntoView({ behavior: "smooth" });
-          }, 450);
-      })
-    }
+    
+    forkJoin({
+      accommodations: getAccommodations,
+      pendingAccommodations: getPending,
+      rejectedAccommodations: getRejected,
+      drafts: getDrafts
+    }).subscribe(() => {
+      if(this.route.snapshot.fragment === 'drafts') {
+        setTimeout(() => {
+          document.getElementById("drafts")?.scrollIntoView({ behavior: "smooth" });
+        }, 450);
+      }
+    });
   }
 
   loadAccommodationsPage(pageNumber: number): void {
