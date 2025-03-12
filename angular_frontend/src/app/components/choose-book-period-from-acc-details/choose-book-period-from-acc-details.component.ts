@@ -14,7 +14,6 @@ import { AccommodationService } from 'src/app/services/accommodation.service';
   styleUrls: ['./choose-book-period-from-acc-details.component.css']
 })
 export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
-
   @Input() accommodation!: Accommodation;
   @Output() sendChosenPeriod = new EventEmitter<PartialBooking | {message: string}>();
 
@@ -26,6 +25,7 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
 
   currentMonth!: { name: string; days: number[]; monthIndex: number; year: number; firstDayIndex: number };
   previousMonth!: { name: string; days: number[]; monthIndex: number; year: number; firstDayIndex: number };
+  today = new Date();
 
   // Weekday names for the calendar headers
   
@@ -54,7 +54,7 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
-
+console.log(this.today);
     console.log("Availabilities received: ", this.availabilities);
     if(this.queryParamsFromParent && this.queryParamsFromParent["start_date"] && this.queryParamsFromParent["end_date"]) {
       this.chosenOne.check_in = new Date(this.queryParamsFromParent["start_date"]);
@@ -97,6 +97,10 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
       year: year,
       firstDayIndex: firstDayIndex
     };
+  }
+
+  getDataInfo(day: number, month: string, year: number): number {
+    return new Date(this.accommodationService.fetchDate(day, month, year)).getTime() + 86400000;
   }
 
   navigateMonths(direction: number) {

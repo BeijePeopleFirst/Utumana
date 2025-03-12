@@ -39,9 +39,9 @@
           <!-- Calendar days -->
           <div *ngFor="let day of previousMonth.days"
             class="w-9 text-center rounded-md cursor-default">
-            <div *ngIf="!availabilities.includes((day < 10 ? '0'+day : day) + '-' + previousMonth.name + '-' + previousMonth.year)" class="p-2 text-center text-gray-300 line-through">{{day}}</div>
-            <div *ngIf="!isSelectedOrBetween(day, previousMonth.name, previousMonth.year) && availabilities.includes((day < 10 ? '0'+day : day) + '-' + previousMonth.name + '-' + previousMonth.year)" class="p-2 font-semibold text-center no-underline cursor-pointer text-secondary" (click)="selectDay(day, 'previousMonth', previousMonth.name, previousMonth.year)">{{day}}</div>
-            <div *ngIf="isSelectedOrBetween(day, previousMonth.name, previousMonth.year) && availabilities.includes((day < 10 ? '0'+day : day) + '-' + previousMonth.name + '-' + previousMonth.year)" class="p-2 font-semibold text-center text-white rounded-md bg-primary">{{day}}</div>
+            <div *ngIf="getDataInfo(day, previousMonth.name, previousMonth.year) < today.getTime() || !availabilities.includes((day < 10 ? '0'+day : day) + '-' + previousMonth.name + '-' + previousMonth.year)" class="p-1 text-center text-gray-300 line-through">{{day}}</div>
+            <div *ngIf="!isSelectedOrBetween(day, previousMonth.name, previousMonth.year) && availabilities.includes((day < 10 ? '0'+day : day) + '-' + previousMonth.name + '-' + previousMonth.year) && getDataInfo(day, previousMonth.name, previousMonth.year) >= today.getTime()" class="p-1 font-semibold text-center no-underline cursor-pointer text-secondary" (click)="selectDay(day, 'previousMonth', previousMonth.name, previousMonth.year)">{{day}}</div>
+            <div *ngIf="isSelectedOrBetween(day, previousMonth.name, previousMonth.year) && availabilities.includes((day < 10 ? '0'+day : day) + '-' + previousMonth.name + '-' + previousMonth.year) && getDataInfo(day, previousMonth.name, previousMonth.year) >= today.getTime()" class="p-1 font-semibold text-center text-white rounded-md bg-primary">{{day}}</div>
           </div>
         </div>
       </div>
@@ -63,9 +63,9 @@
           <!-- Calendar days -->
           <div *ngFor="let day of currentMonth.days"
           class="w-9 text-center rounded-md cursor-default">
-            <div *ngIf="!availabilities.includes((day < 10 ? '0'+day : day) + '-' + currentMonth.name + '-' + currentMonth.year)" class="p-2 text-center text-gray-300 line-through">{{day}}</div>
-            <div *ngIf="!isSelectedOrBetween(day, currentMonth.name, currentMonth.year) && availabilities.includes((day < 10 ? '0'+day : day) + '-' + currentMonth.name + '-' + currentMonth.year)" class="p-2 font-semibold text-center no-underline cursor-pointer text-secondary" (click)="selectDay(day, 'currentMonth', currentMonth.name, currentMonth.year)">{{day}}</div>
-            <div *ngIf="isSelectedOrBetween(day, currentMonth.name, currentMonth.year) && availabilities.includes((day < 10 ? '0'+day : day) + '-' + currentMonth.name + '-' + currentMonth.year)" class="p-2 font-semibold text-center text-white rounded-md bg-primary">{{day}}</div>
+            <div *ngIf=" getDataInfo(day, currentMonth.name, currentMonth.year) < today.getTime() || !availabilities.includes((day < 10 ? '0'+day : day) + '-' + currentMonth.name + '-' + currentMonth.year)" class="p-1 text-center text-gray-300 line-through">{{day}}</div>
+            <div *ngIf="!isSelectedOrBetween(day, currentMonth.name, currentMonth.year) && availabilities.includes((day < 10 ? '0'+day : day) + '-' + currentMonth.name + '-' + currentMonth.year) && getDataInfo(day, currentMonth.name, currentMonth.year) >= today.getTime()" class="p-1 font-semibold text-center no-underline cursor-pointer text-secondary" (click)="selectDay(day, 'currentMonth', currentMonth.name, currentMonth.year)">{{day}}</div>
+            <div *ngIf="isSelectedOrBetween(day, currentMonth.name, currentMonth.year) && availabilities.includes((day < 10 ? '0'+day : day) + '-' + currentMonth.name + '-' + currentMonth.year) && getDataInfo(day, currentMonth.name, currentMonth.year) >= today.getTime()" class="p-1 font-semibold text-center text-white rounded-md bg-primary">{{day}}</div>
           </div>
         </div>
       </div>
