@@ -41,6 +41,10 @@
         <h1 class="text-xl text-blue-800" *ngIf="successPhotoRemoved">
             {{"edit-photos-accommodation-details.remove-photo-success" | translate}}
         </h1>
+
+        <h1 class="text-xl text-blue-800" *ngIf="errorCannotRemoveLastPhoto">
+            {{"edit-photos-accommodation-details.remove-last-photo-error" | translate}}
+        </h1>
           
     </div>
 </div>

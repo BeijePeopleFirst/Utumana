@@ -316,7 +316,8 @@
 	"file-selection-error": "Error while choosing Files",
 	"S3-upload-error": "Error occurred while processing Files",
 	"remove-photo-error": "Error occurred while removing selected Photo",
-	"remove-photo-success": "Photo Successfully removed"
+	"remove-photo-success": "Photo Successfully removed",
+	"remove-last-photo-error": "The Accommodation must have at least ONE Photo"
 },
 "error": "Unexpected error. Please retry.",
 "favourites": {

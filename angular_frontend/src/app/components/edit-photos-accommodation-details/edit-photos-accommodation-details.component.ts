@@ -30,6 +30,7 @@ export class EditPhotosAccommodationDetailsComponent implements OnInit {
   public errorWhileUploadingToS3: boolean = false;
   public errorRemovingPhoto: boolean = false;
   public successPhotoRemoved: boolean = false;
+  public errorCannotRemoveLastPhoto: boolean = false;
   //----------------------------------------------------
 
 
@@ -68,6 +69,14 @@ export class EditPhotosAccommodationDetailsComponent implements OnInit {
       return;
     }
 
+    if(this.getPhotosRowsElementsNumber(this.photosRows) === 1) {
+
+      this.messages = true;
+      this.errorCannotRemoveLastPhoto = true;
+      return;
+
+    }
+
     this.accommodationService.removePhotosFromAccommodation(this.accomodation.id!, Number(localStorage.getItem("id")!),
                                                               Array.of(id))
             .subscribe(
@@ -88,6 +97,18 @@ export class EditPhotosAccommodationDetailsComponent implements OnInit {
               }
               
             )
+  }
+
+  private getPhotosRowsElementsNumber(list: [Photo, (Photo | null), (Photo | null)][]): number {
+    let counter: number = 0;
+
+    for(let r of list) {
+      if(r[0]) counter++;
+      if(r[1]) counter++;
+      if(r[2]) counter++;
+    }
+
+    return counter;
   }
 
   private removePhotoFromRows(id: number, l: [Photo, (Photo | null), (Photo | null)][]): [Photo, (Photo | null), (Photo | null)][] {
@@ -204,6 +225,7 @@ export class EditPhotosAccommodationDetailsComponent implements OnInit {
     this.errorWhileUploadingToS3 = false;
     this.errorRemovingPhoto = false;
     this.successPhotoRemoved = false;
+    this.errorCannotRemoveLastPhoto = false;
   }
 
 }
