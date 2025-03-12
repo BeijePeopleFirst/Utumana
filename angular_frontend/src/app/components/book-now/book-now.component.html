@@ -1,10 +1,10 @@
 <div class="p-4 bg-neutral-1">
     <!-- Header principale con le frecce per navigare -->
-    <div class="flex items-center justify-between mb-4">
+    <div class="flex gap-x-10 justify-center items-center mb-4 text-center">
       <button (click)="prevMonth()" class="text-2xl text-primary-dark hover:text-primary">
         ⬅️
       </button>
-      <h2 class="text-xl font-semibold text-primary">
+      <h2 class="mb-0 w-64 text-xl">
         {{("book-now-component-from-accommodation-card." + getMonthName()) | translate}} {{ currentYear }}
       </h2>
       <button (click)="nextMonth()" class="text-2xl text-primary-dark hover:text-primary">
@@ -12,7 +12,7 @@
       </button>
     </div>
     <!-- Calendari affiancati con il nome del mese sopra ciascuno -->
-    <div class="flex flex-row items-center content-center justify-center">
+    <div class="flex flex-row justify-center content-center items-center">
       <div class="flex space-x-4">
         <!-- Calendario del mese corrente -->
         <div class="p-2 rounded shadow bg-neutral-2">
@@ -84,18 +84,18 @@
         </div>
       </div>
     </div>
-    <div class="flex flex-row items-center justify-center align-middle" *ngIf="isMe">
+    <div class="flex flex-row justify-center items-center mt-2 align-middle" *ngIf="isMe">
       <input type="checkbox" class="mt-2" id="checkbox-is-an-unavailability" [(ngModel)]="isAnUnavailability" />
       <label for="checkbox-is-an-unavailability" class="mt-2 ml-3 label-primary">{{"book-now-component-from-accommodation-card.is-an-unavailability" | translate}}</label>
     </div>
-    <div id="btn-container" class="flex flex-row items-center justify-center">
-        <button type="button" class="w-auto mt-5 btn-primary" (click)="resetSelectedDates()">{{"book-now-component-from-accommodation-card.reset-choices-word" | translate}}</button>
-        <button type="button" [disabled]="!selectedCheckIn || !selectedCheckOut" class="w-auto mt-5 btn-success" (click)="confirmSelectedDates()">{{"book-now-component-from-accommodation-card.confirm-choices-word" | translate}}</button>
+    <div id="btn-container" class="flex flex-row gap-x-4 justify-center items-center">
+        <button type="button" class="mt-5 w-auto btn-primary" (click)="resetSelectedDates()">{{"book-now-component-from-accommodation-card.reset-choices-word" | translate}}</button>
+        <button type="button" [disabled]="!selectedCheckIn || !selectedCheckOut" class="mt-5 w-auto btn-success" (click)="confirmSelectedDates()">{{"book-now-component-from-accommodation-card.confirm-choices-word" | translate}}</button>
     </div>
   </div>
 
   <ng-container *ngIf="thereAreMessagesToDiplay">
-    <button class="btn-primary mt-14" (click)="clearMessages()">{{"book-now-component-from-accommodation-card.clear-word" | translate}}</button>
+    <button class="mt-14 btn-primary" (click)="clearMessages()">{{"book-now-component-from-accommodation-card.clear-word" | translate}}</button>
 
     <h1 class="text-xl text-blue-800" *ngIf="invalidAccommodationError">
         {{"book-now-component-from-accommodation-card.invalid-accommodation-error" | translate}}
