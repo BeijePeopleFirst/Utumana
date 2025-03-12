@@ -16,6 +16,7 @@ import ws.peoplefirst.utumana.exception.IdNotFoundException;
 import ws.peoplefirst.utumana.exception.InvalidJSONException;
 import ws.peoplefirst.utumana.exception.TheJBeansException;
 import ws.peoplefirst.utumana.model.Accommodation;
+import ws.peoplefirst.utumana.model.Booking;
 import ws.peoplefirst.utumana.model.Review;
 import ws.peoplefirst.utumana.model.User;
 import ws.peoplefirst.utumana.repository.BookingRepository;
@@ -231,8 +232,8 @@ public class AccommodationControllerTest {
     @Test
     void getAvailabilities() {
         when(accommodationService.findById(anyLong())).thenReturn(getInstance(Accommodation.class));
-        when(availabilityService.findAvailableDatesByMonth(anyLong(), anyString(), anyString())).thenReturn(new HashMap<>());
-        assertDoesNotThrow(() -> accommodationController.getAvailabilities(0L, "", ""));
+        when(availabilityService.findAvailableDatesByMonth(anyLong(), anyString(), anyString(), anyLong())).thenReturn(new HashMap<>());
+        assertDoesNotThrow(() -> accommodationController.getAvailabilities(0L, "", "", authentication));
     }
 
     /**
@@ -704,7 +705,7 @@ public class AccommodationControllerTest {
         when(accommodationService.findById(anyLong())).thenReturn(mockAccomodation);
         when(accommodationService.getAccommodationReviews(anyLong())).thenReturn(List.of(getInstance(Review.class)));
         when(bookingService.hasPendingBooking(anyLong(), anyLong())).thenReturn(true);
-        when(bookingService.pendingBooking(anyLong(), anyLong())).thenReturn(0L);
+        when(bookingService.pendingBooking(anyLong(), anyLong())).thenReturn(List.of(getInstance(Booking.class)));
         when(accommodationService.isFavourite(anyLong(), anyLong())).thenReturn(true);
         assertDoesNotThrow(() -> accommodationController.getAccomodationDetails(authentication, 0L));
     }
