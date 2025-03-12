@@ -1,11 +1,13 @@
-<section class="flex justify-center items-center pt-8 bg-neutral-1">
+<section class="flex justify-center items-start pt-8 odd:bg-neutral-1 even:bg-neutral-2 min-h-52"
+  [ngClass]="{
+    'h-[85vh]': (!allMyDrafts || allMyDrafts.length === 0) && (!allPendingAccommodations || allPendingAccommodations.length === 0) && (!allRejectedAccommodations || allRejectedAccommodations.length === 0)}">
     <div class="container p-5 text-center">
       <h2>{{'my_accommodations.title' | translate}}</h2>
       <app-accommodation-cards [accommodations$]="accommodations$" [pageNumber]="accommodationsPageNumber" [totalPages]="accommodationsTotalPages" 
         (askForPage)="loadAccommodationsPage($event)" [status]="'active'"></app-accommodation-cards>
     </div>
 </section>
-<section *ngIf="allPendingAccommodations && allPendingAccommodations.length > 0" class="flex justify-center items-center pt-8 bg-neutral-2">
+<section *ngIf="allPendingAccommodations && allPendingAccommodations.length > 0" class="flex justify-center items-center pt-8 odd:bg-neutral-1 even:bg-neutral-2">
   <div class="container p-5 text-center">
     <h2>{{'my_accommodations.pending' | translate}}</h2>
     <app-accommodation-cards [accommodations$]="pendingAccommodations$" [pageNumber]="pendingAccommodationsPageNumber" [totalPages]="pendingAccommodationsTotalPages" 
@@ -13,7 +15,7 @@
   </div>
 </section>
 <section *ngIf="allRejectedAccommodations && allRejectedAccommodations.length > 0" 
-  [ngClass]="{'bg-neutral-1': allPendingAccommodations.length > 0, 'bg-neutral-2': !allPendingAccommodations.length}" class="flex justify-center items-center pt-8">
+  class="flex justify-center items-center pt-8 odd:bg-neutral-1 even:bg-neutral-2">
   <div class="container p-5 text-center">
     <h2>{{'my_accommodations.rejected' | translate}}</h2>
     <app-accommodation-cards [accommodations$]="rejectedAccommodations$" [pageNumber]="rejectedAccommodationsPageNumber" [totalPages]="rejectedAccommodationsTotalPages" 
@@ -21,8 +23,8 @@
   </div>
 </section>
 
-<div id="drafts" class="flex flex-col w-full">
-  <section *ngIf="allMyDrafts && allMyDrafts.length > 0" class="flex justify-center items-center pt-8 bg-neutral-1">
+<div id="drafts" class="flex flex-col w-full odd:has-[section]:bg-neutral-1 even:has-[section]:bg-neutral-2">
+  <section *ngIf="allMyDrafts && allMyDrafts.length > 0" class="flex justify-center items-center pt-8">
     <div class="container p-5 text-center">
       <h2>{{'my_accommodations.drafts' | translate}}</h2>
       <app-draft-cards [accommodations$]="myDrafts$" [pageNumber]="myDraftsPageNumber" [totalPages]="myDraftsTotalPages" 
@@ -39,7 +41,8 @@
       </div>
   </div>
 </div>
- 
+
+<!-- Delete draft modal -->
 <div *ngIf="showDeleteModal" class="flex fixed inset-0 z-50 justify-center items-center delete-confirmation-modal">
   <div class="fixed inset-0 bg-black bg-opacity-50 modal-backdrop" (click)="cancelDelete()"></div>
   <div class="relative z-10 p-6 mx-4 w-full max-w-md bg-white rounded-lg shadow-lg modal-content">

@@ -10,7 +10,6 @@ import { BookingService } from 'src/app/services/booking.service';
 })
 export class HostDashboardComponent implements OnInit {
   readonly PAGE_SIZE = 2;
-  bgColor = 'bg-neutral-2';
   
   bookings$!: Observable<BookingDTO[]>;
   allHostBookings!: BookingDTO[];
@@ -122,10 +121,5 @@ export class HostDashboardComponent implements OnInit {
     this.doneBookingsPageNumber = pageNumber;
     let offset = this.doneBookingsPageNumber * this.doneBookingsPageSize;
     this.doneBookings$ = of(this.allDoneBookings.slice(offset, offset + this.doneBookingsPageSize));
-  }
-
-  changeBgColor(): string {
-    this.bgColor === 'bg-neutral-1' ? this.bgColor = 'bg-neutral-2' : this.bgColor = 'bg-neutral-1';
-    return this.bgColor;
   }
 }

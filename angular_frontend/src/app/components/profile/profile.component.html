@@ -1,4 +1,4 @@
-<section class="flex justify-center items-center pt-6 pb-4 bg-neutral-1">
+<section class="flex justify-center items-center py-6 odd:bg-neutral-1 even:bg-neutral-2">
     <ng-container *ngIf="user">
         <div class="container flex flex-wrap gap-x-20 justify-center items-center">
             <div class="relative">
@@ -43,9 +43,11 @@
     </ng-container>
 </section>
 
-<app-settings class="bg-neutral-2"></app-settings>
+<section class="odd:bg-neutral-1 even:bg-neutral-2">
+    <app-settings></app-settings>
+</section>
 
-<section class="flex justify-center items-center pt-6 w-screen bg-neutral-1">
+<section class="flex justify-center items-center pt-6 w-screen odd:bg-neutral-1 even:bg-neutral-2 min-h-52">
     <div class="py-5 text-center">
         <h2>{{'profile.reviews_to_accept' | translate}}</h2>
         <app-review-cards [reviews]="waitingReviews" [pageNumber]="waitingReviewsPageNumber" [totalPages]="waitingReviewsTotalPages" 
@@ -54,7 +56,7 @@
     </div>
 </section>
 
-<section class="flex justify-center items-center pt-6 w-screen bg-neutral-2">
+<section class="flex justify-center items-center pt-6 w-screen odd:bg-neutral-1 even:bg-neutral-2 min-h-52">
     <div class="py-5 text-center">
         <h2>{{'profile.reviews_title' | translate}}</h2>
         <app-review-cards [reviews]="reviews" [pageNumber]="reviewsPageNumber" [totalPages]="reviewsTotalPages" 

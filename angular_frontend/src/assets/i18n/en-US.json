@@ -13,7 +13,7 @@
 	"deleted": "Deleted"
 	},
 "accommodations_cards": {
-	"notFound": "No accommodations found"
+	"notFound": "No accommodations"
 	},
 "accommodation-card-details": {
 	"delete": "Delete",
@@ -374,7 +374,8 @@
 	"accepted":"Accepted bookings",
 	"doing":"Ongoing booking",
 	"done":"Past bookings",
-	"no_bookings": "No bookings"
+	"no_bookings": "No bookings",
+	"bookings": "Bookings received"
 	},
 "login": {
 	"welcome": "Welcome back!",

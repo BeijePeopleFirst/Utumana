@@ -13,7 +13,7 @@
 	"deleted": "Eliminato"
 	},
 "accommodations_cards": {
-	"notFound": "Nessuna offerta disponibile"
+	"notFound": "Nessuna sistemazione"
 	},
 "accommodation-card-details": {
 	"delete": "Elimina",
@@ -374,7 +374,8 @@
 	"accepted":"Prenotazioni accettate",
 	"doing":"Prenotazione in corso",
 	"done":"Prenotazioni eseguite",
-	"no_bookings": "Nessuna prenotazione"
+	"no_bookings": "Nessuna prenotazione",
+	"bookings": "Prenotazioni ricevute"
 	},
 "login": {
 	"welcome": "Bentornato!",

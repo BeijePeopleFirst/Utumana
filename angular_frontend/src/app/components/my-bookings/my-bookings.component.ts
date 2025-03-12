@@ -1,10 +1,7 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { Observable, of, Subscription } from 'rxjs';
-import { AccommodationDTO } from 'src/app/dtos/accommodationDTO';
 import { BookingDTO } from 'src/app/dtos/bookingDTO';
 import { BookingService } from 'src/app/services/booking.service';
-import { BookingStatus } from 'src/app/utils/enums';
 
 @Component({
   selector: 'app-my-bookings',
@@ -12,7 +9,6 @@ import { BookingStatus } from 'src/app/utils/enums';
   styleUrls: ['./my-bookings.component.css']
 })
 export class MyBookingsComponent {
-  bgColor = 'bg-neutral-2';
   subscriptions: Subscription = new Subscription();
 
   acceptedBookings$!:Observable<BookingDTO[]>;
