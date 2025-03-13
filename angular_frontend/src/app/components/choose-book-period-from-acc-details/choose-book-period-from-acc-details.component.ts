@@ -56,7 +56,7 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
-console.log(this.today);
+
     if(this.queryParamsFromParent && this.queryParamsFromParent["start_date"] && this.queryParamsFromParent["end_date"]) {
       let tmp1: Date = new Date(this.queryParamsFromParent["start_date"]);
       let tmp2: Date = new Date(this.queryParamsFromParent["end_date"]);

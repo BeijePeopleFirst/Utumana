@@ -766,6 +766,7 @@ public class AccommodationService {
 
         // Now lets retrieve the Accommodation Availabilities and remove from those the occupied days:
         List<Availability> avs = this.availabilityService.findByAccommodationId(accommodationId);
+        List<String> availabilities = new ArrayList<String>();
 
         List<LocalDate> occupiedDates = new ArrayList<LocalDate>(); // From Booking Obj to List of Dates
         List<LocalDate> availableDates = new ArrayList<LocalDate>(); // From Availability Obj to List of Dates
