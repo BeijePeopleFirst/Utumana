@@ -34,13 +34,13 @@
             <tbody>
               <tr *ngFor="let week of calendarLeft">
                 <td *ngFor="let day of week">
-                  <div *ngIf="availabilitiesFinal.includes(day + '-' + getMonthName() + '-' + currentYear) && !isSelected(currentYear, getMonthName(), day)" class="w-full bg-green-500 cursor-pointer" (click)="selectDay(currentYear, getMonthName(), day)">
+                  <div *ngIf="availabilitiesFinal.includes(fetchDayString(day) + '-' + getMonthName() + '-' + currentYear) && !isSelected(currentYear, getMonthName(), day)" class="w-full bg-green-500 cursor-pointer" (click)="selectDay(currentYear, getMonthName(), day)">
                       {{ day || '' }}
                   </div>
-                  <div *ngIf="isSelected(currentYear, getMonthName(), day) && availabilitiesFinal.includes(day + '-' + getMonthName() + '-' + currentYear)" class="w-full bg-blue-800">
+                  <div *ngIf="isSelected(currentYear, getMonthName(), day) && availabilitiesFinal.includes(fetchDayString(day) + '-' + getMonthName() + '-' + currentYear)" class="w-full bg-blue-800">
                       {{ day || '' }}
                   </div>
-                  <div *ngIf="!availabilitiesFinal.includes(day + '-' + getMonthName() + '-' + currentYear)">
+                  <div *ngIf="!availabilitiesFinal.includes(fetchDayString(day) + '-' + getMonthName() + '-' + currentYear)">
                       {{ day || '' }}
                   </div>
                 </td>

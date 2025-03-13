@@ -886,44 +886,45 @@ public class AccommodationController {
 	public ResponseEntity<Map<String, Object>> getAccomodationDetails(Authentication auth, @PathVariable(name = "accommodationId") Long accommodationId) {
 		UserDTO user = (UserDTO) auth.getPrincipal();
 
-		Accommodation accommodation = accommodationService.findById(accommodationId);
+			Accommodation accommodation = accommodationService.findById(accommodationId);
 
-		Map<String, Object> res = new HashMap<>();
+			Map<String, Object> res = new HashMap<>();
 
-		res.put("isAdmin", AuthorizationUtility.hasAdminRole(auth));
-		res.put("isOwner", user.getId().equals(accommodation.getOwnerId()));
+			res.put("isAdmin", AuthorizationUtility.hasAdminRole(auth));
+			res.put("isOwner", user.getId().equals(accommodation.getOwnerId()));
 
-		if (accommodation.getApprovalTimestamp() != null) {
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd, hh:mm");
-			String approval = accommodation.getApprovalTimestamp().format(formatter);
-			res.put("approval", approval);
+			if (accommodation.getApprovalTimestamp() != null) {
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd, hh:mm");
+				String approval = accommodation.getApprovalTimestamp().format(formatter);
+				res.put("approval", approval);
 
-			/*boolean hasPendingBooking = bookingService.hasPendingBooking(user.getId(), accommodationId);
-			res.put("hasPendingBooking", hasPendingBooking);
+				/*boolean hasPendingBooking = bookingService.hasPendingBooking(user.getId(), accommodationId);
+				res.put("hasPendingBooking", hasPendingBooking);
 
-			Long pendingId = bookingService.pendingBooking(user.getId(), accommodationId);
-			if (pendingId != null)
-				res.put("bookingId", pendingId);*/
+				Long pendingId = bookingService.pendingBooking(user.getId(), accommodationId);
+				if (pendingId != null)
+					res.put("bookingId", pendingId);*/
+			}
+
+			//List<Review> reviews = accommodationService.getAccommodationReviews(accommodationId);
+			List<ReviewUserDTO> reviews = accommodationService.getAllAccommodationReviews(accommodationId);System.out.println("\n\nDEBUG: Altro debug5\n\n");
+			res.put("reviews", reviews);
+
+			boolean isFavourite = accommodationService.isFavourite(accommodationId, user.getId());
+			res.put("isFavourite", isFavourite);
+
+			List<Booking> values = bookingService.findByStatusInAndAccommodationId(Arrays.asList(
+					BookingStatus.DOING, BookingStatus.ACCEPTED, BookingStatus.PENDING
+			), accommodationId);
+			
+			List<String> checkInList = this.accommodationService.fetchCheckInListForAccommodation(accommodationId, user, values);
+			res.put("check_in_list", checkInList);
+
+			List<String> checkOutList = this.accommodationService.fetchCheckOutListForAccommodation(accommodationId, user, values);
+			res.put("check_out_list", checkOutList);
+
+			return ok(res);
 		}
-
-		//List<Review> reviews = accommodationService.getAccommodationReviews(accommodationId);
-		List<ReviewUserDTO> reviews = accommodationService.getAllAccommodationReviews(accommodationId);System.out.println("\n\nDEBUG: Altro debug5\n\n");
-		res.put("reviews", reviews);
-
-		boolean isFavourite = accommodationService.isFavourite(accommodationId, user.getId());
-		res.put("isFavourite", isFavourite);
-
-		List<Booking> values = bookingService.findByStatusInAndAccommodationId(Arrays.asList(
-                BookingStatus.DOING, BookingStatus.ACCEPTED
-        ), accommodationId);
-
-		values.addAll(bookingService.pendingBooking(user.getId(), accommodationId));
-		
-		List<String> availabilities = this.accommodationService.fetchFullAvailabilityListForAccommodation(accommodationId, user, values);
-		res.put("availabilities_post_elaboration", availabilities);
-
-		return ok(res);
-	}
 
 	@Operation(summary = "Return the accommodation that has been approved")
     @ApiResponses(value = {

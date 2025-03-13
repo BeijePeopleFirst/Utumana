@@ -113,6 +113,10 @@ export class ConfirmBookingBooknowComponent implements OnInit {
     return;
   }
 
+  private goToMyBookings(): void {
+    this.router.navigate(["/my_bookings"])
+  }
+
   bookNow() {
     this.createdBooking.is_unavailability = this.isUnavailability;
 

@@ -41,7 +41,8 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
   isFavourite: boolean = false;
   isAdminOrMe: boolean = false;
   isMe: boolean = false;
-  accommodationAvailabilities: string[] = [];
+  accommodationCheckIns: string[] = [];
+  accommodationCheckOuts: string[] = [];
 
   accommodationReviews: Review[] = [];
   filteredAccommodationReviews: Review[] = [];
@@ -223,6 +224,7 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
             let tmp4: Boolean | undefined;
             console.log("INFO -> ", info);
             let tmp5: any;
+            let tmp6: any;
 
             let info2 = info as any;
             console.log("INFO2 -> ", info2);
@@ -231,12 +233,12 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
               !("isOwner" in info2) ||
               !("reviews" in info2) ||
               !("isFavourite" in info2) ||
-              !("availabilities_post_elaboration" in info2) ||
+              !("check_in_list" in info2) || !("check_out_list" in info2) || 
               (tmp1 = Boolean(info2["isAdmin"])) == undefined ||
               (tmp2 = Boolean(info2["isOwner"])) == undefined ||
               !(tmp3 = info2["reviews"]) ||
               (tmp4 = Boolean(info2["isFavourite"])) == undefined ||
-              !(tmp5 = info2["availabilities_post_elaboration"])
+              !(tmp5 = info2["check_in_list"]) || !(tmp6 = info2["check_out_list"])
             ) {
               this.errorFetchingAccommodationDetails = true;
               this.message = "true";
@@ -317,9 +319,20 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
               return;
             } else {
               for (let s of tmp5) {
-                this.accommodationAvailabilities.push(s);
+                this.accommodationCheckIns.push(s);
               }
               //console.log("Stampo le availabilities -> ", this.accommodationAvailabilities);
+            }
+
+            if (!Array.isArray(tmp6)) {
+              this.errorFetchingAccommodationDetails = true;
+              this.message = "true";
+              return;
+            } else {
+              for (let s of tmp6) {
+                this.accommodationCheckOuts.push(s);
+              }
+              console.log("PROVA DEBUG DETAILS CHECKOUTS -> ", this.accommodationCheckOuts);
             }
 
             //Ora recupero l' Owner dell' Accommodation:
