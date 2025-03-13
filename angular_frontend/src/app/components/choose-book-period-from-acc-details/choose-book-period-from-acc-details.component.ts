@@ -53,11 +53,14 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
       tmp1.setHours(0, 0, 0, 0);
       tmp2.setHours(0, 0, 0, 0);
 
-      this.chosenOne.start_date = tmp1 + "";
-      this.chosenOne.end_date = tmp2 + "";
-    }
+      this.chosenOne.start_date = tmp1.toLocaleDateString();
+      this.chosenOne.end_date = tmp2.toLocaleDateString();
 
-    this.currentList = this.checkInList;
+      this.selectDay(tmp1.getDate(), this.getMonthNameFromMonthIndex(tmp1.getMonth()), tmp1.getFullYear());
+      this.selectDay(tmp2.getDate(), this.getMonthNameFromMonthIndex(tmp2.getMonth()), tmp2.getFullYear());
+      
+    }
+    else this.currentList = this.checkInList;
 
     this.initializeCalendars(new Date().getFullYear(), new Date().getMonth());
     this.navigateMonths(+1);
@@ -101,7 +104,7 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
 
   private checkInDate: string = "";
   isCheckOutSelected: boolean = false;
-  selectDay(day: number, month: string, monthName: string, year: number) {
+  selectDay(day: number, monthName: string, year: number) {
     this.chosenOne.accommodation_id = this.accommodation.id!;
 
     if(this.chosenOne.start_date != "" && this.chosenOne.end_date != "") {
@@ -116,24 +119,23 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
       console.log(this.chosenOne.start_date);
       this.checkInDate = year + "-" + monthName + "-" + day;
 
-      console.log("Sono QUI");
-
       let stringTest: string = this.getStringFromInputParams(day, monthName, year);
 
       let lastIndex: number = this.getFirstNotLecitCheckOutDate(this.checkOutList, this.chosenOne.start_date);
-
-      console.log("PROVA -> ", lastIndex, this.checkOutList[lastIndex]);
 
       //this.currentList = this.checkOutList.slice(this.checkInList.indexOf(stringTest)-1, latestIndex);
 
       let indexStringTest: number = this.checkInList.indexOf(stringTest);
 
-      if(indexStringTest !== 0 && this.checkOutList.includes(stringTest)) this.currentList = this.checkOutList.slice(this.checkInList.indexOf(stringTest)-1, lastIndex);
-      else this.currentList = this.checkOutList.slice(this.checkInList.indexOf(stringTest), lastIndex);
+      if(indexStringTest !== 0 && this.checkOutList.includes(stringTest)) {
+        this.currentList = this.checkOutList.slice(this.checkInList.indexOf(stringTest)+1, lastIndex);
+      }
+      else {
+        //this.currentList = this.checkOutList.slice(this.checkInList.indexOf(stringTest), lastIndex);
+        let indexFinal: number = this.getFirstNextDayComparedToSelectedCheckIn(stringTest, this.checkOutList);
+        this.currentList = this.checkOutList.slice(indexFinal, lastIndex);
+      }
 
-      //this.currentList = this.checkOutList.slice(-1, indexStringTest);
-      console.log("ciccio",this.currentList);
-      console.log(this.checkOutList);
     }
     else {
       if(Date.parse(this.chosenOne.start_date.split("T")[0]) >= this.accommodationService.fetchDate(day, monthName, year)) {
@@ -144,7 +146,6 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
       this.chosenOne.end_date = new Date(this.accommodationService.fetchDate(day, monthName, year)) + "";
       this.isCheckOutSelected = true;
       this.currentList = this.generateSelectedPeriodOfDates(this.chosenOne.start_date, this.chosenOne.end_date);
-      console.log("FINAL VALUES -> " + this.chosenOne.start_date, this.chosenOne.end_date);
       this.sendAvailability();
     }
 
@@ -161,11 +162,10 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
             let date = this.accommodationService.fetchDate(day, monthName, year);
             let support: Date = new Date(date);
             let res2 = new Map<Date, number>(Object.entries(response1).map(([key, value]) => [new Date(key), value as number]));
-            //console.log(res2);
             
             for(let [a, b] of res2) {
               if((a.setHours(0, 0, 0, 0)) == support.setHours(0, 0, 0, 0)) {
-                console.log("Entro in IF");
+                
                 this.chosenOne.price_per_night = b;
                 console.log("Stampo valore impostato -> ", this.chosenOne.price_per_night);
                 break;
@@ -179,26 +179,32 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
     
   }
 
+  private getFirstNextDayComparedToSelectedCheckIn(s: string, checkOuts: string[]): number {
+
+    let d: Date = this.getDateFromDateString(s);
+
+    for(let i = 0; i < checkOuts.length; i++) {
+      if(this.getDateFromDateString(checkOuts[i]).getTime() > d.getTime()) return i;
+    }
+
+    return -1;
+  }
+
   private getFirstNotLecitCheckOutDate(list: string[], checkIn: string): number {
     let tmp1: Date;
     let tmp2: Date;
 
     let chkInDate: Date = new Date(Date.parse(checkIn));
 
-    console.log("checkIn -> ", chkInDate);
-
     for(let i = 0; i < list.length - 1; i++) {
 
       if(this.getDateFromDateString(list[i]).getTime() <= chkInDate.getTime()) continue;
-
-      //console.log();
 
       tmp1 = this.getDateFromDateString(list[i]);
       tmp2 = this.getDateFromDateString(list[i+1]);
 
       const timeDiff = Math.abs(tmp2.getTime() - tmp1.getTime());
       const diffDays = Math.round(timeDiff / (1000 * 3600 * 24));
-      console.log("Stampo diffDays -> ", diffDays)
       
       // If dates are not consecutive (1 day apart), we found our boundary
       if(diffDays !== 1) return i+1;
@@ -319,14 +325,10 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
     let currNumber: number = this.getDateNumberValue(new Date(this.accommodationService.fetchDate(day, monthName, year)));
 
     let outNumber: number = -1;
-    if(this.chosenOne.end_date != "") {
-      outNumber = this.getDateNumberValue(new Date(Date.parse(this.toCompatibleStringFormat(this.chosenOne.end_date))));
-    }
+    if(this.chosenOne.end_date != "") outNumber = this.getDateNumberValue(new Date(Date.parse(this.toCompatibleStringFormat(this.chosenOne.end_date))));
     
     let inNumber: number = -1;
-    if(this.chosenOne.start_date != "") {
-      inNumber = this.getDateNumberValue(new Date(Date.parse(this.toCompatibleStringFormat(this.chosenOne.start_date))));
-    }
+    if(this.chosenOne.start_date != "") inNumber = this.getDateNumberValue(new Date(Date.parse(this.toCompatibleStringFormat(this.chosenOne.start_date))));
     
     if(!this.chosenOne || this.chosenOne.start_date == "") return false;
 
@@ -347,7 +349,7 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
     let testStr: Date = new Date(this.accommodationService.fetchDate(day, monthName, year));
     let chkOutSel: Date = new Date(this.chosenOne.end_date);
     let chkInSel: Date = new Date(this.chosenOne.start_date);
-    //console.log("stampa debug -> ", testStr, this.chosenOne.end_date);
+
     return (testStr.setHours(0, 0, 0, 0) != chkOutSel.setHours(0, 0, 0, 0)) && (testStr.setHours(0, 0, 0, 0) != chkInSel.setHours(0, 0, 0, 0));
   }
 

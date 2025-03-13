@@ -98,6 +98,10 @@ export class ConfirmBookingBooknowComponent implements OnInit {
     return;
   }
 
+  private goToMyBookings(): void {
+    this.router.navigate(["/my_bookings"])
+  }
+
   bookNow() {
     this.createdBooking.is_unavailability = this.isUnavailability;
 
@@ -148,7 +152,7 @@ export class ConfirmBookingBooknowComponent implements OnInit {
             this.messagesCommunications = true;
             this.redirectInFewSeconds = true;
 
-            setTimeout(() => this.goBack(), 3500);
+            setTimeout(() => this.goToMyBookings(), 3500);
           }
         });
     else {
@@ -186,7 +190,7 @@ export class ConfirmBookingBooknowComponent implements OnInit {
             this.messagesCommunications = true;
             this.redirectInFewSeconds = true;
 
-            setTimeout(() => this.goBack(), 3500);
+            setTimeout(() => this.goToMyBookings(), 3500);
           }
         });
     }
