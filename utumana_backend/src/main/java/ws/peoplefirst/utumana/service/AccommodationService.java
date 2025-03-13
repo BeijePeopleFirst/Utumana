@@ -878,6 +878,8 @@ public class AccommodationService {
             d = availableDates.get(i++);
         }
 
+        System.out.println("Availabilities check out: " + availabilities);
+
         return availabilities;
     }
 

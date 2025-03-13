@@ -72,6 +72,7 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
     }
     else this.currentList = this.checkInList;
 
+    console.log("currentList", this.currentList);
     this.initializeCalendars(new Date().getFullYear(), new Date().getMonth());
     this.navigateMonths(+1);
   }
@@ -105,6 +106,10 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
     return new Date(this.accommodationService.fetchDate(day, month, year)).getTime() + 86400000;
   }
 
+  getDate(day: number, month: string, year: number): Date {
+    return new Date(this.accommodationService.fetchDate(day, month, year));
+  }
+
   navigateMonths(direction: number) {
     let newMonth = this.currentMonth.monthIndex + direction;
     let newYear = this.currentMonth.year;
@@ -133,8 +138,6 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
 
     if(!this.alreadySelectedStart) {
       this.chosenOne.check_in = new Date(this.accommodationService.fetchDate(day, monthName, year));
-      //this.selectedDays.set(day + '-' + month + '-' + year, true);
-      console.log(this.chosenOne.check_in);
       this.checkInDate = year + "-" + monthName + "-" + day;
 
       let stringTest: string = this.getStringFromInputParams(day, monthName, year);
@@ -153,6 +156,8 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
         let indexFinal: number = this.getFirstNextDayComparedToSelectedCheckIn(stringTest, this.checkOutList);
         this.currentList = this.checkOutList.slice(indexFinal, lastIndex);
       }
+
+      console.log("currentList: " + this.currentList);
 
     }
     else {
@@ -410,13 +415,17 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
     }
   }
 
-  isNotCheckOut(day: number, monthName: string, year: number): boolean {
-
-    let testStr: Date = new Date(this.accommodationService.fetchDate(day, monthName, year));
-    let chkOutSel: Date = this.chosenOne.check_out!;
-    let chkInSel: Date = this.chosenOne.check_in!;
-
-    return (testStr.setHours(0, 0, 0, 0) != chkOutSel.setHours(0, 0, 0, 0)) && (testStr.setHours(0, 0, 0, 0) != chkInSel.setHours(0, 0, 0, 0));
+  isNotCheckInorCheckOut(day: number, monthName: string, year: number): boolean {
+    let isNotCheckIn: boolean = true;
+    if(this.chosenOne.check_in && this.chosenOne.check_in.getTime() == new Date(this.accommodationService.fetchDate(day, monthName, year)).getTime()) {
+      isNotCheckIn = false;
+      console.log("check-in: " + this.chosenOne.check_in + " check-out: " + this.chosenOne.check_out);
+    }
+    let isNotCheckOut: boolean = true;
+    if(this.chosenOne.check_out && this.chosenOne.check_out.getTime() == new Date(this.accommodationService.fetchDate(day, monthName, year)).getTime()) {
+      isNotCheckOut = false;
+    }
+    return isNotCheckIn && isNotCheckOut;
   }
 
   resetChoices() {
