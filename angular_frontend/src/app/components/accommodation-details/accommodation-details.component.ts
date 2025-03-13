@@ -375,6 +375,12 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
                     )
                   )
                 );
+
+                if(this.route.snapshot.fragment === 'book') {
+                  setTimeout(() => {
+                    document.getElementById("avail")?.scrollIntoView({ behavior: "smooth" });
+                  }, 450);
+                }
               });
           });
       });

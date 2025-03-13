@@ -47,7 +47,7 @@ export class AccommodationCardComponent implements OnInit {
   onClick(event: Event): void {
     event.stopImmediatePropagation();
     if(this.book){
-      this.router.navigate(['book', this.accommodation.id]);
+      this.router.navigate(['accommodation', this.accommodation.id], { fragment: "book" });
     }else if(this.heartClick){
       this.toggleFavourite();
       this.heartClick = false;
