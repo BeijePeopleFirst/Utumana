@@ -149,7 +149,8 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
       let indexStringTest: number = this.checkInList.indexOf(stringTest);
 
       if(indexStringTest !== 0 && this.checkOutList.includes(stringTest)) {
-        this.currentList = this.checkOutList.slice(this.checkInList.indexOf(stringTest)+1, lastIndex);
+        console.log("STAMPOI last index -> ", lastIndex, this.checkOutList);
+        this.currentList = this.checkOutList.slice(this.checkInList.indexOf(stringTest), lastIndex);
       }
       else {
         //this.currentList = this.checkOutList.slice(this.checkInList.indexOf(stringTest), lastIndex);
@@ -157,7 +158,7 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
         this.currentList = this.checkOutList.slice(indexFinal, lastIndex);
       }
 
-      console.log("currentList: " + this.currentList);
+      console.log("currentList: " + this.currentList, this.checkOutList);
 
     }
     else {
