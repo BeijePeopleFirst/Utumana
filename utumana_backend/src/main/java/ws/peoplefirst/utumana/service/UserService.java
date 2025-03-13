@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -50,6 +51,9 @@ public class UserService implements UserDetailsService {
 
 	@Autowired
 	private S3Service s3Service;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 
 	public void checkUser(User user) {
@@ -198,6 +202,8 @@ public class UserService implements UserDetailsService {
 			user.setIsAdmin(false);
 		}
 
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+
 		user = userRepository.save(user);
 		
 		UserAuthority userAuthority = new UserAuthority();
@@ -276,6 +282,8 @@ public class UserService implements UserDetailsService {
 		return true;
 	}
 
+	// if user is not admin, issue admin privileges
+	// if user is already admin, nothing happens
 	public Boolean issueAdminPrivileges(Long userId) {
 		User user = findById(userId);
 		if(user == null) throw new IdNotFoundException("User not found with id: " + userId);

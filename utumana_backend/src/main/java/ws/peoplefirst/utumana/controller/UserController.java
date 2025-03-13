@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,7 +18,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import software.amazon.awssdk.services.s3.endpoints.internal.Value.Bool;
 import ws.peoplefirst.utumana.dto.AccommodationOwnerDTO;
 import ws.peoplefirst.utumana.dto.UserDTO;
 import ws.peoplefirst.utumana.exception.DBException;
@@ -42,6 +42,9 @@ import java.util.Map;
 public class UserController {
 	
 	private Logger log = LoggerFactory.getLogger(this.getClass());
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 //	@Value("${photoPrefixPath.path}")
 //	private String destinationPathPhotoPrefix;
@@ -148,7 +151,7 @@ public class UserController {
 			
 			if(newPassword == null || !(newPassword instanceof String)) throw new InvalidJSONException("Password must be a not null String");
 			if(!userService.isValidPassword((String) newPassword)) throw new InvalidJSONException("Password not valid");
-			user.setPassword((String) newPassword);
+			user.setPassword(passwordEncoder.encode((String) newPassword));
 			log.trace("Set new password");
 			
 			if(userService.saveUser(user)) {
@@ -271,7 +274,7 @@ public class UserController {
 				case "password" :
 					if(value == null || !(value instanceof String)) throw new InvalidJSONException("Password must be a not null String");
 					if(!userService.isValidPassword((String) value)) throw new InvalidJSONException("Password not valid");
-					user.setPassword((String) value);
+					user.setPassword(passwordEncoder.encode((String) value));
 					log.trace("Set new password");
 					break;
 					
@@ -328,52 +331,6 @@ public class UserController {
 		if(photo == null || photo.isEmpty()) throw new InvalidJSONException("You have to provide a photo");
 
 		return userService.uploadProfilePicture(loggedUser.getId(), photo) != null;
-
-		// String orFilename = photo.getOriginalFilename();
-		// byte[] content = null;
-		// FileOutputStream out = null;
-		// String finalUrl = null;
-		// try {
-
-		// 	finalUrl = URLEncoder.encode(loggedUser.getId() + "_" + new Date().getTime() + "." + orFilename.substring(orFilename.lastIndexOf('.') + 1), StandardCharsets.UTF_8.toString());
-
-		// } catch (UnsupportedEncodingException e) {
-		// 	// TODO Auto-generated catch block
-		// 	throw new TheJBeansException("" + e);
-		// }
-		// //File destination = new File("/Users/riccardogugolati/LAVORO/People First/CouchSurfing/TheJBeansCouchSurfing/src/main/resources/static/images/" + finalUrl);
-		// File destination = new File(destinationPathPhotoPrefix + finalUrl);
-		// try {
-
-		// 	System.out.println("SONO DENTRO AL TRY");
-		// 	destination.createNewFile();
-		// 	out = new FileOutputStream(destination);
-		// 	content = photo.getBytes();
-
-		// 	out.write(content);
-
-
-		// } catch (IOException e) {
-		// 	// TODO Auto-generated catch block
-		// 	e.printStackTrace();
-		// }
-		// finally {
-
-		// 	try {
-		// 		out.close();
-		// 	} catch (IOException e) {
-		// 		// TODO Auto-generated catch block
-		// 		e.printStackTrace();
-		// 	}
-
-		// }
-
-		// Map<String, String> map = new HashMap<String, String>();
-		// String res = null;
-		// res = "/images/" + finalUrl;
-		// map.put("url", res);
-
-		// return map;
 	}
 
 	@Operation(summary = "Get accommodation Owner")
