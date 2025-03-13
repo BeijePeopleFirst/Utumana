@@ -224,22 +224,21 @@ public class ConfigurationClass {
 
     @Bean
     public static PasswordEncoder passwordEncoder(){
-        //return new BCryptPasswordEncoder(); {
-    	return new PasswordEncoder() {
-//			
-			@Override
-			public boolean matches(CharSequence rawPassword, String encodedPassword) {
-				System.out.println("Raw -> " + rawPassword);
-				System.out.println("Encoded -> " + encodedPassword);
+        return new BCryptPasswordEncoder(); 
+    	// return new PasswordEncoder() {			
+		// 	@Override
+		// 	public boolean matches(CharSequence rawPassword, String encodedPassword) {
+		// 		System.out.println("Raw -> " + rawPassword);
+		// 		System.out.println("Encoded -> " + encodedPassword);
 				
-				return encode(rawPassword).equals(encodedPassword);
-			}
+		// 		return encode(rawPassword).equals(encodedPassword);
+		// 	}
 			
-			@Override
-			public String encode(CharSequence rawPassword) {
-				return rawPassword.toString();
-			}
-		};
+		// 	@Override
+		// 	public String encode(CharSequence rawPassword) {
+		// 		return rawPassword.toString();
+		// 	}
+		// };
     }
 
     @Bean
