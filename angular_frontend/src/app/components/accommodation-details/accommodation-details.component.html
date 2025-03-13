@@ -7,8 +7,10 @@
   </ng-container>
   
   <ng-container *ngIf="!invalidAccommodation && !userNotLogged" id="accommodation-details-container" class="w-screen">
-    <div class="flex relative flex-col justify-center items-center">      
-      <div class="flex flex-row flex-wrap gap-y-6 justify-center w-full bg-neutral-1">
+    <div class="flex relative flex-col justify-center items-center">
+
+      <!-- container for all info (except reviews) and book now div -  -->
+      <div class="flex flex-row flex-wrap gap-y-6 justify-center items-center w-full lg:flex-col bg-neutral-1">
         <section class="flex flex-col justify-center items-center pt-8 pb-4 space-y-6 w-full bg-neutral-1">
           <!-- 🏠 Titolo + Preferiti -->
           <div class="flex flex-row flex-wrap gap-y-6 justify-center items-center px-2 mb-4 space-x-6 text-center">
@@ -45,34 +47,34 @@
         </section>
         
         <div class="flex flex-col gap-y-6 justify-center items-center">
-        <!-- 🖼️ Carousel Immagini -->
-        <div id="images" class="flex relative flex-row flex-wrap gap-1.5 justify-center mt-8 w-fit">
+          <!-- 🖼️ Carousel Immagini -->
+          <div id="images" class="flex relative flex-row flex-wrap gap-1.5 justify-center mt-8 w-fit">
 
-          <!-- TODO ALL IMAGES + CAROUSEL -->
-          <!-- -------------------------------------------------------------------------------------- -->
-          <img id="biggest-image" [src]="accommodation.photos[0].blob_url" class="h-96" />
+            <!-- TODO ALL IMAGES + CAROUSEL -->
+            <!-- -------------------------------------------------------------------------------------- -->
+            <img id="biggest-image" [src]="accommodation.photos[0].blob_url" class="h-96" />
 
-          <img src="/assets/icons/pencil.png" (click)="toggleEditPhotosPerspective()" class="-top-4 -right-10 w-6 h-6 icon" *ngIf="accommodation.photos.length === 1 && isMe" id="pencil-one-image" />
-          
-          <div *ngIf="accommodation.photos.length > 1" id="other-images" class="flex flex-col gap-1.5">
-            <div class="flex flex-row gap-1.5">
-              <img id="image-oth1" [src]="accommodation.photos[1].blob_url" class="h-44" />
-              <img src="/assets/icons/pencil.png" (click)="toggleEditPhotosPerspective()" class="-top-4 -right-10 w-6 h-6 icon" *ngIf="accommodation.photos.length === 2 && isMe" id="pencil-two-images" />
-              <div>
-                <img id="image-oth2" [src]="accommodation.photos[2].blob_url" class="h-44" *ngIf="accommodation.photos.length > 2" />
-                <img src="/assets/icons/pencil.png" (click)="toggleEditPhotosPerspective()" *ngIf="accommodation.photos.length >= 3 && isMe" id="pencil-three-images" class="-top-4 -right-10 w-6 h-6 icon" />
+            <img src="/assets/icons/pencil.png" (click)="toggleEditPhotosPerspective()" class="-top-4 -right-10 w-6 h-6 icon" *ngIf="accommodation.photos.length === 1 && isMe" id="pencil-one-image" />
+            
+            <div *ngIf="accommodation.photos.length > 1" id="other-images" class="flex flex-col gap-1.5">
+              <div class="flex flex-row gap-1.5">
+                <img id="image-oth1" [src]="accommodation.photos[1].blob_url" class="h-44" />
+                <img src="/assets/icons/pencil.png" (click)="toggleEditPhotosPerspective()" class="-top-4 -right-10 w-6 h-6 icon" *ngIf="accommodation.photos.length === 2 && isMe" id="pencil-two-images" />
+                <div>
+                  <img id="image-oth2" [src]="accommodation.photos[2].blob_url" class="h-44" *ngIf="accommodation.photos.length > 2" />
+                  <img src="/assets/icons/pencil.png" (click)="toggleEditPhotosPerspective()" *ngIf="accommodation.photos.length >= 3 && isMe" id="pencil-three-images" class="-top-4 -right-10 w-6 h-6 icon" />
+                </div>
+              </div>
+
+              <div class="flex flex-row gap-1.5" *ngIf="accommodation.photos.length > 3">
+                <img id="image-oth3" [src]="accommodation.photos[3].blob_url" class="h-44" />
+                <div>
+                  <img id="image-oth4" [src]="accommodation.photos[4].blob_url" class="h-44" *ngIf="accommodation.photos.length > 4" />
+                  <div class="absolute right-0 bottom-0 cursor-pointer" (click)="toggleViewMorePhotosPerspective()" *ngIf="accommodation.photos.length > 5">{{("accommodation-card-details.view-more-photos" | translate)}}</div>
+                </div>
               </div>
             </div>
-
-            <div class="flex flex-row gap-1.5" *ngIf="accommodation.photos.length > 3">
-              <img id="image-oth3" [src]="accommodation.photos[3].blob_url" class="h-44" />
-              <div>
-                <img id="image-oth4" [src]="accommodation.photos[4].blob_url" class="h-44" *ngIf="accommodation.photos.length > 4" />
-                <div class="absolute right-0 bottom-0 cursor-pointer" (click)="toggleViewMorePhotosPerspective()" *ngIf="accommodation.photos.length > 5">{{("accommodation-card-details.view-more-photos" | translate)}}</div>
-              </div>
-            </div>
-          </div>
-          <!-- -------------------------------------------------------------------------------------- -->
+            <!-- -------------------------------------------------------------------------------------- -->
           </div>
           
           <!-- 🏡 Info Camere -->
@@ -154,7 +156,7 @@
         </div>
 
         <!-- 🏷️ Prezzo e Prenotazione -->
-        <div *ngIf="accommodation.availabilities && accommodation.availabilities.length > 0" class="z-50 p-6 my-3 w-full rounded-lg border shadow-md md:w-1/2 xl:w-auto xl:sticky xl:top-1/2 xl:left-3/4 bg-neutral-2 h-fit">
+        <div *ngIf="accommodation.availabilities && accommodation.availabilities.length > 0" class="z-50 p-6 mb-4 w-full rounded-lg border shadow-md md:max-w-96 2xl:sticky 2xl:top-1/2 2xl:left-3/4 bg-neutral-2 h-fit">
           <div class="flex flex-col justify-between">
             <p class="text-lg font-bold">Check-In: {{ chosenPeriod?.check_in | date:'shortDate':undefined:locale }}</p>
             <p class="text-lg font-bold">Check-Out: {{ chosenPeriod?.check_out | date:'shortDate':undefined:locale }}</p>
@@ -285,7 +287,7 @@
 
   <ng-template #editRoomsBedsPerspective>
     <div class="modal">
-      <div class="modal-dialog p-5">
+      <div class="p-5 modal-dialog">
         <form #roomsBedsForm="ngForm">
           <h1 class="text-2xl">{{"accommodation-card-details.edit-rooms-and-beds-sentence" | translate}}</h1>
   
@@ -307,7 +309,7 @@
   
           <div class="flex justify-end mt-6">
             <button class="btn-primary" type="button" (click)="toggleEditRoomsBeds()">{{("accommodation-card-details.close-btn-city-prov-country-form" | translate)}}</button>
-            <button [disabled]="roomsBedsForm.invalid" class="btn-primary ml-2" type="button" (click)="confirmFormRoomsBeds()">{{("accommodation-card-details.submit-btn-city-prov-country-form" | translate)}}</button>
+            <button [disabled]="roomsBedsForm.invalid" class="ml-2 btn-primary" type="button" (click)="confirmFormRoomsBeds()">{{("accommodation-card-details.submit-btn-city-prov-country-form" | translate)}}</button>
           </div>
         </form>
       </div>
@@ -320,7 +322,7 @@
 
   <ng-template #editPhotosPerspective>
     <div class="modal">
-      <div class="modal-dialog p-5">
+      <div class="p-5 modal-dialog">
         <button class="close-modal" (click)="toggleEditPhotosPerspective()">X</button>
         <app-edit-photos-accommodation-details 
           [accomodation]="accommodation" 
@@ -339,11 +341,11 @@
     <div class="modal">
       <div class="modal-dialog p-5 w-full max-w-[650px]">
         <div class="relative">
-          <p class="text-3xl label-primary text-center">{{ ('accommodation-card-details.edit-services-sentence' | translate) }}</p>
+          <p class="text-3xl text-center label-primary">{{ ('accommodation-card-details.edit-services-sentence' | translate) }}</p>
           <button class="close-modal" (click)="toggleEditServicesPerspective()">X</button>
         </div>
   
-        <div id="search-and-selected-services" class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+        <div id="search-and-selected-services" class="grid grid-cols-1 gap-6 mt-4 md:grid-cols-2">
           <div id="search-section">
             <input type="text" class="w-full text-xl text-center input-primary" #servicesBarInput 
               (input)="searchServices(servicesBarInput.value)" 
@@ -352,7 +354,7 @@
               placeholder="{{'accommodation-card-details.services-word' | translate}}" />
   
             <div *ngIf="foundServices$ && foundServices$ | async as ser">
-              <div *ngIf="ser.length > 0" class="mt-2 border border-secondary-light bg-neutral-2 p-2 rounded-lg">
+              <div *ngIf="ser.length > 0" class="p-2 mt-2 rounded-lg border border-secondary-light bg-neutral-2">
                 <div *ngFor="let s of ser" class="flex items-center p-2 border-b border-secondary-light last:border-b-0">
                   <input type="checkbox" [checked]="isSelectedService(s)" #checkBoxFoundService 
                     (input)="elaborateCheckbox(checkBoxFoundService.checked, s)" />
@@ -365,9 +367,9 @@
   
           <div id="selected-services" *ngIf="selectedServicesView$ | async as servicesView">
             <h2 class="text-xl font-semibold">{{ 'accommodation-card-details.selected-services' | translate }}</h2>
-            <div *ngIf="servicesView.length > 0" class="mt-2 flex flex-col space-y-2">
-              <div *ngFor="let s of servicesView" class="flex items-center space-x-2 p-2 bg-neutral-2 rounded-lg">
-                <button class="text-red-500 text-xl" (click)="removeSelectedService(s)">X</button>
+            <div *ngIf="servicesView.length > 0" class="flex flex-col mt-2 space-y-2">
+              <div *ngFor="let s of servicesView" class="flex items-center p-2 space-x-2 rounded-lg bg-neutral-2">
+                <button class="text-xl text-red-500" (click)="removeSelectedService(s)">X</button>
                 <img [src]="iconUrl + '/services/' + s.icon_url" class="w-6" />
                 <p>{{ s.title }}</p>
               </div>
@@ -401,12 +403,12 @@
 
   <ng-template #deleteAccommodationConfirmPopup>
     <div class="modal">
-      <div class="modal-dialog p-5 flex flex-row items-center">
-        <button (click)="deleteAccommodation()" class="btn-danger flex items-center">
+      <div class="flex flex-row items-center p-5 modal-dialog">
+        <button (click)="deleteAccommodation()" class="flex items-center btn-danger">
           <img class="mr-1 w-8" src="assets/icons/binBtnIcon.png" />
           {{"accommodation-card-details.confirm-acc-deletion-btn-text" | translate}}
         </button>
-        <button (click)="toggleDeleteAccommodation()" class="btn-cancel mt-4 ">{{"accommodation-card-details.ABORT-acc-deletion-btn-text" | translate}}</button>
+        <button (click)="toggleDeleteAccommodation()" class="mt-4 btn-cancel">{{"accommodation-card-details.ABORT-acc-deletion-btn-text" | translate}}</button>
       </div>
     </div>
   </ng-template>
@@ -418,16 +420,16 @@
 
   <ng-template #editTitlePerspective>
     <div class="modal">
-      <div class="modal-dialog p-6">
+      <div class="p-6 modal-dialog">
         <h1 class="text-2xl">{{('accommodation-card-details.title-label' | translate)}}</h1>
-        <input type="text" id="title-input-field" class="p-2 rounded-md border w-full mt-2" [(ngModel)]="titleInputField" required />
-        <div *ngIf="titleInputFieldError" class="border-2 alert-danger mt-2">
+        <input type="text" id="title-input-field" class="p-2 mt-2 w-full rounded-md border" [(ngModel)]="titleInputField" required />
+        <div *ngIf="titleInputFieldError" class="mt-2 border-2 alert-danger">
           {{('accommodation-card-details.error-title' | translate)}}
         </div>
   
         <div class="flex justify-end mt-6">
           <button id="edit-title-confirm" class="btn-primary" (click)="confirmTitleEdit()">{{('accommodation-card-details.confirm-title' | translate)}}</button>
-          <button id="edit-title-close" class="btn-cancel ml-2" (click)="toggleEditTitlePerspective()">{{('accommodation-card-details.close-title-gui' | translate)}}</button>
+          <button id="edit-title-close" class="ml-2 btn-cancel" (click)="toggleEditTitlePerspective()">{{('accommodation-card-details.close-title-gui' | translate)}}</button>
         </div>
       </div>
     </div>

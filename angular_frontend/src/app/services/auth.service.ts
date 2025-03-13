@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { tap, delay, map, catchError, filter, switchMap } from 'rxjs/operators';
-import { BACKEND_URL_PREFIX } from 'src/costants';
+import { BACKEND_URL_PREFIX, defaultProfilePictureUrl } from 'src/costants';
 import { AuthCredentials } from '../dtos/authCredential';
 import { RefreshToken } from '../models/refreshToken';
 import { LoginResponse } from '../utils/loginResponse';
@@ -79,6 +79,7 @@ export class AuthService {
     localStorage.clear();
     sessionStorage.clear();
     this.deleteCookies();
+    this.profilePictureUrl$.next(defaultProfilePictureUrl);
     if(returnUrl && returnUrl.indexOf("login") < 0){
       this.router.navigate(['/login'], { queryParams: { returnUrl: returnUrl }})
     }else{

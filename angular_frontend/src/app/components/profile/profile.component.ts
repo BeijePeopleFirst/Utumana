@@ -5,7 +5,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { ReviewService } from 'src/app/services/review.service';
 import { S3Service } from 'src/app/services/s3.service';
 import { UserService } from 'src/app/services/user.service';
-import iconURL, { imagesURL } from 'src/costants';
+import iconURL, { defaultProfilePictureUrl, imagesURL } from 'src/costants';
 
 @Component({
   selector: 'app-profile',
@@ -16,8 +16,8 @@ export class ProfileComponent implements OnInit {
   id: number | undefined = Number(localStorage.getItem("id"));
   user!: User;
   iconsUrl: string = iconURL;
-  defaultPictureUrl: string = `${imagesURL}\\default_profile.png`;
-  pictureUrl?: string  = `${imagesURL}\\default_profile.png`;
+  defaultPictureUrl: string = defaultProfilePictureUrl;
+  pictureUrl?: string  = defaultProfilePictureUrl;
   isEditBioModalOpen: boolean = false;
   isEditPictureModalOpen: boolean = false;
 

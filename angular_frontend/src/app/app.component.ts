@@ -1,7 +1,7 @@
 import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Component, DoCheck, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { iconURL } from 'src/costants';
+import { defaultProfilePictureUrl, iconURL } from 'src/costants';
 import { Location } from '@angular/common';
 import { AuthService } from './services/auth.service';
 import { DraftService } from './services/draft.service';
@@ -22,8 +22,8 @@ export class AppComponent implements OnInit, DoCheck, OnDestroy {
   isMenuOpen = false;
   selectedLanguage = 'en-US'; 
   iconUrl = iconURL;
-  defaultProfileUrl: string = iconURL + '/profile.png';
-  profileUrl: string = this.defaultProfileUrl;
+  profileUrl: string = defaultProfilePictureUrl;
+  defaultProfileUrl: string = defaultProfilePictureUrl;
   title= 'Utumana'; 
   currentYear: number = new Date().getFullYear();
 
@@ -80,7 +80,7 @@ export class AppComponent implements OnInit, DoCheck, OnDestroy {
     this.getProfilePictureUrl = this.authService.profilePictureUrl$.subscribe(url => {
       pictureUrl = url;
       // get profile picture
-      if(pictureUrl !== ''){
+      if(pictureUrl !== '' && pictureUrl != defaultProfilePictureUrl){
         this.s3Service.getPhoto(pictureUrl).subscribe(blob => {
           if(blob != null){
             this.profileUrl = URL.createObjectURL(blob);
@@ -95,7 +95,7 @@ export class AppComponent implements OnInit, DoCheck, OnDestroy {
       pictureUrl = savedProfileUrl;
     }
     // get profile picture
-    if(pictureUrl !== ''){
+    if(pictureUrl !== '' && pictureUrl != defaultProfilePictureUrl){
       this.s3Service.getPhoto(pictureUrl).subscribe(blob => {
         if(blob != null){
           this.profileUrl = URL.createObjectURL(blob);
