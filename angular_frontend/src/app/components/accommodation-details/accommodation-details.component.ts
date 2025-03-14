@@ -106,6 +106,7 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
   successUpdatedDescription: boolean = false;
   errorUpdatingDescription: boolean = false;
   updatedAvailabilitesMessage: boolean = false;
+  errorAvailabilitesMessage: boolean = false;
   //-------------------------------------------------------------------------------------
 
   iconUrl = iconURL;
@@ -194,6 +195,11 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
         }
 
         console.log("STAMPO ACC trovata -> ", this.accommodation);
+
+        this.roomsNum = this.accommodation.rooms + "";
+        this.bedsNum = this.accommodation.beds + "";
+        this.titleInputField = this.accommodation.title;
+        this.descriptionInputField = this.accommodation.description;
 
         //Recupero i Servizi dell' Accommodation:
         for (let s of this.accommodation.services)
@@ -340,7 +346,7 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
               for (let s of tmp6) {
                 this.accommodationCheckOuts.push(s);
               }
-              console.log("PROVA DEBUG DETAILS CHECKOUTS -> ", this.accommodationCheckOuts);
+              //console.log("PROVA DEBUG DETAILS CHECKOUTS -> ", this.accommodationCheckOuts);
             }
 
             //Ora recupero l' Owner dell' Accommodation:
@@ -931,10 +937,22 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
   }
 
   consumeCloseEditAvailabilitiesModal($event: boolean): void {
-    this.message = "true";
-    if($event) this.updatedAvailabilitesMessage = true;
+    
+    if($event) {
+      this.message = "true";
+      this.updatedAvailabilitesMessage = true;
+    }
 
     this.toggleEditAvailabilitiesPerspective();
+    location.reload();
+  }
+
+  consumeErrorOccurredEditAvailabilitiesModal($event: boolean) {
+    this.message = "true";
+    if($event) this.errorAvailabilitesMessage = true;
+
+    this.toggleEditAvailabilitiesPerspective();
+    location.reload();
   }
 
   clearMessage() {
@@ -961,5 +979,6 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
     this.successUpdatedDescription = false;
     this.errorUpdatingDescription = false;
     this.updatedAvailabilitesMessage = false;
+    this.errorAvailabilitesMessage = false;
   }
 }

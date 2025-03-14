@@ -329,28 +329,42 @@ public class AccommodationService {
         
         checkAvailabilites(availabilities);
 
-        System.out.println(availabilities);
-        List<Availability> savedAvailabilities = new ArrayList<Availability>();
-        Availability saved;
-        for (Availability availability : availabilities) {
-            availability.setAccommodationId(accommodationId);
-            availability.setAccommodation(accommodation);
-            saved = availability;
-            if (availability.getId() == null) {
-                saved = availabilityRepository.save(availability);
-            }
-            savedAvailabilities.add(saved);
+        // List<Availability> savedAvailabilities = new ArrayList<Availability>();
+        // Availability saved;
+        // for (Availability availability : availabilities) {
+        //     availability.setAccommodationId(accommodationId);
+        //     availability.setAccommodation(accommodation);
+        //     saved = availability;
+        //     if (availability.getId() == null) {
+        //         saved = availabilityRepository.save(availability);
+        //     }
+        //     savedAvailabilities.add(saved);
+        // }
+        
+        // for (Availability oldAvailability : accommodation.getAvailabilities()) {
+        //     if (!savedAvailabilities.contains(oldAvailability)) {
+        //         availabilityRepository.delete(oldAvailability);
+        //     }
+        // }
+
+        // accommodation.setAvailabilities(savedAvailabilities);
+
+        List<Availability> avsOld = accommodation.getAvailabilities();
+
+        for(Availability a: availabilities) {
+            a.setAccommodation(accommodation);
+            a.setAccommodationId(accommodationId);
+            a.setId(null);
         }
 
-        for (Availability oldAvailability : accommodation.getAvailabilities()) {
-            if (!savedAvailabilities.contains(oldAvailability)) {
-                availabilityRepository.delete(oldAvailability);
-            }
+        accommodation.setAvailabilities(availabilities);
+        accommodation = accommodationRepository.save(accommodation);
+
+        for(Availability oldA: avsOld) {
+            availabilityRepository.delete(oldA);
         }
 
-        accommodation.setAvailabilities(savedAvailabilities);
-
-        return accommodationRepository.save(accommodation);
+        return accommodation;
     }
 
    public Accommodation setAccommodationUnavailabilities(Long accommodationId, List<Booking> unavailabilities, Long userId) {

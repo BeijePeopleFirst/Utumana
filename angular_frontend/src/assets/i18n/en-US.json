@@ -91,7 +91,8 @@
 	"close-description-gui": "Close",
 	"success-edit-description": "Description Successfully Updated",
 	"error-edit-description": "An Error occurred while updating Accommodation' s description",
-	"success-updated-availabilities": "Accommodation' s Booking Periods Updated"
+	"success-updated-availabilities": "Accommodation' s Booking Periods Updated",
+	"error-updating-availabilities": "An Error occurred"
 },
 "admin-dashboard-accommodations": {
 	"approve_reject_title": "Approve/Reject accommodations",

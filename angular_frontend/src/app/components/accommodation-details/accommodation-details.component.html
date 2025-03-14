@@ -283,6 +283,10 @@
     <h1 class="text-xl text-blue-800" *ngIf="updatedAvailabilitesMessage">
       {{"accommodation-card-details.success-updated-availabilities" | translate}}
     </h1>
+
+    <h1 class="text-xl text-blue-800" *ngIf="errorAvailabilitesMessage">
+      {{"accommodation-card-details.error-updating-availabilities" | translate}}
+    </h1>
     
   </ng-container>
   <!-------------------------------------------------------------------------------------------------------------------------------------------------->
@@ -466,10 +470,11 @@
 
   <ng-template #editAvailabilitiesPerspective>
     <div class="modal">
-      <div class="p-6 modal-dialog">
+      <div class="p-6 edit-availabilities-modal">
         <app-edit-availabilities-accommodation-details
           [accommodation]="accommodation"
-          (closeModal)="consumeCloseEditAvailabilitiesModal($event)">
+          (closeModal)="consumeCloseEditAvailabilitiesModal($event)"
+          (errorOccurred)="consumeErrorOccurredEditAvailabilitiesModal($event)">
         </app-edit-availabilities-accommodation-details>
       </div>
     </div>

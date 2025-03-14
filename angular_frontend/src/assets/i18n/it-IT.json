@@ -91,7 +91,8 @@
 	"close-description-gui": "Chiudi",
 	"success-edit-description": "Descrizione Aggiornata con Successo",
 	"error-edit-description": "Si è verificato un errore durante l' aggiornamento della descrizione",
-	"success-updated-availabilities": "Intervalli di prenotazione aggiornati"
+	"success-updated-availabilities": "Intervalli di prenotazione aggiornati",
+	"error-updating-availabilities": "Si è verificato un Errore"
 },
 "admin-dashboard-accommodations": {
 	"approve_reject_title": "Approva/Rifiuta sistemazioni",

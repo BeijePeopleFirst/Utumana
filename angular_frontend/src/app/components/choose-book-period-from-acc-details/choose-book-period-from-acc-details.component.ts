@@ -72,7 +72,7 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
     }
     else this.currentList = this.checkInList;
 
-    console.log("currentList", this.currentList);
+    //console.log("currentList", this.currentList);
     this.initializeCalendars(new Date().getFullYear(), new Date().getMonth());
     this.navigateMonths(+1);
   }
@@ -125,7 +125,6 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
     this.initializeCalendars(newYear, newMonth);
   }
 
-  private checkInDate: string = "";
   isCheckOutSelected: boolean = false;
   selectDay(day: number, monthName: string, year: number) {
     this.chosenOne.accommodation = this.accommodation;
@@ -138,8 +137,7 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
 
     if(!this.alreadySelectedStart) {
       this.chosenOne.check_in = new Date(this.accommodationService.fetchDate(day, monthName, year));
-      this.checkInDate = year + "-" + monthName + "-" + day;
-
+      
       let stringTest: string = this.getStringFromInputParams(day, monthName, year);
 
       let lastIndex: number = this.getFirstNotLecitCheckOutDate(this.checkOutList, this.chosenOne.check_in);
@@ -158,7 +156,7 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
         this.currentList = this.checkOutList.slice(indexFinal, lastIndex);
       }
 
-      console.log("currentList: " + this.currentList, this.checkOutList);
+      //console.log("currentList: " + this.currentList, this.checkOutList);
 
     }
     else {
@@ -433,7 +431,6 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
     this.chosenOne = {};
     this.alreadySelectedStart = false;
     this.isCheckOutSelected = false;
-    this.checkInDate = "";
     this.currentList = this.checkInList;
 
     this.sendBookingPeriod();

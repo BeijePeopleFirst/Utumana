@@ -5,7 +5,10 @@ import { Subscription } from 'rxjs';
 import { Unavailability } from 'src/app/dtos/unavailabilityDTO';
 import { Accommodation } from 'src/app/models/accommodation';
 import { Availability } from 'src/app/models/availability';
+import { Booking } from 'src/app/models/booking';
 import { AccommodationService } from 'src/app/services/accommodation.service';
+import { BookingService } from 'src/app/services/booking.service';
+import { BookingStatus } from 'src/app/utils/enums';
 
 @Component({
   selector: 'app-edit-availabilities-accommodation-details',
@@ -17,6 +20,8 @@ export class EditAvailabilitiesAccommodationDetailsComponent implements OnInit {
   @Input() accommodation!: Accommodation;
   @Output() closeModal: EventEmitter<boolean> = new EventEmitter<boolean>();
   private edited: boolean= false;
+
+  @Output() errorOccurred: EventEmitter<boolean> = new EventEmitter<boolean>();
   
   genericError: boolean = false;
   availabilities!: Availability[];
@@ -38,7 +43,8 @@ export class EditAvailabilitiesAccommodationDetailsComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private translateService: TranslateService,
-    private accommodationService: AccommodationService
+    private accommodationService: AccommodationService,
+    private bookingService: BookingService
   ) {
     this.availForm = this.fb.group({
       start_avail: ['', Validators.required],
@@ -55,17 +61,20 @@ export class EditAvailabilitiesAccommodationDetailsComponent implements OnInit {
     this.localeSubscription = this.translateService.onLangChange.subscribe(
       event => this.locale = event.lang.slice(0,2));
 
-    this.accommodationService.getAvailabilitiesNotUnavailabilities(this.accommodation.id!).subscribe(availabilities => {
-      if(!availabilities){
+    this.accommodationService.getAllAvailabilities(this.accommodation.id!).subscribe(availabilities => {
+      if(!availabilities || (availabilities && "message" in availabilities)){
         this.genericError = true;
+        this.errorOccurred.emit(true);
         return;
       }
       this.availabilities = availabilities;
+      console.log(this.availabilities, "STAMPA");
     });
 
     this.accommodationService.getUnavailabilities(this.accommodation.id!).subscribe(unavailabilities => {
       if(!unavailabilities){
         this.genericError = true;
+        this.errorOccurred.emit(true);
         return;
       }
       this.unavailabilities = unavailabilities;
@@ -74,13 +83,15 @@ export class EditAvailabilitiesAccommodationDetailsComponent implements OnInit {
 
   save(): void {
     // save availabilities and unavailabilities
+
+    let unavailabilitiesAsBookings: Booking[] = this.createBookingArrayFromUnavailabilities(this.unavailabilities);
     
-    this.accommodationService.setUnavailabilities(this.unavailabilities, this.accommodation.id!).subscribe(
+    this.bookingService.setUnavailabilities(unavailabilitiesAsBookings, this.accommodation.id!).subscribe(
       response => {
-        if(response && "message" in response) {
+        if("message" in response) {
           console.error(response.message);
 
-          //TODO: MESSAGGIO DI ERRORE
+          this.errorOccurred.emit(true);
           return;
         }
 
@@ -91,7 +102,7 @@ export class EditAvailabilitiesAccommodationDetailsComponent implements OnInit {
             if(oth && "message" in oth) {
               console.error(oth.message);
     
-              //TODO: MESSAGGIO DI ERRORE
+              this.errorOccurred.emit(true);
               return;
             }
           }
@@ -159,7 +170,7 @@ export class EditAvailabilitiesAccommodationDetailsComponent implements OnInit {
         if(oth && "message" in oth) {
           console.error(oth.message);
 
-          //TODO: MESSAGGIO DI ERRORE
+          this.errorOccurred.emit(true);
           return;
         }
         
@@ -180,7 +191,7 @@ export class EditAvailabilitiesAccommodationDetailsComponent implements OnInit {
         if(oth && "message" in oth) {
           console.error(oth.message);
 
-          //TODO: MESSAGGIO DI ERRORE
+          this.errorOccurred.emit(true);
           return;
         }
         
@@ -227,12 +238,16 @@ export class EditAvailabilitiesAccommodationDetailsComponent implements OnInit {
 
     this.unavailabilities.push(new_acc_unav);
     this.unavailabilities.sort((a, b) => a.check_in.localeCompare(b.check_in));
-    this.accommodationService.setUnavailabilities(this.unavailabilities, this.accommodation.id!).subscribe(
+
+
+    let unavailabilitiesAsBookings: Booking[] = this.createBookingArrayFromUnavailabilities(this.unavailabilities);
+    
+    this.bookingService.setUnavailabilities(unavailabilitiesAsBookings, this.accommodation.id!).subscribe(
       response => {
-        if(response && "message" in response) {
+        if("message" in response) {
           console.error(response.message);
 
-          //TODO: MESSAGGIO DI ERRORE
+          this.errorOccurred.emit(true);
           return;
         }
 
@@ -246,18 +261,42 @@ export class EditAvailabilitiesAccommodationDetailsComponent implements OnInit {
 
   removeUnavailability(unavailability: Unavailability): void{
     this.unavailabilities = this.unavailabilities.filter(u => u.check_in !== unavailability.check_in);
-    this.accommodationService.setUnavailabilities(this.unavailabilities, this.accommodation.id!).subscribe(
+
+    let unavailabilitiesAsBookings: Booking[] = this.createBookingArrayFromUnavailabilities(this.unavailabilities);
+    
+    this.bookingService.setUnavailabilities(unavailabilitiesAsBookings, this.accommodation.id!).subscribe(
       response => {
-        if(response && "message" in response) {
+        if("message" in response) {
           console.error(response.message);
 
-          //TODO: MESSAGGIO DI ERRORE
+          this.errorOccurred.emit(true);
           return;
         }
 
         this.edited = true;
       }
     );
+  }
+
+  private createBookingArrayFromUnavailabilities(uns: Unavailability[]): Booking[] {
+    let result: Booking[] = [];
+
+    let temp: Booking;
+    for(let u of uns) {
+      temp = {
+        accommodation: this.accommodation, 
+        check_in: u.check_in, 
+        check_out: u.check_out, 
+        is_unavailability: true, 
+        price: 0, 
+        status: BookingStatus.ACCEPTED,
+        timestamp: new Date(Date.now()).toISOString(),
+        user_id: Number(localStorage.getItem("id")!)
+      };
+      result.push(temp);
+    }
+
+    return result;
   }
   
   confirmEdits(): void {

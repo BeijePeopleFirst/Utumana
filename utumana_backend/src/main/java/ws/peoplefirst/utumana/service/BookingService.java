@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -14,11 +15,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.annotation.Nullable;
 import jakarta.persistence.PersistenceException;
+import ws.peoplefirst.utumana.dto.AccommodationDTO;
 import ws.peoplefirst.utumana.dto.BookingDTO;
 import ws.peoplefirst.utumana.dto.UnavailabilityDTO;
+import ws.peoplefirst.utumana.dto.UserDTO;
 import ws.peoplefirst.utumana.exception.DBException;
 import ws.peoplefirst.utumana.exception.ForbiddenException;
 import ws.peoplefirst.utumana.exception.IdNotFoundException;
@@ -417,5 +421,41 @@ public class BookingService {
 
 	public List<Booking> findByStatusInAndAccommodationId(List<BookingStatus> list, Long accId) {
 		return bookingRepository.findByStatusInAndAccommodationId(list, accId);
+	}
+
+	@Transactional
+	public List<BookingDTO> setUnAvailabilities(Long accId, Long userId, List<Booking> unavailabilities) {
+		List<BookingDTO> unAvsDTOs = this.findUnavailabilities(accId);
+
+		Accommodation acc = accommodationService.findById(accId);
+		User u = userService.findById(userId);
+
+		List<Long> toRemove = new ArrayList<>();
+		for(BookingDTO b: unAvsDTOs) {
+			toRemove.add(b.getId());
+		}
+		
+		System.out.println("INIZIO RIMOZIONE");
+		this.bookingRepository.deleteByIdInAndAccommodation(toRemove, acc);
+		System.out.println("Termino Rimozione");
+
+		for(Booking b: unavailabilities) {
+			b.setAccommodation(acc);
+			b.setIsUnavailability(true);
+			b.setStatus(BookingStatus.ACCEPTED);
+			b.setUser(u);
+			b.setUserId(userId);
+
+			this.bookingRepository.save(b);
+		}
+
+		List<BookingDTO> res = new ArrayList<>();
+		BookingDTO temp = null;
+		for(Booking b: unavailabilities) {
+			temp = new BookingDTO(b.getPrice(), BookingStatus.ACCEPTED, b.getCheckIn(), b.getCheckOut(), null);
+			res.add(temp);
+		}
+
+		return res;
 	}
 }

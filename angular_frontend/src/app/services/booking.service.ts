@@ -46,6 +46,11 @@ export class BookingService {
       catchError(error => {console.log("ERRORE"); return of(error.error)})
     );
   }
+
+  public setUnavailabilities(unavailabilities: Booking[], accommodationId: number): Observable<BookingDTO[] | {message: string, status: string, time: string}> {
+    console.log("UNAVAILABILITIES", unavailabilities);
+    return this.http.put<BookingDTO[] | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/set_unavailabilities/" + accommodationId, unavailabilities);
+  }
   
   public getBookings(url: string): Observable<BookingDTO[]>{
     return this.http.get<BookingDTO[]>(url).pipe(

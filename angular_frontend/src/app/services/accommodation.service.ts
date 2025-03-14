@@ -580,24 +580,23 @@ export class AccommodationService {
     return this.http.patch<Accommodation>(BACKEND_URL_PREFIX + "/api/reject_accommodation/" + id, {});
   }
   
-  //TODO:
   public getUnavailabilities(accommodationId: number): Observable<Unavailability[] | null | undefined> {
-
+    return this.http.get<Unavailability[] | null | undefined>(BACKEND_URL_PREFIX + "/api/accommodation/" + accommodationId + "/unavailabilities").pipe(
+      catchError(
+        error => {
+          console.error(error.error);
+          return of(null);
+        }
+      )
+    )
   }
 
-  //TODO:
-  public setUnavailabilities(unavailabilities: Unavailability[], accommodationId: number): Observable<void | {message: string, status: string, time: string}> {
-    
+  public getAllAvailabilities(accommodationId: number): Observable<Availability[] | null | {message: string, status: string, time: string}> {
+    return this.http.get<Availability[] | null | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/accommodation/" + accommodationId + "/availabilities");
   }
 
-  //TODO:
-  public getAvailabilitiesNotUnavailabilities(accommodationId: number): Observable<Availability[] | null | undefined> {
-
-  }
-
-  //TODO:
   public setAvailabilities(availabilities: Availability[], accommodationId: number): Observable<void | {message: string, status: string, time: string}> {
-    
+    return this.http.patch<void | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/accommodation/" + accommodationId + "/availabilities", availabilities);
   }
 
 }
