@@ -40,7 +40,7 @@ export class AuthInterceptor implements HttpInterceptor {
         })
       ); 
 
-    }else if(req.url.includes('signin') || req.url.includes('forgotPassword')){
+    }else if(req.url.includes('signin') || req.url.includes('forgotPassword') || (req.url.includes('settings/theme') && req.method === 'GET')){
       console.log("Request with signin or forgotPassword:", req);
       // forward request without overwriting headers
       return next.handle(req);
