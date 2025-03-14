@@ -10,7 +10,7 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^15.2.0",
+    "@angular/animations": "^15.2.10",
     "@angular/cdk": "^15.2.8",
     "@angular/common": "^15.2.0",
     "@angular/compiler": "^15.2.0",
@@ -23,6 +23,7 @@
     "@ngx-translate/http-loader": "^7.0.0",
     "@types/leaflet": "^1.9.16",
     "leaflet": "^1.9.4",
+    "ngx-colors": "^3.6.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.12.0"

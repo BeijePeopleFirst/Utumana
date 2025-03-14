@@ -50,7 +50,7 @@ export class BookingService {
   public getBookings(url: string): Observable<BookingDTO[]>{
     return this.http.get<BookingDTO[]>(url).pipe(
       map(data => {
-        for(let booking of data){
+        for(let booking of data as BookingDTO[]){
           this.s3Service.getPhoto(booking.accommodation.main_photo_url).subscribe(blob => {
             if(blob != null){
               booking.accommodation.main_photo_blob_url = URL.createObjectURL(blob);

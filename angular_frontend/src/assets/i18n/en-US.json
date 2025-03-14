@@ -97,6 +97,29 @@
 	"accepted_success": "Accommodation accepted successfully!",
 	"rejected_success": "Accommodation rejected successfully!"
 },
+"admin-dashboard-customize": {
+	"colors_title": "Customize colors for the application",
+	"colors_warning": "Warning: colors will be modified for all users. Modify them with caution, follow the instructions given and ensure that the contrast colors make the text visible on a colored background.",
+	"primary_instructions": "Choose the primary color: it is the main color of the site, used for example for titles and most buttons. We ask you to also indicate a darker shade and a lighter one, which will be used for example when the user hovers over a button.",
+	"primary": "Primary color",
+	"primary_dark": "Darker primary color",
+	"primary_light": "Lighter primary color",
+	"primary_contrast": "Text color on primary background",
+	"secondary_instructions": "Choose the secondary color: it is the secondary color of the site, used for example for links and for field names in forms. We ask you to also indicate a darker shade and a lighter one, which will be used for example when the user hovers over a link.",
+	"secondary": "Secondary color",
+	"secondary_dark": "Darker secondary color",
+	"secondary_light": "Lighter secondary color",
+	"secondary_contrast": "Text color on secondary background",
+	"neutral_instructions": "Choose the neutral colors: they are the colors used for backgrounds. Try to choose two different but light shades.",
+	"neutral_1": "First neutral color",
+	"neutral_2": "Second neutral color",
+	"examples": "Examples",
+	"reset": "Reset colors",
+	"confirm_colors_title": "Are you sure you want to save these colors?",
+	"confirm_colors_subtitle": "The colors chosen will be saved and will be used as the application's colors for all users.",
+	"confirm_colors": "Save colors",
+	"colors_success": "Colors saved successfully!"
+},
 "admin-dashboard-sidenav": {
 	"title": "Admin Panel",
 	"home": "Home",
@@ -244,7 +267,8 @@
 "common": {
 	"cancel": "Cancel",
 	"create": "Create",
-	"delete": "Delete"
+	"delete": "Delete",
+	"save": "Save"
 	},
 "create": {
 	"continue": "Next",

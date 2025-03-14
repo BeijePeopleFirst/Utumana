@@ -1,4 +1,150 @@
-<!-- work in progress -->
-<img src="https://static.vecteezy.com/system/resources/previews/024/016/100/original/work-in-progress-fill-outline-icon-design-illustration-work-in-progress-symbol-on-white-background-eps-10-file-vector.jpg" alt="Work in progress" class="w-2/5 h-auto">
-
 <!-- https://blog.logrocket.com/applying-dynamic-styles-tailwind-css/ -->
+
+<div class="flex justify-center items-center p-2 bg-neutral-1">
+    <form class="px-2 my-4 w-fit" (ngSubmit)="showConfirmColorsModal()" #form="ngForm">
+        <h2 class="text-center">{{'admin-dashboard-customize.colors_title' | translate}}</h2>
+        <p class="p-2 mb-4 font-semibold text-red-700 bg-red-50 rounded-md">{{'admin-dashboard-customize.colors_warning' | translate}}</p>
+
+        <p class="mb-2">{{'admin-dashboard-customize.primary_instructions' | translate}}</p>
+        <div class="flex flex-row flex-wrap gap-4 justify-start items-center pl-4 mb-4 2xl:px-10 2xl:gap-x-20">
+            <div class="flex flex-col gap-2">
+                <div>
+                    <label class="label-primary">{{'admin-dashboard-customize.primary_dark' | translate}}*</label>
+                    <div class="flex flex-row gap-x-2 items-center">
+                        <ngx-colors ngx-colors-trigger [(ngModel)]="theme.primary_dark" name="primary_dark_picker"></ngx-colors>
+                        <input [(ngModel)]="theme.primary_dark" class="input-primary w-fit" name="primary_dark"/>
+                    </div>
+                </div>
+                <div>
+                    <label class="label-primary">{{'admin-dashboard-customize.primary' | translate}}*</label>
+                    <div class="flex flex-row gap-x-2 items-center">
+                        <ngx-colors ngx-colors-trigger [(ngModel)]="theme.primary_default" name="primary_default_picker"></ngx-colors>
+                        <input [(ngModel)]="theme.primary_default" class="input-primary w-fit" name="primary_default"/>
+                    </div>
+                </div>
+                <div>
+                    <label class="label-primary">{{'admin-dashboard-customize.primary_light' | translate}}*</label>
+                    <div class="flex flex-row gap-x-2 items-center">
+                        <ngx-colors ngx-colors-trigger [(ngModel)]="theme.primary_light" name="primary_light_picker"></ngx-colors>
+                        <input [(ngModel)]="theme.primary_light" class="input-primary w-fit" name="primary_light"/>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h6>{{'admin-dashboard-customize.examples' | translate}}:</h6>
+                <div class="flex flex-col flex-wrap gap-2 mt-2">
+                    <h2 [style.color]="theme.primary_default">{{'my_accommodations.title' | translate}}</h2>
+                    <button id="primary-button" class="btn-primary w-fit" type="button" [style.backgroundColor]="theme.primary_default"
+                    [style.--tw-ring-color]="theme.primary_light" (mouseenter)="document.getElementById('primary-button')?.style!.backgroundColor = theme.primary_dark" 
+                    (mouseleave)="document.getElementById('primary-button')?.style!.backgroundColor = theme.primary_default">{{'login.button_text' | translate}}</button>
+                </div>
+            </div>
+        </div>
+
+        <p class="mb-2">{{'admin-dashboard-customize.secondary_instructions' | translate}}</p>
+        <div class="flex flex-row flex-wrap gap-4 justify-start items-center pl-4 mb-4 2xl:px-10 2xl:gap-x-20">
+            <div class="flex flex-col gap-2">
+                <div>
+                    <label class="label-primary">{{'admin-dashboard-customize.secondary_dark' | translate}}*</label>
+                    <div class="flex flex-row gap-x-2 items-center">
+                        <ngx-colors ngx-colors-trigger [(ngModel)]="theme.secondary_dark" name="secondary_dark_picker"></ngx-colors>
+                        <input [(ngModel)]="theme.secondary_dark" class="input-primary w-fit" name="secondary_dark"/>
+                    </div>
+                </div>
+                <div>
+                    <label class="label-primary">{{'admin-dashboard-customize.secondary' | translate}}*</label>
+                    <div class="flex flex-row gap-x-2 items-center">
+                        <ngx-colors ngx-colors-trigger [(ngModel)]="theme.secondary_default" name="secondary_default_picker"></ngx-colors>
+                        <input [(ngModel)]="theme.secondary_default" class="input-primary w-fit" name="secondary_default"/>
+                    </div>
+                </div>
+                <div>
+                    <label class="label-primary">{{'admin-dashboard-customize.secondary_light' | translate}}*</label>
+                    <div class="flex flex-row gap-x-2 items-center">
+                        <ngx-colors ngx-colors-trigger [(ngModel)]="theme.secondary_light" name="secondary_light_picker"></ngx-colors>
+                        <input [(ngModel)]="theme.secondary_light" class="input-primary w-fit" name="secondary_light"/>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h6>{{'admin-dashboard-customize.examples' | translate}}:</h6>
+                <div class="flex flex-col flex-wrap gap-2 mt-2">
+                    <h5 [style.color]="theme.secondary_default">{{'profile.edit_picture' | translate}}</h5>
+                    <button id="secondary-button" class="btn-primary w-fit" type="button" [style.backgroundColor]="theme.secondary_default"
+                    [style.--tw-ring-color]="theme.secondary_light" (mouseenter)="document.getElementById('secondary-button')?.style!.backgroundColor = theme.secondary_dark" 
+                    (mouseleave)="document.getElementById('secondary-button')?.style!.backgroundColor = theme.secondary_default">{{'create.confirm' | translate}}</button>
+                    <a id="secondary-link" [style.color]="theme.secondary_default" (mouseenter)="document.getElementById('secondary-link')?.style!.color = theme.secondary_dark" 
+                    (mouseleave)="document.getElementById('secondary-link')?.style!.color = theme.secondary_default"
+                    (click)="document.getElementById('secondary-link')?.style!.color = theme.secondary_light">{{'settings.change_password' | translate}}</a>
+                </div>
+            </div>
+        </div>
+
+        <p class="mb-2">{{'admin-dashboard-customize.neutral_instructions' | translate}}</p>
+        <div class="flex flex-row flex-wrap gap-4 justify-start items-center pl-4 mb-4 2xl:px-10 2xl:gap-x-20">
+            <div class="flex flex-col gap-2">
+                <div>
+                    <label class="label-primary">{{'admin-dashboard-customize.neutral_1' | translate}}*</label>
+                    <div class="flex flex-row gap-x-2 items-center">
+                        <ngx-colors ngx-colors-trigger [(ngModel)]="theme.neutral1" name="neutral1_picker"></ngx-colors>
+                        <input [(ngModel)]="theme.neutral1" class="input-primary w-fit" name="neutral1"/>
+                    </div>
+                </div>
+                <div>
+                    <label class="label-primary">{{'admin-dashboard-customize.neutral_2' | translate}}*</label>
+                    <div class="flex flex-row gap-x-2 items-center">
+                        <ngx-colors ngx-colors-trigger [(ngModel)]="theme.neutral2" name="neutral2_picker"></ngx-colors>
+                        <input [(ngModel)]="theme.neutral2" class="input-primary w-fit" name="neutral2"/>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h6>{{'admin-dashboard-customize.examples' | translate}}:</h6>
+                <div class="flex flex-col flex-wrap gap-2 mt-2">
+                    <div class="p-4" [style.backgroundColor]="theme.neutral1">
+                        <h2 [style.color]="theme.primary_default">{{'my_accommodations.title' | translate}}</h2>
+                        <h5 [style.color]="theme.secondary_default">{{'profile.edit_picture' | translate}}</h5>
+                        <p class="text-center">{{'admin-dashboard-customize.neutral_instructions' | translate}}</p>
+                    </div>
+                    <div class="p-4" [style.backgroundColor]="theme.neutral2">
+                        <h2 [style.color]="theme.primary_default">{{'my_accommodations.title' | translate}}</h2>
+                        <h5 [style.color]="theme.secondary_default">{{'profile.edit_picture' | translate}}</h5>
+                        <p class="text-center">{{'admin-dashboard-customize.neutral_instructions' | translate}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-row gap-4 justify-center">
+            <button type="button" class="btn-cancel w-fit" (click)="resetTheme()">{{'admin-dashboard-customize.reset' | translate}}</button>
+            <button type="submit" class="btn-primary w-fit" [disabled]="form.invalid">{{'common.save' | translate}}</button>
+        </div>
+    </form>
+</div>
+
+
+<!-- Modal to confirm theme colors -->
+<div *ngIf="isColorsModalOpen" class="modal">
+    <div [hidden]="success" class="justify-center px-7 pt-7 pb-5 text-center modal-dialog">
+        <h5>{{'admin-dashboard-customize.confirm_colors_title' | translate}}</h5>
+        <p class="text-sm">{{'admin-dashboard-customize.confirm_colors_subtitle' | translate}}</p>
+
+        <button (click)="closeConfirmColorsModal()" class="close-modal">
+            &times;
+        </button>
+
+        <p *ngIf="error" class="mt-4 mb-0 text-center error-message">{{'error' | translate}}</p>
+
+        <div class="flex gap-x-5 justify-center mt-4">
+            <button type="button" class="w-fit btn-cancel" (click)="closeConfirmColorsModal()">{{'cancel_button_label' | translate}}</button>
+            <button type="button" class="w-fit btn-primary" (click)="updateTheme()">{{'admin-dashboard-customize.confirm_colors' | translate}}</button>
+        </div> 
+    </div>
+
+    <div [hidden]="!success" class="justify-center p-10 text-center modal-dialog">
+        <h5 class="text-[#28db08]">{{'admin-dashboard-customize.colors_success' | translate}}</h5>
+    </div>
+</div>

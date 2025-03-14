@@ -7,6 +7,7 @@ import { AuthService } from './services/auth.service';
 import { DraftService } from './services/draft.service';
 import { Subscription } from 'rxjs';
 import { S3Service } from './services/s3.service';
+import { SettingsService } from './services/settings.service';
 
 
 @Component({
@@ -44,12 +45,16 @@ export class AppComponent implements OnInit, DoCheck, OnDestroy {
     public authService: AuthService,
     private draftService: DraftService,
     private s3Service: S3Service,
-    private router: Router
+    private router: Router,
+    private settingsService: SettingsService
   ) {
     this.selectedLanguage = this.translate.currentLang || 'en-US';
     //this.translate.use(this.selectedLanguage);
     this.selectedLanguage = localStorage.getItem("currLan") ?? 'en-US';
     this.translate.use(this.selectedLanguage);
+
+    // set colors theme
+    this.settingsService.getAndSetSavedTheme();
   }
 
   ngOnInit(): void {

@@ -1,3 +1,12 @@
+function withOpacity(variableName) {
+  return ({ opacityValue }) => {
+    if (opacityValue !== undefined) {
+      return `rgba(var(${variableName}), ${opacityValue})`
+    }
+    return `rgb(var(${variableName}))`
+  }
+}
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./src/app/components/**/*.{html,js,ts,css}", "./src/app/*.{html,js,ts,css}"],
@@ -5,18 +14,18 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-          DEFAULT: '#0e7490', // cyan-800
-          dark: '#164e63',
-          light: '#0891b2'
+          DEFAULT: withOpacity("--primary-default"), //'#0e7490', // cyan-800
+          dark: withOpacity("--primary-dark"),
+          light: withOpacity("--primary-light")
         },
         secondary: {
-          DEFAULT: '#fb923c', // orange-400
-          dark: '#ea580c',  // orange-600
-          light: '#f59e0b'  // amber-500
+          DEFAULT: withOpacity("--secondary-default"), // orange-400
+          dark: withOpacity("--secondary-dark"),  // orange-600
+          light: withOpacity("--secondary-light")  // amber-500
         }, 
         neutral: {
-          1: '#fcfcfc', // neutral-50
-          2: '#fff7ed'  // orange-50
+          1: withOpacity("--neutral-1"), // neutral-50
+          2: withOpacity("--neutral-2")  // orange-50
         }
       }
     }

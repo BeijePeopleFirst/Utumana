@@ -1,11 +1,13 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AccommodationCardComponent } from './components/accommodation-card/accommodation-card.component';
 import {HttpClientModule,HttpClient, HTTP_INTERCEPTORS} from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthInterceptor } from './interceptors/authInterceptor.service';
+import { NgxColorsModule } from 'ngx-colors';
 
 
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -143,6 +145,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     AppRoutingModule,
     ReactiveFormsModule,
     FormsModule,
+    BrowserAnimationsModule,
+    NgxColorsModule,
     TranslateModule.forRoot({
       loader: {
         provide:TranslateLoader,
