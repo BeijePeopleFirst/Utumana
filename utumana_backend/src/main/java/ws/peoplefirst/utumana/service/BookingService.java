@@ -341,9 +341,6 @@ public class BookingService {
 		if(endDate.isAfter(checkIn) && endDate.isBefore(checkOut)) return true;
 
 		if(startDate.isBefore(checkIn) && endDate.isAfter(checkOut)) return true;
-
-		//Because there should be at least one day dedicated to set the Accommodation up for the new Guest:
-		//if(startDate.isEqual(checkOut) || endDate.isEqual(checkIn)) return true;
 		
 		return false;
 	}
@@ -411,6 +408,7 @@ public class BookingService {
 		return this.bookingRepository.findByStatusInAndAccommodationIdAndUserId(stats, accId, usrId);
 	}
 
+	@Deprecated()
 	private List<Booking> findByAccommodationAndUser(Accommodation acc, User user) {
 		return bookingRepository.findByAccommodationAndUser(acc, user);
 	}
@@ -425,6 +423,33 @@ public class BookingService {
 
 	@Transactional
 	public List<BookingDTO> setUnAvailabilities(Long accId, Long userId, List<Booking> unavailabilities) {
+
+		//Lets retrieve the Booking that are considered to be valid:
+		//if there will be some overlapping the operation won' t be allowed
+		List<BookingDTO> occupiedBookings = this.bookingRepository.findNotPendingNotRejectedBookingsByAccommodationID(accId);
+		
+		for(Booking unavailability : unavailabilities) {
+			for(BookingDTO b : occupiedBookings) {
+				if(checkIfDatesAreOverlapping(unavailability.getCheckIn().toLocalDate(), unavailability.getCheckOut().toLocalDate(), LocalDate.parse(b.getCheckIn(), DateTimeFormatter.ISO_DATE_TIME), LocalDate.parse(b.getCheckOut(), DateTimeFormatter.ISO_DATE_TIME))) {
+					log.error("unavailability dates are overlapping with pre-existent lecit bookings" );
+					System.out.println(b);
+					throw new ForbiddenException("cannot set unavailability due to overlapping dates");
+				}
+			}
+		}
+		
+		//Now that the operation is considered legal lets REJECT all the Bookings that are PENDING:
+		List<Booking> pendingBookings = this.bookingRepository.findPendingBookingsByAccommodationID(accId);
+		
+		for(Booking unavailability: unavailabilities) {
+			for(Booking b : pendingBookings) {
+				if(checkIfDatesAreOverlapping(unavailability.getCheckIn().toLocalDate(), unavailability.getCheckOut().toLocalDate(), b.getCheckIn().toLocalDate(), b.getCheckOut().toLocalDate())) {
+					b.setStatus(BookingStatus.REJECTED);
+					this.bookingRepository.save(b);
+				}
+			}
+		}
+
 		List<BookingDTO> unAvsDTOs = this.findUnavailabilities(accId);
 
 		Accommodation acc = accommodationService.findById(accId);
@@ -435,9 +460,7 @@ public class BookingService {
 			toRemove.add(b.getId());
 		}
 		
-		System.out.println("INIZIO RIMOZIONE");
 		this.bookingRepository.deleteByIdInAndAccommodation(toRemove, acc);
-		System.out.println("Termino Rimozione");
 
 		for(Booking b: unavailabilities) {
 			b.setAccommodation(acc);

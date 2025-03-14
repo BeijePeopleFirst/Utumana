@@ -949,10 +949,9 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
 
   consumeErrorOccurredEditAvailabilitiesModal($event: boolean) {
     this.message = "true";
-    if($event) this.errorAvailabilitesMessage = true;
+    this.errorAvailabilitesMessage = true;
 
     this.toggleEditAvailabilitiesPerspective();
-    location.reload();
   }
 
   clearMessage() {

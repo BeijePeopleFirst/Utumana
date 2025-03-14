@@ -185,6 +185,12 @@ export class EditAvailabilitiesAccommodationDetailsComponent implements OnInit {
   }
 
   removeAvailability(availability: Availability): void{
+
+    if(this.availabilities.length === 1) {
+      this.errorOccurred.emit(true);
+      return;
+    }
+
     this.availabilities = this.availabilities.filter(a => a.start_date !== availability.start_date);
     this.accommodationService.setAvailabilities(this.availabilities, this.accommodation.id!).subscribe(
       oth => {

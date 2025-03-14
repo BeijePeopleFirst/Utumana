@@ -329,6 +329,8 @@ public class AccommodationService {
         
         checkAvailabilites(availabilities);
 
+        //BUG: Availabilities weren't updated:
+        //----------------------------------------------------------------------------------------------------------------
         // List<Availability> savedAvailabilities = new ArrayList<Availability>();
         // Availability saved;
         // for (Availability availability : availabilities) {
@@ -348,8 +350,15 @@ public class AccommodationService {
         // }
 
         // accommodation.setAvailabilities(savedAvailabilities);
+        //----------------------------------------------------------------------------------------------------------------
 
         List<Availability> avsOld = accommodation.getAvailabilities();
+
+        if(avsOld.size() > availabilities.size()) {
+            if(this.cannotDeleteAvailability(avsOld, accommodation)) {
+                throw new ForbiddenException("Cannot remove availability whose days are booked already by other users");
+            }
+        }
 
         for(Availability a: availabilities) {
             a.setAccommodation(accommodation);
@@ -365,6 +374,35 @@ public class AccommodationService {
         }
 
         return accommodation;
+    }
+
+    //1) Retrieve all bookings in that period except unavailabilities
+    //2) If at least one Booking falls into any availability period then RETURN TRUE, else RETURN FALSE
+    //Shall we consider unavailabilities as well?
+    private boolean cannotDeleteAvailability(List<Availability> list, Accommodation acc) {
+
+        List<Booking> bookings = bookingRepository.findByAccommodationAndIsUnavailabilityIsFalse(acc);
+
+        for(Availability av: list) {
+            for(Booking b : bookings) {
+                if(areOverlappingDates(av.getStartDate(), av.getEndDate(), b.getCheckIn().toLocalDate(), b.getCheckOut().toLocalDate())) return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static boolean areOverlappingDates(LocalDate start, LocalDate end, LocalDate chkIn, LocalDate chkOut) {
+        return ((isAfterOrEqual(chkIn, start) && isBeforeOrEqual(chkIn, end))
+                || (isAfterOrEqual(chkOut, start) && isBeforeOrEqual(chkOut, end)));
+    }
+
+    private static boolean isAfterOrEqual(LocalDate sx, LocalDate dx) {
+        return sx.isAfter(dx) || sx.isEqual(dx);
+    }
+
+    private static boolean isBeforeOrEqual(LocalDate sx, LocalDate dx) {
+        return sx.isBefore(dx) || sx.isEqual(dx);
     }
 
    public Accommodation setAccommodationUnavailabilities(Long accommodationId, List<Booking> unavailabilities, Long userId) {
