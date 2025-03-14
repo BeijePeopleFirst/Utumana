@@ -353,10 +353,37 @@ public class AccommodationService {
         //----------------------------------------------------------------------------------------------------------------
 
         List<Availability> avsOld = accommodation.getAvailabilities();
+        List<Availability> toRemoveAvailabilities = new ArrayList<Availability>();
 
         if(avsOld.size() > availabilities.size()) {
-            if(this.cannotDeleteAvailability(avsOld, accommodation)) {
+
+            boolean addToList = true;
+            for(Availability a: avsOld) {
+
+                addToList = true;
+                for(Availability a2: availabilities) {
+                    if(a.getStartDate().isEqual(a2.getStartDate())) {
+                        addToList = false;
+                        break;
+                    }
+
+                    if(addToList) toRemoveAvailabilities.add(a);
+                }
+            }
+
+            List<Object> evaluation = this.cannotDeleteAvailability(toRemoveAvailabilities, accommodation);
+            if((Boolean)evaluation.get(0)) {
                 throw new ForbiddenException("Cannot remove availability whose days are booked already by other users");
+            }
+            else {
+
+                @SuppressWarnings("unchecked")
+                List<Booking> toReject = (ArrayList<Booking>)evaluation.get(1);
+
+                for(Booking b: toReject) {
+                    b.setStatus(BookingStatus.REJECTED);
+                    bookingRepository.save(b);
+                }
             }
         }
 
@@ -379,9 +406,12 @@ public class AccommodationService {
     //1) Retrieve all bookings in that period except unavailabilities
     //2) If at least one Booking falls into any availability period then RETURN TRUE, else RETURN FALSE
     //Shall we consider unavailabilities as well?
-    private boolean cannotDeleteAvailability(List<Availability> list, Accommodation acc) {
+    private List<Object> cannotDeleteAvailability(List<Availability> list, Accommodation acc) {
+
+        List<Object> result = new ArrayList<>();
 
         List<Booking> bookings = bookingRepository.findByAccommodationAndIsUnavailabilityIsFalse(acc);
+        List<Booking> toReject = new ArrayList<>();
 
         for(Availability av: list) {
             for(Booking b : bookings) {
@@ -390,14 +420,21 @@ public class AccommodationService {
                 
                     if(areOverlappingDates(av.getStartDate(), av.getEndDate(), b.getCheckIn().toLocalDate(), b.getCheckOut().toLocalDate())) {
                         System.out.println(av.getStartDate() + "        " + av.getEndDate() + "       " + b.getCheckIn().toLocalDate() + "         " + b.getCheckOut().toLocalDate());
-                        return true;
+                        return Arrays.asList(true);
                     }
 
+                }
+                else {
+                    if(b.getStatus().equals(BookingStatus.PENDING)) {
+                        if(areOverlappingDates(av.getStartDate(), av.getEndDate(), b.getCheckIn().toLocalDate(), b.getCheckOut().toLocalDate())) {
+                            toReject.add(b);
+                        }
+                    }
                 }
             }
         }
 
-        return false;
+        return Arrays.asList(false, toReject);
     }
 
     private static boolean areOverlappingDates(LocalDate start, LocalDate end, LocalDate chkIn, LocalDate chkOut) {
