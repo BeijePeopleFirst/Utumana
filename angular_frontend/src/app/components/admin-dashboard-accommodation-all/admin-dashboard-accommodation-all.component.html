@@ -11,7 +11,7 @@
     </button>
 </div>
 
-<div *ngIf="isSearchBarVisible" class="sticky top-0 z-20 p-4 rounded-lg shadow-md bg-neutral-1">
+<div *ngIf="isSearchBarVisible" class="sticky top-0 z-20 p-4 rounded-lg shadow-md bg-neutral-2">
     <app-admin-dashdoard-search-bar (searchSubmitted)="search($event)"></app-admin-dashdoard-search-bar>
 </div>
 
@@ -21,7 +21,7 @@
     </div>
 </div>
 
-<section *ngIf="!isLoading && allAccommodations && allAccommodations.length > 0" class="flex justify-center items-center pt-8 bg-neutral-2">
+<section *ngIf="!isLoading && allAccommodations && allAccommodations.length > 0" class="flex justify-center items-center pt-8">
     <div class="container p-5 text-center">
       <app-search-accommodation-list [accommodations$]="allAccommodations$" [pageNumber]="allAccommodationsPageNumber" [totalPages]="allAccommodationsTotalPages" 
         (askForPage)="loadAllAccommodationsPage($event)" [status]="'all'"></app-search-accommodation-list>

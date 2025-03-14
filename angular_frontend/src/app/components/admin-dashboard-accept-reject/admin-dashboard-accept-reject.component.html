@@ -6,7 +6,7 @@
   </div>
 </div>
 
-<section *ngIf="allPendingAccommodations && allPendingAccommodations.length > 0; else noAccommodations" class="flex justify-center items-center pt-8 bg-neutral-2">
+<section *ngIf="allPendingAccommodations && allPendingAccommodations.length > 0; else noAccommodations" class="flex justify-center items-center pt-8">
     <div class="container p-5 text-center">
       <app-accommodation-cards [accommodations$]="pendingAccommodations$" [pageNumber]="pendingAccommodationsPageNumber" [totalPages]="pendingAccommodationsTotalPages"  [status]="'pending'"
         (askForPage)="loadPendingAccommodationsPage($event)" (refresh)="refresh($event)"></app-accommodation-cards>
