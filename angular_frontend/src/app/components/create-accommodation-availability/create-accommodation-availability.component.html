@@ -1,13 +1,13 @@
-<div class="flex flex-col justify-center items-center w-screen sm:w-auto">
+<div class="flex flex-col justify-center items-center w-full px-4 sm:w-auto">
     <app-create-progress [step] = 3 [draftId]="draftId"></app-create-progress>
 
     <!-- availabilities-->
-    <div class="justify-self-center px-2 mb-5 w-screen xl:w-1/2">
+    <div class="justify-self-center px-4 mb-5 w-full xl:w-1/2">
     <p>{{'create.availability_info' | translate}}</p> 
     </div>
 
     <div class="flex flex-row flex-wrap gap-5 justify-center w-full sm:flex-nowrap">
-        <form (ngSubmit)="addAvailability()" class="px-4 w-screen sm:w-1/3" [formGroup]="availForm">
+        <form (ngSubmit)="addAvailability()" class="px-4 w-full sm:w-1/3" [formGroup]="availForm">
             <div class="justify-self-end w-full sm:w-1/2">
                 <label class="label-primary" for="start_avail">{{'create.start_date' | translate}}</label>
                 <input class="input-primary" [ngClass]="{'alert-danger': (availForm.controls['start_avail'].invalid && isAvailSubmitted) || invalidDates}" 
@@ -54,7 +54,7 @@
             </div>
         </form>
         
-        <div class="flex flex-col p-4 w-screen max-w-lg text-center rounded-lg shadow-md h-fit bg-neutral-2">
+        <div class="flex flex-col p-4 w-full max-w-lg text-center rounded-lg shadow-md h-fit bg-neutral-2">
             <h4>{{'create.availabilities' | translate}}</h4>
             <ng-container *ngIf="availabilities && availabilities.length > 0">
                 <div class="flex relative flex-row justify-evenly">
@@ -76,12 +76,12 @@
     </div>
 
     <!-- unavailabilities-->
-    <div class="justify-self-center px-2 my-5 w-screen xl:w-1/2">
+    <div class="justify-self-center px-4 my-5 w-full xl:w-1/2">
         <p>{{'create.unavailability_info' | translate}}</p>
     </div>
 
     <div class="flex flex-row flex-wrap gap-5 justify-center w-full sm:flex-nowrap">
-        <form (ngSubmit)="addUnavailability()" class="px-4 w-screen sm:w-1/3" [formGroup]="unavForm">
+        <form (ngSubmit)="addUnavailability()" class="px-4 w-full sm:w-1/3" [formGroup]="unavForm">
             <div class="justify-self-end w-full sm:w-1/2">
                 <label class="label-primary" for="start_unav">{{'create.start_date' | translate}}</label>
                 <input class="input-primary" [ngClass]="{'alert-danger': (unavForm.controls['start_unav'].invalid && isUnavSubmitted) || invalidUnavDates}" 
@@ -117,7 +117,7 @@
             </div>
         </form>
         
-        <div class="flex flex-col p-4 w-screen max-w-lg text-center rounded-lg shadow-md h-fit bg-neutral-2">
+        <div class="flex flex-col p-4 w-full max-w-lg text-center rounded-lg shadow-md h-fit bg-neutral-2">
             <h4>{{'create.unavailabilities' | translate}}</h4>
             <ng-container *ngIf="unavailabilities && unavailabilities.length > 0">
                 <div class="flex relative flex-row justify-evenly">

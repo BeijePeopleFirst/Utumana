@@ -1,7 +1,7 @@
 <div class="flex flex-col justify-center items-center w-screen sm:w-auto">
     <app-create-progress [step] = 4 [draftId]="draftId"></app-create-progress>
 
-    <form class="my-4 w-screen md:max-w-md" (ngSubmit)="saveAndContinue()" #infoForm="ngForm">
+    <form class="my-4 w--screen mx-2 md:max-w-md" (ngSubmit)="saveAndContinue()" #infoForm="ngForm">
         <div class="w-full">
             <label class="label-primary">{{'create.title' | translate}}*</label>
             <input class="input-primary" [ngClass]="{'alert-danger': titleField.invalid}" 

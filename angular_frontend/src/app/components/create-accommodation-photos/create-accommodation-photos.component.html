@@ -1,7 +1,7 @@
-<div class="flex flex-col justify-center items-center w-screen sm:w-auto">
+<div class="flex flex-col justify-center items-center p-4 m-auto w-full sm:w-auto">
     <app-create-progress [step] = 5 [draftId]="draftId"></app-create-progress>
 
-    <form class="my-4 w-screen md:max-w-md" (ngSubmit)="saveAndContinue()" #photoForm="ngForm">
+    <form class="my-4 w-full md:max-w-md" (ngSubmit)="saveAndContinue()" #photoForm="ngForm">
         <div class="grid grid-cols-1 space-y-2 text-center">
             <h5>{{'create.choose_photos' | translate}}</h5>
             <p class="text-sm">{{'create.photos_instructions' | translate}}</p>
