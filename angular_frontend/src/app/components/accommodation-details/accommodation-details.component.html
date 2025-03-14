@@ -7,19 +7,19 @@
   </ng-container>
   
   <ng-container *ngIf="!invalidAccommodation && !userNotLogged" id="accommodation-details-container" class="w-screen">
-    <div class="relative flex flex-col items-center justify-center">
+    <div class="flex relative flex-col justify-center items-center">
 
       <!-- container for all info (except reviews) and book now div -  -->
-      <div class="flex flex-row flex-wrap items-center justify-center w-full gap-y-6 lg:flex-col bg-neutral-1">
-        <section class="flex flex-col items-center justify-center w-full pt-8 pb-4 space-y-6 bg-neutral-1">
+      <div class="flex flex-row flex-wrap gap-y-6 justify-center items-center w-full lg:flex-col bg-neutral-1">
+        <section class="flex flex-col justify-center items-center pt-8 pb-4 space-y-6 w-full bg-neutral-1">
           <!-- 🏠 Titolo + Preferiti -->
-          <div class="flex flex-row flex-wrap items-center justify-center px-2 mb-4 space-x-6 text-center gap-y-6">
-            <div class="relative flex flex-row items-center">
+          <div class="flex flex-row flex-wrap gap-y-6 justify-center items-center px-2 mb-4 space-x-6 text-center">
+            <div class="flex relative flex-row items-center">
               <h1 class="mb-0">{{ accommodation.title }}</h1>
-              <img *ngIf="isMe" class="w-6 h-6 ml-2 cursor-pointer" src="/assets/icons/pencil.png" (click)="toggleEditTitlePerspective()" />
+              <img *ngIf="isMe" class="ml-2 w-6 h-6 cursor-pointer" src="/assets/icons/pencil.png" (click)="toggleEditTitlePerspective()" />
             </div>
             
-            <div id="heart" class="flex items-center justify-center shrink-0">
+            <div id="heart" class="flex justify-center items-center shrink-0">
               <img 
                 class="w-8 transition-transform cursor-pointer hover:scale-110" 
                 [src]="isFavourite ? '/assets/icons/heart-full.png' : '/assets/icons/heart-empty.png'" 
@@ -35,8 +35,8 @@
           </div>
     
           <!-- 📍 Località -->
-          <div class="relative flex items-center px-2">
-            <p class="text-2xl text-gray-600">
+          <div class="flex relative items-center px-2">
+            <p class="text-2xl text-gray-500">
               <span *ngIf="accommodation.city">{{ accommodation.city }}</span>
               <span *ngIf="accommodation.city && accommodation.province">, </span> 
               <span *ngIf="accommodation.province">{{ accommodation.province }}</span>
@@ -46,7 +46,7 @@
           </div>
         </section>
         
-        <div class="flex flex-col items-center justify-center gap-y-6">
+        <div class="flex flex-col gap-y-6 justify-center items-center">
           <!-- 🖼️ Carousel Immagini -->
           <div id="images" class="flex relative flex-row flex-wrap gap-1.5 justify-center mt-8 w-fit">
 
@@ -54,15 +54,15 @@
             <!-- -------------------------------------------------------------------------------------- -->
             <img id="biggest-image" [src]="accommodation.photos[0].blob_url" class="h-96" />
 
-            <img src="/assets/icons/pencil.png" (click)="toggleEditPhotosPerspective()" class="w-6 h-6 -top-4 -right-10 icon" *ngIf="accommodation.photos.length === 1 && isMe" id="pencil-one-image" />
+            <img src="/assets/icons/pencil.png" (click)="toggleEditPhotosPerspective()" class="-top-4 -right-10 w-6 h-6 icon" *ngIf="accommodation.photos.length === 1 && isMe" id="pencil-one-image" />
             
             <div *ngIf="accommodation.photos.length > 1" id="other-images" class="flex flex-col gap-1.5">
               <div class="flex flex-row gap-1.5">
                 <img id="image-oth1" [src]="accommodation.photos[1].blob_url" class="h-44" />
-                <img src="/assets/icons/pencil.png" (click)="toggleEditPhotosPerspective()" class="w-6 h-6 -top-4 -right-10 icon" *ngIf="accommodation.photos.length === 2 && isMe" id="pencil-two-images" />
+                <img src="/assets/icons/pencil.png" (click)="toggleEditPhotosPerspective()" class="-top-4 -right-10 w-6 h-6 icon" *ngIf="accommodation.photos.length === 2 && isMe" id="pencil-two-images" />
                 <div>
                   <img id="image-oth2" [src]="accommodation.photos[2].blob_url" class="h-44" *ngIf="accommodation.photos.length > 2" />
-                  <img src="/assets/icons/pencil.png" (click)="toggleEditPhotosPerspective()" *ngIf="accommodation.photos.length >= 3 && isMe" id="pencil-three-images" class="w-6 h-6 -top-4 -right-10 icon" />
+                  <img src="/assets/icons/pencil.png" (click)="toggleEditPhotosPerspective()" *ngIf="accommodation.photos.length >= 3 && isMe" id="pencil-three-images" class="-top-4 -right-10 w-6 h-6 icon" />
                 </div>
               </div>
 
@@ -70,7 +70,7 @@
                 <img id="image-oth3" [src]="accommodation.photos[3].blob_url" class="h-44" />
                 <div>
                   <img id="image-oth4" [src]="accommodation.photos[4].blob_url" class="h-44" *ngIf="accommodation.photos.length > 4" />
-                  <div class="absolute bottom-0 right-0 cursor-pointer" (click)="toggleViewMorePhotosPerspective()" *ngIf="accommodation.photos.length > 5">{{("accommodation-card-details.view-more-photos" | translate)}}</div>
+                  <div class="absolute right-0 bottom-0 cursor-pointer" (click)="toggleViewMorePhotosPerspective()" *ngIf="accommodation.photos.length > 5">{{("accommodation-card-details.view-more-photos" | translate)}}</div>
                 </div>
               </div>
             </div>
@@ -78,20 +78,20 @@
           </div>
           
           <!-- 🏡 Info Camere -->
-          <div class="relative flex items-center text-center">
+          <div class="flex relative items-center text-center">
             <p class="text-xl">
               {{ accommodation.rooms }} {{"accommodation-card-details.rooms-word" | translate}}, 
               {{ accommodation.beds }} {{"accommodation-card-details.beds-word" | translate}}
             </p>
-            <img *ngIf="isMe" class="top-0 w-6 h-6 -right-10 icon" src="/assets/icons/pencil.png" (click)="toggleEditRoomsBeds()" />
+            <img *ngIf="isMe" class="top-0 -right-10 w-6 h-6 icon" src="/assets/icons/pencil.png" (click)="toggleEditRoomsBeds()" />
           </div>
 
           <p class="px-4 mt-10 text-2xl text-center" *ngIf="isAdminOrMe && accommodation.approval_timestamp">{{("accommodation-card-details.approval-timestamp-text" | translate)}}: {{accommodation.approval_timestamp | date:'medium':undefined:locale}}</p>
     
           <!-- 👤 Info Host -->
-          <div id="host-info-div" class="flex items-start w-screen max-w-3xl p-6 space-x-6 rounded-lg shadow-md bg-neutral-1">
-            <div class="relative w-20 h-20 overflow-hidden rounded-full shadow-md shrink-0">
-              <img id="profile-picture" class="absolute top-0 left-0 object-cover w-full h-full bg-cover object-fit" [src]="accommodationOwner.profile_picture_blob_url" (error)="accommodationOwner.profile_picture_blob_url = defaultPictureUrl" alt="Profile picture">
+          <div id="host-info-div" class="flex items-start p-6 space-x-6 w-screen max-w-3xl rounded-lg shadow-md bg-neutral-1">
+            <div class="overflow-hidden relative w-20 h-20 rounded-full shadow-md shrink-0">
+              <img id="profile-picture" class="object-cover absolute top-0 left-0 w-full h-full bg-cover object-fit" [src]="accommodationOwner.profile_picture_blob_url" (error)="accommodationOwner.profile_picture_blob_url = defaultPictureUrl" alt="Profile picture">
             </div>
             <!-- <img id="badge-picture" /> --> <!-- TODO -->
             <div>
@@ -99,8 +99,8 @@
                 <span class="text-lg text-primary">{{'accommodation-card-details.host' | translate}}: &nbsp; </span>
                 {{ accommodationOwner.name }} {{ accommodationOwner.surname }}
               </p>
-              <p class="italic text-gray-500">{{ accommodationOwner.bio }}</p>
-              <button class="px-4 py-2 mt-2 text-white rounded-lg shadow bg-primary hover:bg-primary-dark">
+              <p class="italic text-neutral-contrast">{{ accommodationOwner.bio }}</p>
+              <button class="mt-2 w-fit btn-primary">
                 {{ ("accommodation-card-details.contact-word" | translate) }}
               </button>
             </div>
@@ -108,14 +108,14 @@
 
           <!-- 📝 Descrizione -->
           <ng-container *ngIf="accommodation.description">
-            <div class="w-full max-w-3xl p-6 rounded-lg shadow-md bg-neutral-2">
+            <div class="p-6 w-full max-w-3xl rounded-lg shadow-md bg-neutral-2">
               <h3>{{ ("accommodation-card-details.description-word" | translate) }}</h3>
               <p class="mt-3">{{ accommodation.description }}</p>
             </div>
           </ng-container>
 
           <!-- 📆 Availabilities -->
-          <div id="avail" class="w-full max-w-3xl p-6 rounded-lg shadow-md bg-neutral-1">
+          <div id="avail" class="p-6 w-full max-w-3xl rounded-lg shadow-md bg-neutral-1">
             <ng-container *ngIf="accommodation.availabilities && accommodation.availabilities.length > 0">
               <h3>{{ ("accommodation-card-details.choose-dates" | translate) }}:</h3>
               <app-choose-book-period-from-acc-details 
@@ -132,14 +132,14 @@
             </ng-container>
           </div>
 
-          <section class="flex flex-col items-center justify-center w-full py-4 space-y-6 bg-neutral-1">
+          <section class="flex flex-col justify-center items-center py-4 space-y-6 w-full bg-neutral-1">
             <!-- 🛠️ Servizi -->
-            <div class="relative w-full max-w-3xl p-6 rounded-lg shadow-md bg-neutral-1">
+            <div class="relative p-6 w-full max-w-3xl rounded-lg shadow-md bg-neutral-1">
               <!-- Matita per modificare i servizi -->
               <img src="/assets/icons/pencil.png" 
                 (click)="toggleEditServicesPerspective()" 
                 *ngIf="isMe" 
-                class="w-6 h-6 top-4 right-4 icon"/>
+                class="top-4 right-4 w-6 h-6 icon"/>
 
               <h3>{{ ("accommodation-card-details.services-word" | translate) }}</h3>
 
@@ -164,7 +164,7 @@
           </div>
           <div class="flex items-center mt-4 mb-2 space-x-3">
             <label for="guests-number" class="font-semibold">{{ ("accommodation-card-details.guests-word" | translate) }}:</label>
-            <input id="guests-number" type="number" min="1" [max]="accommodation.beds" [(ngModel)]="guestsNumber" class="p-2 border rounded-md" />
+            <input id="guests-number" type="number" min="1" [max]="accommodation.beds" [(ngModel)]="guestsNumber" class="p-2 rounded-md border" />
           </div>
 
           <p *ngFor="let p of chosenPeriod?.price_info" class="mt-2">
@@ -173,13 +173,13 @@
           <p *ngIf="chosenPeriod && chosenPeriod.price_info && chosenPeriod.price_info.length > 1" class="mt-4 text-lg font-bold">
             {{'accommodation-card-details.total-price' | translate}}: {{chosenPeriod.price | currency:'EUR':'symbol-narrow':'1.2-2':'it-IT'}}
           </p>
-          <button (click)="bookNow()" class="w-full mt-4 btn-primary">
+          <button (click)="bookNow()" class="mt-4 w-full btn-primary">
             {{ ("accommodation-card-details.book-now" | translate) }}
           </button>
         </div>
       </div>
   
-      <section class="flex items-center justify-center w-screen pt-8 pb-4 space-y-6 bg-neutral-2">
+      <section class="flex justify-center items-center pt-8 pb-4 space-y-6 w-screen bg-neutral-2">
         <!-- 🌟 Recensioni -->
         <div class="py-6 text-center">
           <h2>{{("accommodation-card-details.reviews-word" | translate)}}</h2>
@@ -198,7 +198,7 @@
   <!-- MESSAGGES -->
   <!-------------------------------------------------------------------------------------------------------------------------------------------------->
   <ng-container *ngIf="message" class="mt-16">
-    <button class="btn-primary" type="button" (click)="clearMessage()">clear</button>
+    <button class="btn-primary w-fit" type="button" (click)="clearMessage()">clear</button>
     <br>
     <h1 class="text-xl text-blue-800" *ngIf="accommodationEntityError">
       {{"accommodation-card-details.accommodation-entity-error" | translate}}
@@ -290,7 +290,7 @@
     <div class="modal">
       <div class="p-5 modal-dialog">
         <form #roomsBedsForm="ngForm">
-          <h1 class="text-2xl">{{"accommodation-card-details.edit-rooms-and-beds-sentence" | translate}}</h1>
+          <h4>{{"accommodation-card-details.edit-rooms-and-beds-sentence" | translate}}</h4>
   
           <div>
             <label for="rooms-input-popup">{{"accommodation-card-details.rooms-word" | translate}}:</label>
@@ -355,11 +355,11 @@
               placeholder="{{'accommodation-card-details.services-word' | translate}}" />
   
             <div *ngIf="foundServices$ && foundServices$ | async as ser">
-              <div *ngIf="ser.length > 0" class="p-2 mt-2 border rounded-lg border-secondary-light bg-neutral-2">
+              <div *ngIf="ser.length > 0" class="p-2 mt-2 rounded-lg border border-secondary-light bg-neutral-2">
                 <div *ngFor="let s of ser" class="flex items-center p-2 border-b border-secondary-light last:border-b-0">
                   <input type="checkbox" [checked]="isSelectedService(s)" #checkBoxFoundService 
                     (input)="elaborateCheckbox(checkBoxFoundService.checked, s)" />
-                  <img [src]="iconUrl + '/services/' + s.icon_url" class="w-6 ml-2" />
+                  <img [src]="iconUrl + '/services/' + s.icon_url" class="ml-2 w-6" />
                   <p class="ml-2">{{ s.title }}</p>
                 </div>
               </div>
@@ -396,7 +396,7 @@
     <div class="modal">
       <div class="flex flex-row items-center p-5 modal-dialog">
         <button (click)="deleteAccommodation()" class="flex items-center btn-danger">
-          <img class="w-8 mr-1" src="assets/icons/binBtnIcon.png" />
+          <img class="mr-1 w-8" src="assets/icons/binBtnIcon.png" />
           {{"accommodation-card-details.confirm-acc-deletion-btn-text" | translate}}
         </button>
         <button (click)="toggleDeleteAccommodation()" class="mt-4 btn-cancel">{{"accommodation-card-details.ABORT-acc-deletion-btn-text" | translate}}</button>
@@ -412,8 +412,8 @@
   <ng-template #editTitlePerspective>
     <div class="modal">
       <div class="p-6 modal-dialog">
-        <h1 class="text-2xl">{{('accommodation-card-details.title-label' | translate)}}</h1>
-        <input type="text" id="title-input-field" class="w-full p-2 mt-2 border rounded-md" [(ngModel)]="titleInputField" required />
+        <h4>{{('accommodation-card-details.title-label' | translate)}}</h4>
+        <input type="text" id="title-input-field" class="p-2 mt-2 w-full rounded-md border" [(ngModel)]="titleInputField" required />
         <div *ngIf="titleInputFieldError" class="mt-2 border-2 alert-danger">
           {{('accommodation-card-details.error-title' | translate)}}
         </div>

@@ -35,7 +35,7 @@ public class SettingsController {
             @ApiResponse(responseCode = "200", description = "Theme returned successfully.",
                     content = @Content(schema = @Schema(implementation = Theme.class)))
     })
-	@PreAuthorize("hasAuthority('USER')")
+	@PreAuthorize("permitAll()")
     @GetMapping("/theme")
     public Theme getTheme() {
         return settingsService.getTheme();

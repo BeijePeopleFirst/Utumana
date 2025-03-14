@@ -13,8 +13,8 @@
             </div>
 
             <div class="flex gap-x-5 justify-center mt-4">
-                <button type="submit" class="w-1/4 btn-primary">{{'save_button_label' | translate}}</button>
-                <button type="button" class="w-1/4 btn-cancel" (click)="close()">{{'cancel_button_label' | translate}}</button>
+                <button type="button" class="w-fit btn-cancel" (click)="close()">{{'cancel_button_label' | translate}}</button>
+                <button type="submit" class="w-fit btn-primary">{{'save_button_label' | translate}}</button>
             </div>
         </form>
         <p *ngIf="error" class="mt-4 mb-0 text-center error-message">{{'error' | translate}}</p>

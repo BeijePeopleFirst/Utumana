@@ -57,7 +57,7 @@
                 required pattern="[\w\W]+" minlength="8"
                 [(ngModel)]="user.password" #password="ngModel"/>
             
-                <button type="button"class="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-600 dark:text-neutral-300"
+                <button type="button"class="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-contrast/75"
                 aria-label="Show password" (click)="visiblePassword=!visiblePassword">
                     <svg *ngIf="!visiblePassword" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                         stroke-width="1.5" stroke="currentColor" aria-hidden="true" class="size-5">

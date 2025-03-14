@@ -2,14 +2,14 @@
 <ul>
     <li *ngFor="let user of admins" class="py-1">
         <div class="flex flex-col">
-            <div class="p-2 mb-1 bg-white rounded-lg shadow-md xl:w-3/4 2xl:w-2/3">
+            <div class="p-2 mb-1 rounded-lg shadow-md bg-neutral-1 xl:w-3/4 2xl:w-2/3">
                 <div class="flex flex-row flex-wrap items-center space-x-6">
                     <img [src]="user.profile_picture_url" alt="Profile Picture" (error)="user.profile_picture_url = defaultPictureUrl"
                         class="object-cover w-24 h-24 rounded-full border-4 border-primary-dark shrink-0">
                     <div class="flex flex-col flex-grow justify-between items-center space-y-2 lg:flex-row">
                         <div class="flex flex-col flex-grow w-full">
-                            <p class="text-xl font-bold text-gray-800">{{ user.name }} {{ user.surname }}</p>
-                            <p class="text-base text-gray-600">{{ user.email }}</p>
+                            <p class="text-xl font-bold text-neutral-contrast text-wrap">{{ user.name }} {{ user.surname }}</p>
+                            <p class="text-base break-all text-neutral-contrast/75">{{ user.email }}</p>
                         </div>
                     
                         <div class="place-self-start w-full max-w-72">
@@ -104,8 +104,8 @@
                         class="object-cover w-24 h-24 rounded-full border-4 border-primary-dark">
                     
                     <div class="relative flex-grow">
-                        <p class="text-xl font-bold text-gray-800">{{ selectedUser.name }} {{ selectedUser.surname }}</p>
-                        <p class="text-base text-gray-600">{{ selectedUser.email }}</p>
+                        <p class="text-xl font-bold text-neutral-contrast">{{ selectedUser.name }} {{ selectedUser.surname }}</p>
+                        <p class="text-base text-neutral-contrast/75">{{ selectedUser.email }}</p>
                     </div>
                 </div>
             </div>
@@ -119,8 +119,8 @@
         <p *ngIf="error" class="mt-4 mb-0 text-center error-message">{{'error' | translate}}</p>
 
         <div class="flex gap-x-5 justify-center mt-4">
-            <button type="button" class="w-1/4 btn-cancel" (click)="closeMakeAdminModal()">{{'cancel_button_label' | translate}}</button>
-            <button type="button" class="w-1/4 btn-success" (click)="makeAdmin()">{{'admin-dashboard-users.make_admin' | translate}}</button>
+            <button type="button" class="w-fit btn-cancel" (click)="closeMakeAdminModal()">{{'cancel_button_label' | translate}}</button>
+            <button type="button" class="w-fit btn-success" (click)="makeAdmin()">{{'admin-dashboard-users.make_admin' | translate}}</button>
         </div> 
     </div>
 

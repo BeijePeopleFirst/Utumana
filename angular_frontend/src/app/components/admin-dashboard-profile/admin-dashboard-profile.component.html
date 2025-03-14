@@ -1,11 +1,11 @@
-<div class="px-2 py-6 bg-white rounded-lg shadow-md md:px-6">
+<div class="px-2 py-6 rounded-lg shadow-md bg-neutral-1 md:px-6">
   <div *ngIf="!isEditing; else editFormTemplate" class="flex relative gap-x-6 items-center">
     <img [src]="user.profile_picture_url" alt="Profile Picture" (error)="user.profile_picture_url = defaultPictureUrl"
          class="object-cover w-24 h-24 rounded-full border-4 border-primary-dark">
     
     <div class="relative flex-grow">
-      <p class="text-xl font-bold text-gray-800 text-wrap">{{ user.name }} {{ user.surname }}</p>
-      <p class="text-base text-gray-600 break-all">{{ user.email }}</p>
+      <p class="text-xl font-bold text-neutral-contrast text-wrap">{{ user.name }} {{ user.surname }}</p>
+      <p class="text-base break-all text-neutral-contrast/75">{{ user.email }}</p>
     </div>
     
     <div class="absolute right-0 -top-3">
@@ -26,7 +26,7 @@
           </label>
           <input formControlName="name" required
                  class="input-primary">
-          <p *ngIf="editForm.get('name')?.hasError('required')" class="mt-1 text-sm text-red-600">
+          <p *ngIf="editForm.get('name')?.hasError('required')" class="mt-1 text-sm text-red-700">
             {{'adminProfile.required' | translate}}
           </p>
         </div>
@@ -37,7 +37,7 @@
           </label>
           <input formControlName="surname" required
                  class="input-primary">
-          <p *ngIf="editForm.get('surname')?.hasError('required')" class="mt-1 text-sm text-red-600">
+          <p *ngIf="editForm.get('surname')?.hasError('required')" class="mt-1 text-sm text-red-700">
             {{'adminProfile.required' | translate}}
           </p>
         </div>
@@ -48,7 +48,7 @@
           </label>
           <input formControlName="email" type="email" required
                  class="input-primary">
-          <p *ngIf="editForm.get('email')?.hasError('email')" class="mt-1 text-sm text-red-600">
+          <p *ngIf="editForm.get('email')?.hasError('email')" class="mt-1 text-sm text-red-700">
             {{'adminProfile.nonValid' | translate}}
           </p>
         </div>
@@ -59,7 +59,7 @@
           </label>
           <input type="password" formControlName="password"
                  class="input-primary">
-          <p class="mt-1 text-xs text-gray-500">
+          <p class="mt-1 text-xs text-neutral-contrast/75">
             {{'adminProfile.passwordMessage' | translate}}
           </p>
         </div>

@@ -6,7 +6,7 @@
           <img class="object-cover absolute top-0 left-0 w-full h-full bg-cover object-fit" [src]="review.user_picture_blob" alt="Profile picture">
         </div>
         <p class="relative">
-          <span class="font-bold text-gray-600">{{review.name_user}}</span>
+          <span class="font-bold text-neutral-contrast/75">{{review.name_user}}</span>
         </p>
       </div>
       <div *ngIf="!review.approval_timestamp" class="flex gap-x-3 items-center">
@@ -45,7 +45,7 @@
         </div>
         <p class="mt-1">{{review.description}}</p>
       </div>
-      <div class="mt-4 text-gray-600">
+      <div class="mt-4 text-neutral-contrast/75">
         <div class="flex gap-2">
           <span *ngIf="review.comfort" class="rating-label">{{'review.comfort' | translate}}</span>
           <div class="text-xl stars-container">

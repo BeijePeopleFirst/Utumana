@@ -8,7 +8,7 @@
                 </svg>
             </button>
             <div class="flex flex-wrap gap-3 justify-center">
-                <div *ngFor="let booking of bookings" class="bg-white rounded-lg shadow-lg md:p-4">
+                <div *ngFor="let booking of bookings" class="rounded-lg shadow-lg bg-neutral-1 md:p-4">
                 <!--div *ngFor="let booking of bookings" class="flex p-2 max-w-sm rounded-lg text-start lg:max-w-4xl"-->
                     <app-booking-card (selectBooking)="onBookingSelected($event)" [booking]="booking" [isOwner]="isOwner"></app-booking-card>
                 </div>

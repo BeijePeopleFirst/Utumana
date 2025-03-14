@@ -28,7 +28,7 @@
                 <div class="mt-4">
                     <div class="flex justify-between">
                         <label class="label-primary">{{'login.password_label' | translate}}</label>
-                        <a (click)="forgotPassword()" class="self-center text-xs text-gray-500">{{'login.forget_password' | translate}}</a>
+                        <a (click)="forgotPassword()" class="self-center text-xs text-neutral-contrast/75">{{'login.forget_password' | translate}}</a>
                     </div>
                     <div class="relative">
                     <input class="input-primary" [ngClass]="{'alert-danger': password.invalid && showPasswordError}" 
@@ -37,7 +37,7 @@
                     [(ngModel)]="user.password" #password="ngModel" 
                     (input)="showPasswordError = false; passwordError = false;"/>
 
-                    <button type="button"class="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-600 dark:text-neutral-300"
+                    <button type="button"class="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-contrast/50"
                 aria-label="Show password" (click)="visiblePassword=!visiblePassword">
                         <svg *ngIf="!visiblePassword" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                             stroke-width="1.5" stroke="currentColor" aria-hidden="true" class="size-5">

@@ -15,12 +15,12 @@
 
         <div class="flex gap-x-5 justify-center mt-4">
             <ng-container *ngIf="action=='accept'">
-                <button type="button" class="w-1/4 btn-success" (click)="accept()">{{'review.accept_button_label' | translate}}</button>
+                <button type="button" class="w-fit btn-success" (click)="accept()">{{'review.accept_button_label' | translate}}</button>
             </ng-container>
             <ng-container *ngIf="action=='reject'">
-                <button type="button" class="w-1/4 btn-danger" (click)="reject()">{{'review.reject_button_label' | translate}}</button>
+                <button type="button" class="w-fit btn-danger" (click)="reject()">{{'review.reject_button_label' | translate}}</button>
             </ng-container>
-            <button type="button" class="w-1/4 btn-cancel" (click)="close()">{{'cancel_button_label' | translate}}</button>
+            <button type="button" class="w-fit btn-cancel" (click)="close()">{{'cancel_button_label' | translate}}</button>
         </div>
         <p *ngIf="error" class="mt-4 mb-0 text-center error-message">{{'error' | translate}}</p>
     </div>

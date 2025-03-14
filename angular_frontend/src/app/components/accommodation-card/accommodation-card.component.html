@@ -1,6 +1,6 @@
 <div *ngIf="accommodation" class="w-72 group hover:-translate-y-2">
   <a class="clickable_card" (click)="onClick($event)">
-    <div class="flex overflow-hidden flex-col flex-1 bg-white rounded-lg shadow-lg" >
+    <div class="flex overflow-hidden flex-col flex-1 rounded-lg shadow-lg bg-neutral-1" >
         <img *ngIf="accommodation.main_photo_blob_url; else no_photo" [src]="accommodation.main_photo_blob_url" [alt]="accommodation.main_photo_url" class="object-cover h-64">
         <ng-template #no_photo>
           <div class="flex justify-center items-center h-64">

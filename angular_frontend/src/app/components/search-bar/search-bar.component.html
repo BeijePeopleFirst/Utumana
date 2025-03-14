@@ -1,5 +1,5 @@
 <form [formGroup]="searchForm" (ngSubmit)="search()" class="flex flex-col flex-wrap gap-4 items-center px-6 py-3 rounded-lg shadow-md bg-neutral-2 md:flex-row">
-  <div class="flex flex-col w-2/3 sm:w-auto relative">
+  <div class="flex relative flex-col w-2/3 sm:w-auto">
     <div class="relative w-fit">
       <label for="city" class="text-sm font-medium select-none text-primary-dark">{{ 'search.city' | translate }}</label>
       <input 
@@ -18,7 +18,7 @@
             type="button"
             *ngFor="let city of filteredCities" 
             (click)="selectCity(city)" 
-            class="flex items-center px-4 py-2 w-full text-sm text-left text-gray-900 hover:bg-gray-50">
+            class="flex items-center px-4 py-2 w-full text-sm text-left text-neutral-contrast hover:bg-gray-50">
             {{ city }}
           </button>
         </div>

@@ -31,7 +31,6 @@ import { MyAccommodationsComponent } from './components/my-accommodations/my-acc
 import { HostDashboardComponent } from './components/host-dashboard/host-dashboard.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { WriteReviewComponent } from './components/write-review/write-review.component';
-import { BookConfirmComponent } from './components/book-confirm/book-confirm.component';
 import { BookNowComponent } from './components/book-now/book-now.component';
 import { CreateAccommodationAddressComponent } from './components/create-accommodation-address/create-accommodation-address.component';
 import { CreateAccommodationServicesComponent } from './components/create-accommodation-services/create-accommodation-services.component';
@@ -95,7 +94,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     HostDashboardComponent,
     ProfileComponent,
     WriteReviewComponent,
-    BookConfirmComponent,
     BookNowComponent,
     CreateAccommodationAddressComponent,
     CreateAccommodationServicesComponent,
@@ -145,7 +143,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     AppRoutingModule,
     ReactiveFormsModule,
     FormsModule,
-    BrowserAnimationsModule,
+    BrowserAnimationsModule,  // dependency added for NgxColorsModule
     NgxColorsModule,
     TranslateModule.forRoot({
       loader: {

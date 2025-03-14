@@ -1,6 +1,6 @@
 <!-- https://blog.logrocket.com/applying-dynamic-styles-tailwind-css/ -->
 
-<div class="flex justify-center items-center p-2 bg-neutral-1">
+<div class="flex justify-center items-center p-2 bg-gray-100">
     <form class="px-2 my-4 w-fit" (ngSubmit)="showConfirmColorsModal()" #form="ngForm">
         <h2 class="text-center">{{'admin-dashboard-customize.colors_title' | translate}}</h2>
         <p class="p-2 mb-4 font-semibold text-red-700 bg-red-50 rounded-md">{{'admin-dashboard-customize.colors_warning' | translate}}</p>
@@ -103,7 +103,7 @@
 
             <div>
                 <h6>{{'admin-dashboard-customize.examples' | translate}}:</h6>
-                <div class="flex flex-col flex-wrap gap-2 mt-2">
+                <div class="flex flex-col flex-wrap mt-2">
                     <div class="p-4" [style.backgroundColor]="theme.neutral1">
                         <h2 [style.color]="theme.primary_default">{{'my_accommodations.title' | translate}}</h2>
                         <h5 [style.color]="theme.secondary_default">{{'profile.edit_picture' | translate}}</h5>

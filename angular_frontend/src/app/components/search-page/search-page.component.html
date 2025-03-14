@@ -19,11 +19,11 @@
 ></app-filter-modal>
 
 <section class="py-8 bg-neutral-2">
-  <div class="container px-2 pt-4 pb-12 mx-auto text-gray-800">
+  <div class="container px-2 pt-4 pb-12 mx-auto text-neutral-contrast">
     <div class="flex gap-x-6 justify-center items-center">
-      <h2 class="text-5xl font-bold text-gray-800">
+      <h1 class="mb-0 text-neutral-contrast">
         {{ 'search.resFound' | translate }}
-      </h2>
+      </h1>
 
       <div class="flex relative gap-x-4 items-center">
         <button 
@@ -39,25 +39,25 @@
 
         <div 
           *ngIf="isOrderByOpen" 
-          class="absolute left-0 top-full z-50 mt-2 w-full bg-white rounded-xl ring-1 shadow-lg ring-gray-900/5"
+          class="absolute left-0 top-full z-50 mt-2 w-full rounded-xl ring-1 shadow-lg bg-neutral-1 ring-neutral-contrast/5"
         >
           <div class="p-4 space-y-2 w-full">
-            <button (click)="setOrderParam('minPrice', 'ASC' , $event)" class="block px-4 py-2 w-full text-sm text-gray-900 hover:bg-neutral-2 hover:cursor-pointer hover:text-secondary-dark">{{ 'search.priceAsc' | translate }}</button>
-            <button (click)="setOrderParam('minPrice', 'DESC' , $event)" class="block px-4 py-2 w-full text-sm text-gray-900 hover:bg-neutral-2 hover:cursor-pointer hover:text-secondary-dark">{{ 'search.priceDesc' | translate }}</button>
-            <button (click)="setOrderParam('approvalTimestamp', 'ASC' , $event)" class="block px-4 py-2 w-full text-sm text-gray-900 hover:bg-neutral-2 hover:cursor-pointer hover:text-secondary-dark">{{ 'search.recentAsc' | translate }}</button>
-            <button (click)="setOrderParam('approvalTimestamp', 'DESC' , $event)" class="block px-4 py-2 w-full text-sm text-gray-900 hover:bg-neutral-2 hover:cursor-pointer hover:text-secondary-dark">{{ 'search.recentDesc' | translate }}</button>
-            <button (click)="setOrderParam('rating', 'ASC' , $event)" class="block px-4 py-2 w-full text-sm text-gray-900 hover:bg-neutral-2 hover:cursor-pointer hover:text-secondary-dark">{{ 'search.ratingAsc' | translate }}</button>
-            <button (click)="setOrderParam('rating', 'DESC' , $event)" class="block px-4 py-2 w-full text-sm text-gray-900 hover:bg-neutral-2 hover:cursor-pointer hover:text-secondary-dark">{{ 'search.ratingDesc' | translate }}</button>
+            <button (click)="setOrderParam('minPrice', 'ASC' , $event)" class="block px-4 py-2 w-full text-sm text-neutral-contrast hover:bg-neutral-2 hover:cursor-pointer hover:text-secondary-dark">{{ 'search.priceAsc' | translate }}</button>
+            <button (click)="setOrderParam('minPrice', 'DESC' , $event)" class="block px-4 py-2 w-full text-sm text-neutral-contrast hover:bg-neutral-2 hover:cursor-pointer hover:text-secondary-dark">{{ 'search.priceDesc' | translate }}</button>
+            <button (click)="setOrderParam('approvalTimestamp', 'ASC' , $event)" class="block px-4 py-2 w-full text-sm text-neutral-contrast hover:bg-neutral-2 hover:cursor-pointer hover:text-secondary-dark">{{ 'search.recentAsc' | translate }}</button>
+            <button (click)="setOrderParam('approvalTimestamp', 'DESC' , $event)" class="block px-4 py-2 w-full text-sm text-neutral-contrast hover:bg-neutral-2 hover:cursor-pointer hover:text-secondary-dark">{{ 'search.recentDesc' | translate }}</button>
+            <button (click)="setOrderParam('rating', 'ASC' , $event)" class="block px-4 py-2 w-full text-sm text-neutral-contrast hover:bg-neutral-2 hover:cursor-pointer hover:text-secondary-dark">{{ 'search.ratingAsc' | translate }}</button>
+            <button (click)="setOrderParam('rating', 'DESC' , $event)" class="block px-4 py-2 w-full text-sm text-neutral-contrast hover:bg-neutral-2 hover:cursor-pointer hover:text-secondary-dark">{{ 'search.ratingDesc' | translate }}</button>
             <div *ngFor="let address of defaultAddresses">
-              <button (click)="setAddressParam(address.address, $event); setOrderParam('distance', 'ASC' , $event) " class="block px-4 py-2 w-full text-sm text-gray-900 hover:bg-neutral-2 hover:cursor-pointer hover:text-secondary-dark">{{ 'search.addressASC'| translate }} {{address.name}}</button>
-              <button (click)=" setAddressParam(address.address, $event); setOrderParam('distance', 'DESC' , $event)" class="block px-4 py-2 w-full text-sm text-gray-900 hover:bg-neutral-2 hover:cursor-pointer hover:text-secondary-dark">{{ 'search.addressDESC' | translate }} {{address.name}}</button>
+              <button (click)="setAddressParam(address.address, $event); setOrderParam('distance', 'ASC' , $event) " class="block px-4 py-2 w-full text-sm text-neutral-contrast hover:bg-neutral-2 hover:cursor-pointer hover:text-secondary-dark">{{ 'search.addressASC'| translate }} {{address.name}}</button>
+              <button (click)=" setAddressParam(address.address, $event); setOrderParam('distance', 'DESC' , $event)" class="block px-4 py-2 w-full text-sm text-neutral-contrast hover:bg-neutral-2 hover:cursor-pointer hover:text-secondary-dark">{{ 'search.addressDESC' | translate }} {{address.name}}</button>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="flex flex-col sm:flex-row gap-6 mt-8">
+    <div class="flex flex-col gap-6 mt-8 sm:flex-row">
       <div class="w-full sm:w-1/2 lg:w-3/5">
         <app-search-accommodation-list
           [accommodations$]="foundAccommodations$" 
@@ -70,7 +70,7 @@
       </div>
 
       <div class="w-full sm:w-1/2 lg:w-1/2 h-[600px] sticky top-4">
-        <div class="border-2 border-black h-full rounded-lg overflow-hidden">
+        <div class="overflow-hidden h-full rounded-lg border-2 border-neutral-contrast">
           <app-map [accommodations$]="foundAccommodations$"></app-map>
         </div>
       </div>

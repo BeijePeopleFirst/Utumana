@@ -249,6 +249,7 @@ public class ConfigurationClass {
                     authorize.requestMatchers("/api/signin").permitAll();
                     authorize.requestMatchers("/api/refresh_token").permitAll();
                     authorize.requestMatchers("/check").permitAll();
+                    authorize.requestMatchers(HttpMethod.GET, "/api/settings/theme").permitAll();
                     authorize.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                     authorize.requestMatchers("/swagger-ui/**")
                     .permitAll()

@@ -9,7 +9,6 @@ import { CreateAccommodationAddressComponent } from './components/create-accommo
 import { MyBookingsComponent } from './components/my-bookings/my-bookings.component';
 import { HostDashboardComponent } from './components/host-dashboard/host-dashboard.component';
 import { SearchPageComponent } from './components/search-page/search-page.component';
-import { BookConfirmComponent } from './components/book-confirm/book-confirm.component';
 import { ConfirmBookingBooknowComponent } from './components/confirm-booking-booknow/confirm-booking-booknow.component';
 import { FavouritesComponent } from './components/favourites/favourites.component';
 import { MyAccommodationsComponent } from './components/my-accommodations/my-accommodations.component';
