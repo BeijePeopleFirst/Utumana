@@ -118,7 +118,8 @@
           </div>
           
           <!-- 📆 Availabilities -->
-          <div id="avail" class="w-full max-w-3xl p-6 rounded-lg shadow-md bg-neutral-1">
+          <div id="avail" class="relative w-full max-w-3xl p-6 rounded-lg shadow-md bg-neutral-1">
+            <img src="/assets/icons/pencil.png" (click)="toggleEditAvailabilitiesPerspective()" *ngIf="isMe" class="absolute w-6 h-6 top-4 right-4 icon"/>
             <ng-container *ngIf="accommodation.availabilities && accommodation.availabilities.length > 0">
               <h3>{{ ("accommodation-card-details.choose-dates" | translate) }}:</h3>
               <app-choose-book-period-from-acc-details 
@@ -277,6 +278,10 @@
 
     <h1 class="text-xl text-blue-800" *ngIf="errorUpdatingDescription">
       {{"accommodation-card-details.error-edit-description" | translate}}
+    </h1>
+
+    <h1 class="text-xl text-blue-800" *ngIf="updatedAvailabilitesMessage">
+      {{"accommodation-card-details.success-updated-availabilities" | translate}}
     </h1>
     
   </ng-container>
@@ -457,4 +462,19 @@
 
   <ng-container *ngIf="showEditDescriptionPerspective">
     <ng-container *ngTemplateOutlet="editDescriptionPerspective"></ng-container>
+  </ng-container>
+
+  <ng-template #editAvailabilitiesPerspective>
+    <div class="modal">
+      <div class="p-6 modal-dialog">
+        <app-edit-availabilities-accommodation-details
+          [accommodation]="accommodation"
+          (closeModal)="consumeCloseEditAvailabilitiesModal($event)">
+        </app-edit-availabilities-accommodation-details>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-container *ngIf="showEditAvailabilitiesPerspective">
+    <ng-container *ngTemplateOutlet="editAvailabilitiesPerspective"></ng-container>
   </ng-container>

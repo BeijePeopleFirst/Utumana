@@ -72,6 +72,7 @@ import { AdminDashboardProfileListComponent } from './components/admin-dashboard
 import { AdminDashboardMetricsComponent } from './components/admin-dashboard-metrics/admin-dashboard-metrics.component';
 import { AdminDashdoardSearchBarComponent } from './components/admin-dashdoard-search-bar/admin-dashdoard-search-bar.component';
 import { AdminDashboardCustomizeComponent } from './components/admin-dashboard-customize/admin-dashboard-customize.component';
+import { EditAvailabilitiesAccommodationDetailsComponent } from './components/edit-availabilities-accommodation-details/edit-availabilities-accommodation-details.component';
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
@@ -135,7 +136,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     AdminDashboardProfileListComponent,
     AdminDashboardMetricsComponent,
     AdminDashdoardSearchBarComponent,
-    AdminDashboardCustomizeComponent
+    AdminDashboardCustomizeComponent,
+    EditAvailabilitiesAccommodationDetailsComponent
   ],
   imports: [
     BrowserModule,

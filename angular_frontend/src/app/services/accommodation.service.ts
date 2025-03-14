@@ -16,6 +16,7 @@ import { DefaultAddress } from '../models/defaultAddress';
 import { Coordinates } from '../models/coordinates';
 import { S3Service } from './s3.service';
 import { Photo } from '../models/photo';
+import { Unavailability } from '../dtos/unavailabilityDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -578,8 +579,25 @@ export class AccommodationService {
   rejectAccommodation(id: number): Observable<Accommodation> {
     return this.http.patch<Accommodation>(BACKEND_URL_PREFIX + "/api/reject_accommodation/" + id, {});
   }
-  /*private getAuth(): HttpHeaders {
-    let headers = new HttpHeaders();
-    return headers;
-  }*/
+  
+  //TODO:
+  public getUnavailabilities(accommodationId: number): Observable<Unavailability[] | null | undefined> {
+
+  }
+
+  //TODO:
+  public setUnavailabilities(unavailabilities: Unavailability[], accommodationId: number): Observable<void | {message: string, status: string, time: string}> {
+    
+  }
+
+  //TODO:
+  public getAvailabilitiesNotUnavailabilities(accommodationId: number): Observable<Availability[] | null | undefined> {
+
+  }
+
+  //TODO:
+  public setAvailabilities(availabilities: Availability[], accommodationId: number): Observable<void | {message: string, status: string, time: string}> {
+    
+  }
+
 }

@@ -68,6 +68,8 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
   showEditTitlePerspective: boolean = false;
   showEditDescriptionPerspective: boolean = false;
 
+  showEditAvailabilitiesPerspective: boolean = false;
+
   guestsNumber: number = 1;
   nightsNumber$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   postOperation$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
@@ -103,6 +105,7 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
   successUpdateTitle: boolean = false;
   successUpdatedDescription: boolean = false;
   errorUpdatingDescription: boolean = false;
+  updatedAvailabilitesMessage: boolean = false;
   //-------------------------------------------------------------------------------------
 
   iconUrl = iconURL;
@@ -923,6 +926,17 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
     )
   }
 
+  toggleEditAvailabilitiesPerspective(): void {
+    this.showEditAvailabilitiesPerspective = !this.showEditAvailabilitiesPerspective;
+  }
+
+  consumeCloseEditAvailabilitiesModal($event: boolean): void {
+    this.message = "true";
+    if($event) this.updatedAvailabilitesMessage = true;
+
+    this.toggleEditAvailabilitiesPerspective();
+  }
+
   clearMessage() {
     this.message = undefined;
 
@@ -946,5 +960,6 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
     this.successUpdateTitle = false;
     this.successUpdatedDescription = false;
     this.errorUpdatingDescription = false;
+    this.updatedAvailabilitesMessage = false;
   }
 }

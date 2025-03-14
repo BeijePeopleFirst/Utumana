@@ -1,0 +1,142 @@
+<div class="flex flex-col items-center justify-center w-screen sm:w-auto">
+
+    <!-- availabilities-->
+    <div class="w-screen px-2 mb-5 justify-self-center xl:w-1/2">
+    <p>{{'edit-availabilities-accommodation-details.availability_info' | translate}}</p> 
+    </div>
+
+    <div class="flex flex-row flex-wrap justify-center w-full gap-5 sm:flex-nowrap">
+        <form (ngSubmit)="addAvailability()" class="w-screen px-4 sm:w-1/3" [formGroup]="availForm">
+            <div class="w-full justify-self-end sm:w-1/2">
+                <label class="label-primary" for="start_avail">{{'edit-availabilities-accommodation-details.start_date' | translate}}</label>
+                <input class="input-primary" [ngClass]="{'alert-danger': (availForm.controls['start_avail'].invalid && isAvailSubmitted) || invalidDates}" 
+                required type="date" id="start_avail" name="start_avail" (input)="invalidDates = false; invalidAvailability = false"
+                formControlName="start_avail"/>
+
+                <div *ngIf="availForm.controls['start_avail'].invalid && isAvailSubmitted" class="error-message">
+                    {{'edit-availabilities-accommodation-details.invalid_start_date' | translate}}
+                </div>
+            </div>           
+
+            <div class="w-full mt-2 justify-self-end sm:w-1/2">
+                <label class="label-primary" for="end_avail">{{'edit-availabilities-accommodation-details.end_date' | translate}}</label>
+                <input class="input-primary" [ngClass]="{'alert-danger': (availForm.controls['end_avail'].invalid && isAvailSubmitted) || invalidDates}" 
+                required type="date" id="end_avail" name="end_avail" (input)="invalidDates = false; invalidAvailability = false" 
+                formControlName="end_avail"/>
+
+                <div *ngIf="availForm.controls['end_avail'].invalid && isAvailSubmitted" class="error-message"> 
+                    {{'edit-availabilities-accommodation-details.invalid_end_date' | translate}}
+                </div>
+            </div>            
+
+            <div class="w-full mt-2 justify-self-end sm:w-1/2">
+                <label class="label-primary" for="price">{{'edit-availabilities-accommodation-details.price' | translate}} (&euro;)</label>
+                <input class="input-primary" [ngClass]="{'alert-danger': availForm.controls['price'].invalid && isAvailSubmitted}" 
+                required type="number" id="price" name="price" min="0.00" step="0.01"
+                formControlName="price"/>
+
+                <div *ngIf="availForm.controls['price'].invalid && isAvailSubmitted" class="error-message">
+                    {{'edit-availabilities-accommodation-details.invalid_price' | translate}}
+                </div>
+            </div>
+           
+            <div *ngIf="invalidAvailability == true" class="w-full mt-2 justify-self-end error-message sm:w-1/2">
+                {{'edit-availabilities-accommodation-details.availability_overlaps' | translate}}
+            </div>
+
+            <div *ngIf="invalidDates == true" class="w-full mt-2 justify-self-end error-message sm:w-1/2">
+                {{'edit-availabilities-accommodation-details.availability_reversed_dates' | translate}}
+            </div>
+
+            <div class="flex justify-center w-full mt-4 justify-self-end sm:w-1/2">
+                <button type="submit" class="btn-primary w-fit">{{'edit-availabilities-accommodation-details.add_availability' | translate}}</button>
+            </div>
+        </form>
+        
+        <div class="flex flex-col w-screen max-w-lg p-4 text-center rounded-lg shadow-md h-fit bg-neutral-2">
+            <h4>{{'edit-availabilities-accommodation-details.availabilities' | translate}}</h4>
+            <ng-container *ngIf="availabilities && availabilities.length > 0">
+                <div class="relative flex flex-row justify-evenly">
+                    <h6 class="w-1/3">{{'edit-availabilities-accommodation-details.start_date' | translate}}</h6>
+                    <h6 class="w-1/3">{{'edit-availabilities-accommodation-details.end_date' | translate}}</h6>
+                    <h6 class="w-1/3">{{'edit-availabilities-accommodation-details.price' | translate}}</h6>
+                </div>
+                <div *ngFor="let avail of availabilities" class="flex relative flex-row justify-evenly p-1 rounded-lg has-[button:hover]:outline has-[button:hover]:outline-1 has-[button:hover]:outline-gray-200 has-[button:hover]:bg-neutral-50 transition-colors duration-100 has-[button:hover]:text-gray-400">
+                    <button (click)="removeAvailability(avail)" class="p-0 -top-1 right-1 w-fit h-min scale-80 close-modal peer"> &times; </button>
+                    <div class="w-1/3">{{ avail.start_date | date:'E d MMM yyyy':undefined:this.locale }}</div>
+                    <div class="w-1/3">{{ avail.end_date | date:'E d MMM yyyy':undefined:this.locale }}</div>
+                    <div class="w-1/3">{{ avail.price_per_night | currency:'EUR':'symbol-narrow':'1.2-2':'it-IT'}}</div>
+                </div>
+            </ng-container>
+            <div class="self-center w-full py-10" *ngIf="!availabilities || availabilities.length == 0">
+                {{'edit-availabilities-accommodation-details.no_availabilities' | translate}}
+            </div>
+        </div>
+    </div>
+
+    <!-- unavailabilities-->
+    <div class="w-screen px-2 my-5 justify-self-center xl:w-1/2">
+        <p>{{'edit-availabilities-accommodation-details.unavailability_info' | translate}}</p>
+    </div>
+
+    <div class="flex flex-row flex-wrap justify-center w-full gap-5 sm:flex-nowrap">
+        <form (ngSubmit)="addUnavailability()" class="w-screen px-4 sm:w-1/3" [formGroup]="unavForm">
+            <div class="w-full justify-self-end sm:w-1/2">
+                <label class="label-primary" for="start_unav">{{'edit-availabilities-accommodation-details.start_date' | translate}}</label>
+                <input class="input-primary" [ngClass]="{'alert-danger': (unavForm.controls['start_unav'].invalid && isUnavSubmitted) || invalidUnavDates}" 
+                required type="date" id="start_unav" name="start_unav" (input)="invalidUnavDates = false; invalidUnavailability = false"
+                formControlName="start_unav"/>
+
+                <div *ngIf="unavForm.controls['start_unav'].invalid && isUnavSubmitted" class="error-message">
+                    {{'edit-availabilities-accommodation-details.invalid_start_date' | translate}}
+                </div>
+            </div>           
+
+            <div class="w-full mt-2 justify-self-end sm:w-1/2">
+                <label class="label-primary" for="end_unav">{{'edit-availabilities-accommodation-details.end_date' | translate}}</label>
+                <input class="input-primary" [ngClass]="{'alert-danger': (unavForm.controls['end_unav'].invalid && isUnavSubmitted) || invalidUnavDates}" 
+                required type="date" id="end_unav" name="end_unav" (input)="invalidUnavDates = false; invalidUnavailability = false" 
+                formControlName="end_unav"/>
+
+                <div *ngIf="unavForm.controls['end_unav'].invalid && isUnavSubmitted" class="error-message"> 
+                    {{'edit-availabilities-accommodation-details.invalid_end_date' | translate}}
+                </div>
+            </div>            
+           
+            <div *ngIf="invalidUnavailability == true" class="w-full mt-2 justify-self-end error-message sm:w-1/2">
+                {{'edit-availabilities-accommodation-details.unavailability_overlaps' | translate}}
+            </div>
+
+            <div *ngIf="invalidUnavDates == true" class="w-full mt-2 justify-self-end error-message sm:w-1/2">
+                {{'edit-availabilities-accommodation-details.availability_reversed_dates' | translate}}
+            </div>
+
+            <div class="flex justify-center w-full mt-4 justify-self-end sm:w-1/2">
+                <button type="submit" class="btn-primary w-fit">{{'edit-availabilities-accommodation-details.add_unavailability' | translate}}</button>
+            </div>
+        </form>
+        
+        <div class="flex flex-col w-screen max-w-lg p-4 text-center rounded-lg shadow-md h-fit bg-neutral-2">
+            <h4>{{'edit-availabilities-accommodation-details.unavailabilities' | translate}}</h4>
+            <ng-container *ngIf="unavailabilities && unavailabilities.length > 0">
+                <div class="relative flex flex-row justify-evenly">
+                    <h6 class="w-1/2">{{'edit-availabilities-accommodation-details.start_date' | translate}}</h6>
+                    <h6 class="w-1/2">{{'edit-availabilities-accommodation-details.end_date' | translate}}</h6>
+                </div>
+                <div *ngFor="let unav of unavailabilities" class="flex relative flex-row justify-evenly p-1 rounded-lg has-[button:hover]:outline has-[button:hover]:outline-1 has-[button:hover]:outline-gray-200 has-[button:hover]:bg-neutral-50 transition-colors duration-100 has-[button:hover]:text-gray-400">
+                    <button (click)="removeUnavailability(unav)" class="p-0 -top-1 right-1 w-fit h-min scale-80 close-modal peer"> &times; </button>
+                    <div class="w-1/2">{{ unav.check_in | date:'E d MMM yyyy':undefined:this.locale }}</div>
+                    <div class="w-1/2">{{ unav.check_out | date:'E d MMM yyyy':undefined:this.locale }}</div>
+                </div>
+            </ng-container>
+            <div class="self-center w-full py-10" *ngIf="!unavailabilities || unavailabilities.length == 0">
+                {{'edit-availabilities-accommodation-details.no_unavailabilities' | translate}}
+            </div>
+        </div>
+    </div>
+
+
+    <div class="flex justify-center my-6 gap-x-5 h-fit">
+        <button type="button" (click)="confirmEdits()" class="btn-primary w-fit">{{'edit-availabilities-accommodation-details.confirm' | translate}}</button>
+    </div>
+</div>
