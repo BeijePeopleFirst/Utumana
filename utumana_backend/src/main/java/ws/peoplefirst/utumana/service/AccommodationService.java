@@ -848,8 +848,6 @@ public class AccommodationService {
         }
 
         Collections.sort(availableDates);
-
-        System.out.println("AVAI -> " + availableDates);
         
         for (Booking b : copy2) {
             checkIn = b.getCheckIn().toLocalDate();
@@ -866,7 +864,6 @@ public class AccommodationService {
             }
 
         }
-        System.out.println("OCCC  -> " + occupiedDates);
 
         // Now I sort the dates list for the occupied ones:
         Collections.sort(occupiedDates);

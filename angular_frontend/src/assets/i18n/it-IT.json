@@ -86,7 +86,11 @@
 	"error-title": "Titolo non Valido",
 	"error-edit-title": "Errore durante l' aggiornamento del Titolo",
 	"success-edit-title": "Titolo aggiornato con Successo",
-	"selected-services": "Servizi Selezionati"
+	"selected-services": "Servizi Selezionati",
+	"confirm-description": "Conferma Descrizione",
+	"close-description-gui": "Chiudi",
+	"success-edit-description": "Descrizione Aggiornata con Successo",
+	"error-edit-description": "Si è verificato un errore durante l' aggiornamento della descrizione"
 },
 "admin-dashboard-accommodations": {
 	"approve_reject_title": "Approva/Rifiuta sistemazioni",

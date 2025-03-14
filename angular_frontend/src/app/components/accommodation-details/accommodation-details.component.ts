@@ -66,6 +66,7 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
 
   showViewEditPhotosPerspective: boolean = false;
   showEditTitlePerspective: boolean = false;
+  showEditDescriptionPerspective: boolean = false;
 
   guestsNumber: number = 1;
   nightsNumber$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
@@ -79,6 +80,8 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
 
   titleInputField?: string;
   titleInputFieldError: boolean = false;
+
+  descriptionInputField?: string;
 
   //MESSAGGES:
   //-------------------------------------------------------------------------------------
@@ -98,6 +101,8 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
   errorCleaningNotConfirmedPhotos: boolean = false;
   errorOccurredTitle: boolean = false;
   successUpdateTitle: boolean = false;
+  successUpdatedDescription: boolean = false;
+  errorUpdatingDescription: boolean = false;
   //-------------------------------------------------------------------------------------
 
   iconUrl = iconURL;
@@ -884,6 +889,40 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
     )
   }
 
+  toggleEditDescriptionPerspective(): void {
+    this.showEditDescriptionPerspective = !this.showEditDescriptionPerspective;
+  }
+
+  confirmDescriptionEdit(): void {
+    this.accommodation.description = this.descriptionInputField;
+
+    this.accommodationService.updateAccommodationInfo(this.accommodation).subscribe(
+      response => {
+        if((response && "message" in response) || !response) {
+          if(response && "message" in response) {
+            console.error(response.message);
+            this.message = "true";
+            this.errorUpdatingDescription = true;
+            this.toggleEditDescriptionPerspective();
+            return;
+          }
+          else {
+            this.message = "true";
+            this.errorUpdatingDescription = true;
+            this.toggleEditDescriptionPerspective();
+            return;
+          }
+        }
+        else {
+          this.message = "true";
+          this.successUpdatedDescription = true;
+          this.toggleEditDescriptionPerspective();
+          return;
+        }
+      }
+    )
+  }
+
   clearMessage() {
     this.message = undefined;
 
@@ -905,5 +944,7 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
     this.errorCleaningNotConfirmedPhotos = false;
     this.errorOccurredTitle = false;
     this.successUpdateTitle = false;
+    this.successUpdatedDescription = false;
+    this.errorUpdatingDescription = false;
   }
 }

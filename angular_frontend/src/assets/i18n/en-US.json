@@ -86,7 +86,11 @@
 	"error-title": "Invalid Title",
 	"error-edit-title": "Error occurred while updating Title",
 	"success-edit-title": "Title Updated Successfully",
-	"selected-services": "Selected Services"
+	"selected-services": "Selected Services",
+	"confirm-description": "Confirm Description",
+	"close-description-gui": "Close",
+	"success-edit-description": "Description Successfully Updated",
+	"error-edit-description": "An Error occurred while updating Accommodation' s description"
 },
 "admin-dashboard-accommodations": {
 	"approve_reject_title": "Approve/Reject accommodations",

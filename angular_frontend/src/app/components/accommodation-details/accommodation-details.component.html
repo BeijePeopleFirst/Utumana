@@ -107,13 +107,16 @@
           </div>
 
           <!-- 📝 Descrizione -->
-          <ng-container *ngIf="accommodation.description">
-            <div class="w-full max-w-3xl p-6 rounded-lg shadow-md bg-neutral-2">
-              <h3>{{ ("accommodation-card-details.description-word" | translate) }}</h3>
-              <p class="mt-3">{{ accommodation.description }}</p>
-            </div>
-          </ng-container>
-
+          <div id="description-container-root" class="relative">
+            <img src="/assets/icons/pencil.png" (click)="toggleEditDescriptionPerspective()" *ngIf="isMe" class="absolute w-6 h-6 top-4 right-4 icon"/>
+            <ng-container>
+              <div class="w-full max-w-3xl p-6 rounded-lg shadow-md bg-neutral-2">
+                <h3>{{ ("accommodation-card-details.description-word" | translate) }}</h3>
+                <p class="mt-3">{{ accommodation.description }}</p>
+              </div>
+            </ng-container>
+          </div>
+          
           <!-- 📆 Availabilities -->
           <div id="avail" class="w-full max-w-3xl p-6 rounded-lg shadow-md bg-neutral-1">
             <ng-container *ngIf="accommodation.availabilities && accommodation.availabilities.length > 0">
@@ -266,6 +269,14 @@
 
     <h1 class="text-xl text-blue-800" *ngIf="successUpdateTitle">
       {{"accommodation-card-details.success-edit-title" | translate}}
+    </h1>
+
+    <h1 class="text-xl text-blue-800" *ngIf="successUpdatedDescription">
+      {{"accommodation-card-details.success-edit-description" | translate}}
+    </h1>
+
+    <h1 class="text-xl text-blue-800" *ngIf="errorUpdatingDescription">
+      {{"accommodation-card-details.error-edit-description" | translate}}
     </h1>
     
   </ng-container>
@@ -428,4 +439,22 @@
 
   <ng-container *ngIf="showEditTitlePerspective">
     <ng-container *ngTemplateOutlet="editTitlePerspective"></ng-container>
+  </ng-container>
+
+  <ng-template #editDescriptionPerspective>
+    <div class="modal">
+      <div class="p-6 modal-dialog">
+        <h1 class="text-2xl">{{('accommodation-card-details.description-word' | translate)}}</h1>
+        <textarea id="description-text-area-input" class="w-full p-2 mt-2 border rounded-md" [(ngModel)]="descriptionInputField" ></textarea>
+  
+        <div class="flex justify-end mt-6">
+          <button id="edit-descr-confirm" class="btn-primary" (click)="confirmDescriptionEdit()">{{('accommodation-card-details.confirm-description' | translate)}}</button>
+          <button id="edit-descr-close" class="ml-2 btn-cancel" (click)="toggleEditDescriptionPerspective()">{{('accommodation-card-details.close-description-gui' | translate)}}</button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-container *ngIf="showEditDescriptionPerspective">
+    <ng-container *ngTemplateOutlet="editDescriptionPerspective"></ng-container>
   </ng-container>
