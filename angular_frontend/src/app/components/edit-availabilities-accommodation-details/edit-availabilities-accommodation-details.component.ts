@@ -191,8 +191,8 @@ export class EditAvailabilitiesAccommodationDetailsComponent implements OnInit {
       return;
     }
 
-    this.availabilities = this.availabilities.filter(a => a.start_date !== availability.start_date);
-    this.accommodationService.setAvailabilities(this.availabilities, this.accommodation.id!).subscribe(
+    let support: Availability[] = this.availabilities.filter(a => a.start_date !== availability.start_date);
+    this.accommodationService.setAvailabilities(support, this.accommodation.id!).subscribe(
       oth => {
         if(oth && "message" in oth) {
           console.error(oth.message);
@@ -201,6 +201,7 @@ export class EditAvailabilitiesAccommodationDetailsComponent implements OnInit {
           return;
         }
         
+        this.availabilities = this.availabilities.filter(a => a.start_date !== availability.start_date);
         this.edited = true;
       }
     );

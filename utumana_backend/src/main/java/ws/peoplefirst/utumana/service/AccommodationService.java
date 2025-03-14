@@ -385,7 +385,15 @@ public class AccommodationService {
 
         for(Availability av: list) {
             for(Booking b : bookings) {
-                if(areOverlappingDates(av.getStartDate(), av.getEndDate(), b.getCheckIn().toLocalDate(), b.getCheckOut().toLocalDate())) return true;
+
+                if(!b.getStatus().equals(BookingStatus.DONE) && !b.getStatus().equals(BookingStatus.REJECTED) && !b.getStatus().equals(BookingStatus.PENDING)) {
+                
+                    if(areOverlappingDates(av.getStartDate(), av.getEndDate(), b.getCheckIn().toLocalDate(), b.getCheckOut().toLocalDate())) {
+                        System.out.println(av.getStartDate() + "        " + av.getEndDate() + "       " + b.getCheckIn().toLocalDate() + "         " + b.getCheckOut().toLocalDate());
+                        return true;
+                    }
+
+                }
             }
         }
 
@@ -394,7 +402,8 @@ public class AccommodationService {
 
     private static boolean areOverlappingDates(LocalDate start, LocalDate end, LocalDate chkIn, LocalDate chkOut) {
         return ((isAfterOrEqual(chkIn, start) && isBeforeOrEqual(chkIn, end))
-                || (isAfterOrEqual(chkOut, start) && isBeforeOrEqual(chkOut, end)));
+                || (isAfterOrEqual(chkOut, start) && isBeforeOrEqual(chkOut, end)) ||
+                ((isAfterOrEqual(chkOut, end) && isBeforeOrEqual(chkIn, start))));
     }
 
     private static boolean isAfterOrEqual(LocalDate sx, LocalDate dx) {
