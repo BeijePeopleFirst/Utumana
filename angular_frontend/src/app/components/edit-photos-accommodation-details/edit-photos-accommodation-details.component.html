@@ -1,6 +1,6 @@
 <div class="p-8">
     <div id="photo-previews" class="flex flex-col mt-32">
-        <div class="flex flex-row items-center justify-center" *ngFor="let c of photosRows">
+        <div class="flex flex-row justify-center items-center" *ngFor="let c of photosRows">
             <div class="relative mr-7">
                 <p (click)="removePhoto(c[0].id)" class="absolute top-0 right-0 text-2xl cursor-pointer text-secondary">X</p>
                 <img [src]="c[0].blob_url" class="mb-12 w-52" />
@@ -16,9 +16,9 @@
         </div>
     </div>
     <form #photo_form="ngForm">
-        <div class="flex flex-col items-center justify-center">
+        <div class="flex flex-col justify-center items-center">
             <input id="add-photos" type="file" accept="image/*" (change)="uploadPhotosToS3($event)" multiple class="mt-10" />
-            <button type="button" (click)="confirmPhotos()" class="btn-success">{{"edit-photos-accommodation-details.confirm-button" | translate}}</button>
+            <button type="button" (click)="confirmPhotos()" class="mt-4 btn-success">{{"edit-photos-accommodation-details.confirm-button" | translate}}</button>
         </div>
     </form>
 
@@ -49,5 +49,5 @@
     </div>
 </div>
 <div class="w-full h-full fixed top-0 left-0 bg-neutral-2/50 z-[1000] flex justify-center align-middle items-center" *ngIf="displaySpinner">
-    <div class="w-20 h-20 border-8 border-gray-300 rounded-full animate-spin border-t-blue-600" ></div>
+    <div class="w-20 h-20 rounded-full border-8 border-gray-300 animate-spin border-t-blue-600" ></div>
 </div>

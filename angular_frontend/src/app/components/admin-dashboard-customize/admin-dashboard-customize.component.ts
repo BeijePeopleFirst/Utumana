@@ -31,11 +31,14 @@ export class AdminDashboardCustomizeComponent implements OnInit {
         primary_default: theme.primary_default,
         primary_dark: theme.primary_dark,
         primary_light: theme.primary_light,
+        primary_contrast: theme.primary_contrast,
         secondary_default: theme.secondary_default,
         secondary_dark: theme.secondary_dark,
         secondary_light: theme.secondary_light,
+        secondary_contrast: theme.secondary_contrast,
         neutral1: theme.neutral1,
-        neutral2: theme.neutral2
+        neutral2: theme.neutral2,
+        neutral_contrast: theme.neutral_contrast
       };
       console.log("Theme: ", this.theme);
     });
@@ -46,11 +49,14 @@ export class AdminDashboardCustomizeComponent implements OnInit {
       primary_default: this.currentTheme.primary_default,
       primary_dark: this.currentTheme.primary_dark,
       primary_light: this.currentTheme.primary_light,
+      primary_contrast: this.currentTheme.primary_contrast,
       secondary_default: this.currentTheme.secondary_default,
       secondary_dark: this.currentTheme.secondary_dark,
       secondary_light: this.currentTheme.secondary_light,
+      secondary_contrast: this.currentTheme.secondary_contrast,
       neutral1: this.currentTheme.neutral1,
-      neutral2: this.currentTheme.neutral2
+      neutral2: this.currentTheme.neutral2,
+      neutral_contrast: this.currentTheme.neutral_contrast
     };
   }
 

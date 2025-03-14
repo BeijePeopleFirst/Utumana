@@ -126,21 +126,18 @@
     <div class="flex flex-row gap-4 justify-end pt-4 border-t">
       <button 
         (click)="resetFilters()"
-        class="w-24 btn-cancel"
-      >
+        class="w-fit btn-cancel">
         {{ 'filters.reset' | translate }}
       </button>
       <button 
         (click)="close.emit()"
-        class="w-24 btn-cancel"
-      >
+        class="w-fit btn-cancel">
         {{ 'filters.cancel' | translate }}
       </button>
       <button 
         (click)="applyFilters()"
         [disabled]="filterForm.invalid"
-        class="w-24 btn-primary"
-      >
+        class="w-fit btn-primary">
         {{ 'filters.apply' | translate }}
       </button>
     </div>

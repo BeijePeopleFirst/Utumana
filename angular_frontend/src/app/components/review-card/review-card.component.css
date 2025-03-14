@@ -1,6 +1,6 @@
-.rating-label { @apply self-center w-16 text-sm leading-normal; }
+.rating-label { @apply self-center w-16 text-sm leading-normal text-neutral-contrast; }
 
-.stars-container { @apply flex flex-row justify-start gap-0 align-middle; }
+.stars-container { @apply flex flex-row gap-0 justify-start align-middle; }
 .star-container { @apply leading-5 text-center align-middle fill-current; }
 .star-half-container { @apply bg-gradient-to-r from-yellow-500 to-gray-300 from-50% to-50% bg-clip-text text-transparent; }
 .star-full { @apply text-yellow-500; }
@@ -8,5 +8,5 @@
 
 .preview { @apply overflow-hidden h-36; }
 
-.review-action { @apply relative inline align-middle justify-self-end hover:opacity-80 hover:scale-105; }
+.review-action { @apply inline relative justify-self-end align-middle hover:opacity-80 hover:scale-105; }
 .review-action img { @apply object-contain w-8 h-8; }

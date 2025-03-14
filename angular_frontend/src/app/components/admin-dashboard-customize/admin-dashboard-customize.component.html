@@ -1,11 +1,12 @@
 <!-- https://blog.logrocket.com/applying-dynamic-styles-tailwind-css/ -->
 
-<div class="flex justify-center items-center p-2 bg-gray-100">
+<div class="flex justify-center items-center p-2 bg-neutral-1">
     <form class="px-2 my-4 w-fit" (ngSubmit)="showConfirmColorsModal()" #form="ngForm">
         <h2 class="text-center">{{'admin-dashboard-customize.colors_title' | translate}}</h2>
         <p class="p-2 mb-4 font-semibold text-red-700 bg-red-50 rounded-md">{{'admin-dashboard-customize.colors_warning' | translate}}</p>
 
         <p class="mb-2">{{'admin-dashboard-customize.primary_instructions' | translate}}</p>
+        <p class="mb-2">{{'admin-dashboard-customize.primary_contrast_instructions' | translate}}</p>
         <div class="flex flex-row flex-wrap gap-4 justify-start items-center pl-4 mb-4 2xl:px-10 2xl:gap-x-20">
             <div class="flex flex-col gap-2">
                 <div>
@@ -29,13 +30,20 @@
                         <input [(ngModel)]="theme.primary_light" class="input-primary w-fit" name="primary_light"/>
                     </div>
                 </div>
+                <div>
+                    <label class="label-primary">{{'admin-dashboard-customize.primary_contrast' | translate}}*</label>
+                    <div class="flex flex-row gap-x-2 items-center">
+                        <ngx-colors ngx-colors-trigger [(ngModel)]="theme.primary_contrast" name="primary_contrast_picker"></ngx-colors>
+                        <input [(ngModel)]="theme.primary_contrast" class="input-primary w-fit" name="primary_contrast_color"/>
+                    </div>
+                </div>
             </div>
 
             <div>
                 <h6>{{'admin-dashboard-customize.examples' | translate}}:</h6>
                 <div class="flex flex-col flex-wrap gap-2 mt-2">
                     <h2 [style.color]="theme.primary_default">{{'my_accommodations.title' | translate}}</h2>
-                    <button id="primary-button" class="btn-primary w-fit" type="button" [style.backgroundColor]="theme.primary_default"
+                    <button id="primary-button" class="btn-primary w-fit" type="button" [style.backgroundColor]="theme.primary_default" [style.color]="theme.primary_contrast"
                     [style.--tw-ring-color]="theme.primary_light" (mouseenter)="document.getElementById('primary-button')?.style!.backgroundColor = theme.primary_dark" 
                     (mouseleave)="document.getElementById('primary-button')?.style!.backgroundColor = theme.primary_default">{{'login.button_text' | translate}}</button>
                 </div>
@@ -43,6 +51,7 @@
         </div>
 
         <p class="mb-2">{{'admin-dashboard-customize.secondary_instructions' | translate}}</p>
+        <p class="mb-2">{{'admin-dashboard-customize.secondary_contrast_instructions' | translate}}</p>
         <div class="flex flex-row flex-wrap gap-4 justify-start items-center pl-4 mb-4 2xl:px-10 2xl:gap-x-20">
             <div class="flex flex-col gap-2">
                 <div>
@@ -66,13 +75,20 @@
                         <input [(ngModel)]="theme.secondary_light" class="input-primary w-fit" name="secondary_light"/>
                     </div>
                 </div>
+                <div>
+                    <label class="label-primary">{{'admin-dashboard-customize.secondary_contrast' | translate}}*</label>
+                    <div class="flex flex-row gap-x-2 items-center">
+                        <ngx-colors ngx-colors-trigger [(ngModel)]="theme.secondary_contrast" name="secondary_contrast_picker"></ngx-colors>
+                        <input [(ngModel)]="theme.secondary_contrast" class="input-primary w-fit" name="secondary_contrast"/>
+                    </div>
+                </div>
             </div>
 
             <div>
                 <h6>{{'admin-dashboard-customize.examples' | translate}}:</h6>
                 <div class="flex flex-col flex-wrap gap-2 mt-2">
                     <h5 [style.color]="theme.secondary_default">{{'profile.edit_picture' | translate}}</h5>
-                    <button id="secondary-button" class="btn-primary w-fit" type="button" [style.backgroundColor]="theme.secondary_default"
+                    <button id="secondary-button" class="btn-primary w-fit" type="button" [style.backgroundColor]="theme.secondary_default" [style.color]="theme.secondary_contrast"
                     [style.--tw-ring-color]="theme.secondary_light" (mouseenter)="document.getElementById('secondary-button')?.style!.backgroundColor = theme.secondary_dark" 
                     (mouseleave)="document.getElementById('secondary-button')?.style!.backgroundColor = theme.secondary_default">{{'create.confirm' | translate}}</button>
                     <a id="secondary-link" [style.color]="theme.secondary_default" (mouseenter)="document.getElementById('secondary-link')?.style!.color = theme.secondary_dark" 
@@ -83,6 +99,7 @@
         </div>
 
         <p class="mb-2">{{'admin-dashboard-customize.neutral_instructions' | translate}}</p>
+        <p class="mb-2">{{'admin-dashboard-customize.neutral_contrast_instructions' | translate}}</p>
         <div class="flex flex-row flex-wrap gap-4 justify-start items-center pl-4 mb-4 2xl:px-10 2xl:gap-x-20">
             <div class="flex flex-col gap-2">
                 <div>
@@ -99,6 +116,13 @@
                         <input [(ngModel)]="theme.neutral2" class="input-primary w-fit" name="neutral2"/>
                     </div>
                 </div>
+                <div>
+                    <label class="label-primary">{{'admin-dashboard-customize.neutral_contrast' | translate}}*</label>
+                    <div class="flex flex-row gap-x-2 items-center">
+                        <ngx-colors ngx-colors-trigger [(ngModel)]="theme.neutral_contrast" name="neutral_contrast_picker"></ngx-colors>
+                        <input [(ngModel)]="theme.neutral_contrast" class="input-primary w-fit" name="neutral_contrast"/>
+                    </div>
+                </div>
             </div>
 
             <div>
@@ -107,12 +131,12 @@
                     <div class="p-4" [style.backgroundColor]="theme.neutral1">
                         <h2 [style.color]="theme.primary_default">{{'my_accommodations.title' | translate}}</h2>
                         <h5 [style.color]="theme.secondary_default">{{'profile.edit_picture' | translate}}</h5>
-                        <p class="text-center">{{'admin-dashboard-customize.neutral_instructions' | translate}}</p>
+                        <p class="text-center" [style.color]="theme.neutral_contrast">{{'admin-dashboard-customize.neutral_instructions' | translate}}</p>
                     </div>
                     <div class="p-4" [style.backgroundColor]="theme.neutral2">
                         <h2 [style.color]="theme.primary_default">{{'my_accommodations.title' | translate}}</h2>
                         <h5 [style.color]="theme.secondary_default">{{'profile.edit_picture' | translate}}</h5>
-                        <p class="text-center">{{'admin-dashboard-customize.neutral_instructions' | translate}}</p>
+                        <p class="text-center" [style.color]="theme.neutral_contrast">{{'admin-dashboard-customize.neutral_instructions' | translate}}</p>
                     </div>
                 </div>
             </div>

@@ -40,7 +40,6 @@
 @layer base {
   html, body {
     font-family: "Parkinsans", serif;
-    color: var(--neutral-contrast);
   }
 }
 
@@ -100,7 +99,7 @@
   nav a {@apply no-underline; }
   .clickable_card {@apply relative no-underline text-inherit; }
 
-  .icon { @apply inline absolute z-20 w-10 h-10 align-middle hover:scale-105 hover:cursor-pointer; }
+  .icon { @apply inline absolute z-20 w-10 h-10 align-middle hover:scale-105 hover:cursor-pointer text-neutral-contrast; }
   .icon img { @apply object-contain p-1.5; }
   .heart { @apply inline absolute top-4 right-4 align-middle hover:opacity-80 hover:scale-105;  }
   .heart img { @apply object-contain w-7 h-6; }
@@ -120,7 +119,7 @@
 
   .modal { @apply flex fixed inset-0 z-50 justify-center items-center bg-black bg-opacity-50; }
   .close-modal { @apply absolute -top-0.5 right-2 p-2 text-3xl text-secondary hover:text-secondary-dark; }
-  .modal-dialog { @apply relative w-screen rounded-lg shadow-lg bg-neutral-1 sm:w-full md:max-w-md; }
+  .modal-dialog { @apply relative w-screen rounded-lg shadow-lg bg-neutral-1 sm:w-full md:max-w-md text-neutral-contrast; }
 
   .stars-container { @apply flex flex-row gap-0 justify-start align-middle; }
   .star-container { @apply leading-5 text-center align-middle fill-current; }

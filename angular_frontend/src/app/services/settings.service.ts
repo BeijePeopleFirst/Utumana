@@ -23,7 +23,7 @@ export class SettingsService {
     return `${r}, ${g}, ${b}`
   }
 
-  // // calculate contrast color to make text written on background in color "hex"  readable
+  // // calculate the more accessible text color between back and white for text written on a background in given hex color
   // private getAccessibleColor(hex: string) {
   //   let color = hex.replace(/#/g, "")
   //   // rgb values
@@ -48,11 +48,14 @@ export class SettingsService {
     document.documentElement.style.setProperty('--primary-default', this.getRGBTuple(theme.primary_default));
     document.documentElement.style.setProperty('--primary-dark', this.getRGBTuple(theme.primary_dark));
     document.documentElement.style.setProperty('--primary-light', this.getRGBTuple(theme.primary_light));
+    document.documentElement.style.setProperty('--primary-contrast', this.getRGBTuple(theme.primary_contrast));
     document.documentElement.style.setProperty('--secondary-default', this.getRGBTuple(theme.secondary_default));
     document.documentElement.style.setProperty('--secondary-dark', this.getRGBTuple(theme.secondary_dark));
     document.documentElement.style.setProperty('--secondary-light', this.getRGBTuple(theme.secondary_light));
+    document.documentElement.style.setProperty('--secondary-contrast', this.getRGBTuple(theme.secondary_contrast));
     document.documentElement.style.setProperty('--neutral-1', this.getRGBTuple(theme.neutral1));
     document.documentElement.style.setProperty('--neutral-2', this.getRGBTuple(theme.neutral2));
+    document.documentElement.style.setProperty('--neutral-contrast', this.getRGBTuple(theme.neutral_contrast));
   }
 
   updateTheme(theme: Theme): Observable<boolean> {
