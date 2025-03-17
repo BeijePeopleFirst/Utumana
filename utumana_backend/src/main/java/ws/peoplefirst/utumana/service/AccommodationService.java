@@ -367,8 +367,9 @@ public class AccommodationService {
                         break;
                     }
 
-                    if(addToList) toRemoveAvailabilities.add(a);
                 }
+                if(addToList) toRemoveAvailabilities.add(a);
+
             }
 
             List<Object> evaluation = this.cannotDeleteAvailability(toRemoveAvailabilities, accommodation);
