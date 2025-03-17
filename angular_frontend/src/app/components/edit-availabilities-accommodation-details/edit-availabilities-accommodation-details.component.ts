@@ -203,6 +203,15 @@ export class EditAvailabilitiesAccommodationDetailsComponent implements OnInit {
         
         this.availabilities = this.availabilities.filter(a => a.start_date !== availability.start_date);
         this.edited = true;
+
+        this.accommodationService.getUnavailabilities(this.accommodation.id!).subscribe(unavailabilities => {
+          if(!unavailabilities){
+            this.genericError = true;
+            this.errorOccurred.emit(true);
+            return;
+          }
+          this.unavailabilities = unavailabilities;
+        })
       }
     );
   }

@@ -360,6 +360,7 @@ public class AccommodationService {
 
                 for(Booking b: toReject) {
                     b.setStatus(BookingStatus.REJECTED);
+                    b.setIsUnavailability(false);
                     bookingRepository.save(b);
                 }
             }
@@ -381,9 +382,6 @@ public class AccommodationService {
         return accommodation;
     }
 
-    //1) Retrieve all bookings in that period except unavailabilities
-    //2) If at least one Booking falls into any availability period then RETURN TRUE, else RETURN FALSE
-    //Shall we consider unavailabilities as well?
     private List<Object> cannotDeleteAvailability(List<Availability> list, Accommodation acc) {
 
         List<Booking> bookings = bookingRepository.findByAccommodationAndIsUnavailabilityIsFalse(acc);
@@ -406,6 +404,17 @@ public class AccommodationService {
                             toReject.add(b);
                         }
                     }
+                }
+            }
+        }
+
+        //Now we need to REJECT the pre-existent Unavailabilities that fall inside any of the specified period to remove (inside availabilities to remove):
+        List<Booking> possibleUnavailabilitiesToReject = this.bookingRepository.findByAccommodationAndIsUnavailabilityIsTrue(acc);
+
+        for(Booking b: possibleUnavailabilitiesToReject) {
+            for(Availability av: list) {
+                if(areOverlappingDates(av.getStartDate(), av.getEndDate(), b.getCheckIn().toLocalDate(), b.getCheckOut().toLocalDate())) {
+                    toReject.add(b);
                 }
             }
         }

@@ -98,4 +98,6 @@ public interface BookingRepository extends JpaRepository<Booking,Long>{
 
 	void deleteByIdInAndAccommodation(List<Long> ids, Accommodation acc);
 
+	List<Booking> findByAccommodationAndIsUnavailabilityIsTrue(Accommodation acc);
+
 }
