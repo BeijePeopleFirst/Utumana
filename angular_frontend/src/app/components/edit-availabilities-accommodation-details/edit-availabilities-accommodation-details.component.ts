@@ -68,7 +68,6 @@ export class EditAvailabilitiesAccommodationDetailsComponent implements OnInit {
         return;
       }
       this.availabilities = availabilities;
-      console.log(this.availabilities, "STAMPA");
     });
 
     this.accommodationService.getUnavailabilities(this.accommodation.id!).subscribe(unavailabilities => {
@@ -161,7 +160,6 @@ export class EditAvailabilitiesAccommodationDetailsComponent implements OnInit {
     if(!this.isLatestAvailabilityOk(new_acc_avail)){
       return;
     }
-    console.log("Adding availability:", new_acc_avail);
 
     this.availabilities.push(new_acc_avail);
     this.availabilities.sort((a, b) => a.start_date.localeCompare(b.start_date));
@@ -250,7 +248,6 @@ export class EditAvailabilitiesAccommodationDetailsComponent implements OnInit {
     if(!this.isLatestUnavailabilityOk(new_acc_unav)){
       return;
     }
-    console.log("Adding unavailability:", new_acc_unav);
 
     this.unavailabilities.push(new_acc_unav);
     this.unavailabilities.sort((a, b) => a.check_in.localeCompare(b.check_in));

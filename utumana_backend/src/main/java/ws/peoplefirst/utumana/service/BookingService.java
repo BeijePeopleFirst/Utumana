@@ -433,7 +433,6 @@ public class BookingService {
 			for(BookingDTO b : occupiedBookings) {
 				if(checkIfDatesAreOverlapping(unavailability.getCheckIn().toLocalDate(), unavailability.getCheckOut().toLocalDate(), LocalDate.parse(b.getCheckIn(), DateTimeFormatter.ISO_DATE_TIME), LocalDate.parse(b.getCheckOut(), DateTimeFormatter.ISO_DATE_TIME))) {
 					log.error("unavailability dates are overlapping with pre-existent lecit bookings" );
-					System.out.println(b.getCheckIn() + "     " + b.getCheckOut() + "          UN: " + unavailability.getCheckIn() + "       " + unavailability.getCheckOut());
 					throw new ForbiddenException("cannot set unavailability due to overlapping dates");
 				}
 			}

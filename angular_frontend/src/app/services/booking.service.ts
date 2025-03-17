@@ -22,7 +22,7 @@ export class BookingService {
   ) { }
 
   newBooking(createdBooking: Booking): Observable<{message: string, status: string, time: string} | BookingDTO> {
-    console.log("Stampo il booking -> ", createdBooking);
+    //console.log("Stampo il booking -> ", createdBooking);
     return this.http.post<{message: string, status: string, time: string} | BookingDTO>(BACKEND_URL_PREFIX + "/api/book/" + createdBooking.accommodation.id + "?checkIn=" + createdBooking.check_in + "&checkOut=" + createdBooking.check_out, 
                         {
                           checkIn: createdBooking.check_in,
@@ -34,7 +34,7 @@ export class BookingService {
   }
 
   newUnavailability(createdBooking: Availability): Observable<{message: string, status: string, time: string} | Availability> {
-    console.log("newUnavailability", createdBooking);
+    //console.log("newUnavailability", createdBooking);
     return this.http.post<Unavailability>(BACKEND_URL_PREFIX + "/api/add_unavailability", 
       {
         start_date: createdBooking.start_date,
@@ -48,7 +48,7 @@ export class BookingService {
   }
 
   public setUnavailabilities(unavailabilities: Booking[], accommodationId: number): Observable<BookingDTO[] | {message: string, status: string, time: string}> {
-    console.log("UNAVAILABILITIES", unavailabilities);
+    //console.log("UNAVAILABILITIES", unavailabilities);
     return this.http.put<BookingDTO[] | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/set_unavailabilities/" + accommodationId, unavailabilities);
   }
   
@@ -62,7 +62,7 @@ export class BookingService {
             }
           })
         }
-        console.log("Booking Service - Fetched bookings DTO:", data);
+        //console.log("Booking Service - Fetched bookings DTO:", data);
         return data;
       }),
       catchError(error => {

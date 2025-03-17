@@ -92,11 +92,11 @@ export class BookNowComponent implements OnInit {
               return;
             }
 
-            let responseInfo2 = responseInfo as any;console.log("STAMPO il 2 ----> ", responseInfo2);
+            let responseInfo2 = responseInfo as any;
             if(responseInfo2["isAdmin"] == null || responseInfo2["isOwner"] == null
               || responseInfo2["availabilities_post_elaboration"] == null
             ) {
-              this.thereAreMessagesToDiplay = true;console.log("ECComi QUI1");
+              this.thereAreMessagesToDiplay = true;
               this.accommodationInfoError = true;
               return;
             }
@@ -106,7 +106,7 @@ export class BookNowComponent implements OnInit {
             let tmpAv: any = responseInfo2["availabilities_post_elaboration"];
 
             if(!Array.isArray(tmpAv)) {
-              this.thereAreMessagesToDiplay = true;console.log("ECComi QUI2");
+              this.thereAreMessagesToDiplay = true;
               this.accommodationInfoError = true;
               return;
             }
@@ -254,7 +254,7 @@ selectDay(y: number, monthName: string, day: number | null): void {
   if(!this.selectedCheckIn) this.selectedCheckIn = chosenDate;
   else {
     this.selectedCheckOut = chosenDate;
-    console.log(new Date(this.selectedCheckIn!), new Date(this.selectedCheckOut!));
+    //console.log(new Date(this.selectedCheckIn!), new Date(this.selectedCheckOut!));
   }
 }
 

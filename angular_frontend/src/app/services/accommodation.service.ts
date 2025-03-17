@@ -374,8 +374,6 @@ export class AccommodationService {
   deleteAccommodation(id: number): Observable<Accommodation | {message: string, status: string, time: string} | null> {
     //let headers = this.getAuth();
 
-    console.log("SONO IN DELETE");
-
     return this.http.patch<Accommodation | {message: string, status: string, time: string} | null>(BACKEND_URL_PREFIX + "/api/delete_accommodation/" + id, {})
     .pipe(catchError(err => {console.error(err); return of()}))
 
@@ -457,7 +455,7 @@ export class AccommodationService {
   
   updateAccommodationInfo(accommodation: Accommodation): Observable<Accommodation | null | {message: string, status: string, time: string}> {
     //let headers = this.getAuth();
-    console.log("input ->", accommodation, accommodation.id);
+    //console.log("input ->", accommodation, accommodation.id);
 
     return this.http.patch<Accommodation | null | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/accommodation/" + accommodation.id, accommodation)
                       .pipe(

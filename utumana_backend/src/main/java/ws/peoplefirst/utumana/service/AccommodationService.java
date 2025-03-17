@@ -393,7 +393,6 @@ public class AccommodationService {
                 if(!b.getStatus().equals(BookingStatus.DONE) && !b.getStatus().equals(BookingStatus.REJECTED) && !b.getStatus().equals(BookingStatus.PENDING)) {
                 
                     if(areOverlappingDates(av.getStartDate(), av.getEndDate(), b.getCheckIn().toLocalDate(), b.getCheckOut().toLocalDate())) {
-                        System.out.println(av.getStartDate() + "        " + av.getEndDate() + "       " + b.getCheckIn().toLocalDate() + "         " + b.getCheckOut().toLocalDate());
                         return Arrays.asList(true);
                     }
 

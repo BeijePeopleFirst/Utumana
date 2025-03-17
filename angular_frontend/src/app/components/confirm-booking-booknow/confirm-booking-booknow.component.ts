@@ -141,7 +141,6 @@ export class ConfirmBookingBooknowComponent implements OnInit {
         .subscribe((response) => {
           if ("message" in response) {
             this.messages.push(response.message);
-            console.log("Ho Aggiunto a messages");
             return;
           } else {
             this.messagesCommunications = true;
@@ -179,7 +178,6 @@ export class ConfirmBookingBooknowComponent implements OnInit {
         .subscribe((response) => {
           if ("message" in response) {
             this.messages.push(response.message);
-            console.log("Ho aggiunto a messages 2");
             return;
           } else {
             this.messagesCommunications = true;
