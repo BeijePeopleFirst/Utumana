@@ -435,35 +435,36 @@ public class AccommodationService {
         return sx.isBefore(dx) || sx.isEqual(dx);
     }
 
-   public Accommodation setAccommodationUnavailabilities(Long accommodationId, List<Booking> unavailabilities, Long userId) {
-       Accommodation accommodation = findById(accommodationId);
+//    NOTE: please go to check BookingService (the correct method is there -> public List<BookingDTO> setUnAvailabilities(Long accId, Long userId, List<Booking> unavailabilities))
+//    public Accommodation setAccommodationUnavailabilities(Long accommodationId, List<Booking> unavailabilities, Long userId) {
+//        Accommodation accommodation = findById(accommodationId);
 
-       if (accommodation == null)
-           throw new IdNotFoundException("Accommodation with id " + accommodationId + " not found");
-       if (!accommodation.getOwnerId().equals(userId))
-           throw new TheJBeansException("Error: logged user must be the accommodation's owner to modify its unavailabilities");
+//        if (accommodation == null)
+//            throw new IdNotFoundException("Accommodation with id " + accommodationId + " not found");
+//        if (!accommodation.getOwnerId().equals(userId))
+//            throw new TheJBeansException("Error: logged user must be the accommodation's owner to modify its unavailabilities");
 
-       checkUnavailabilities(unavailabilities);
+//        checkUnavailabilities(unavailabilities);
 
-       User owner = userRepository.findById(userId).get();
-       for (Booking unavailability : unavailabilities) {
-           unavailability.setAccommodation(accommodation);
-           unavailability.setUser(owner);
-           unavailability.setTimestamp(LocalDateTime.now());
-           unavailability.setStatus(BookingStatus.ACCEPTED);
-           unavailability.setIsUnavailability(true);
-           bookingRepository.save(unavailability);
-       }
+//        User owner = userRepository.findById(userId).get();
+//        for (Booking unavailability : unavailabilities) {
+//            unavailability.setAccommodation(accommodation);
+//            unavailability.setUser(owner);
+//            unavailability.setTimestamp(LocalDateTime.now());
+//            unavailability.setStatus(BookingStatus.ACCEPTED);
+//            unavailability.setIsUnavailability(true);
+//            bookingRepository.save(unavailability);
+//        }
 
-       List<Long> unavailabilitiesIds = unavailabilities.stream().map(Booking::getId).collect(Collectors.toList());
-       for (Booking oldUnavailability : bookingRepository.findByAccommodationIdAndIsUnavailabilityIsTrue(accommodationId)) {
-           if (!unavailabilitiesIds.contains(oldUnavailability.getId())) {
-               bookingRepository.delete(oldUnavailability);
-           }
-       }
+//        List<Long> unavailabilitiesIds = unavailabilities.stream().map(Booking::getId).collect(Collectors.toList());
+//        for (Booking oldUnavailability : bookingRepository.findByAccommodationIdAndIsUnavailabilityIsTrue(accommodationId)) {
+//            if (!unavailabilitiesIds.contains(oldUnavailability.getId())) {
+//                bookingRepository.delete(oldUnavailability);
+//            }
+//        }
 
-       return accommodation;
-   }
+//        return accommodation;
+//    }
 
     // update info (no images)
     public Accommodation setAccommodationInfo(Accommodation newOne) {
