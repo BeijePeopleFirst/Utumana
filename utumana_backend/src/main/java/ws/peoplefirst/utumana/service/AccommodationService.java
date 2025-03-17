@@ -329,29 +329,6 @@ public class AccommodationService {
         
         checkAvailabilites(availabilities);
 
-        //BUG: Availabilities weren't updated:
-        //----------------------------------------------------------------------------------------------------------------
-        // List<Availability> savedAvailabilities = new ArrayList<Availability>();
-        // Availability saved;
-        // for (Availability availability : availabilities) {
-        //     availability.setAccommodationId(accommodationId);
-        //     availability.setAccommodation(accommodation);
-        //     saved = availability;
-        //     if (availability.getId() == null) {
-        //         saved = availabilityRepository.save(availability);
-        //     }
-        //     savedAvailabilities.add(saved);
-        // }
-        
-        // for (Availability oldAvailability : accommodation.getAvailabilities()) {
-        //     if (!savedAvailabilities.contains(oldAvailability)) {
-        //         availabilityRepository.delete(oldAvailability);
-        //     }
-        // }
-
-        // accommodation.setAvailabilities(savedAvailabilities);
-        //----------------------------------------------------------------------------------------------------------------
-
         List<Availability> avsOld = accommodation.getAvailabilities();
         List<Availability> toRemoveAvailabilities = new ArrayList<Availability>();
 
@@ -408,8 +385,6 @@ public class AccommodationService {
     //2) If at least one Booking falls into any availability period then RETURN TRUE, else RETURN FALSE
     //Shall we consider unavailabilities as well?
     private List<Object> cannotDeleteAvailability(List<Availability> list, Accommodation acc) {
-
-        List<Object> result = new ArrayList<>();
 
         List<Booking> bookings = bookingRepository.findByAccommodationAndIsUnavailabilityIsFalse(acc);
         List<Booking> toReject = new ArrayList<>();

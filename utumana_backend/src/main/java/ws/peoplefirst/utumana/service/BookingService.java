@@ -438,6 +438,19 @@ public class BookingService {
 				}
 			}
 		}
+
+		//Now lets check if there are overlappings inside the new unavailabilities list:
+
+		int counter = 0;
+		for(Booking un: unavailabilities) {
+
+			counter = 0;
+			for(Booking unLoop: unavailabilities) {
+				if(checkIfDatesAreOverlapping(un.getCheckIn().toLocalDate(), un.getCheckOut().toLocalDate(), unLoop.getCheckIn().toLocalDate(), unLoop.getCheckOut().toLocalDate())) counter++;
+			}
+
+			if(counter > 1) throw new ForbiddenException("cannot set unavailability due to overlapping dates inside the provided unavailability list");
+		}
 		
 		//Now that the operation is considered legal lets REJECT all the Bookings that are PENDING:
 		List<Booking> pendingBookings = this.bookingRepository.findPendingBookingsByAccommodationID(accId);
