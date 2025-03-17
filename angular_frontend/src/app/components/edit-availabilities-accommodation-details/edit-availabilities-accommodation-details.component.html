@@ -140,3 +140,7 @@
         <button type="button" (click)="confirmEdits()" class="btn-primary w-fit">{{'edit-availabilities-accommodation-details.confirm' | translate}}</button>
     </div>
 </div>
+
+<div class="w-full h-full fixed top-0 left-0 bg-neutral-2/50 z-[1000] flex justify-center align-middle items-center" *ngIf="displaySpinner">
+    <div class="w-20 h-20 border-8 border-gray-300 rounded-full animate-spin border-t-blue-600" ></div>
+</div>

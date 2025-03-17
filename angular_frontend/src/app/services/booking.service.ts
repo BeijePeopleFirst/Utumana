@@ -49,7 +49,11 @@ export class BookingService {
 
   public setUnavailabilities(unavailabilities: Booking[], accommodationId: number): Observable<BookingDTO[] | {message: string, status: string, time: string}> {
     //console.log("UNAVAILABILITIES", unavailabilities);
-    return this.http.put<BookingDTO[] | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/set_unavailabilities/" + accommodationId, unavailabilities);
+    return this.http.put<BookingDTO[] | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/set_unavailabilities/" + accommodationId, unavailabilities).pipe(
+      catchError(error => {
+        return of(error.error);
+      })
+    );
   }
   
   public getBookings(url: string): Observable<BookingDTO[]>{

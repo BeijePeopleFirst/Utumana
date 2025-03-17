@@ -31,6 +31,7 @@ import ws.peoplefirst.utumana.model.Accommodation;
 import ws.peoplefirst.utumana.model.Availability;
 import ws.peoplefirst.utumana.model.Booking;
 import ws.peoplefirst.utumana.model.User;
+import ws.peoplefirst.utumana.repository.AvailabilityRepository;
 import ws.peoplefirst.utumana.repository.BookingRepository;
 import ws.peoplefirst.utumana.utility.BookingStatus;
 import ws.peoplefirst.utumana.utility.JsonFormatter;
@@ -48,6 +49,9 @@ public class BookingService {
 	
 	@Autowired
 	private AccommodationService accommodationService;
+
+	@Autowired
+	private AvailabilityRepository availabilityRepository;
 	
 	public Map<String,LocalDate> checkDate(String checkInString,String checkOutString) {
 		if(checkInString.isBlank() || checkOutString.isBlank()) {
@@ -283,6 +287,10 @@ public class BookingService {
 		}
 		selfBooking.setCheckIn(LocalDateTime.of(unavailability.getStartDate(), LocalTime.of(14, 0)));
 		selfBooking.setCheckOut(LocalDateTime.of(unavailability.getEndDate(), LocalTime.of(10, 0)));
+
+		List<Availability> availabilities = availabilityRepository.findByAccommodationId(unavailability.getAccommodationId());
+		if(this.isNotInsideAnyAvailabilityPeriod(availabilities, selfBooking.getCheckIn().toLocalDate(), selfBooking.getCheckOut().toLocalDate())) throw new ForbiddenException("cannot set unavailability due to absent matching with available dates period");
+
 		selfBooking.setIsUnavailability(true);
 		selfBooking.setPrice(0.0);
 		selfBooking.setStatus(BookingStatus.ACCEPTED);
@@ -424,6 +432,13 @@ public class BookingService {
 	@Transactional
 	public List<BookingDTO> setUnAvailabilities(Long accId, Long userId, List<Booking> unavailabilities) {
 
+		List<Availability> availabilities = availabilityRepository.findByAccommodationId(accId);
+
+		//Lets check if unavailabilities are valid:
+		for(Booking b : unavailabilities) {
+			if(this.isNotInsideAnyAvailabilityPeriod(availabilities, b.getCheckIn().toLocalDate(), b.getCheckOut().toLocalDate())) throw new ForbiddenException("cannot set unavailability due to absent matching with available dates period");
+		}
+
 		//Lets retrieve the Booking that are considered to be valid:
 		//if there will be some overlapping the operation won' t be allowed
 		//List<BookingDTO> occupiedBookings = this.bookingRepository.findNotPendingNotRejectedBookingsByAccommodationID(accId);
@@ -493,5 +508,14 @@ public class BookingService {
 		}
 
 		return res;
+	}
+
+	private boolean isNotInsideAnyAvailabilityPeriod(List<Availability> availabilities, LocalDate checkIn, LocalDate checkOut) {
+
+		for(Availability a: availabilities) {
+			if(checkIfDatesAreOverlapping(a.getStartDate(), a.getEndDate(), checkIn, checkOut)) return false;
+		}
+
+		return true;
 	}
 }

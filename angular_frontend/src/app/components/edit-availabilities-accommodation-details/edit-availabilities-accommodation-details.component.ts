@@ -40,6 +40,8 @@ export class EditAvailabilitiesAccommodationDetailsComponent implements OnInit {
   locale: string = 'en';
   localeSubscription?: Subscription;
 
+  displaySpinner: boolean = false;
+
   constructor(
     private fb: FormBuilder,
     private translateService: TranslateService,
@@ -161,9 +163,11 @@ export class EditAvailabilitiesAccommodationDetailsComponent implements OnInit {
       return;
     }
 
-    this.availabilities.push(new_acc_avail);
-    this.availabilities.sort((a, b) => a.start_date.localeCompare(b.start_date));
-    this.accommodationService.setAvailabilities(this.availabilities, this.accommodation.id!).subscribe(
+    let availabilitiesSupport: Availability[] = Array.from(this.availabilities);
+
+    availabilitiesSupport.push(new_acc_avail);
+    availabilitiesSupport.sort((a, b) => a.start_date.localeCompare(b.start_date));
+    this.accommodationService.setAvailabilities(availabilitiesSupport, this.accommodation.id!).subscribe(
       oth => {
         if(oth && "message" in oth) {
           console.error(oth.message);
@@ -172,6 +176,8 @@ export class EditAvailabilitiesAccommodationDetailsComponent implements OnInit {
           return;
         }
         
+        this.availabilities.push(new_acc_avail);
+        this.availabilities.sort((a, b) => a.start_date.localeCompare(b.start_date));
         this.edited = true;
       }
     );
@@ -189,6 +195,7 @@ export class EditAvailabilitiesAccommodationDetailsComponent implements OnInit {
       return;
     }
 
+    this.displaySpinner = true;
     let support: Availability[] = this.availabilities.filter(a => a.start_date !== availability.start_date);
     this.accommodationService.setAvailabilities(support, this.accommodation.id!).subscribe(
       oth => {
@@ -205,10 +212,14 @@ export class EditAvailabilitiesAccommodationDetailsComponent implements OnInit {
         this.accommodationService.getUnavailabilities(this.accommodation.id!).subscribe(unavailabilities => {
           if(!unavailabilities){
             this.genericError = true;
+
+            this.displaySpinner = false;
             this.errorOccurred.emit(true);
             return;
           }
           this.unavailabilities = unavailabilities;
+
+          this.displaySpinner = false;
         })
       }
     );
@@ -249,11 +260,13 @@ export class EditAvailabilitiesAccommodationDetailsComponent implements OnInit {
       return;
     }
 
-    this.unavailabilities.push(new_acc_unav);
-    this.unavailabilities.sort((a, b) => a.check_in.localeCompare(b.check_in));
+
+    let unavailabilitiesSupport: Unavailability[] = Array.from(this.unavailabilities);
+    unavailabilitiesSupport.push(new_acc_unav);
+    unavailabilitiesSupport.sort((a, b) => a.check_in.localeCompare(b.check_in));
 
 
-    let unavailabilitiesAsBookings: Booking[] = this.createBookingArrayFromUnavailabilities(this.unavailabilities);
+    let unavailabilitiesAsBookings: Booking[] = this.createBookingArrayFromUnavailabilities(unavailabilitiesSupport);
     
     this.bookingService.setUnavailabilities(unavailabilitiesAsBookings, this.accommodation.id!).subscribe(
       response => {
@@ -264,6 +277,8 @@ export class EditAvailabilitiesAccommodationDetailsComponent implements OnInit {
           return;
         }
 
+        this.unavailabilities.push(new_acc_unav);
+        this.unavailabilities.sort((a, b) => a.check_in.localeCompare(b.check_in));
         this.edited = true;
       }
     );
@@ -277,16 +292,19 @@ export class EditAvailabilitiesAccommodationDetailsComponent implements OnInit {
 
     let unavailabilitiesAsBookings: Booking[] = this.createBookingArrayFromUnavailabilities(this.unavailabilities);
     
+    this.displaySpinner = true;
     this.bookingService.setUnavailabilities(unavailabilitiesAsBookings, this.accommodation.id!).subscribe(
       response => {
         if("message" in response) {
           console.error(response.message);
 
+          this.displaySpinner = false;
           this.errorOccurred.emit(true);
           return;
         }
 
         this.edited = true;
+        this.displaySpinner = false;
       }
     );
   }

@@ -368,7 +368,11 @@ export class AccommodationService {
 }
 
   public getAccommodationInfo(accId: number): Observable<Map<string, object> | {message: string, status: string, time: string}> {
-    return this.http.get<Map<string, object>>(BACKEND_URL_PREFIX + "/api/accommodation_info/" + accId);
+    return this.http.get<Map<string, object>>(BACKEND_URL_PREFIX + "/api/accommodation_info/" + accId).pipe(
+      catchError(error => {
+        return of(error.error);
+      })
+    );
   }
 
   deleteAccommodation(id: number): Observable<Accommodation | {message: string, status: string, time: string} | null> {
@@ -564,7 +568,11 @@ export class AccommodationService {
         ContentType: 'application/json',
         AcceptType: 'application/json'
       }
-    });
+    }).pipe(
+      catchError(error => {
+        return of(error.error);
+      })
+    );
   }
   
   getAccommodationsToBeApproved() {
@@ -590,11 +598,19 @@ export class AccommodationService {
   }
 
   public getAllAvailabilities(accommodationId: number): Observable<Availability[] | null | {message: string, status: string, time: string}> {
-    return this.http.get<Availability[] | null | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/accommodation/" + accommodationId + "/availabilities");
+    return this.http.get<Availability[] | null | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/accommodation/" + accommodationId + "/availabilities").pipe(
+      catchError(error => {
+        return of(error.error);
+      })
+    );
   }
 
   public setAvailabilities(availabilities: Availability[], accommodationId: number): Observable<void | {message: string, status: string, time: string}> {
-    return this.http.patch<void | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/accommodation/" + accommodationId + "/availabilities", availabilities);
+    return this.http.patch<void | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/accommodation/" + accommodationId + "/availabilities", availabilities).pipe(
+      catchError(error => {
+        return of(error.error);
+      })
+    );
   }
 
 }
