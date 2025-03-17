@@ -426,13 +426,14 @@ public class BookingService {
 
 		//Lets retrieve the Booking that are considered to be valid:
 		//if there will be some overlapping the operation won' t be allowed
-		List<BookingDTO> occupiedBookings = this.bookingRepository.findNotPendingNotRejectedBookingsByAccommodationID(accId);
+		//List<BookingDTO> occupiedBookings = this.bookingRepository.findNotPendingNotRejectedBookingsByAccommodationID(accId);
+		List<BookingDTO> occupiedBookings = this.bookingRepository.findNotPendingNotRejectedBookingsNotIsUnavailabilityByAccommodationID(accId);
 		
 		for(Booking unavailability : unavailabilities) {
 			for(BookingDTO b : occupiedBookings) {
 				if(checkIfDatesAreOverlapping(unavailability.getCheckIn().toLocalDate(), unavailability.getCheckOut().toLocalDate(), LocalDate.parse(b.getCheckIn(), DateTimeFormatter.ISO_DATE_TIME), LocalDate.parse(b.getCheckOut(), DateTimeFormatter.ISO_DATE_TIME))) {
 					log.error("unavailability dates are overlapping with pre-existent lecit bookings" );
-					System.out.println(b);
+					System.out.println(b.getCheckIn() + "     " + b.getCheckOut() + "          UN: " + unavailability.getCheckIn() + "       " + unavailability.getCheckOut());
 					throw new ForbiddenException("cannot set unavailability due to overlapping dates");
 				}
 			}
