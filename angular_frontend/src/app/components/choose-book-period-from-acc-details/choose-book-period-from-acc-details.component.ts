@@ -401,11 +401,13 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
     
     if(!this.chosenOne || this.chosenOne.check_in == null) return false;
 
+    if(currNumber === inNumber) return true;
+
     // current day is not check-in and check-out hasn't been specified yet
     if(!this.chosenOne.check_out) return false;
 
     // current day is between check-in and check-out
-    if(currNumber >= this.chosenOne.check_in.getTime() && currNumber <= this.chosenOne.check_out.getTime()) {
+    if(currNumber >= inNumber && currNumber <= outNumber) {
       return true;
     }
     else {
