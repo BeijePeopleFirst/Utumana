@@ -868,6 +868,8 @@ public class AccommodationService {
 
         }
 
+        if(availableDates.size() == 0) return new ArrayList<String>();
+
         Collections.sort(availableDates);
         
         for (Booking b : copy2) {
@@ -902,6 +904,8 @@ public class AccommodationService {
         List<Booking> copy2 = new ArrayList<>();
 
         List<String> checkIns = this.fetchCheckInListForAccommodation(accommodationId, user, values);
+
+        if(checkIns.size() == 0) return new ArrayList<String>();
 
         for (Booking b : values) {
             if (b.getStatus().equals(BookingStatus.PENDING) && b.getUser().getId() != user.getId());
