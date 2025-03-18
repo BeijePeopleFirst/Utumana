@@ -25,6 +25,7 @@ import ws.peoplefirst.utumana.exception.TheJBeansException;
 import ws.peoplefirst.utumana.model.*;
 import ws.peoplefirst.utumana.repository.*;
 import ws.peoplefirst.utumana.utility.BookingStatus;
+import ws.peoplefirst.utumana.utility.MailMessage;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -75,6 +76,9 @@ public class AccommodationService {
 
     @Autowired
     private S3Service s3Service;
+
+    @Autowired
+    private MailSenderService mailSenderService;
 
 
     public Accommodation approveAccommodation(Long accommodationId) {
@@ -249,6 +253,11 @@ public class AccommodationService {
         favourites.add(newFavouriteAccommodation);
 
         userRepository.save(user);
+
+        //Sending Notification to the User:
+        MailMessage message = new MailMessage(user.getEmail(), "New Accommodation was added to your Favourites list");
+        this.mailSenderService.sendSimpleMessage(message);
+        
     }
 
     public void removeFavourite(Long accommodationId, Long userId) {
@@ -267,6 +276,10 @@ public class AccommodationService {
         favourites.remove(i);
 
         userRepository.save(user);
+
+        //Sending Notification to the User:
+        MailMessage message = new MailMessage(user.getEmail(), "An Accommodation was removed from your Favourites list");
+        this.mailSenderService.sendSimpleMessage(message);
     }
 
     public Page<AccommodationDTO> findByUserInputDTO(String destination, LocalDate checkInDate, LocalDate checkOutDate,
@@ -316,6 +329,13 @@ public class AccommodationService {
         Set<ws.peoplefirst.utumana.model.Service> services = serviceService.getServicesByIds(serviceIds);
         System.out.println("services: " + services);
         accommodation.setServices(services);
+
+        //Sending Notification to the User:
+        User user = this.userRepository.findById(userId).get();
+
+        MailMessage message = new MailMessage(user.getEmail(), "Accommodation \"" + accommodation.getTitle() + "\" was edited in \"services\" section");
+        this.mailSenderService.sendSimpleMessage(message);
+
         return accommodationRepository.save(accommodation);
     }
 
@@ -378,6 +398,12 @@ public class AccommodationService {
         for(Availability oldA: avsOld) {
             availabilityRepository.delete(oldA);
         }
+
+        //Sending Notification to the User:
+        User user = this.userRepository.findById(userId).get();
+
+        MailMessage message = new MailMessage(user.getEmail(), "Accommodation \"" + accommodation.getTitle() + "\" was edited in \"availabilities\" section");
+        this.mailSenderService.sendSimpleMessage(message);
 
         return accommodation;
     }
@@ -488,6 +514,12 @@ public class AccommodationService {
         accommodation.setBeds(newOne.getBeds());
         accommodation.setRooms(newOne.getRooms());
 
+        //Sending Notification to the User:
+        User user = this.userRepository.findById(newOne.getOwnerId()).get();
+
+        MailMessage message = new MailMessage(user.getEmail(), "Accommodation \"" + accommodation.getTitle() + "\" was edited in one or more sections");
+        this.mailSenderService.sendSimpleMessage(message);
+
         return accommodationRepository.save(accommodation);
     }
 
@@ -514,6 +546,12 @@ public class AccommodationService {
 
         // recalculate coordinates and set them
         // TODO
+
+        //Sending Notification to the User:
+        User user = this.userRepository.findById(newOne.getOwnerId()).get();
+
+        MailMessage message = new MailMessage(user.getEmail(), "Accommodation \"" + accommodation.getTitle() + "\" was edited in \"address\" section");
+        this.mailSenderService.sendSimpleMessage(message);
 
         return accommodationRepository.save(accommodation);
     }
@@ -820,6 +858,13 @@ public class AccommodationService {
             toDelete.setHidingTimestamp(LocalDateTime.now());
             System.out.println(toDelete);
             accommodationRepository.save(toDelete);
+
+            //Sending Notification to the User:
+            User user = this.userRepository.findById(toDelete.getOwnerId()).get();
+
+            MailMessage message = new MailMessage(user.getEmail(), "Accommodation \"" + toDelete.getTitle() + "\" was deleted");
+            this.mailSenderService.sendSimpleMessage(message);
+
             return toDelete;
         } else {
             throw new ForbiddenException("could not delete an accommodation with ongoing or future booking");
