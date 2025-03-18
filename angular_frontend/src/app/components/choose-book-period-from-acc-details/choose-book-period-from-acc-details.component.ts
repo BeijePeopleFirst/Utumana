@@ -147,15 +147,17 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
       let indexStringTest: number = this.checkInList.indexOf(stringTest);
 
       if(indexStringTest !== 0 && this.checkOutList.includes(stringTest)) {
-        this.currentList = this.checkOutList.slice(this.checkInList.indexOf(stringTest), lastIndex);
+        this.currentList = this.checkOutList.slice(this.checkOutList.indexOf(stringTest), lastIndex);
       }
       else {
         //this.currentList = this.checkOutList.slice(this.checkInList.indexOf(stringTest), lastIndex);
         let indexFinal: number = this.getFirstNextDayComparedToSelectedCheckIn(stringTest, this.checkOutList);
+        //console.log("Stampo indexFinal -> ", indexFinal);
         this.currentList = this.checkOutList.slice(indexFinal, lastIndex);
       }
 
-      //console.log("currentList: " + this.currentList, this.checkOutList);
+      
+      //console.log("currentList: ", this.currentList, this.checkOutList);
 
     }
     else {
@@ -280,7 +282,11 @@ export class ChooseBookPeriodFromAccDetailsComponent implements OnInit {
       const diffDays = Math.round(timeDiff / (1000 * 3600 * 24));
       
       // If dates are not consecutive (1 day apart), we found our boundary
-      if(diffDays !== 1) return i+1;
+      if(diffDays !== 1) {
+
+        //console.log("Stampo i giorni -> ", tmp1.toLocaleDateString(), tmp2.toLocaleDateString());
+        return i+1;
+      }
     }
 
     return list.length;
