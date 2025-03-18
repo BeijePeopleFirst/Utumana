@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -284,6 +285,31 @@ public class BookingController {
 		
 		UserDTO userDTO=AuthorizationUtility.getUserFromAuthentication(auth);
 		return bookingService.addUnAvailability(userDTO.getId(), unavailability);
+	}
+
+	@Operation(summary = "Set unavailabilities to an accommodation", description = "Set unavailabilities to an accommodation.", tags = { "Bookings" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Unavailabilities set successfully."),
+			@ApiResponse(responseCode = "400", description = "Unavailability or its start or end dates are null, or logged user's info not found", content = @Content),
+			@ApiResponse(responseCode = "403", description = "Unavailability's start is before today's date, or the end date is before the start date, or logged user's info not found, or logged user is not the owner of the accommodation associated with this unavailability", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Accommodation with given ID does not exist.", content = @Content)
+    })
+	@PreAuthorize("hasAuthority('USER')")
+	@PutMapping(value = "/set_unavailabilities/{accommodationId}")
+	public List<BookingDTO> setUnavailabilities(Authentication auth,
+		@io.swagger.v3.oas.annotations.parameters.RequestBody(
+			description = "unavailabilities", required = true,
+			content = @Content(mediaType = "application/json",
+			schema = @Schema(implementation = List.class)))
+		@RequestBody List<Booking> unavailabilities,
+		@PathVariable Long accommodationId) {
+				
+		log.debug("PUT /set_unavailabilities");
+
+		UserDTO userDTO=AuthorizationUtility.getUserFromAuthentication(auth);
+		AuthorizationUtility.checkIsAdminOrMe(auth, userDTO.getId());
+
+		return bookingService.setUnAvailabilities(accommodationId, userDTO.getId(), unavailabilities);
 	}
 	
 	@Operation(summary = "Delete an unavailability period from an accommodation", description = "Delete an unavailability period from an accommodation. Returns the unavalibility details as an UnavailabilityDTO.", tags = { "Bookings" })

@@ -329,59 +329,142 @@ public class AccommodationService {
         
         checkAvailabilites(availabilities);
 
-        System.out.println(availabilities);
-        List<Availability> savedAvailabilities = new ArrayList<Availability>();
-        Availability saved;
-        for (Availability availability : availabilities) {
-            availability.setAccommodationId(accommodationId);
-            availability.setAccommodation(accommodation);
-            saved = availability;
-            if (availability.getId() == null) {
-                saved = availabilityRepository.save(availability);
+        List<Availability> avsOld = accommodation.getAvailabilities();
+        List<Availability> toRemoveAvailabilities = new ArrayList<Availability>();
+
+        if(avsOld.size() > availabilities.size()) {
+
+            boolean addToList = true;
+            for(Availability a: avsOld) {
+
+                addToList = true;
+                for(Availability a2: availabilities) {
+                    if(a.getStartDate().isEqual(a2.getStartDate())) {
+                        addToList = false;
+                        break;
+                    }
+
+                }
+                if(addToList) toRemoveAvailabilities.add(a);
+
             }
-            savedAvailabilities.add(saved);
+
+            List<Object> evaluation = this.cannotDeleteAvailability(toRemoveAvailabilities, accommodation);
+            if((Boolean)evaluation.get(0)) {
+                throw new ForbiddenException("Cannot remove availability whose days are booked already by other users");
+            }
+            else {
+
+                @SuppressWarnings("unchecked")
+                List<Booking> toReject = (ArrayList<Booking>)evaluation.get(1);
+
+                for(Booking b: toReject) {
+                    b.setStatus(BookingStatus.REJECTED);
+                    b.setIsUnavailability(false);
+                    bookingRepository.save(b);
+                }
+            }
         }
 
-        for (Availability oldAvailability : accommodation.getAvailabilities()) {
-            if (!savedAvailabilities.contains(oldAvailability)) {
-                availabilityRepository.delete(oldAvailability);
-            }
+        for(Availability a: availabilities) {
+            a.setAccommodation(accommodation);
+            a.setAccommodationId(accommodationId);
+            a.setId(null);
         }
 
-        accommodation.setAvailabilities(savedAvailabilities);
+        accommodation.setAvailabilities(availabilities);
+        accommodation = accommodationRepository.save(accommodation);
 
-        return accommodationRepository.save(accommodation);
+        for(Availability oldA: avsOld) {
+            availabilityRepository.delete(oldA);
+        }
+
+        return accommodation;
     }
 
-   public Accommodation setAccommodationUnavailabilities(Long accommodationId, List<Booking> unavailabilities, Long userId) {
-       Accommodation accommodation = findById(accommodationId);
+    private List<Object> cannotDeleteAvailability(List<Availability> list, Accommodation acc) {
 
-       if (accommodation == null)
-           throw new IdNotFoundException("Accommodation with id " + accommodationId + " not found");
-       if (!accommodation.getOwnerId().equals(userId))
-           throw new TheJBeansException("Error: logged user must be the accommodation's owner to modify its unavailabilities");
+        List<Booking> bookings = bookingRepository.findByAccommodationAndIsUnavailabilityIsFalse(acc);
+        List<Booking> toReject = new ArrayList<>();
 
-       checkUnavailabilities(unavailabilities);
+        for(Availability av: list) {
+            for(Booking b : bookings) {
 
-       User owner = userRepository.findById(userId).get();
-       for (Booking unavailability : unavailabilities) {
-           unavailability.setAccommodation(accommodation);
-           unavailability.setUser(owner);
-           unavailability.setTimestamp(LocalDateTime.now());
-           unavailability.setStatus(BookingStatus.ACCEPTED);
-           unavailability.setIsUnavailability(true);
-           bookingRepository.save(unavailability);
-       }
+                if(!b.getStatus().equals(BookingStatus.DONE) && !b.getStatus().equals(BookingStatus.REJECTED) && !b.getStatus().equals(BookingStatus.PENDING)) {
+                
+                    if(areOverlappingDates(av.getStartDate(), av.getEndDate(), b.getCheckIn().toLocalDate(), b.getCheckOut().toLocalDate())) {
+                        return Arrays.asList(true);
+                    }
 
-       List<Long> unavailabilitiesIds = unavailabilities.stream().map(Booking::getId).collect(Collectors.toList());
-       for (Booking oldUnavailability : bookingRepository.findByAccommodationIdAndIsUnavailabilityIsTrue(accommodationId)) {
-           if (!unavailabilitiesIds.contains(oldUnavailability.getId())) {
-               bookingRepository.delete(oldUnavailability);
-           }
-       }
+                }
+                else {
+                    if(b.getStatus().equals(BookingStatus.PENDING)) {
+                        if(areOverlappingDates(av.getStartDate(), av.getEndDate(), b.getCheckIn().toLocalDate(), b.getCheckOut().toLocalDate())) {
+                            toReject.add(b);
+                        }
+                    }
+                }
+            }
+        }
 
-       return accommodation;
-   }
+        //Now we need to REJECT the pre-existent Unavailabilities that fall inside any of the specified period to remove (inside availabilities to remove):
+        List<Booking> possibleUnavailabilitiesToReject = this.bookingRepository.findByAccommodationAndIsUnavailabilityIsTrue(acc);
+
+        for(Booking b: possibleUnavailabilitiesToReject) {
+            for(Availability av: list) {
+                if(areOverlappingDates(av.getStartDate(), av.getEndDate(), b.getCheckIn().toLocalDate(), b.getCheckOut().toLocalDate())) {
+                    toReject.add(b);
+                }
+            }
+        }
+
+        return Arrays.asList(false, toReject);
+    }
+
+    private static boolean areOverlappingDates(LocalDate start, LocalDate end, LocalDate chkIn, LocalDate chkOut) {
+        return ((isAfterOrEqual(chkIn, start) && isBeforeOrEqual(chkIn, end))
+                || (isAfterOrEqual(chkOut, start) && isBeforeOrEqual(chkOut, end)) ||
+                ((isAfterOrEqual(chkOut, end) && isBeforeOrEqual(chkIn, start))));
+    }
+
+    private static boolean isAfterOrEqual(LocalDate sx, LocalDate dx) {
+        return sx.isAfter(dx) || sx.isEqual(dx);
+    }
+
+    private static boolean isBeforeOrEqual(LocalDate sx, LocalDate dx) {
+        return sx.isBefore(dx) || sx.isEqual(dx);
+    }
+
+//    NOTE: please go to check BookingService (the correct method is there -> public List<BookingDTO> setUnAvailabilities(Long accId, Long userId, List<Booking> unavailabilities))
+//    public Accommodation setAccommodationUnavailabilities(Long accommodationId, List<Booking> unavailabilities, Long userId) {
+//        Accommodation accommodation = findById(accommodationId);
+
+//        if (accommodation == null)
+//            throw new IdNotFoundException("Accommodation with id " + accommodationId + " not found");
+//        if (!accommodation.getOwnerId().equals(userId))
+//            throw new TheJBeansException("Error: logged user must be the accommodation's owner to modify its unavailabilities");
+
+//        checkUnavailabilities(unavailabilities);
+
+//        User owner = userRepository.findById(userId).get();
+//        for (Booking unavailability : unavailabilities) {
+//            unavailability.setAccommodation(accommodation);
+//            unavailability.setUser(owner);
+//            unavailability.setTimestamp(LocalDateTime.now());
+//            unavailability.setStatus(BookingStatus.ACCEPTED);
+//            unavailability.setIsUnavailability(true);
+//            bookingRepository.save(unavailability);
+//        }
+
+//        List<Long> unavailabilitiesIds = unavailabilities.stream().map(Booking::getId).collect(Collectors.toList());
+//        for (Booking oldUnavailability : bookingRepository.findByAccommodationIdAndIsUnavailabilityIsTrue(accommodationId)) {
+//            if (!unavailabilitiesIds.contains(oldUnavailability.getId())) {
+//                bookingRepository.delete(oldUnavailability);
+//            }
+//        }
+
+//        return accommodation;
+//    }
 
     // update info (no images)
     public Accommodation setAccommodationInfo(Accommodation newOne) {
@@ -848,8 +931,6 @@ public class AccommodationService {
         }
 
         Collections.sort(availableDates);
-
-        System.out.println("AVAI -> " + availableDates);
         
         for (Booking b : copy2) {
             checkIn = b.getCheckIn().toLocalDate();
@@ -866,7 +947,6 @@ public class AccommodationService {
             }
 
         }
-        System.out.println("OCCC  -> " + occupiedDates);
 
         // Now I sort the dates list for the occupied ones:
         Collections.sort(occupiedDates);

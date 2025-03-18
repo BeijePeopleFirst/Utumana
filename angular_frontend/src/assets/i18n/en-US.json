@@ -86,7 +86,13 @@
 	"error-title": "Invalid Title",
 	"error-edit-title": "Error occurred while updating Title",
 	"success-edit-title": "Title Updated Successfully",
-	"selected-services": "Selected Services"
+	"selected-services": "Selected Services",
+	"confirm-description": "Confirm Description",
+	"close-description-gui": "Close",
+	"success-edit-description": "Description Successfully Updated",
+	"error-edit-description": "An Error occurred while updating Accommodation' s description",
+	"success-updated-availabilities": "Accommodation' s Booking Periods Updated",
+	"error-updating-availabilities": "An Error occurred"
 },
 "admin-dashboard-accommodations": {
 	"approve_reject_title": "Approve/Reject accommodations",
@@ -346,6 +352,37 @@
 	"missing_required": "One or more required fields haven't been filled",
 	"modal_title": "Confirm and create this accommodation?",
 	"modal_subtitle": "By clicking 'Confirm', this accommodation will be created and sent to the admin for approval."
+},
+"edit-availabilities-accommodation-details": {
+	"continue": "Next",
+	"back": "Back",
+	"confirm": "Confirm",
+
+	"availabilities_step": "Availabilities",
+	"availability_info": "Set the availability periods for your accommodation. Note: the end date's night is not included in the period.",
+	"unavailability_info": "If it is more convenient, you can add unavailability periods too. For example, if your accommodation will be available for six months with the exception of a few weekends, you can set a six months availability period and add unavailability periods for those weekends. Note: the end date's night is not included in the period.",
+	"availabilities": "Availabilities",
+	"unavailabilities": "Unavailabilities",
+	"no_availabilities": "No availabilities",
+	"no_unavailabilities": "No unavailabilities",
+	"start_date": "Start date",
+	"invalid_start_date": "Invalid start date",
+	"end_date": "End date",
+	"invalid_end_date": "Invalid end date",
+	"price": "Price per night",
+	"invalid_price": "Invalid price",
+	"add_availability": "Add availability",
+	"availability_overlaps": "Error: availability overlaps with existing availabilities",
+	"availability_reversed_dates": "Error: start date must be before end date",
+	"add_unavailability": "Add unavailability",
+	"unavailability_overlaps": "Error: unavailability overlaps with existing unavailabilities",
+
+	"recap": "Confirm",
+	"edit_availabilities": "Edit availability",
+	"no_info": "No info",
+	"edit_info": "Edit info",
+	"invalid_info": "Invalid info",
+	"missing_required": "One or more required fields haven't been filled"
 },
 "edit-photos-accommodation-details": {
 	"confirm-button": "Confirm",

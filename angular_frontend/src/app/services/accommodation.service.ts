@@ -16,6 +16,7 @@ import { DefaultAddress } from '../models/defaultAddress';
 import { Coordinates } from '../models/coordinates';
 import { S3Service } from './s3.service';
 import { Photo } from '../models/photo';
+import { Unavailability } from '../dtos/unavailabilityDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -367,13 +368,15 @@ export class AccommodationService {
 }
 
   public getAccommodationInfo(accId: number): Observable<Map<string, object> | {message: string, status: string, time: string}> {
-    return this.http.get<Map<string, object>>(BACKEND_URL_PREFIX + "/api/accommodation_info/" + accId);
+    return this.http.get<Map<string, object>>(BACKEND_URL_PREFIX + "/api/accommodation_info/" + accId).pipe(
+      catchError(error => {
+        return of(error.error);
+      })
+    );
   }
 
   deleteAccommodation(id: number): Observable<Accommodation | {message: string, status: string, time: string} | null> {
     //let headers = this.getAuth();
-
-    console.log("SONO IN DELETE");
 
     return this.http.patch<Accommodation | {message: string, status: string, time: string} | null>(BACKEND_URL_PREFIX + "/api/delete_accommodation/" + id, {})
     .pipe(catchError(err => {console.error(err); return of()}))
@@ -456,7 +459,7 @@ export class AccommodationService {
   
   updateAccommodationInfo(accommodation: Accommodation): Observable<Accommodation | null | {message: string, status: string, time: string}> {
     //let headers = this.getAuth();
-    console.log("input ->", accommodation, accommodation.id);
+    //console.log("input ->", accommodation, accommodation.id);
 
     return this.http.patch<Accommodation | null | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/accommodation/" + accommodation.id, accommodation)
                       .pipe(
@@ -565,7 +568,11 @@ export class AccommodationService {
         ContentType: 'application/json',
         AcceptType: 'application/json'
       }
-    });
+    }).pipe(
+      catchError(error => {
+        return of(error.error);
+      })
+    );
   }
   
   getAccommodationsToBeApproved() {
@@ -578,8 +585,32 @@ export class AccommodationService {
   rejectAccommodation(id: number): Observable<Accommodation> {
     return this.http.patch<Accommodation>(BACKEND_URL_PREFIX + "/api/reject_accommodation/" + id, {});
   }
-  /*private getAuth(): HttpHeaders {
-    let headers = new HttpHeaders();
-    return headers;
-  }*/
+  
+  public getUnavailabilities(accommodationId: number): Observable<Unavailability[] | null | undefined> {
+    return this.http.get<Unavailability[] | null | undefined>(BACKEND_URL_PREFIX + "/api/accommodation/" + accommodationId + "/unavailabilities").pipe(
+      catchError(
+        error => {
+          console.error(error.error);
+          return of(null);
+        }
+      )
+    )
+  }
+
+  public getAllAvailabilities(accommodationId: number): Observable<Availability[] | null | {message: string, status: string, time: string}> {
+    return this.http.get<Availability[] | null | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/accommodation/" + accommodationId + "/availabilities").pipe(
+      catchError(error => {
+        return of(error.error);
+      })
+    );
+  }
+
+  public setAvailabilities(availabilities: Availability[], accommodationId: number): Observable<void | {message: string, status: string, time: string}> {
+    return this.http.patch<void | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/accommodation/" + accommodationId + "/availabilities", availabilities).pipe(
+      catchError(error => {
+        return of(error.error);
+      })
+    );
+  }
+
 }

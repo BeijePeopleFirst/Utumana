@@ -49,7 +49,6 @@ export class UserService {
   private getUserDTOs(url: string): Observable<UserDTO[]> {
     return this.http.get<UserDTO[]>(url).pipe(
       map(users => {
-        console.log("users",users);
         users.forEach(user => {
           if(user.profile_picture_url){
             this.s3Service.getPhoto(user.profile_picture_url).subscribe(blob => {
@@ -141,7 +140,7 @@ export class UserService {
   insertUser(user: User): Observable<boolean> {
     return this.http.post<User>(`${BACKEND_URL_PREFIX}/api/user`, user).pipe(
       map(createdUser => {
-        console.log("User created: ", createdUser);
+        //console.log("User created: ", createdUser);
         return true;
       }),
       catchError(err => { throw(err); })

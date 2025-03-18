@@ -66,6 +66,9 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
 
   showViewEditPhotosPerspective: boolean = false;
   showEditTitlePerspective: boolean = false;
+  showEditDescriptionPerspective: boolean = false;
+
+  showEditAvailabilitiesPerspective: boolean = false;
 
   guestsNumber: number = 1;
   nightsNumber$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
@@ -79,6 +82,8 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
 
   titleInputField?: string;
   titleInputFieldError: boolean = false;
+
+  descriptionInputField?: string;
 
   //MESSAGGES:
   //-------------------------------------------------------------------------------------
@@ -98,6 +103,10 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
   errorCleaningNotConfirmedPhotos: boolean = false;
   errorOccurredTitle: boolean = false;
   successUpdateTitle: boolean = false;
+  successUpdatedDescription: boolean = false;
+  errorUpdatingDescription: boolean = false;
+  updatedAvailabilitesMessage: boolean = false;
+  errorAvailabilitesMessage: boolean = false;
   //-------------------------------------------------------------------------------------
 
   iconUrl = iconURL;
@@ -185,7 +194,12 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
           return;
         }
 
-        console.log("STAMPO ACC trovata -> ", this.accommodation);
+        //console.log("STAMPO ACCOMMODATION trovata -> ", this.accommodation);
+
+        this.roomsNum = this.accommodation.rooms + "";
+        this.bedsNum = this.accommodation.beds + "";
+        this.titleInputField = this.accommodation.title;
+        this.descriptionInputField = this.accommodation.description;
 
         //Recupero i Servizi dell' Accommodation:
         for (let s of this.accommodation.services)
@@ -222,12 +236,12 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
             let tmp2: Boolean | undefined;
             let tmp3: any;
             let tmp4: Boolean | undefined;
-            console.log("INFO -> ", info);
+            //console.log("INFO -> ", info);
             let tmp5: any;
             let tmp6: any;
 
             let info2 = info as any;
-            console.log("INFO2 -> ", info2);
+            //console.log("INFO2 -> ", info2);
             if (
               !("isAdmin" in info2) ||
               !("isOwner" in info2) ||
@@ -254,7 +268,6 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
               !this.isAdminOrMe) {
 
                 this.invalidAccommodation = true;
-                console.log("stampo invalidAcc1 -> ", this.invalidAccommodation);
                 return;
 
             } 
@@ -262,7 +275,7 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
             else if (!this.accommodation.hiding_timestamp && this.accommodation.approval_timestamp) this.invalidAccommodation = false;
             else {}
 
-            this.photoList = this.accommodation.photos;console.log("PHOTOSSSSSSS -> ", this.accommodation.photos);
+            this.photoList = this.accommodation.photos;
             this.photoList.sort((p1, p2) => p1.photo_order - p2.photo_order);
             this.photoToShow = [this.photoList[0], 0];
             this.totalPhotos = this.photoList.length;
@@ -289,7 +302,7 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
               }
             }
 
-            console.log("Reviews -> ", this.accommodationReviews);
+            //console.log("Reviews -> ", this.accommodationReviews);
 
             //Filtro le review in base al tipo di User loggato:
             if (!this.isMe)
@@ -332,7 +345,7 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
               for (let s of tmp6) {
                 this.accommodationCheckOuts.push(s);
               }
-              console.log("PROVA DEBUG DETAILS CHECKOUTS -> ", this.accommodationCheckOuts);
+              //console.log("PROVA DEBUG DETAILS CHECKOUTS -> ", this.accommodationCheckOuts);
             }
 
             //Ora recupero l' Owner dell' Accommodation:
@@ -350,7 +363,7 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
                   this.errorFetchingAccommodationOwner = true;
                   return;
                 } else {
-                  console.log("found user -> ", foundUser);
+                  //console.log("found user -> ", foundUser);
                   this.accommodationOwner = foundUser;
                 }
 
@@ -514,7 +527,7 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
             this.message = result.message;
             return;
           } else {
-            console.log("Deleted Accommodation -> ", result);
+            //console.log("Deleted Accommodation -> ", result);
             this.message = "true";
             this.deletedAccommodation = true;
             setTimeout(() => this.router.navigate(["/"]), 1850);
@@ -646,7 +659,7 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
       user_id: this.userId!
     };
 
-    console.log("Stampoil booking -> ", booking, this.chosenPeriod?.check_in, this.chosenPeriod?.check_out);
+    //console.log("Stampo il booking -> ", booking, this.chosenPeriod?.check_in, this.chosenPeriod?.check_out);
 
     let container: {chosen_availability: PartialBooking,
                     nights_number: number, post_operation: number
@@ -769,17 +782,16 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
   //Prendo n elementi dalla lista delle review in base all' offset specificato
   //PageSize === 4
   consumeAskForPageEvent($event: number) {
-    console.log($event, this.accommodationReviewsTotalPagesNumber);
+    //console.log($event, this.accommodationReviewsTotalPagesNumber);
     if ($event < 0) return;
     if ($event > this.accommodationReviewsTotalPagesNumber) return;
-    console.log("eccomi");
 
     this.accommodationReviews.sort((a, b) => b.id! - a.id!);
     let map: Map<Number, Review[]> = this.buildPagesMap(
       $event,
       this.accommodationReviews
     );
-    console.log(map);
+    //console.log(map);
 
     this.accommodationReviewsPageNumber = $event;
 
@@ -884,6 +896,62 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
     )
   }
 
+  toggleEditDescriptionPerspective(): void {
+    this.showEditDescriptionPerspective = !this.showEditDescriptionPerspective;
+  }
+
+  confirmDescriptionEdit(): void {
+    this.accommodation.description = this.descriptionInputField;
+
+    this.accommodationService.updateAccommodationInfo(this.accommodation).subscribe(
+      response => {
+        if((response && "message" in response) || !response) {
+          if(response && "message" in response) {
+            console.error(response.message);
+            this.message = "true";
+            this.errorUpdatingDescription = true;
+            this.toggleEditDescriptionPerspective();
+            return;
+          }
+          else {
+            this.message = "true";
+            this.errorUpdatingDescription = true;
+            this.toggleEditDescriptionPerspective();
+            return;
+          }
+        }
+        else {
+          this.message = "true";
+          this.successUpdatedDescription = true;
+          this.toggleEditDescriptionPerspective();
+          return;
+        }
+      }
+    )
+  }
+
+  toggleEditAvailabilitiesPerspective(): void {
+    this.showEditAvailabilitiesPerspective = !this.showEditAvailabilitiesPerspective;
+  }
+
+  consumeCloseEditAvailabilitiesModal($event: boolean): void {
+    
+    if($event) {
+      this.message = "true";
+      this.updatedAvailabilitesMessage = true;
+    }
+
+    this.toggleEditAvailabilitiesPerspective();
+    location.reload();
+  }
+
+  consumeErrorOccurredEditAvailabilitiesModal($event: boolean) {
+    this.message = "true";
+    this.errorAvailabilitesMessage = true;
+
+    this.toggleEditAvailabilitiesPerspective();
+  }
+
   clearMessage() {
     this.message = undefined;
 
@@ -905,5 +973,9 @@ export class AccommodationDetailsComponent implements OnInit, OnDestroy {
     this.errorCleaningNotConfirmedPhotos = false;
     this.errorOccurredTitle = false;
     this.successUpdateTitle = false;
+    this.successUpdatedDescription = false;
+    this.errorUpdatingDescription = false;
+    this.updatedAvailabilitesMessage = false;
+    this.errorAvailabilitesMessage = false;
   }
 }

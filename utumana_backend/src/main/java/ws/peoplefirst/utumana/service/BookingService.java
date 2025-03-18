@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -14,11 +15,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.annotation.Nullable;
 import jakarta.persistence.PersistenceException;
+import ws.peoplefirst.utumana.dto.AccommodationDTO;
 import ws.peoplefirst.utumana.dto.BookingDTO;
 import ws.peoplefirst.utumana.dto.UnavailabilityDTO;
+import ws.peoplefirst.utumana.dto.UserDTO;
 import ws.peoplefirst.utumana.exception.DBException;
 import ws.peoplefirst.utumana.exception.ForbiddenException;
 import ws.peoplefirst.utumana.exception.IdNotFoundException;
@@ -27,6 +31,7 @@ import ws.peoplefirst.utumana.model.Accommodation;
 import ws.peoplefirst.utumana.model.Availability;
 import ws.peoplefirst.utumana.model.Booking;
 import ws.peoplefirst.utumana.model.User;
+import ws.peoplefirst.utumana.repository.AvailabilityRepository;
 import ws.peoplefirst.utumana.repository.BookingRepository;
 import ws.peoplefirst.utumana.utility.BookingStatus;
 import ws.peoplefirst.utumana.utility.JsonFormatter;
@@ -44,6 +49,9 @@ public class BookingService {
 	
 	@Autowired
 	private AccommodationService accommodationService;
+
+	@Autowired
+	private AvailabilityRepository availabilityRepository;
 	
 	public Map<String,LocalDate> checkDate(String checkInString,String checkOutString) {
 		if(checkInString.isBlank() || checkOutString.isBlank()) {
@@ -279,6 +287,10 @@ public class BookingService {
 		}
 		selfBooking.setCheckIn(LocalDateTime.of(unavailability.getStartDate(), LocalTime.of(14, 0)));
 		selfBooking.setCheckOut(LocalDateTime.of(unavailability.getEndDate(), LocalTime.of(10, 0)));
+
+		List<Availability> availabilities = availabilityRepository.findByAccommodationId(unavailability.getAccommodationId());
+		if(this.isNotInsideAnyAvailabilityPeriod(availabilities, selfBooking.getCheckIn().toLocalDate(), selfBooking.getCheckOut().toLocalDate())) throw new ForbiddenException("cannot set unavailability due to absent matching with available dates period");
+
 		selfBooking.setIsUnavailability(true);
 		selfBooking.setPrice(0.0);
 		selfBooking.setStatus(BookingStatus.ACCEPTED);
@@ -337,9 +349,6 @@ public class BookingService {
 		if(endDate.isAfter(checkIn) && endDate.isBefore(checkOut)) return true;
 
 		if(startDate.isBefore(checkIn) && endDate.isAfter(checkOut)) return true;
-
-		//Because there should be at least one day dedicated to set the Accommodation up for the new Guest:
-		//if(startDate.isEqual(checkOut) || endDate.isEqual(checkIn)) return true;
 		
 		return false;
 	}
@@ -407,6 +416,7 @@ public class BookingService {
 		return this.bookingRepository.findByStatusInAndAccommodationIdAndUserId(stats, accId, usrId);
 	}
 
+	@Deprecated()
 	private List<Booking> findByAccommodationAndUser(Accommodation acc, User user) {
 		return bookingRepository.findByAccommodationAndUser(acc, user);
 	}
@@ -417,5 +427,95 @@ public class BookingService {
 
 	public List<Booking> findByStatusInAndAccommodationId(List<BookingStatus> list, Long accId) {
 		return bookingRepository.findByStatusInAndAccommodationId(list, accId);
+	}
+
+	@Transactional
+	public List<BookingDTO> setUnAvailabilities(Long accId, Long userId, List<Booking> unavailabilities) {
+
+		List<Availability> availabilities = availabilityRepository.findByAccommodationId(accId);
+
+		//Lets check if unavailabilities are valid:
+		for(Booking b : unavailabilities) {
+			if(this.isNotInsideAnyAvailabilityPeriod(availabilities, b.getCheckIn().toLocalDate(), b.getCheckOut().toLocalDate())) throw new ForbiddenException("cannot set unavailability due to absent matching with available dates period");
+		}
+
+		//Lets retrieve the Booking that are considered to be valid:
+		//if there will be some overlapping the operation won' t be allowed
+		//List<BookingDTO> occupiedBookings = this.bookingRepository.findNotPendingNotRejectedBookingsByAccommodationID(accId);
+		List<BookingDTO> occupiedBookings = this.bookingRepository.findNotPendingNotRejectedBookingsNotIsUnavailabilityByAccommodationID(accId);
+		
+		for(Booking unavailability : unavailabilities) {
+			for(BookingDTO b : occupiedBookings) {
+				if(checkIfDatesAreOverlapping(unavailability.getCheckIn().toLocalDate(), unavailability.getCheckOut().toLocalDate(), LocalDate.parse(b.getCheckIn(), DateTimeFormatter.ISO_DATE_TIME), LocalDate.parse(b.getCheckOut(), DateTimeFormatter.ISO_DATE_TIME))) {
+					log.error("unavailability dates are overlapping with pre-existent lecit bookings" );
+					throw new ForbiddenException("cannot set unavailability due to overlapping dates");
+				}
+			}
+		}
+
+		//Now lets check if there are overlappings inside the new unavailabilities list:
+
+		int counter = 0;
+		for(Booking un: unavailabilities) {
+
+			counter = 0;
+			for(Booking unLoop: unavailabilities) {
+				if(checkIfDatesAreOverlapping(un.getCheckIn().toLocalDate(), un.getCheckOut().toLocalDate(), unLoop.getCheckIn().toLocalDate(), unLoop.getCheckOut().toLocalDate())) counter++;
+			}
+
+			if(counter > 1) throw new ForbiddenException("cannot set unavailability due to overlapping dates inside the provided unavailability list");
+		}
+		
+		//Now that the operation is considered legal lets REJECT all the Bookings that are PENDING:
+		List<Booking> pendingBookings = this.bookingRepository.findPendingBookingsByAccommodationID(accId);
+		
+		for(Booking unavailability: unavailabilities) {
+			for(Booking b : pendingBookings) {
+				if(checkIfDatesAreOverlapping(unavailability.getCheckIn().toLocalDate(), unavailability.getCheckOut().toLocalDate(), b.getCheckIn().toLocalDate(), b.getCheckOut().toLocalDate())) {
+					b.setStatus(BookingStatus.REJECTED);
+					this.bookingRepository.save(b);
+				}
+			}
+		}
+
+		List<BookingDTO> unAvsDTOs = this.findUnavailabilities(accId);
+
+		Accommodation acc = accommodationService.findById(accId);
+		User u = userService.findById(userId);
+
+		List<Long> toRemove = new ArrayList<>();
+		for(BookingDTO b: unAvsDTOs) {
+			toRemove.add(b.getId());
+		}
+		
+		this.bookingRepository.deleteByIdInAndAccommodation(toRemove, acc);
+
+		for(Booking b: unavailabilities) {
+			b.setAccommodation(acc);
+			b.setIsUnavailability(true);
+			b.setStatus(BookingStatus.ACCEPTED);
+			b.setUser(u);
+			b.setUserId(userId);
+
+			this.bookingRepository.save(b);
+		}
+
+		List<BookingDTO> res = new ArrayList<>();
+		BookingDTO temp = null;
+		for(Booking b: unavailabilities) {
+			temp = new BookingDTO(b.getPrice(), BookingStatus.ACCEPTED, b.getCheckIn(), b.getCheckOut(), null);
+			res.add(temp);
+		}
+
+		return res;
+	}
+
+	private boolean isNotInsideAnyAvailabilityPeriod(List<Availability> availabilities, LocalDate checkIn, LocalDate checkOut) {
+
+		for(Availability a: availabilities) {
+			if(checkIfDatesAreOverlapping(a.getStartDate(), a.getEndDate(), checkIn, checkOut)) return false;
+		}
+
+		return true;
 	}
 }

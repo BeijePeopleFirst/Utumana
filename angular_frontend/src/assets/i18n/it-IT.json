@@ -86,7 +86,13 @@
 	"error-title": "Titolo non Valido",
 	"error-edit-title": "Errore durante l' aggiornamento del Titolo",
 	"success-edit-title": "Titolo aggiornato con Successo",
-	"selected-services": "Servizi Selezionati"
+	"selected-services": "Servizi Selezionati",
+	"confirm-description": "Conferma Descrizione",
+	"close-description-gui": "Chiudi",
+	"success-edit-description": "Descrizione Aggiornata con Successo",
+	"error-edit-description": "Si è verificato un errore durante l' aggiornamento della descrizione",
+	"success-updated-availabilities": "Intervalli di prenotazione aggiornati",
+	"error-updating-availabilities": "Si è verificato un Errore"
 },
 "admin-dashboard-accommodations": {
 	"approve_reject_title": "Approva/Rifiuta sistemazioni",
@@ -346,6 +352,37 @@
 	"missing_required": "Uno o più campi obbligatori non sono compilati",
 	"modal_title": "Confermare la creazione di questa sistemazione?",
 	"modal_subtitle": "Cliccando su 'Conferma', questa sistemazione verrà creata e inviata all'amministratore per essere approvata."
+},
+"edit-availabilities-accommodation-details": {
+  "continue": "Continua",
+  "back": "Indietro",
+  "confirm": "Conferma",
+
+  "availabilities_step": "Disponibilità",
+  "availability_info": "Inidca i periodi in cui la tua sistemazione sarà disponibile. Nota: la notte della data finale indicata non è compresa nel periodo.",
+  "unavailability_info": "Per comodità, si possono inserire anche periodi di non disponibilità: se ad esempio la tua sistemazione sarà disponibile per sei mesi ad eccezione di qualche weekend, puoi inserire un periodo di disponibilità di sei mesi e aggiungere periodi di non disponibilità per quei weekend. Nota: la notte della data finale indicata non è compresa nel periodo.",
+  "availabilities": "Periodi di disponibilità",
+  "unavailabilities": "Periodi di non disponibilità",
+  "no_availabilities": "Nessun periodo di disponibilità",
+  "no_unavailabilities": "Nessun periodo di non disponibilità",
+  "start_date": "Da",
+  "invalid_start_date": "Data iniziale non valida",
+  "end_date": "A",
+  "invalid_end_date": "Data finale non valida",
+  "price": "Prezzo per notte",
+  "invalid_price": "Prezzo non valido",
+  "add_availability": "Aggiungi disponibilità",
+  "availability_overlaps": "Errore: questo periodo si sovrappone alle disponibilità esistenti",
+  "availability_reversed_dates": "Errore: la data iniziale deve essere precedente alla data finale",
+  "add_unavailability": "Aggiungi non disponibilità",
+  "unavailability_overlaps": "Errore: questo periodo si sovrappone alle non disponibilità esistenti",
+
+  "recap": "Conferma",
+  "edit_availabilities": "Modifica disponibilità",
+  "no_info": "Nessuna informazione",
+  "edit_info": "Modifica informazioni",
+  "invalid_info": "Informazioni non valide",
+  "missing_required": "Uno o più campi obbligatori non sono compilati"
 },
 "edit-photos-accommodation-details": {
 	"confirm-button": "Conferma",

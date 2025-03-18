@@ -85,11 +85,19 @@ public interface BookingRepository extends JpaRepository<Booking,Long>{
 	           + " FROM Booking b WHERE b.status != 'PENDING' AND b.status != 'REJECTED' AND b.accommodation.id = :id")
 	List<BookingDTO> findNotPendingNotRejectedBookingsByAccommodationID(@Param("id") Long id);
 
+	@Query("SELECT new ws.peoplefirst.utumana.dto.BookingDTO(b.id,b.price,b.status,b.checkIn,b.checkOut,b.review.id, new ws.peoplefirst.utumana.dto.AccommodationDTO(b.accommodation.id, b.accommodation.title, b.accommodation.city, b.accommodation.mainPhotoUrl, b.accommodation.country))" + 
+			" FROM Booking b WHERE b.status NOT IN ('PENDING', 'REJECTED') AND b.isUnavailability = false AND b.accommodation.id = :id")
+	List<BookingDTO> findNotPendingNotRejectedBookingsNotIsUnavailabilityByAccommodationID(@Param("id") Long accommodationId);
+
 	@Query("SELECT b FROM Booking as b WHERE b.status = 'PENDING' AND b.accommodation.id = :id")
 	List<Booking> findPendingBookingsByAccommodationID(@Param("id") Long id);
 
 	public List<Booking> findByStatusInAndAccommodationId(List<BookingStatus> list, Long accId);
 
 	List<Booking> findByStatusInAndAccommodationIdAndUserId(List<BookingStatus> stats, Long accId, Long usrId);
+
+	void deleteByIdInAndAccommodation(List<Long> ids, Accommodation acc);
+
+	List<Booking> findByAccommodationAndIsUnavailabilityIsTrue(Accommodation acc);
 
 }

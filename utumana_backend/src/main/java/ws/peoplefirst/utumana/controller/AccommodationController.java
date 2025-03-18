@@ -461,7 +461,6 @@ public class AccommodationController {
 											  @PathVariable Long id, Authentication auth) {
 
 		if (newOne.getOwnerId() == null || newOne.getId() == null) {
-			System.out.println("Stampo Errore in questione" + newOne);
 			logger.error("Accommodation ID and Owner ID must be provided");
 			throw new IdNotFoundException("Accommodation ID and Owner ID must be provided");
 		}
@@ -907,7 +906,7 @@ public class AccommodationController {
 			}
 
 			//List<Review> reviews = accommodationService.getAccommodationReviews(accommodationId);
-			List<ReviewUserDTO> reviews = accommodationService.getAllAccommodationReviews(accommodationId);System.out.println("\n\nDEBUG: Altro debug5\n\n");
+			List<ReviewUserDTO> reviews = accommodationService.getAllAccommodationReviews(accommodationId);
 			res.put("reviews", reviews);
 
 			boolean isFavourite = accommodationService.isFavourite(accommodationId, user.getId());
