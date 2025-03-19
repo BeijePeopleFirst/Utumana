@@ -64,4 +64,15 @@ public interface UserRepository extends JpaRepository<User,Long>{
 
 	@Query("SELECT new ws.peoplefirst.utumana.dto.UserDTO(u.id, u.name, u.surname, u.email, u.profilePictureUrl) FROM User as u WHERE u.archivedTimestamp is null AND (u.name LIKE %:term% OR u.surname LIKE %:term% OR u.email LIKE %:term%)")
 	public List<UserDTO> searchUserDTOs(@Param("term") String term);
+
+	@Query("SELECT new ws.peoplefirst.utumana.dto.UserDTO(u.id, u.name, u.surname, u.email, u.profilePictureUrl) FROM User as u WHERE u.id = :id")
+	public UserDTO findSingleUserDTOById(@Param("id") Long id);
+
+	@Query(
+				"SELECT new ws.peoplefirst.utumana.dto.UserDTO(u.id, u.name, u.surname, u.email, u.profilePictureUrl) " + 
+				"FROM User as u " +
+				"JOIN u.authorityEntity a " + 
+				"WHERE a.authority = 'ADMIN'"
+			)
+	public List<UserDTO> findAllAdmins();
 }

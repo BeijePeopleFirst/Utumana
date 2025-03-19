@@ -1,6 +1,8 @@
 package ws.peoplefirst.utumana.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import ws.peoplefirst.utumana.ScheduledTasks;
+import ws.peoplefirst.utumana.dto.UserDTO;
 import ws.peoplefirst.utumana.exception.IdNotFoundException;
 import ws.peoplefirst.utumana.exception.TheJBeansException;
 import ws.peoplefirst.utumana.model.Accommodation;
@@ -124,6 +127,27 @@ public class MailSenderService {
         this.sendSimpleMessage(message);
 
         return true;
+    }
+
+    public void notifyAllAdminsToAcceptOrRejectAccommodation(Accommodation accommodation) {
+
+        Long userId = accommodation.getOwnerId();
+        UserDTO user = this.userRepository.findSingleUserDTOById(userId);
+
+        if(user == null) throw new IdNotFoundException("Accommodation Owner not found");
+
+        List<UserDTO> admins = this.userRepository.findAllAdmins();
+
+        String textContent = "Accommodation named \"" + accommodation.getTitle() + "\", whose owner is " + user.getEmail() + ", needs to be approved or rejected"; 
+
+        MailMessage message = new MailMessage();    //Subject is "Utumana Software - Notification" by default
+        message.setTextContent(textContent);
+
+        for(UserDTO admin: admins) {
+            message.setTo(admin.getEmail());
+            this.sendSimpleMessage(message);
+        }
+
     }
     
 }

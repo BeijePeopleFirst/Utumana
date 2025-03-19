@@ -308,17 +308,21 @@ public class AccommodationService {
     }
 
     public Accommodation insertAccommodation(Accommodation accommodation) {
-        // to be sure
+        // just to be sure
         accommodation.setId(null);
         accommodation.setApprovalTimestamp(null);
         accommodation.setHidingTimestamp(null);
 
         checkAccommodationBeforeInsert(accommodation);
 
+        //save Accommodation:
+        Accommodation result = accommodationRepository.save(accommodation);
+
         // set coordinates TODO
 
-        // save accommodation
-        return accommodationRepository.save(accommodation);
+        this.mailSenderService.notifyAllAdminsToAcceptOrRejectAccommodation(result);
+        this.mailSenderService.notifyUserAboutOwnAccommodation(result, "Your Accommodation with title \"" + result.getTitle() + "\" is waiting for Admin Approval");
+        return result;
     }
 
     public Accommodation setAccommodationServices(Long accommodationId, List<Long> serviceIds, Long userId) {
@@ -512,7 +516,8 @@ public class AccommodationService {
         //Sending Notification to the User:
         this.mailSenderService.notifyUserAboutOwnAccommodation(accommodation, "Accommodation \"" + accommodation.getTitle() + "\" was edited in one or more sections and needs Admin's approval");
 
-        //TODO: Inviare mail ad Admin per accettare accommodation
+        //Lets notify the Admins about the new Accommodation to be accepted or edited:
+        this.mailSenderService.notifyAllAdminsToAcceptOrRejectAccommodation(accommodation);
 
         return accommodationRepository.save(accommodation);
     }

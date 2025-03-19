@@ -54,6 +54,9 @@ public class PublishDraftService {
     @Autowired
     private S3Service s3Service;
 
+    @Autowired
+    private MailSenderService mailSenderService;
+
 
     @Transactional
     public Accommodation publishDraft(Long draftId) {
@@ -67,6 +70,9 @@ public class PublishDraftService {
 
         draftRepository.deleteById(draftId);
         System.out.println("Deleted draft");
+
+        this.mailSenderService.notifyAllAdminsToAcceptOrRejectAccommodation(accommodation);
+        this.mailSenderService.notifyUserAboutOwnAccommodation(accommodation, "Your Accommodation with title \"" + accommodation.getTitle() + "\" is waiting for Admin Approval");
 
         return accommodation;
     }
