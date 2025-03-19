@@ -95,6 +95,14 @@ public class MailSenderService {
         this.sendSimpleMessage(message);
     }
 
+    public void notifyUserAboutGeneralInfo(User user, String textContent) {
+
+        if(user.getId() == null) throw new IdNotFoundException("User with id " + user.getId() + " not found");
+
+        MailMessage message = new MailMessage(user.getEmail(), textContent);
+        this.sendSimpleMessage(message);
+    }
+
     public boolean passwordResetRequest(String userEmail) {
 
         User user = this.userRepository.findUserByEmail(userEmail);

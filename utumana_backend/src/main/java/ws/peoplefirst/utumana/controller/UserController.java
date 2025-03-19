@@ -232,7 +232,7 @@ public class UserController {
 		User user = userService.getUserById(id);
 		log.debug("User pre: " + user);
 		
-		body.forEach((key, value) -> {			
+		body.forEach((key, value) -> {			//TODO: Mail allo user usando notifyUserAboutGeneralInfo -> MailSenderService
 			switch(key) {
 				case "id": 
 					break;
