@@ -1,26 +1,24 @@
 package ws.peoplefirst.utumana;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import ws.peoplefirst.utumana.exception.ForbiddenException;
-import ws.peoplefirst.utumana.model.Accommodation;
 import ws.peoplefirst.utumana.model.AccommodationDraft;
 import ws.peoplefirst.utumana.model.Booking;
 import ws.peoplefirst.utumana.repository.AccommodationDraftRepository;
-import ws.peoplefirst.utumana.repository.AccommodationRepository;
 import ws.peoplefirst.utumana.repository.BookingRepository;
 import ws.peoplefirst.utumana.service.AccommodationDraftService;
-import ws.peoplefirst.utumana.service.AccommodationService;
-import ws.peoplefirst.utumana.service.BookingService;
+import ws.peoplefirst.utumana.service.PasswordResetTokenService;
 import ws.peoplefirst.utumana.utility.BookingStatus;
 
 
@@ -31,13 +29,10 @@ public class ScheduledTasks {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
-	private BookingService bookingService;
+	private TaskScheduler scheduler;
 
 	@Autowired
 	private AccommodationDraftService accommodationDraftService;
-
-	@Autowired
-	private AccommodationService accommodationService;
 	
 	@Autowired
 	private BookingRepository bookingRepository;
@@ -46,15 +41,23 @@ public class ScheduledTasks {
 	private AccommodationDraftRepository accommodationDraftRepository;
 
 	@Autowired
-	private AccommodationRepository accommodationRepository;
-	
+	private PasswordResetTokenService passwordResetTopTokenService;
+
+	private Runnable deleteOldResetPasswordToken = () -> {
+		this.passwordResetTopTokenService.gc();
+	};
+
+
+	public void triggerDeleteOldResetPasswordToken() {
+		this.scheduler.schedule(deleteOldResetPasswordToken, Instant.now().plusSeconds(320));
+	}
 	
 	@Scheduled(fixedDelay = 86400000)	// 24h
 	public void updateBookingStatus(){
 		
-		List<Booking> expiredBooking = bookingService.getExpiredBookings();
+		List<Booking> expiredBooking = bookingRepository.findExpiredBookings(LocalDateTime.now());
 		
-		List<Booking> startedBooking = bookingService.getStartedBookings();
+		List<Booking> startedBooking = bookingRepository.findStartedBookings(LocalDateTime.now());
 		
 		for (Booking b: startedBooking){
 			b.setStatus(BookingStatus.DOING);

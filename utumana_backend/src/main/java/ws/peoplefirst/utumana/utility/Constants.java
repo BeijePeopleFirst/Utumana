@@ -10,6 +10,8 @@ public class Constants {
 	public static final int MIN_PASSWORD_LOWER_CHARACTERS = 1;
 	public static final int MIN_PASSWORD_DIGIT_CHARACTERS = 1;
 	public static final int MIN_PASSWORD_SYMBOL_CHARACTERS = 1;
+	public static final String BACKEND_URL_PREFIX = "http://localhost:8080";
+	public static final String FRONTEND_URL_PREFIX = "http://localhost:4200";
 	
 	
 	public static final String EMAIL_REGEX = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$";

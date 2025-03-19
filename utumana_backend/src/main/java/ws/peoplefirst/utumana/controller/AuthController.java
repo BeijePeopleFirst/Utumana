@@ -20,9 +20,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,9 +41,11 @@ import ws.peoplefirst.utumana.exception.ErrorMessage;
 import ws.peoplefirst.utumana.model.RefreshToken;
 import ws.peoplefirst.utumana.model.User;
 import ws.peoplefirst.utumana.security.JwtTokenProvider;
+import ws.peoplefirst.utumana.service.MailSenderService;
 import ws.peoplefirst.utumana.service.RefreshTokenService;
 import ws.peoplefirst.utumana.service.UserService;
 import ws.peoplefirst.utumana.utility.AuthorizationUtility;
+import ws.peoplefirst.utumana.utility.CredentialsResetContainer;
 
 
 @RestController
@@ -62,6 +66,9 @@ public class AuthController {
 
 	@Autowired
 	private RefreshTokenService refreshTokenService;
+
+	@Autowired
+	private MailSenderService mailSenderService;
 	
 	@Operation(summary = "Test endpoint for USER role")
 	@PreAuthorize("hasAuthority('USER')")
@@ -199,5 +206,31 @@ public class AuthController {
 			throw e;
 		}
 	}
+
+	@Operation(summary = "Sends an email which permits to reset the user password (validation by a temporary Token)")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Email sent successfully and Token created"),
+        @ApiResponse(responseCode = "404", description = "User not found",content=@Content(mediaType = "application/json",
+		schema=@Schema(implementation=ErrorMessage.class)))
+    })
+	@PreAuthorize("permitAll()")
+	@PostMapping("/send_reset_password_email")
+	public boolean requestPasswordReset(@RequestBody String userEmail) {
+		return this.mailSenderService.passwordResetRequest(userEmail);
+	} 
+
+	@Operation(summary = "Resets the user password after validation")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Password successfully changed"),
+		@ApiResponse(responseCode = "401", description = "Invalid token",content=@Content(mediaType = "application/json",
+		schema=@Schema(implementation=ErrorMessage.class))),
+        @ApiResponse(responseCode = "404", description = "User not found",content=@Content(mediaType = "application/json",
+		schema=@Schema(implementation=ErrorMessage.class)))
+    })
+	@PreAuthorize("permitAll()")
+	@PostMapping("/reset_password_for_user")
+	public boolean changeUserPasswordAfterUserExplicitRequest(@RequestParam(required = true) String token, @RequestBody() CredentialsResetContainer credentials) {
+		return this.userService.changeUserPassword(credentials, token);
+	} 
 
 }

@@ -29,6 +29,7 @@ import ws.peoplefirst.utumana.repository.AccommodationRepository;
 import ws.peoplefirst.utumana.repository.UserAuthorityRepository;
 import ws.peoplefirst.utumana.repository.UserRepository;
 import ws.peoplefirst.utumana.utility.Constants;
+import ws.peoplefirst.utumana.utility.CredentialsResetContainer;
 
 
 @Service
@@ -54,6 +55,9 @@ public class UserService implements UserDetailsService {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private PasswordResetTokenService resetPasswordTokenService;
 
 
 	public void checkUser(User user) {
@@ -321,5 +325,20 @@ public class UserService implements UserDetailsService {
 
 	public boolean hasOpenDrafts(Long userId) {
 		return accommodationDraftRepository.countByOwnerId(userId) > 0;
+	}
+
+	public boolean changeUserPassword(CredentialsResetContainer credentials, String token) {
+		User user = this.userRepository.findUserByEmail(credentials.getEmail());
+
+		if(user == null) throw new IdNotFoundException("The provided email is not registered in the System");
+
+		this.resetPasswordTokenService.validateToken(token, user);
+
+		String safePassword = this.passwordEncoder.encode(credentials.getPassword());
+		user.setPassword(safePassword);
+		
+		this.userRepository.save(user);
+
+		return true;
 	}
 }

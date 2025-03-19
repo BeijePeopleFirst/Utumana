@@ -19,10 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.annotation.Nullable;
 import jakarta.persistence.PersistenceException;
-import ws.peoplefirst.utumana.dto.AccommodationDTO;
 import ws.peoplefirst.utumana.dto.BookingDTO;
 import ws.peoplefirst.utumana.dto.UnavailabilityDTO;
-import ws.peoplefirst.utumana.dto.UserDTO;
 import ws.peoplefirst.utumana.exception.DBException;
 import ws.peoplefirst.utumana.exception.ForbiddenException;
 import ws.peoplefirst.utumana.exception.IdNotFoundException;

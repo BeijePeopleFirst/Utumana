@@ -88,6 +88,10 @@ public class AccommodationService {
             throw new IdNotFoundException("Accommodation with id " + accommodationId + " not found");
         }
         accommodation.setApprovalTimestamp(LocalDateTime.now());
+
+        //Now lets notify the Accommodation Owner:
+        this.mailSenderService.notifyUserAboutOwnAccommodation(accommodation, "Your Accommodation \"" + accommodation.getTitle() + "\" was accepted by an Admin");
+
         return accommodationRepository.save(accommodation);
     }
 
@@ -107,6 +111,10 @@ public class AccommodationService {
         for(BookingDTO b: futureBookings){
             // TODO notify guests that the accommodation will be temporarily hidden because it's waiting for admin approval
         }
+
+        //Now lets notify the Accommodation Owner:
+        this.mailSenderService.notifyUserAboutOwnAccommodation(accommodation, "Your Accommodation \"" + accommodation.getTitle() + "\" was rejected by an Admin");
+
         return accommodation;
     }
 
@@ -253,10 +261,6 @@ public class AccommodationService {
         favourites.add(newFavouriteAccommodation);
 
         userRepository.save(user);
-
-        //Sending Notification to the User:
-        MailMessage message = new MailMessage(user.getEmail(), "New Accommodation was added to your Favourites list");
-        this.mailSenderService.sendSimpleMessage(message);
         
     }
 
@@ -277,9 +281,6 @@ public class AccommodationService {
 
         userRepository.save(user);
 
-        //Sending Notification to the User:
-        MailMessage message = new MailMessage(user.getEmail(), "An Accommodation was removed from your Favourites list");
-        this.mailSenderService.sendSimpleMessage(message);
     }
 
     public Page<AccommodationDTO> findByUserInputDTO(String destination, LocalDate checkInDate, LocalDate checkOutDate,
@@ -331,10 +332,7 @@ public class AccommodationService {
         accommodation.setServices(services);
 
         //Sending Notification to the User:
-        User user = this.userRepository.findById(userId).get();
-
-        MailMessage message = new MailMessage(user.getEmail(), "Accommodation \"" + accommodation.getTitle() + "\" was edited in \"services\" section");
-        this.mailSenderService.sendSimpleMessage(message);
+        this.mailSenderService.notifyUserAboutOwnAccommodation(accommodation, "Accommodation \"" + accommodation.getTitle() + "\" was edited in \"services\" section");
 
         return accommodationRepository.save(accommodation);
     }
@@ -400,10 +398,7 @@ public class AccommodationService {
         }
 
         //Sending Notification to the User:
-        User user = this.userRepository.findById(userId).get();
-
-        MailMessage message = new MailMessage(user.getEmail(), "Accommodation \"" + accommodation.getTitle() + "\" was edited in \"availabilities\" section");
-        this.mailSenderService.sendSimpleMessage(message);
+        this.mailSenderService.notifyUserAboutOwnAccommodation(accommodation, "Accommodation \"" + accommodation.getTitle() + "\" was edited in \"availabilities\" section");
 
         return accommodation;
     }
@@ -515,10 +510,9 @@ public class AccommodationService {
         accommodation.setRooms(newOne.getRooms());
 
         //Sending Notification to the User:
-        User user = this.userRepository.findById(newOne.getOwnerId()).get();
+        this.mailSenderService.notifyUserAboutOwnAccommodation(accommodation, "Accommodation \"" + accommodation.getTitle() + "\" was edited in one or more sections and needs Admin's approval");
 
-        MailMessage message = new MailMessage(user.getEmail(), "Accommodation \"" + accommodation.getTitle() + "\" was edited in one or more sections");
-        this.mailSenderService.sendSimpleMessage(message);
+        //TODO: Inviare mail ad Admin per accettare accommodation
 
         return accommodationRepository.save(accommodation);
     }
@@ -548,10 +542,7 @@ public class AccommodationService {
         // TODO
 
         //Sending Notification to the User:
-        User user = this.userRepository.findById(newOne.getOwnerId()).get();
-
-        MailMessage message = new MailMessage(user.getEmail(), "Accommodation \"" + accommodation.getTitle() + "\" was edited in \"address\" section");
-        this.mailSenderService.sendSimpleMessage(message);
+        this.mailSenderService.notifyUserAboutOwnAccommodation(newOne, "Accommodation \"" + accommodation.getTitle() + "\" was edited in \"address\" section");
 
         return accommodationRepository.save(accommodation);
     }
@@ -860,10 +851,7 @@ public class AccommodationService {
             accommodationRepository.save(toDelete);
 
             //Sending Notification to the User:
-            User user = this.userRepository.findById(toDelete.getOwnerId()).get();
-
-            MailMessage message = new MailMessage(user.getEmail(), "Accommodation \"" + toDelete.getTitle() + "\" was deleted");
-            this.mailSenderService.sendSimpleMessage(message);
+            this.mailSenderService.notifyUserAboutOwnAccommodation(toDelete, "Accommodation \"" + toDelete.getTitle() + "\" was deleted");
 
             return toDelete;
         } else {

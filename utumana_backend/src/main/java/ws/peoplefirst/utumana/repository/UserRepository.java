@@ -20,7 +20,8 @@ public interface UserRepository extends JpaRepository<User,Long>{
 
 	public User findUserByEmailAndPasswordAndArchivedTimestampIsNull(String email, String password);
 	
-	public User findUserByEmail(String email);
+	@Query("SELECT u FROM User u WHERE u.email = :email")
+	public User findUserByEmail(@Param("email") String email);
 	
 	 @Query("SELECT DISTINCT u FROM User u WHERE u.id <> :userId AND u.email = :email")
 	public User findUserByEmailExceptMe(@Param(value="email")String email,@Param(value="userId")Long userId);
