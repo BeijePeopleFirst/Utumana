@@ -119,7 +119,6 @@ public class MailSenderService {
 
         //Lets launch the scheduler to delete the Token when validity runs out:
         this.passwordResetTokenService.idsToRemove.add(saved.getId());
-
         this.scheduler.triggerDeleteOldResetPasswordToken();
 
         this.sendSimpleMessage(message);
