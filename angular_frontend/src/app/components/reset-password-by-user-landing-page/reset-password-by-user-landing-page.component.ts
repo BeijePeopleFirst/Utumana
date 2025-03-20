@@ -13,6 +13,8 @@ export class ResetPasswordByUserLandingPageComponent implements OnInit {
   private userEmail?: string;
   private token: string = "";
 
+  isVisiblePassword: boolean = false;
+
   //MESSAGGES:
   //-----------------------------------------------------------------------------
   thereAreMessages: boolean= false;
@@ -41,14 +43,15 @@ export class ResetPasswordByUserLandingPageComponent implements OnInit {
 
     this.token = this.route.snapshot.queryParams["token"];
 
-    if(!localStorage.getItem("user_email_pswd_reset")) {
+    if(!localStorage.getItem("user_email_pswd_reset") && !sessionStorage.getItem("user_email_pswd_reset")) {
       this.errorNoUserEmailProvided = true;
       setTimeout(() => {this.router.navigate(["/"])}, 2400);
       return;
     }
 
-    this.userEmail = localStorage.getItem("user_email_pswd_reset")!;
-    localStorage.removeItem("user_email_pswd_reset");
+    this.userEmail = localStorage.getItem("user_email_pswd_reset") ?? sessionStorage.getItem("user_email_pswd_reset")!;
+    if(localStorage.getItem("user_email_pswd_reset")) localStorage.removeItem("user_email_pswd_reset");
+    sessionStorage.setItem("user_email_pswd_reset", this.userEmail);
   }
 
   public resetPassword(): void {

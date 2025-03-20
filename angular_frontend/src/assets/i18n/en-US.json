@@ -485,7 +485,10 @@
 	"password-label": "Password",
 	"password-updated-success": "Password successfully updated! Redirecting...",
 	"user-not-found-error": "User not found! Redirecting to login page...",
-	"clear-messages": "Clear messages"
+	"clear-messages": "Clear messages",
+	"unauthorized-access-error": "Unauthorized access: redirect in few seconds",
+	"no-email-provided-error": "Error: no email was provided. Redirect in few seconds",
+	"password-error": "Invalid password"
 },
 "review": {
 	"comfort": "Comfort",

@@ -485,7 +485,10 @@
 	"password-label": "Password",
 	"password-updated-success": "Password cambiata con successo! Cambio di pagina tra qualche istante...",
 	"user-not-found-error": "Utente non trovato! Ritorno alla pagina di login...",
-	"clear-messages": "Elimina messaggi"
+	"clear-messages": "Elimina messaggi",
+	"unauthorized-access-error": "Accesso non consentito: ritorno alla login tra qualche secondo",
+	"no-email-provided-error": "Nessuna email è stata fornita per il reset della password: ritorno alla login tra  qualche secondo",
+	"password-error": "Password non valida"
 },
 "review": {
 	"comfort": "Comfort",
