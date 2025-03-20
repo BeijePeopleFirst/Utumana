@@ -34,6 +34,17 @@ export class UserService {
     )
   }
 
+  getUserDTOByEmail(email: string): Observable<UserDTO | {message: string, status: string, time: string}> {
+    return this.http.get<UserDTO | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/send_reset_password_email/user/email/" + email).pipe(
+      catchError(
+        error => {
+          console.error(error.error);
+          return of(error.error);
+        }
+      )
+    )
+  }
+
   getAllUsersDto(): Observable<UserDTO[]> {
     return this.getUserDTOs(BACKEND_URL_PREFIX + "/api/users");
   }
@@ -182,5 +193,21 @@ export class UserService {
         return of(false);
       })
     );
+  }
+
+  resetPasswordForUser(userEmail: string, password: string, token: string): Observable<boolean | {message: string, status: string, time: string}> {
+    return this.http.post<boolean | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/reset_password_for_user?token=" + token, 
+      {
+        email: userEmail,
+        password: password
+      }
+    ).pipe(
+      catchError(
+        error => {
+          console.error(error.error);
+          return of(error.error);
+        }
+      )
+    )
   }
 }

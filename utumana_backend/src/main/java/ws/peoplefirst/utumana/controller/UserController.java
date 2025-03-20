@@ -26,6 +26,7 @@ import ws.peoplefirst.utumana.exception.ErrorMessage;
 import ws.peoplefirst.utumana.exception.ForbiddenException;
 import ws.peoplefirst.utumana.exception.IdNotFoundException;
 import ws.peoplefirst.utumana.exception.InvalidJSONException;
+import ws.peoplefirst.utumana.exception.TheJBeansException;
 import ws.peoplefirst.utumana.model.BadgeAward;
 import ws.peoplefirst.utumana.model.User;
 import ws.peoplefirst.utumana.service.MailSenderService;
@@ -451,6 +452,23 @@ public class UserController {
 	@GetMapping(value = "/user/{userId}/has-open-drafts")
 	public @ResponseBody boolean hasOpenDrafts(@PathVariable Long userId, Authentication auth) {
 		return userService.hasOpenDrafts(userId);
+	}
+
+	@Operation(summary = "Gets the user by email when asking for password reset from login page", description = "Returns the corresponding User")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "User found"),
+        @ApiResponse(responseCode = "404", description = "IdNotFoundException(\"user not found\")", content=@Content(mediaType = "application/json",
+		schema=@Schema(implementation=ErrorMessage.class))),
+    })
+	@PreAuthorize("permitAll()")
+	@GetMapping(value = "/send_reset_password_email/user/email/{email}")
+	public UserDTO getUserByEmailForPSWDReset(@PathVariable() String email) {
+		if(email == null || email.isEmpty()) throw new TheJBeansException("Error: email pathVariable is needed");
+
+		UserDTO u = userService.findUserDTOByEmail(email);
+
+		if(u == null) throw new IdNotFoundException("The specified User does not exist");
+		return u;
 	}
 }
 	

@@ -3,6 +3,7 @@ import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthCredentials } from 'src/app/dtos/authCredential';
 import { AuthService } from 'src/app/services/auth.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -21,8 +22,11 @@ export class LoginComponent implements OnInit {
 
   returnUrl: string = '';
 
+  showEmailSent: boolean = false;
+
   constructor(
     private authService: AuthService,
+    private userService: UserService,
     private router: Router,
     private route: ActivatedRoute
   ){ }
@@ -68,6 +72,43 @@ export class LoginComponent implements OnInit {
 
   forgotPassword(): void {
     console.log("Clicked forgot password");
-    // TODO
+
+    if(!this.user.email || this.user.email == "") {
+      this.showEmailError = true;
+      return;
+    }
+
+    this.showEmailError = false;
+
+    this.authService.sendResetPasswordRequestByUser(this.user.email).subscribe(
+      response => {
+        if(typeof response != "boolean" && "message" in response) {
+          this.emailError = true;
+          return;
+        }
+
+        if(response && response === true) {
+          this.showEmailSent = true;
+
+          this.userService.getUserDTOByEmail(this.user.email).subscribe(
+            found => {
+
+              if("message" in found) {
+                this.emailError = true;
+                return;
+              }
+
+              localStorage.setItem("user_email_pswd_reset", "" + found.email);
+
+              setTimeout(() => {this.showEmailSent = false}, 2000);
+
+            }
+          )
+
+          
+        }
+      }
+    )
+    
   }
 }

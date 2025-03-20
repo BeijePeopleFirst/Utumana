@@ -75,4 +75,11 @@ public interface UserRepository extends JpaRepository<User,Long>{
 				"WHERE a.authority = 'ADMIN'"
 			)
 	public List<UserDTO> findAllAdmins();
+
+	@Query(
+				"SELECT new ws.peoplefirst.utumana.dto.UserDTO(u.id, u.name, u.surname, u.email, u.profilePictureUrl) " +
+				"FROM User as u " +
+				"WHERE u.email = :email"
+			)
+	public UserDTO findUserDTOByEmail(@Param("email") String email);
 }

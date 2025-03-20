@@ -453,7 +453,8 @@
 	"password_short": "Password troppo corta",
 	"password_wrong": "Password errata",
 	"forget_password": "Hai dimenticato la password?",
-	"button_text": "Login"
+	"button_text": "Login",
+	"email-sent": "Messaggio inviato all' indirizzo email specificato"
 	},
 "my_accommodations": {
 	"title": "Le mie sistemazioni",
@@ -479,6 +480,13 @@
 	"edit_picture": "Modifica la tua foto profilo",
 	"edit_picture_instructions": "Seleziona una foto (max 7 MB)."
 	},
+"reset-password-by-user-landing-page": {
+	"confirm": "Conferma nuova password",
+	"password-label": "Password",
+	"password-updated-success": "Password cambiata con successo! Cambio di pagina tra qualche istante...",
+	"user-not-found-error": "Utente non trovato! Ritorno alla pagina di login...",
+	"clear-messages": "Elimina messaggi"
+},
 "review": {
 	"comfort": "Comfort",
 	"convenience": "Prezzo",

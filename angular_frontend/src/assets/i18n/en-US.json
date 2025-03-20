@@ -453,7 +453,8 @@
 	"password_short": "Password too short",
 	"password_wrong": "Wrong password",
 	"forget_password": "Forgot your password?",
-	"button_text": "Login"
+	"button_text": "Login",
+	"email-sent": "Email sent to the specified address"
 	},
 "my_accommodations": {
 	"title": "My accommodations",
@@ -479,6 +480,13 @@
 	"edit_picture": "Edit your profile picture",
 	"edit_picture_instructions": "Upload a photo (max 7 MB)."
 	},
+"reset-password-by-user-landing-page": {
+	"confirm": "Confirm new password",
+	"password-label": "Password",
+	"password-updated-success": "Password successfully updated! Redirecting...",
+	"user-not-found-error": "User not found! Redirecting to login page...",
+	"clear-messages": "Clear messages"
+},
 "review": {
 	"comfort": "Comfort",
 	"convenience": "Price",

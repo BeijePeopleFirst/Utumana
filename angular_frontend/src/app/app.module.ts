@@ -74,6 +74,7 @@ import { AdminDashboardMetricsComponent } from './components/admin-dashboard-met
 import { AdminDashdoardSearchBarComponent } from './components/admin-dashdoard-search-bar/admin-dashdoard-search-bar.component';
 import { AdminDashboardCustomizeComponent } from './components/admin-dashboard-customize/admin-dashboard-customize.component';
 import { EditAvailabilitiesAccommodationDetailsComponent } from './components/edit-availabilities-accommodation-details/edit-availabilities-accommodation-details.component';
+import { ResetPasswordByUserLandingPageComponent } from './components/reset-password-by-user-landing-page/reset-password-by-user-landing-page.component';
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
@@ -137,7 +138,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     AdminDashboardMetricsComponent,
     AdminDashdoardSearchBarComponent,
     AdminDashboardCustomizeComponent,
-    EditAvailabilitiesAccommodationDetailsComponent
+    EditAvailabilitiesAccommodationDetailsComponent,
+    ResetPasswordByUserLandingPageComponent
   ],
   imports: [
     BrowserModule,

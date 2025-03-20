@@ -31,9 +31,11 @@ import { AdminDashboardUsersAddUserComponent } from './components/admin-dashboar
 import { AdminDashboardUsersMakeNewAdminComponent } from './components/admin-dashboard-users-make-new-admin/admin-dashboard-users-make-new-admin.component';
 import { adminGuard } from './services/admin.guard';
 import { AdminDashboardCustomizeComponent } from './components/admin-dashboard-customize/admin-dashboard-customize.component';
+import { ResetPasswordByUserLandingPageComponent } from './components/reset-password-by-user-landing-page/reset-password-by-user-landing-page.component';
 
 const routes: Routes = [
   {path: 'login', title: "Login", component: LoginComponent},
+  {path: 'reset_password_for_user', title: "Password Reset", component: ResetPasswordByUserLandingPageComponent},
   {path: 'create', title: "Create a new accommodation", component: CreateAccommodationAddressComponent},
   {path: 'search_page', title: "Search", component: SearchPageComponent, resolve: {loadSearchAccommodations: LoadSearchAccommodationResolver}, runGuardsAndResolvers: 'always'},
   {path: '', title: "Utumana",  component: HomeComponent, canActivate: [authGuard]},

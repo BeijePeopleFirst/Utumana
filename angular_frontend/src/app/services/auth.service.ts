@@ -127,4 +127,15 @@ export class AuthService {
   public isAdmin(): Observable<boolean> {
     return this.http.get<boolean>(`${BACKEND_URL_PREFIX}/api/is_admin`)
   }
+
+  public sendResetPasswordRequestByUser(userEmail: string): Observable<boolean | {message: string, status: string, time: string}> {
+    return this.http.post<boolean | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/send_reset_password_email", userEmail).pipe(
+      catchError(
+        error => {
+          console.error(error.error);
+          return of(error.error);
+        }
+      )
+    );
+  }
 }

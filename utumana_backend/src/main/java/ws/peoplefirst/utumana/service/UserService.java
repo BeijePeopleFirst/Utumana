@@ -334,11 +334,17 @@ public class UserService implements UserDetailsService {
 
 		this.resetPasswordTokenService.validateToken(token, user);
 
+		if(!this.isValidPassword(credentials.getPassword())) throw new InvalidJSONException("invalid password");
+
 		String safePassword = this.passwordEncoder.encode(credentials.getPassword());
 		user.setPassword(safePassword);
 		
 		this.userRepository.save(user);
 
 		return true;
+	}
+
+	public UserDTO findUserDTOByEmail(String email) {
+		return this.userRepository.findUserDTOByEmail(email);
 	}
 }
