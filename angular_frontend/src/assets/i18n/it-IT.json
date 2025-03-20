@@ -488,7 +488,8 @@
 	"clear-messages": "Elimina messaggi",
 	"unauthorized-access-error": "Accesso non consentito: ritorno alla login tra qualche secondo",
 	"no-email-provided-error": "Nessuna email è stata fornita per il reset della password: ritorno alla login tra  qualche secondo",
-	"password-error": "Password non valida"
+	"password-error": "Password non valida",
+	"invalid-token-error": "Operazione non più autorizzata: tempo scaduto"
 },
 "review": {
 	"comfort": "Comfort",

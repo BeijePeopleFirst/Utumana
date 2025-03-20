@@ -80,31 +80,21 @@ export class LoginComponent implements OnInit {
 
     this.showEmailError = false;
 
+    //This API will also check that the User exists
     this.authService.sendResetPasswordRequestByUser(this.user.email).subscribe(
       response => {
         if(typeof response != "boolean" && "message" in response) {
           this.emailError = true;
+          this.showEmailError = true;
           return;
         }
 
         if(response && response === true) {
           this.showEmailSent = true;
 
-          this.userService.getUserDTOByEmail(this.user.email).subscribe(
-            found => {
+          localStorage.setItem("user_email_pswd_reset", "" + this.user.email);
 
-              if("message" in found) {
-                this.emailError = true;
-                return;
-              }
-
-              localStorage.setItem("user_email_pswd_reset", "" + found.email);
-
-              setTimeout(() => {this.showEmailSent = false}, 2000);
-
-            }
-          )
-
+          setTimeout(() => {this.showEmailSent = false}, 2000);
           
         }
       }

@@ -488,7 +488,8 @@
 	"clear-messages": "Clear messages",
 	"unauthorized-access-error": "Unauthorized access: redirect in few seconds",
 	"no-email-provided-error": "Error: no email was provided. Redirect in few seconds",
-	"password-error": "Invalid password"
+	"password-error": "Invalid password",
+	"invalid-token-error": "Unauthorized: please retry later"
 },
 "review": {
 	"comfort": "Comfort",

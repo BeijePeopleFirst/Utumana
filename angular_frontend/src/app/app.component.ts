@@ -17,6 +17,7 @@ import { SettingsService } from './services/settings.service';
 })
 export class AppComponent implements OnInit, DoCheck, OnDestroy {
   isLogin: boolean = false;
+  isPasswordReset: boolean = false;
   isProfileMenuOpen = false;
   isLanguageMenuOpen = false;
   isCreateMenuOpen = false;
@@ -58,16 +59,20 @@ export class AppComponent implements OnInit, DoCheck, OnDestroy {
   }
 
   ngOnInit(): void {
-    // update isAdmin after user logs in
-    this.checkIsAdmin = this.authService.isUserAdmin$.subscribe(isUserAdmin => {
-      this.isAdmin = isUserAdmin;
-      console.log("Updated value for isAdmin: ", this.isAdmin);
-    });
-    // update isAdmin if logged user refreshes page
-    if(this.isAdmin === null){
-      this.authService.isAdmin().subscribe(isUserAdmin => {
-        this.authService.isUserAdmin$.next(isUserAdmin);
+
+    this.isPasswordReset = this.location.path().indexOf("/reset_password_for_user") >= 0;
+    if(!this.isPasswordReset) {
+      // update isAdmin after user logs in
+      this.checkIsAdmin = this.authService.isUserAdmin$.subscribe(isUserAdmin => {
+        this.isAdmin = isUserAdmin;
+        console.log("Updated value for isAdmin: ", this.isAdmin);
       });
+      // update isAdmin if logged user refreshes page
+      if(this.isAdmin === null){
+        this.authService.isAdmin().subscribe(isUserAdmin => {
+          this.authService.isUserAdmin$.next(isUserAdmin);
+        });
+      }
     }
 
     // subscribe to hasOpenDrafts$
@@ -116,6 +121,7 @@ export class AppComponent implements OnInit, DoCheck, OnDestroy {
 
   ngDoCheck(): void {
     this.isLogin = this.location.path().indexOf('/login') >= 0;
+    this.isPasswordReset = this.location.path().indexOf("/reset_password_for_user") >= 0;
   }
 
 

@@ -251,6 +251,9 @@ public class ConfigurationClass {
                     authorize.requestMatchers("/check").permitAll();
                     authorize.requestMatchers(HttpMethod.GET, "/api/settings/theme").permitAll();
                     authorize.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
+                    authorize.requestMatchers("/api/send_reset_password_email").permitAll();
+                    authorize.requestMatchers("/api/reset_password_for_user").permitAll();
+                    authorize.requestMatchers("/api/send_reset_password_email/user/email/**").permitAll();
                     authorize.requestMatchers("/swagger-ui/**")
                     .permitAll()
                     .requestMatchers("/v3/api-docs*/**")

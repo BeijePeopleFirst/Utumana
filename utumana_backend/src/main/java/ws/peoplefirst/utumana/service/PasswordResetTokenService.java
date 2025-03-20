@@ -31,9 +31,10 @@ public class PasswordResetTokenService {
     }
 
     public String generateToken() {
-        BytesKeyGenerator generator = KeyGenerators.secureRandom();
+        BytesKeyGenerator generator = KeyGenerators.secureRandom(112);
         byte[] bytesToken = generator.generateKey();
 
+        //150 characters wide token
         String token = Base64.getUrlEncoder().withoutPadding().encodeToString(bytesToken);
 
         return token;

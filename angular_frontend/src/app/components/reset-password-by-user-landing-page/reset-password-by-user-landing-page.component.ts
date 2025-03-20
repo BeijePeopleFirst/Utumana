@@ -23,6 +23,7 @@ export class ResetPasswordByUserLandingPageComponent implements OnInit {
   errorUnauthorizedAccess: boolean = false;
   errorUserNotFoundAfterRequest: boolean = false;
   successPasswordUpdated: boolean = false;
+  errorInvalidToken: boolean = false;
   //-----------------------------------------------------------------------------
 
 
@@ -37,7 +38,7 @@ export class ResetPasswordByUserLandingPageComponent implements OnInit {
 
     if(!this.route.snapshot.queryParams["token"]) {
       this.errorUnauthorizedAccess = true;
-      setTimeout(() => {this.router.navigate(["/"])}, 2400);
+      setTimeout(() => {this.router.navigate(["/login"])}, 2800);
       return;
     }
 
@@ -45,7 +46,7 @@ export class ResetPasswordByUserLandingPageComponent implements OnInit {
 
     if(!localStorage.getItem("user_email_pswd_reset") && !sessionStorage.getItem("user_email_pswd_reset")) {
       this.errorNoUserEmailProvided = true;
-      setTimeout(() => {this.router.navigate(["/"])}, 2400);
+      setTimeout(() => {this.router.navigate(["/login"])}, 2800);
       return;
     }
 
@@ -55,8 +56,6 @@ export class ResetPasswordByUserLandingPageComponent implements OnInit {
   }
 
   public resetPassword(): void {
-    //TODO: Sistemare interfaccia grafica
-    //TODO: Risolvere problema 401 di non invio richiesta
 
     this.errorInvalidPassword = false;
 
@@ -72,11 +71,22 @@ export class ResetPasswordByUserLandingPageComponent implements OnInit {
             this.errorInvalidPassword = true;
             return;
           }
+          else if(response.message.includes("Invalid Token provided")) {
+            this.errorInvalidToken = true;
+            this.thereAreMessages = true;
+
+            if(sessionStorage.getItem("user_email_pswd_reset")) sessionStorage.removeItem("user_email_pswd_reset");
+
+            setTimeout(() => {this.router.navigate(["/login"])}, 2800);
+            return;
+          }
           else {
             this.errorUserNotFoundAfterRequest = true;
             this.thereAreMessages = true;
 
-            setTimeout(() => {this.router.navigate(["/"])}, 2200);
+            if(sessionStorage.getItem("user_email_pswd_reset")) sessionStorage.removeItem("user_email_pswd_reset");
+
+            setTimeout(() => {this.router.navigate(["/login"])}, 2800);
             return;
           }
         }
@@ -84,7 +94,9 @@ export class ResetPasswordByUserLandingPageComponent implements OnInit {
         this.successPasswordUpdated = true;
         this.thereAreMessages = true;
 
-        setTimeout(() => {this.router.navigate(["/"])}, 2200);
+        if(sessionStorage.getItem("user_email_pswd_reset")) sessionStorage.removeItem("user_email_pswd_reset");
+
+        setTimeout(() => {this.router.navigate(["/login"])}, 2800);
       }
     )
   }

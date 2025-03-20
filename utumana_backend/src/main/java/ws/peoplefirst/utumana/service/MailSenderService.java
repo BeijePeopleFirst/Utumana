@@ -37,7 +37,7 @@ public class MailSenderService {
     private String from;
 
     @Value("${user.password.reset.token.duration}")
-    private String tokenLifeTimeStr;
+    private Long tokenLifeTime;
 
     @Autowired
     private UserRepository userRepository;
@@ -123,7 +123,7 @@ public class MailSenderService {
 
         PasswordResetToken tokenEntity = new PasswordResetToken();
         tokenEntity.setToken(token);
-        tokenEntity.setExpirationDate(LocalDateTime.now().plusMinutes(Long.parseLong(this.tokenLifeTimeStr))); //5 minutes validity (configurable from .properties file)
+        tokenEntity.setExpirationDate(LocalDateTime.now().plusMinutes(this.tokenLifeTime)); //5 minutes validity (configurable from .properties file)
         tokenEntity.setUser(user);
 
         PasswordResetToken saved = this.passwordResetTokenRepository.save(tokenEntity);
