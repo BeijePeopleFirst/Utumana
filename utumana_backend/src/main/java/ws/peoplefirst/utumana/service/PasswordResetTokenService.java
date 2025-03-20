@@ -9,7 +9,6 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.keygen.BytesKeyGenerator;
 import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.stereotype.Service;
@@ -40,13 +39,6 @@ public class PasswordResetTokenService {
         return token;
     }
 
-    public String generateHashFromToken(String token) {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
-        String finalToken = encoder.encode(token);
-
-        return finalToken;
-    }
-
     public void validateToken(String token, User user) {
 
         List<PasswordResetToken> tokenEntityList = this.passwordResetTokenRepository.findByUser(user);
@@ -54,9 +46,9 @@ public class PasswordResetTokenService {
         if(tokenEntityList == null || tokenEntityList.size() == 0) throw new BadCredentialsException("Invalid Token provided");
 
         PasswordResetToken tokenEntity = null;
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+
         for(PasswordResetToken t: tokenEntityList) {
-            if(encoder.matches(token, t.getToken())) tokenEntity = t;
+            if(token.equals(t.getToken())) tokenEntity = t;
         }
 
         if(tokenEntity == null) throw new BadCredentialsException("Invalid Token provided");

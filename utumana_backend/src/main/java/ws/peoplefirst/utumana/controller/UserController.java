@@ -2,6 +2,7 @@ package ws.peoplefirst.utumana.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,6 +28,7 @@ import ws.peoplefirst.utumana.exception.IdNotFoundException;
 import ws.peoplefirst.utumana.exception.InvalidJSONException;
 import ws.peoplefirst.utumana.model.BadgeAward;
 import ws.peoplefirst.utumana.model.User;
+import ws.peoplefirst.utumana.service.MailSenderService;
 import ws.peoplefirst.utumana.service.UserService;
 import ws.peoplefirst.utumana.utility.AuthorizationUtility;
 
@@ -51,6 +53,9 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private MailSenderService mailSenderService;
 	
     @Operation(summary = "Get all users as DTOs")
     @ApiResponses({
@@ -231,8 +236,17 @@ public class UserController {
 		
 		User user = userService.getUserById(id);
 		log.debug("User pre: " + user);
-		
-		body.forEach((key, value) -> {			//TODO: Mail allo user usando notifyUserAboutGeneralInfo -> MailSenderService
+
+		//Tracking old user values:
+		User userCopy = new User();
+		BeanUtils.copyProperties(user, userCopy);
+		String messageText = "Your profile has been updated in the following fields:\n";
+
+		for(Map.Entry<String, Object> couple: body.entrySet()) {
+
+			String key = couple.getKey();
+			Object value = couple.getValue();
+
 			switch(key) {
 				case "id": 
 					break;
@@ -242,6 +256,7 @@ public class UserController {
 						if(value == null || !(value instanceof String)) throw new InvalidJSONException("Name must be a not null String");	
 						if(!userService.isValidName((String) value)) throw new InvalidJSONException("Invalid name");
 						user.setName((String) value);
+						messageText += "NAME: " + userCopy.getName() + " -> " + user.getName();
 						log.trace("Set new name: " + (String) value);
 					} else {
 						throw new ForbiddenException("Forbidden: Not allowed to modify name");
@@ -253,6 +268,7 @@ public class UserController {
 						if(value == null || !(value instanceof String)) throw new InvalidJSONException("Surname must be a not null String");
 						if(!userService.isValidSurname((String) value)) throw new InvalidJSONException("Invalid surname");
 						user.setSurname((String) value);
+						messageText += "SURNAME: " + userCopy.getSurname() + " -> " + user.getSurname();
 						log.trace("Set new surname: " + (String) value);
 					} else {
 						throw new ForbiddenException("Forbidden: Not allowed to modify surname");
@@ -265,6 +281,7 @@ public class UserController {
 						if(!userService.isValidEmail((String) value)) throw new InvalidJSONException("Email not valid");
 						if(!userService.isEmailUnique((String) value, id))	throw new DBException("Email " + value + " already exists in db");
 						user.setEmail((String) value);
+						messageText += "EMAIL: " + userCopy.getEmail() + " -> " + user.getEmail();
 						log.trace("Set new email: " + (String) value);
 					} else {
 						throw new ForbiddenException("Forbidden: Not allowed to modify email");
@@ -275,12 +292,14 @@ public class UserController {
 					if(value == null || !(value instanceof String)) throw new InvalidJSONException("Password must be a not null String");
 					if(!userService.isValidPassword((String) value)) throw new InvalidJSONException("Password not valid");
 					user.setPassword(passwordEncoder.encode((String) value));
+					messageText += "NEW PASSWORD: " + ((String) value);
 					log.trace("Set new password");
 					break;
 					
 				case "bio" :
 					if(!(value instanceof String)) throw new InvalidJSONException("Bio must be a String");
 					user.setBio((String) value);
+					messageText += "BIO: " + userCopy.getBio() + " -> " + user.getBio();
 					log.trace("Set new bio: " + (String) value);
 					break;
 				
@@ -290,6 +309,7 @@ public class UserController {
 						
 						try {
 							user.setArchivedTimestamp(LocalDateTime.now());
+							messageText += "IMPORTANT NOTE: Your Utumana account has been removed.\nIf you believe this was a mistake, please don’t hesitate to contact the administration.";
 							log.trace("Set archived timestamp: " + LocalDateTime.now());
 						} catch (DateTimeParseException e) {
 							throw new InvalidJSONException("Invalid archived timestamp: text cannot be parsed");
@@ -301,10 +321,86 @@ public class UserController {
 				default: 
 					throw new InvalidJSONException("Invalid key: " + key);
 			}
-		});
+
+		}
+		
+		// To Remove...
+		// body.forEach((key, value) -> {
+		// 	switch(key) {
+		// 		case "id": 
+		// 			break;
+		// 		case "name" : 
+		// 			System.out.println("authorities" + user.getAuthorityList() + user.getAuthorityList().contains("ADMIN"));
+		// 			if(AuthorizationUtility.hasAdminRole(auth)) {
+		// 				if(value == null || !(value instanceof String)) throw new InvalidJSONException("Name must be a not null String");	
+		// 				if(!userService.isValidName((String) value)) throw new InvalidJSONException("Invalid name");
+		// 				user.setName((String) value);
+		// 				log.trace("Set new name: " + (String) value);
+		// 			} else {
+		// 				throw new ForbiddenException("Forbidden: Not allowed to modify name");
+		// 			}
+		// 			break;
+					
+		// 		case "surname" :
+		// 			if(AuthorizationUtility.hasAdminRole(auth)) {
+		// 				if(value == null || !(value instanceof String)) throw new InvalidJSONException("Surname must be a not null String");
+		// 				if(!userService.isValidSurname((String) value)) throw new InvalidJSONException("Invalid surname");
+		// 				user.setSurname((String) value);
+		// 				log.trace("Set new surname: " + (String) value);
+		// 			} else {
+		// 				throw new ForbiddenException("Forbidden: Not allowed to modify surname");
+		// 			}
+		// 			break;
+					
+		// 		case "email" :
+		// 			if(AuthorizationUtility.hasAdminRole(auth)) {
+		// 				if(value == null || !(value instanceof String)) throw new InvalidJSONException("Email must be a not null String");
+		// 				if(!userService.isValidEmail((String) value)) throw new InvalidJSONException("Email not valid");
+		// 				if(!userService.isEmailUnique((String) value, id))	throw new DBException("Email " + value + " already exists in db");
+		// 				user.setEmail((String) value);
+		// 				log.trace("Set new email: " + (String) value);
+		// 			} else {
+		// 				throw new ForbiddenException("Forbidden: Not allowed to modify email");
+		// 			}
+		// 			break;
+					
+		// 		case "password" :
+		// 			if(value == null || !(value instanceof String)) throw new InvalidJSONException("Password must be a not null String");
+		// 			if(!userService.isValidPassword((String) value)) throw new InvalidJSONException("Password not valid");
+		// 			user.setPassword(passwordEncoder.encode((String) value));
+		// 			log.trace("Set new password");
+		// 			break;
+					
+		// 		case "bio" :
+		// 			if(!(value instanceof String)) throw new InvalidJSONException("Bio must be a String");
+		// 			user.setBio((String) value);
+		// 			log.trace("Set new bio: " + (String) value);
+		// 			break;
+				
+		// 		case "archived_timestamp": 
+		// 			if(AuthorizationUtility.hasAdminRole(auth)) {
+		// 				if(!(value instanceof String)) throw new InvalidJSONException("Archive timestamp must be a String");
+						
+		// 				try {
+		// 					user.setArchivedTimestamp(LocalDateTime.now());
+		// 					log.trace("Set archived timestamp: " + LocalDateTime.now());
+		// 				} catch (DateTimeParseException e) {
+		// 					throw new InvalidJSONException("Invalid archived timestamp: text cannot be parsed");
+		// 				}
+		// 			} else {
+		// 				throw new ForbiddenException("Forbidden: Not allowed to modify archived timestamp");
+		// 			}
+		// 			break;
+		// 		default: 
+		// 			throw new InvalidJSONException("Invalid key: " + key);
+		// 	}
+		// });
 		
 		userService.saveUser(user);
 		log.debug("User after: " + user);
+
+		//Invio messaggio all'utente:
+		this.mailSenderService.notifyUserAboutGeneralInfo(user, messageText);
 		
 		return user;
 	}

@@ -36,6 +36,9 @@ public class MailSenderService {
     @Value("${spring.mail.username}")
     private String from;
 
+    @Value("${user.password.reset.token.duration}")
+    private String tokenLifeTimeStr;
+
     @Autowired
     private UserRepository userRepository;
 
@@ -118,19 +121,19 @@ public class MailSenderService {
         message.setTextContent("You receive this email because a Password Reset was requested for your Utumana Account: if it was not a request of yours please contact immediately an Admin.\n" +
         "Follow this link to reset your Password: " + url);
 
-        //Now lets create an Hash associated with the token:
-        String finalToken = this.passwordResetTokenService.generateHashFromToken(token);
-
         PasswordResetToken tokenEntity = new PasswordResetToken();
-        tokenEntity.setToken(finalToken);
-        tokenEntity.setExpirationDate(LocalDateTime.now().plusMinutes(5L)); //5 minutes validity
+        tokenEntity.setToken(token);
+        tokenEntity.setExpirationDate(LocalDateTime.now().plusMinutes(Long.parseLong(this.tokenLifeTimeStr))); //5 minutes validity (configurable from .properties file)
         tokenEntity.setUser(user);
 
         PasswordResetToken saved = this.passwordResetTokenRepository.save(tokenEntity);
 
         //Lets launch the scheduler to delete the Token when validity runs out:
-        this.passwordResetTokenService.idsToRemove.add(saved.getId());
-        this.scheduler.triggerDeleteOldResetPasswordToken();
+
+        synchronized(this.passwordResetTokenService.idsToRemove) {
+            this.passwordResetTokenService.idsToRemove.add(saved.getId());
+            this.scheduler.triggerDeleteOldResetPasswordToken();
+        }
 
         this.sendSimpleMessage(message);
 
