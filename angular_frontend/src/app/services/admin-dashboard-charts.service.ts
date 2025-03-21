@@ -49,4 +49,43 @@ export class AdminDashboardChartsService {
         )
       )  
   }
+
+  public calculateAnnualOccupancyPercentage(): 
+
+  Observable<
+  {
+    name: string,
+    value: any
+  }[]
+
+  |
+
+  {message: string, status: string, time: string}
+  >
+
+  {
+    return this.http.get<
+    
+        {
+          name: string,
+          value: any
+        }[]
+      
+        |
+      
+        {message: string, status: string, time: string}
+
+      >(
+        BACKEND_URL_PREFIX + "/api/accommodations/fetch_annual_occupancy_percentage"
+      )
+      .pipe(
+        catchError(
+          error => {
+            console.error(error.error);
+            return of(error.error);
+          }
+        )
+      );
+  }
+
 }

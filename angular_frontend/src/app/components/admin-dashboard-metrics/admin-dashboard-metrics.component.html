@@ -1,16 +1,18 @@
-<ng-container id="average-price-over-time-line-chart" class="chart-card-container">
-    <app-admin-dashboard-average-price-over-time-line-chart [multi]="multi"></app-admin-dashboard-average-price-over-time-line-chart>
-</ng-container>
+<div class="flex flex-col">
+    <ng-container id="average-price-over-time-line-chart" class="chart-card-container">
+        <app-admin-dashboard-average-price-over-time-line-chart [multi]="multi"></app-admin-dashboard-average-price-over-time-line-chart>
+    </ng-container>
 
-<ng-container id="number-of-bookings-over-time-bar-chart" class="mt-14 chart-card-container">
+    <ng-container id="number-of-bookings-over-time-bar-chart" class="mt-6 chart-card-container">
 
-</ng-container>
+    </ng-container>
 
-<ng-container id="occupation-percentage-over-time-area-chart" class="mt-14 chart-card-container">
+    <ng-container id="occupation-percentage-over-time-area-chart" class="mt-6 chart-card-container">
+        <app-admin-dashboard-occupancy-percentage-over-time-chart [single]="single"></app-admin-dashboard-occupancy-percentage-over-time-chart>
+    </ng-container>
 
-</ng-container>
+    <ng-container id="most-booked-accommodations-horizontal-bar-chart" class="mt-6 chart-card-container">
 
-<ng-container id="most-booked-accommodations-horizontal-bar-chart" class="mt-14 chart-card-container">
-
-</ng-container>
+    </ng-container>
+</div>
 

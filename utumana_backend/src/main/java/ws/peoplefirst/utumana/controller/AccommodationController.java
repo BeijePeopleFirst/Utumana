@@ -47,6 +47,7 @@ import ws.peoplefirst.utumana.utility.AveragePriceLineChartData;
 import ws.peoplefirst.utumana.utility.BookingStatus;
 import ws.peoplefirst.utumana.utility.Constants;
 import ws.peoplefirst.utumana.utility.JsonFormatter;
+import ws.peoplefirst.utumana.utility.SeriesInstance;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -1056,5 +1057,15 @@ public class AccommodationController {
 	@GetMapping(value = "/accommodations/fetch_price_average_over_time")
 	public List<AveragePriceLineChartData> calculateAveragePricesOverTimeChart(Authentication auth) {
 		return this.accommodationService.calculateAveragePricesOverTimeChart();
+	}
+
+	@Operation(summary = "This endpoint calculates the annual occupation percentage")
+	@ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Operation completed")
+    })
+	@PreAuthorize("hasAuthority('ADMIN')")
+	@GetMapping(value = "/accommodations/fetch_annual_occupancy_percentage")
+	public List<SeriesInstance> calculateAnnualOccupancyPercentage(Authentication auth) {
+		return this.accommodationService.calculateAnnualOccupancyPercentage();
 	}
 }

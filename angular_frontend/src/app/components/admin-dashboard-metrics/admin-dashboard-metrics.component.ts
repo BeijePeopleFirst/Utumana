@@ -16,6 +16,11 @@ export class AdminDashboardMetricsComponent implements OnInit {
     }[]
   }[];
 
+  single!: {
+    name: string,
+    value: any
+  }[];
+
 
   constructor(
     private route: ActivatedRoute
@@ -27,6 +32,7 @@ export class AdminDashboardMetricsComponent implements OnInit {
     this.route.data.subscribe(
       data => {
         this.multi = data["multi"] ? data["multi"] : [];
+        this.single = data["single"] ? data["single"] : [{name: "Occupation", value: 0}];
       }
     )
 

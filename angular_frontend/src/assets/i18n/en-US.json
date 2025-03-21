@@ -134,6 +134,9 @@
 	"confirm_colors": "Save colors",
 	"colors_success": "Colors saved successfully!"
 },
+"admin-dashboard-metrics": {
+	"area-chart-title": "Occupation pertange per year"
+},
 "admin-dashboard-sidenav": {
 	"title": "Admin Panel",
 	"home": "Home",
