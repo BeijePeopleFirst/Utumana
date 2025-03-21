@@ -52,6 +52,7 @@ public class MailSenderService {
     private ScheduledTasks scheduler;
 
 
+    //TODO: De-commentare!!!!!
     public MailMessage sendSimpleMessage(MailMessage msg) {
         
         SimpleMailMessage message = new SimpleMailMessage(); 
@@ -59,11 +60,12 @@ public class MailSenderService {
         message.setTo(msg.getTo()); 
         message.setSubject(msg.getSubject()); 
         message.setText(msg.getTextContent());
-        this.mailSender.send(message);
+        //this.mailSender.send(message);    Guardare nota sulla signature del metodo
         
         return msg;
     }
 
+    //TODO: De-commentare!!!!!
     public MailMessage sendMessageWithAttachment(MailMessage msg) {
     
         MimeMessage message = this.mailSender.createMimeMessage();
@@ -78,7 +80,7 @@ public class MailSenderService {
 
             helper.addAttachment(msg.getAttachmentName(), new InputStreamResource(msg.getAttachmentPayload()));
 
-            this.mailSender.send(message);
+            //this.mailSender.send(message);    Guardare nota sulla signature del metodo
             return msg;
 
         } catch (MessagingException e) {
