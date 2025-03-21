@@ -84,13 +84,14 @@ export class AdminDashboardAveragePriceOverTimeLineChartComponent implements OnI
   {}
 
   ngOnInit(): void {
-    
-    this.translate.get('admin-dashboard-average-price-over-time-line-chart.x-axis-label').subscribe((res: string) => {
-      this.xAxisLabel = res;
-    });
-    this.translate.get('admin-dashboard-average-price-over-time-line-chart.y-axis-label').subscribe((res: string) => {
-      this.yAxisLabel = res;
-    });
+
+    this.translate.stream('admin-dashboard-average-price-over-time-line-chart.x-axis-label').subscribe((res: string) => {
+        this.xAxisLabel = res;
+      });
+
+    this.translate.stream('admin-dashboard-average-price-over-time-line-chart.y-axis-label').subscribe((res: string) => {
+        this.yAxisLabel = res;
+      });
 
   }
 
