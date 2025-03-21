@@ -1179,7 +1179,7 @@ public class AccommodationService {
 
         AveragePriceLineChartData singleTuple = new AveragePriceLineChartData();
         singleTuple.setName(yearGroup);
-        singleTuple.setSeries(Arrays.asList(new SeriesInstance(getMonthNameByNumber((Integer) line[1]), (Double) line[2])));
+        singleTuple.setSeries(new ArrayList<SeriesInstance>(Arrays.asList(new SeriesInstance(getMonthNameByNumber((Integer) line[1]), (Double) line[2]))));
 
         input.add(singleTuple);
 
