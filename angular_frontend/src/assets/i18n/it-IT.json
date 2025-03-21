@@ -103,6 +103,10 @@
 	"accepted_success": "Sistemazione accettata con successo!",
 	"rejected_success": "Sistemazione rifiutata con successo!"
 },
+"admin-dashboard-average-price-over-time-line-chart": {
+	"x-axis-label": "Mese",
+	"y-axis-label": "Prezzo medio per notte"
+},
 "admin-dashboard-customize": {
 	"colors_title": "Personalizza i colori dell'applicazione",
 	"colors_warning": "Attenzione: i colori saranno modificati per tutti gli utenti. Modificali con cautela, rispetta le indicazioni date e assicurati che i colori di contrasto rendano il testo visibile su uno sfondo colorato.",

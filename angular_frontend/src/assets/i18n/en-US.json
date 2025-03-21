@@ -103,6 +103,10 @@
 	"accepted_success": "Accommodation accepted successfully!",
 	"rejected_success": "Accommodation rejected successfully!"
 },
+"admin-dashboard-average-price-over-time-line-chart": {
+	"x-axis-label": "Month",
+	"y-axis-label": "Average price per night"
+},
 "admin-dashboard-customize": {
 	"colors_title": "Customize colors for the application",
 	"colors_warning": "Warning: colors will be modified for all users. Modify them with caution, follow the instructions given and ensure that the contrast colors make the text visible on a colored background.",

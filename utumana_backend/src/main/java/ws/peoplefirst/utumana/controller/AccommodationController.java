@@ -43,6 +43,7 @@ import ws.peoplefirst.utumana.model.Review;
 import ws.peoplefirst.utumana.model.Service;
 import ws.peoplefirst.utumana.service.*;
 import ws.peoplefirst.utumana.utility.AuthorizationUtility;
+import ws.peoplefirst.utumana.utility.AveragePriceLineChartData;
 import ws.peoplefirst.utumana.utility.BookingStatus;
 import ws.peoplefirst.utumana.utility.Constants;
 import ws.peoplefirst.utumana.utility.JsonFormatter;
@@ -1045,5 +1046,15 @@ public class AccommodationController {
 		if(pageSize == null) pageSize = 10;
 		Pageable pageable = PageRequest.of(pageNumber, pageSize);
 		return accommodationService.findByAdminInputDTO(title, ownerName, ownerSurname, city, pageable);
+	}
+
+	@Operation(summary = "This endpoint calculates the average price per night during each month")
+	@ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Operation completed")
+    })
+	@PreAuthorize("hasAuthority('ADMIN')")
+	@GetMapping(value = "/accommodations/fetch_price_average_over_time")
+	public List<AveragePriceLineChartData> calculateAveragePricesOverTimeChart(Authentication auth) {
+		return this.accommodationService.calculateAveragePricesOverTimeChart();
 	}
 }

@@ -166,4 +166,5 @@ public interface AccommodationRepository extends JpaRepository<Accommodation, Lo
 			+ "FROM Accommodation as a "
 			+ "JOIN a.rating r Order By a.id DESC")
 	public Page<AccommodationDTO> getAllAccommodationDTO(Pageable p);
+
 }

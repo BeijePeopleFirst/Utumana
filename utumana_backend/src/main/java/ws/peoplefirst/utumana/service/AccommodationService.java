@@ -24,7 +24,9 @@ import ws.peoplefirst.utumana.exception.InvalidJSONException;
 import ws.peoplefirst.utumana.exception.TheJBeansException;
 import ws.peoplefirst.utumana.model.*;
 import ws.peoplefirst.utumana.repository.*;
+import ws.peoplefirst.utumana.utility.AveragePriceLineChartData;
 import ws.peoplefirst.utumana.utility.BookingStatus;
+import ws.peoplefirst.utumana.utility.SeriesInstance;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -1129,4 +1131,60 @@ public class AccommodationService {
         Pageable p = PageRequest.of(pageNumber, pageSize);
         return accommodationRepository.getAllAccommodationDTO(p);
     }
+
+    //TODO: move methods inside avilability service class:
+    //-----------------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------------------------
+    public List<AveragePriceLineChartData> calculateAveragePricesOverTimeChart() {
+        List<Object[]> rawData = this.availabilityRepository.calculateAveragePricesOverTimeChart();
+
+        List<AveragePriceLineChartData> result = new ArrayList<AveragePriceLineChartData>();
+        String yearGroup = null;
+
+        for(Object[] line: rawData) {
+            yearGroup = "Year " + ((Integer) line[0]);
+            if(containsAlreadyPropertyName(yearGroup, result)) result = addSeriesInstance(yearGroup, line, result); 
+            else result = createPropertyAndAddSeriesInstance(yearGroup, line, result);
+        }
+
+        return result;
+    }
+
+    private boolean containsAlreadyPropertyName(String yearGroup, List<AveragePriceLineChartData> input) {
+
+        for(AveragePriceLineChartData r: input) {
+            if(r.getName().equals(yearGroup)) return true;
+        }
+
+        return false;
+    }
+
+    private static List<AveragePriceLineChartData> addSeriesInstance(String yearGroup, Object[] line, List<AveragePriceLineChartData> input) {
+
+        SeriesInstance ser = new SeriesInstance();
+        for(AveragePriceLineChartData tuple: input) {
+            if(tuple.getName().equals(yearGroup)) {
+                ser.setName(getMonthNameByNumber((Integer) line[1]));
+                ser.setValue((Double) line[2]);
+
+                tuple.getSeries().add(ser);
+                break;
+            }
+        }
+
+        return input;
+    }
+
+    private static List<AveragePriceLineChartData> createPropertyAndAddSeriesInstance(String yearGroup, Object[] line, List<AveragePriceLineChartData> input) {
+
+        AveragePriceLineChartData singleTuple = new AveragePriceLineChartData();
+        singleTuple.setName(yearGroup);
+        singleTuple.setSeries(Arrays.asList(new SeriesInstance(getMonthNameByNumber((Integer) line[1]), (Double) line[2])));
+
+        input.add(singleTuple);
+
+        return input;
+    }
+    //-----------------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------------------------
 }

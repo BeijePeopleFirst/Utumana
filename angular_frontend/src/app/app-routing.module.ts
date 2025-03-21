@@ -31,6 +31,7 @@ import { AdminDashboardUsersAddUserComponent } from './components/admin-dashboar
 import { AdminDashboardUsersMakeNewAdminComponent } from './components/admin-dashboard-users-make-new-admin/admin-dashboard-users-make-new-admin.component';
 import { adminGuard } from './services/admin.guard';
 import { AdminDashboardCustomizeComponent } from './components/admin-dashboard-customize/admin-dashboard-customize.component';
+import { AveragePriceChartResolver } from './resolvers/average-price-chart.resolver';
 
 const routes: Routes = [
   {path: 'login', title: "Login", component: LoginComponent},
@@ -65,7 +66,7 @@ const routes: Routes = [
       {path: 'add-user', component: AdminDashboardUsersAddUserComponent, canActivate: [adminGuard]},
       {path: 'admins', component: AdminDashboardUsersMakeNewAdminComponent, canActivate: [adminGuard]},
     ]},
-    {path: 'metrics', component: AdminDashboardMetricsComponent, canActivate: [adminGuard]},
+    {path: 'metrics', component: AdminDashboardMetricsComponent, canActivate: [adminGuard], resolve: {multi: AveragePriceChartResolver}},
     {path: 'customize', component: AdminDashboardCustomizeComponent, canActivate: [adminGuard]}
   ]}
   // { path: '**', title: "Error", component: PageNotFoundComponent }

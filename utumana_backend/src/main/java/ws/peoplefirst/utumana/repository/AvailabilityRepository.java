@@ -29,4 +29,14 @@ public interface AvailabilityRepository extends JpaRepository<Availability,Long>
             "av.startDate <= :endDate AND " +
             "av.endDate >= :startDate")
     public List<Availability> findByAccommodationIdAndDateRange( @Param("accommodationId") Long accommodationId, @Param("startDate") LocalDate startDate,@Param("endDate") LocalDate endDate);
+
+	@Query(
+			"SELECT YEAR(a.startDate), MONTH(a.startDate), AVG(a.pricePerNight) " +
+			"FROM Availability a " +
+			"JOIN a.accommodation acc " +
+			"WHERE acc.hidingTimestamp IS NULL " +
+			"GROUP BY YEAR(a.startDate), MONTH(a.startDate) " +
+			"ORDER BY YEAR(a.startDate), MONTH(a.startDate)"
+		)
+	public List<Object[]> calculateAveragePricesOverTimeChart();
 }
