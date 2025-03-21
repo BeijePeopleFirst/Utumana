@@ -138,6 +138,8 @@
   .drop-box {@apply block px-4 py-2 text-sm text-neutral-contrast select-none hover:bg-neutral-2}
   .drop-box-menu-open {@apply px-2 py-1 rounded-md hover:ring-2 hover:bg-inherit hover:ring-secondary-light/50}
 
+  .chart-card-container {@apply border relative text-inherit overflow-hidden rounded-lg shadow-lg bg-neutral-1}
+
   /* Use like this: 
   <ng-template #loader>
     <div class="flex justify-center items-center h-full">

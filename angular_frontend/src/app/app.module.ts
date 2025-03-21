@@ -74,6 +74,9 @@ import { AdminDashboardMetricsComponent } from './components/admin-dashboard-met
 import { AdminDashdoardSearchBarComponent } from './components/admin-dashdoard-search-bar/admin-dashdoard-search-bar.component';
 import { AdminDashboardCustomizeComponent } from './components/admin-dashboard-customize/admin-dashboard-customize.component';
 import { EditAvailabilitiesAccommodationDetailsComponent } from './components/edit-availabilities-accommodation-details/edit-availabilities-accommodation-details.component';
+import { NgxEchartsModule } from 'ngx-echarts';
+import { AdminDashboardAveragePriceOverTimeLineChartComponent } from './components/admin-dashboard-average-price-over-time-line-chart/admin-dashboard-average-price-over-time-line-chart.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
@@ -137,7 +140,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     AdminDashboardMetricsComponent,
     AdminDashdoardSearchBarComponent,
     AdminDashboardCustomizeComponent,
-    EditAvailabilitiesAccommodationDetailsComponent
+    EditAvailabilitiesAccommodationDetailsComponent,
+    AdminDashboardAveragePriceOverTimeLineChartComponent
   ],
   imports: [
     BrowserModule,
@@ -153,7 +157,9 @@ export function HttpLoaderFactory(http: HttpClient) {
         useFactory:HttpLoaderFactory,
         deps:[HttpClient]
       }
-    })
+    }),
+    NgxEchartsModule.forRoot({ echarts: () => import('echarts') }),
+    NgxChartsModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
