@@ -16,6 +16,7 @@ export class AdminDashboardMetricsComponent implements OnInit {
     }[]
   }[];
 
+  //TODO: CAMBIARE IL TIPO IN BASE AL BACKEND
   single!: {
     name: string,
     value: any

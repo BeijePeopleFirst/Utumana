@@ -3,11 +3,15 @@ package ws.peoplefirst.utumana.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Month;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
@@ -35,6 +39,7 @@ import ws.peoplefirst.utumana.repository.AvailabilityRepository;
 import ws.peoplefirst.utumana.repository.BookingRepository;
 import ws.peoplefirst.utumana.utility.BookingStatus;
 import ws.peoplefirst.utumana.utility.JsonFormatter;
+import ws.peoplefirst.utumana.utility.SeriesInstance;
 
 @Service
 public class BookingService {
@@ -517,5 +522,164 @@ public class BookingService {
 		}
 
 		return true;
+	}
+
+	//Map<Year, List<MonthName, TotalOccupiedDays>>
+	//TODO: SISTEMARE IL RETURN TYPE E LA OGICA NEL FrontEnd -> VOGLIO POTER SWITCHARE TRA UN ANNO E L'ALTRO NEL FE (Charts)
+	public Map<Integer, List<SeriesInstance>> calculateAnnualOccupancyPercentage() {
+		Map<Integer, List<SeriesInstance>> result = new HashMap<Integer, List<SeriesInstance>>();
+        List<Object[]> startDatesAndEndDatesBookings = this.bookingRepository.getStartDatesAndEndDatesDoneOrAcceptedOrDoingBookings();
+		List<LocalDateTime> toRemove = mergeDates(startDatesAndEndDatesBookings);
+
+		LocalDateTime start = null;
+		LocalDateTime end = null;
+		for(Object[] o: startDatesAndEndDatesBookings) {
+			start = (LocalDateTime) o[0];
+			end = (LocalDateTime) o[1];
+
+			result = fetchDaysInterval(start, end, result);
+		}
+
+		Map<Integer, List<SeriesInstance>> resultFinal = adjustSeriesInstances(toRemove, result);
+
+		return resultFinal;
+    }
+
+	public Map<Integer, List<SeriesInstance>> adjustSeriesInstances(List<LocalDateTime> toRemove, Map<Integer, List<SeriesInstance>> result) {
+        
+        // Creiamo una copia della mappa per non modificare l'originale
+        Map<Integer, List<SeriesInstance>> resultFinal = new HashMap<>();
+        for (Map.Entry<Integer, List<SeriesInstance>> entry : result.entrySet()) {
+            
+            List<SeriesInstance> listCopy = new ArrayList<>();
+            for (SeriesInstance si : entry.getValue()) {
+                // Creiamo una nuova istanza per evitare side-effect
+                listCopy.add(new SeriesInstance(si.getName(), si.getValue()));
+            }
+            resultFinal.put(entry.getKey(), listCopy);
+        }
+        
+        // Per ogni data da rimuovere, decrementa il valore corrispondente al mese
+        for (LocalDateTime removalDate : toRemove) {
+            int year = removalDate.getYear();
+            
+            String monthName = getMonthNameByEnum(removalDate.getMonth());
+            
+            // Se la mappa contiene l'anno interessato
+            if (resultFinal.containsKey(year)) {
+                List<SeriesInstance> seriesList = resultFinal.get(year);
+                for (SeriesInstance si : seriesList) {
+                    // Confronto ignorando la differenza fra maiuscole e minuscole
+                    if (si.getName().equalsIgnoreCase(monthName)) {
+                        // Si assume che il valore sia un Integer
+                        int currentValue = (Integer) si.getValue();
+                        si.setValue(currentValue - 1);
+                        // Se c'è solo una rimozione per data, usciamo dal ciclo
+                        break;
+                    }
+                }
+            }
+        }
+        
+        return resultFinal;
+    }
+
+	private List<LocalDateTime> mergeDates(List<Object[]> p) {
+		List<LocalDateTime[]> dates = new ArrayList<LocalDateTime[]>();
+		List<LocalDateTime> result = new ArrayList<LocalDateTime>();
+
+
+		for(Object[] o: p) {
+			dates.add(new LocalDateTime[]{(LocalDateTime) o[0], (LocalDateTime) o[1]});
+		}
+
+		dates.sort((a, b) -> Long.valueOf(a[0].toEpochSecond(ZoneOffset.UTC) - b[0].toEpochSecond(ZoneOffset.UTC)).intValue());
+
+		for(int i = 0; i < dates.size() - 1; i++) {
+			if((dates.get(i)[1].toLocalDate()).isEqual(dates.get(i+1)[0].toLocalDate())) result.add(dates.get(i)[1]);
+		}
+
+		return result;		
+	}
+
+	private Map<Integer, List<SeriesInstance>> fetchDaysInterval(LocalDateTime start, LocalDateTime end, Map<Integer, List<SeriesInstance>> list) {
+
+		LocalDateTime cursor = start;
+
+		Integer year = null;
+		Month month = null;
+		while(cursor.isBefore(end) || cursor.isEqual(end)) {
+
+			year = cursor.getYear();
+			month = cursor.getMonth();
+			if(list.containsKey(year)) list = addDayUnitToMonthInYear(list, month, year);
+			else list = createAndAddKeyInSpecifiedMonth(list, month, year);
+			
+			cursor = cursor.plusDays(1);
+		}
+
+		return list;
+	}
+
+	private Map<Integer, List<SeriesInstance>> createAndAddKeyInSpecifiedMonth(Map<Integer, List<SeriesInstance>> map, Month month, Integer year) {
+		SeriesInstance i = new SeriesInstance(getMonthNameByEnum(month), 1);
+
+		map.put(year, new ArrayList<SeriesInstance>(Arrays.asList(i)));
+		return map;
+	}
+
+	private Map<Integer, List<SeriesInstance>> addDayUnitToMonthInYear(Map<Integer, List<SeriesInstance>> map, Month month, Integer year) {
+
+		List<SeriesInstance> units = map.get(year);
+		List<SeriesInstance> result = new ArrayList<SeriesInstance>();
+		Integer value = null;
+		boolean found = false;
+
+		for(SeriesInstance i : units) {
+			if(i.getName().equals(getMonthNameByEnum(month))) {
+				found = true;
+				value = (Integer) i.getValue();
+			}
+		}
+
+		if(found) {
+			value++;
+
+			for(SeriesInstance i: units) {
+				if(!i.getName().equals(getMonthNameByEnum(month))) result.add(i);
+				else result.add(new SeriesInstance(getMonthNameByEnum(month), value));
+			}
+	
+		}
+		else {
+			units.add(new SeriesInstance(getMonthNameByEnum(month), 1));
+
+			for(SeriesInstance i: units) {
+				result.add(i);
+			}
+		}
+
+		map.put(year, result);
+
+		return map;
+	}
+
+	private String getMonthNameByEnum(Month m) {
+		return switch (m) {
+			case JANUARY -> "January";
+			case FEBRUARY -> "February";
+			case MARCH -> "March";
+			case APRIL -> "April";
+			case MAY -> "May";
+			case JUNE -> "June";
+			case JULY -> "July";
+			case AUGUST -> "August";
+			case SEPTEMBER -> "September";
+			case OCTOBER -> "October";
+			case NOVEMBER -> "November";
+			case DECEMBER -> "December";
+			default -> throw new IllegalArgumentException("Invalid month: " + m);
+		};
+		
 	}
 }

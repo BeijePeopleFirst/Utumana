@@ -100,4 +100,11 @@ public interface BookingRepository extends JpaRepository<Booking,Long>{
 
 	List<Booking> findByAccommodationAndIsUnavailabilityIsTrue(Accommodation acc);
 
+	@Query(
+		"SELECT b.checkIn, b.checkOut " +
+		"FROM Booking b " +
+		"WHERE b.status IN ('ACCEPTED', 'DOING', 'DONE')"
+	)
+	List<Object[]> getStartDatesAndEndDatesDoneOrAcceptedOrDoingBookings();
+
 }

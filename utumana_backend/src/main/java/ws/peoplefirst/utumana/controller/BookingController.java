@@ -45,6 +45,7 @@ import ws.peoplefirst.utumana.service.BookingService;
 import ws.peoplefirst.utumana.utility.AuthorizationUtility;
 import ws.peoplefirst.utumana.utility.BookingStatus;
 import ws.peoplefirst.utumana.utility.JsonFormatter;
+import ws.peoplefirst.utumana.utility.SeriesInstance;
 
 @RestController
 @RequestMapping(value="/api")
@@ -361,4 +362,14 @@ public class BookingController {
 		Authentication auth) {
 		return bookingService.findByIdIfDONE(id);
 	}	
+
+	@Operation(summary = "This endpoint calculates the annual occupation percentage")
+	@ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Operation completed")
+    })
+	@PreAuthorize("hasAuthority('ADMIN')")
+	@GetMapping(value = "/bookings/fetch_annual_occupancy_percentage")
+	public Map<Integer, List<SeriesInstance>> calculateAnnualOccupancyPercentage(Authentication auth) {
+		return this.bookingService.calculateAnnualOccupancyPercentage();
+	}
 }

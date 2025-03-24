@@ -10,6 +10,7 @@ export class AdminDashboardChartsService {
 
   constructor(private http: HttpClient) { }
 
+  //TODO: CAMBIARE RETURN TYPE IN BASE AL BACKEND
   public calculateAveragePricesOverTimeChart(): 
   Observable<
   {
@@ -76,7 +77,7 @@ export class AdminDashboardChartsService {
         {message: string, status: string, time: string}
 
       >(
-        BACKEND_URL_PREFIX + "/api/accommodations/fetch_annual_occupancy_percentage"
+        BACKEND_URL_PREFIX + "/api/bookings/fetch_annual_occupancy_percentage"
       )
       .pipe(
         catchError(

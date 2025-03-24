@@ -23,6 +23,7 @@ null
 
   constructor(private chartService: AdminDashboardChartsService) {}
 
+  //TODO: CAMBIARE RETURN TYPE IN BASE AL BACKEND
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<{
     name: string,
     value: any

@@ -1059,13 +1059,4 @@ public class AccommodationController {
 		return this.accommodationService.calculateAveragePricesOverTimeChart();
 	}
 
-	@Operation(summary = "This endpoint calculates the annual occupation percentage")
-	@ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Operation completed")
-    })
-	@PreAuthorize("hasAuthority('ADMIN')")
-	@GetMapping(value = "/accommodations/fetch_annual_occupancy_percentage")
-	public List<SeriesInstance> calculateAnnualOccupancyPercentage(Authentication auth) {
-		return this.accommodationService.calculateAnnualOccupancyPercentage();
-	}
 }
