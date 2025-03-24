@@ -1,5 +1,6 @@
 package ws.peoplefirst.utumana.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +22,9 @@ import ws.peoplefirst.utumana.exception.ForbiddenException;
 import ws.peoplefirst.utumana.exception.IdNotFoundException;
 import ws.peoplefirst.utumana.exception.InvalidJSONException;
 import ws.peoplefirst.utumana.model.Accommodation;
+import ws.peoplefirst.utumana.model.AdminPerformedOperation;
 import ws.peoplefirst.utumana.model.BadgeAward;
+import ws.peoplefirst.utumana.model.PopularOperation;
 import ws.peoplefirst.utumana.model.User;
 import ws.peoplefirst.utumana.model.UserAuthority;
 import ws.peoplefirst.utumana.repository.AccommodationDraftRepository;
@@ -29,6 +32,7 @@ import ws.peoplefirst.utumana.repository.AccommodationRepository;
 import ws.peoplefirst.utumana.repository.UserAuthorityRepository;
 import ws.peoplefirst.utumana.repository.UserRepository;
 import ws.peoplefirst.utumana.utility.Constants;
+import ws.peoplefirst.utumana.utility.PopularOperationTitle;
 
 
 @Service
@@ -54,6 +58,9 @@ public class UserService implements UserDetailsService {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private PopularOperationService popularOperationService;
 
 
 	public void checkUser(User user) {
@@ -321,5 +328,51 @@ public class UserService implements UserDetailsService {
 
 	public boolean hasOpenDrafts(Long userId) {
 		return accommodationDraftRepository.countByOwnerId(userId) > 0;
+	}
+
+	public boolean setLatestOperationPerformedAsAdmin(Long userId, PopularOperationTitle operation) {
+		User user = this.findById(userId);
+		if(user == null) throw new IdNotFoundException("The specified user id does not exist in the Database");
+
+		PopularOperation operationFound = this.popularOperationService.findByTitle(operation);
+
+		user.setLatestAdminOperation(operationFound);
+		this.userRepository.save(user);
+
+		return true;
+	}
+
+	@Transactional
+	public boolean updateUserOperationsCount(Long userId, PopularOperationTitle operation) {
+		User user = this.findById(userId);
+		if(user == null) throw new IdNotFoundException("The specified user id does not exist in the Database");
+
+		PopularOperation operationFound = this.popularOperationService.findByTitle(operation);
+
+		List<AdminPerformedOperation> operations = user.getAdminPerformedOperations();
+
+		boolean found = false;
+		for(AdminPerformedOperation op: operations) {
+			if(op.getOperation().getId().equals(operationFound.getId())) {
+				op.setLatestUpdate(LocalDateTime.now());
+				op.setNumberOfTimes(op.getNumberOfTimes() + 1);
+				found = true;
+			}
+		}
+
+		if(!found) {
+			AdminPerformedOperation n = new AdminPerformedOperation();
+			n.setLatestUpdate(LocalDateTime.now());
+			n.setNumberOfTimes(1);
+			n.setOperation(operationFound);
+			n.setUser(user);
+
+			operations.add(n);
+		}
+
+		user.setAdminPerformedOperations(operations);
+		this.userRepository.save(user);
+
+		return true;
 	}
 }

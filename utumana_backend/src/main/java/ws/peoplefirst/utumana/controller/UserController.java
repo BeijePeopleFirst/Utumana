@@ -27,8 +27,10 @@ import ws.peoplefirst.utumana.exception.IdNotFoundException;
 import ws.peoplefirst.utumana.exception.InvalidJSONException;
 import ws.peoplefirst.utumana.model.BadgeAward;
 import ws.peoplefirst.utumana.model.User;
+import ws.peoplefirst.utumana.service.PopularOperationService;
 import ws.peoplefirst.utumana.service.UserService;
 import ws.peoplefirst.utumana.utility.AuthorizationUtility;
+import ws.peoplefirst.utumana.utility.PopularOperationTitle;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
@@ -51,6 +53,7 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
+
 	
     @Operation(summary = "Get all users as DTOs")
     @ApiResponses({
@@ -356,5 +359,32 @@ public class UserController {
 	public @ResponseBody boolean hasOpenDrafts(@PathVariable Long userId, Authentication auth) {
 		return userService.hasOpenDrafts(userId);
 	}
+
+	@Operation(summary = "Sets the user' s latest operation performed as an admin", description = "Sets the user' s latest operation performed as an admin")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Successfully updated"),
+		@ApiResponse(responseCode = "400", description = "Invalid Operation title provided", content=@Content(mediaType = "application/json",
+		schema=@Schema(implementation=ErrorMessage.class))),
+        @ApiResponse(responseCode = "404", description = "IdNotFoundException(\"user not found\")", content=@Content(mediaType = "application/json",
+		schema=@Schema(implementation=ErrorMessage.class)))
+    })
+	@PreAuthorize("hasAuthority('ADMIN')")
+	@PatchMapping(value = "/user/set_latest_performed_operation_as_admin/{userId}/{operation}")
+	public boolean setUserLatestOperationPerformedAsAdmin(@PathVariable Long userId, @PathVariable PopularOperationTitle operation, Authentication auth) {
+		return this.userService.setLatestOperationPerformedAsAdmin(userId, operation);
+	}
+
+	@Operation(summary = "Updates admin's operations usage", description = "Updates admin's operations usage")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Successfully updated"),
+        @ApiResponse(responseCode = "404", description = "IdNotFoundException(\"user not found\")", content=@Content(mediaType = "application/json",
+		schema=@Schema(implementation=ErrorMessage.class)))
+    })
+	@PreAuthorize("hasAuthority('ADMIN')")
+	@PatchMapping(value = "/user/update_user_operations_count/{userId}/{operation}")
+	public boolean updateUserOperationsCount(@PathVariable Long userId, @PathVariable PopularOperationTitle operation, Authentication auth) {
+		return this.userService.updateUserOperationsCount(userId, operation);
+	}
+
 }
 	

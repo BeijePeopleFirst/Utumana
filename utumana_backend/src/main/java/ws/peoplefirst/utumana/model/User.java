@@ -31,7 +31,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
@@ -118,7 +120,19 @@ public class User implements Serializable, UserDetails {
 	@Transient
 	@Schema(description = "Review list of the user")
 	private List<ReviewDTO> reviews;
-	
+
+	@JsonInclude(JsonInclude.Include.NON_EMPTY)
+	@JsonProperty(value = "latest_admin_operation")
+	@JoinColumn(name = "latest_admin_operation")
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	@Schema(description = "Latest admin operation", example = "ADD_USER")
+	private PopularOperation latestAdminOperation;
+
+	@JsonInclude(JsonInclude.Include.NON_EMPTY)
+	@JsonProperty(value = "admin_performed_operations")
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+	@Schema(description = "Admin operation count over time")
+	private List<AdminPerformedOperation> adminPerformedOperations;
 	
 //	public List<Badge> getBadges() {
 //		return badges;
@@ -129,6 +143,22 @@ public class User implements Serializable, UserDetails {
 //	}
 	
 	
+
+	public PopularOperation getLatestAdminOperation() {
+		return latestAdminOperation;
+	}
+
+	public void setLatestAdminOperation(PopularOperation latestAdminOperation) {
+		this.latestAdminOperation = latestAdminOperation;
+	}
+
+	public List<AdminPerformedOperation> getAdminPerformedOperations() {
+		return adminPerformedOperations;
+	}
+
+	public void setAdminPerformedOperations(List<AdminPerformedOperation> adminPerformedOperations) {
+		this.adminPerformedOperations = adminPerformedOperations;
+	}
 
 	public Long getId() {
 		return id;
