@@ -17,6 +17,7 @@ export class AdminDashboardMetricsComponent implements OnInit {
   }[];
 
   //TODO: CAMBIARE IL TIPO IN BASE AL BACKEND
+  //TODO: DECOMMENTARE IL RESOLVER IN APP-ROUTING-MODULE
   single!: {
     name: string,
     value: any

@@ -8,7 +8,8 @@ import { ScaleType } from '@swimlane/ngx-charts';
 })
 export class AdminDashboardOccupancyPercentageOverTimeChartComponent {
 
-  //TODO: CAMBIAREIL TIPO IN BASE AL BACKEND
+  //TODO: CAMBIARE IL TIPO IN BASE AL BACKEND
+  //TODO: DECOMMENTARE IL RESOLVER IN APP-ROUTING-MODULE
   @Input() single!: {
     name: string,
     value: any

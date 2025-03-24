@@ -68,9 +68,9 @@ const routes: Routes = [
       {path: 'admins', component: AdminDashboardUsersMakeNewAdminComponent, canActivate: [adminGuard]},
     ]},
     {path: 'metrics', component: AdminDashboardMetricsComponent, canActivate: [adminGuard], 
-      resolve: {
-        multi: AveragePriceChartResolver, 
-        single: OccupancyPercentageChartResolver
+      resolve: {//TODO: DECOMMENTARE IL RESOLVER "single"
+        multi: AveragePriceChartResolver/*, 
+        single: OccupancyPercentageChartResolver*/
       }
     },
     {path: 'customize', component: AdminDashboardCustomizeComponent, canActivate: [adminGuard]}
