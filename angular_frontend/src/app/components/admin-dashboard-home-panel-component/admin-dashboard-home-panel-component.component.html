@@ -1,3 +1,17 @@
-<div class="flex justify-center py-5 h-[96.6vh] bg-neutral-2">
-    <img [src]="url" class="rounded-full">
+<div class="flex flex-row items-center justify-center space-x-4 sm:space-x-8 md:space-x-16 lg:space-x-32">
+    <div id="other-utilities" class="flex flex-col">
+        <div class="relative" id="number-of-accommodations-waiting-for-approval" (click)="goToAcceptOrRejectAccommodations()" class="admin-dashboard-card-home">
+            <div class="flex flex-col items-start">
+                <h3>{{ "admin-dashboard-home-tab.total-accommodations" | translate }}:</h3>
+                <br>
+                <h1>{{totalAccommodations}}</h1>
+            </div>
+        </div>
+    </div>
+    <div id="latest-operations-performed-by-admin" class="admin-dashboard-card-home">
+        
+    </div>
+</div>
+<div class="w-full h-full fixed top-0 left-0 bg-neutral-2/50 z-[1000] flex justify-center align-middle items-center" *ngIf="displaySpinner">
+    <div class="w-20 h-20 border-8 border-gray-300 rounded-full animate-spin border-t-blue-600" ></div>
 </div>

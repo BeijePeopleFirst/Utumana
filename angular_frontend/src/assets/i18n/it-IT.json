@@ -134,6 +134,9 @@
 	"confirm_colors": "Salva colori",
 	"colors_success": "Colori salvati con successo!"
 },
+"admin-dashboard-home-tab": {
+	"total-accommodations": "Sistemazioni in attesa di revisione admin"
+},
 "admin-dashboard-metrics": {
 	"area-chart-title": "Tasso di occupazione annuale"
 },
