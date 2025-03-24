@@ -1,6 +1,7 @@
 package ws.peoplefirst.utumana;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -11,15 +12,13 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import ws.peoplefirst.utumana.exception.ForbiddenException;
-import ws.peoplefirst.utumana.model.Accommodation;
 import ws.peoplefirst.utumana.model.AccommodationDraft;
+import ws.peoplefirst.utumana.model.AdminPerformedOperation;
 import ws.peoplefirst.utumana.model.Booking;
 import ws.peoplefirst.utumana.repository.AccommodationDraftRepository;
-import ws.peoplefirst.utumana.repository.AccommodationRepository;
+import ws.peoplefirst.utumana.repository.AdminPerformedOperationRepository;
 import ws.peoplefirst.utumana.repository.BookingRepository;
 import ws.peoplefirst.utumana.service.AccommodationDraftService;
-import ws.peoplefirst.utumana.service.AccommodationService;
 import ws.peoplefirst.utumana.service.BookingService;
 import ws.peoplefirst.utumana.utility.BookingStatus;
 
@@ -31,13 +30,7 @@ public class ScheduledTasks {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
-	private BookingService bookingService;
-
-	@Autowired
 	private AccommodationDraftService accommodationDraftService;
-
-	@Autowired
-	private AccommodationService accommodationService;
 	
 	@Autowired
 	private BookingRepository bookingRepository;
@@ -46,15 +39,15 @@ public class ScheduledTasks {
 	private AccommodationDraftRepository accommodationDraftRepository;
 
 	@Autowired
-	private AccommodationRepository accommodationRepository;
+	private AdminPerformedOperationRepository adminPerformedOperationRepository;
 	
 	
 	@Scheduled(fixedDelay = 86400000)	// 24h
 	public void updateBookingStatus(){
 		
-		List<Booking> expiredBooking = bookingService.getExpiredBookings();
+		List<Booking> expiredBooking = bookingRepository.findExpiredBookings(LocalDateTime.now());
 		
-		List<Booking> startedBooking = bookingService.getStartedBookings();
+		List<Booking> startedBooking = bookingRepository.findStartedBookings(LocalDateTime.now());
 		
 		for (Booking b: startedBooking){
 			b.setStatus(BookingStatus.DOING);
@@ -77,5 +70,24 @@ public class ScheduledTasks {
 			accommodationDraftService.delete(draft);
 		}
 		log.info("Deleted drafts modified for the last time more than 6 months ago: " + drafts);
+	}
+
+	/** Delete admins' action count modified for the last time more than 3 months ago. */
+	@Scheduled(fixedDelay = 86400000)	// 24h
+	@Transactional
+	public void deleteOldAdminActivityCount(){
+		LocalDateTime threeMonthsAgo = LocalDateTime.now().minusMonths(3);
+
+		List<AdminPerformedOperation> list = this.adminPerformedOperationRepository.findAll();
+		List<AdminPerformedOperation> removed = new ArrayList<AdminPerformedOperation>();
+
+		for(AdminPerformedOperation op: list) {
+			if(op.getLatestUpdate().isBefore(threeMonthsAgo) || op.getLatestUpdate().isEqual(threeMonthsAgo)) {
+				this.adminPerformedOperationRepository.delete(op);
+				removed.add(op);
+			}
+		}
+		
+		log.info("Deleted admins' action count modified for the last time more than 3 months ago: " + removed);
 	}
 }
