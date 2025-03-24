@@ -135,7 +135,8 @@
 	"colors_success": "Colori salvati con successo!"
 },
 "admin-dashboard-home-tab": {
-	"total-accommodations": "Sistemazioni in attesa di revisione admin"
+	"total-accommodations": "Sistemazioni in attesa di revisione admin",
+	"total-doing-bookings": "Prenotazioni in corso"
 },
 "admin-dashboard-metrics": {
 	"area-chart-title": "Tasso di occupazione annuale"

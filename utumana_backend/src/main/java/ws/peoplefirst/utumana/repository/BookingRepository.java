@@ -107,4 +107,11 @@ public interface BookingRepository extends JpaRepository<Booking,Long>{
 	)
 	List<Object[]> getStartDatesAndEndDatesDoneOrAcceptedOrDoingBookings();
 
+	@Query(
+		"SELECT new ws.peoplefirst.utumana.dto.BookingDTO(b.id,b.price,b.status,b.checkIn,b.checkOut,b.review.id, new ws.peoplefirst.utumana.dto.AccommodationDTO(b.accommodation.id, b.accommodation.title, b.accommodation.city, b.accommodation.mainPhotoUrl, b.accommodation.country)) " +
+		"FROM Booking b " +
+		"WHERE b.status IN ('DOING')"
+	)
+	public List<BookingDTO> findAllDoingBookings();
+
 }

@@ -372,4 +372,18 @@ public class BookingController {
 	public Map<Integer, List<SeriesInstance>> calculateAnnualOccupancyPercentage(Authentication auth) {
 		return this.bookingService.calculateAnnualOccupancyPercentage();
 	}
+
+	@Operation(summary = "Get all doing bookings", description = "Returns the list of all doing bookingsDto", tags = { "Bookings" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Bookings retrieved successfully", content = @Content(schema = @Schema(implementation = BookingDTO.class))),
+			@ApiResponse(responseCode = "403", description = "Logged user is not an admin", content = @Content)
+    })
+	@PreAuthorize("hasAuthority('ADMIN')")
+	@GetMapping(value = "/bookings/get_all_doing_bookings")
+	public List<BookingDTO> getAllDoingBookings(Authentication auth) {
+				
+		log.debug("GET /bookings/get_all_doing_bookings");
+		
+		return bookingService.getAllDoingBookings();
+	}
 }

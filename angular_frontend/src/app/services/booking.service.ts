@@ -105,4 +105,13 @@ export class BookingService {
       tap(() => this.bookingUpdated.next())
     );
   }
+
+  public getAllDoingBookings(): Observable<BookingDTO[]> {
+    return this.http.get<BookingDTO[]>(BACKEND_URL_PREFIX + "/api/bookings/get_all_doing_bookings").pipe(
+      catchError(error => {
+        console.error(error.error);
+        return of([]);
+      })
+    )
+  }
 }

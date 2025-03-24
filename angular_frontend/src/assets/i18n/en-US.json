@@ -135,7 +135,8 @@
 	"colors_success": "Colors saved successfully!"
 },
 "admin-dashboard-home-tab": {
-	"total-accommodations": "Total pending accommodations"
+	"total-accommodations": "Total pending accommodations",
+	"total-doing-bookings": "Ongoing bookings"
 },
 "admin-dashboard-metrics": {
 	"area-chart-title": "Occupation pertange per year"

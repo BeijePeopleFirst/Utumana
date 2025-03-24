@@ -682,4 +682,8 @@ public class BookingService {
 		};
 		
 	}
+
+	public List<BookingDTO> getAllDoingBookings() {
+		return this.bookingRepository.findAllDoingBookings();
+	}
 }
