@@ -15,6 +15,7 @@ export class AdminDashboardUsersProfilesComponent implements OnInit {
 
   ngOnInit(): void {
     this.userService.setUserLatestOperationPerformedAsAdmin(Number(localStorage.getItem("id")), PopularOperationTitle.PROFILES).subscribe();
+    this.userService.updateUserOperationsCount(Number(localStorage.getItem("id")), PopularOperationTitle.PROFILES).subscribe();
   }
 
 }

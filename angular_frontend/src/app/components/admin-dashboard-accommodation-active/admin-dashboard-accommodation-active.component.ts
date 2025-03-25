@@ -31,6 +31,7 @@ export class AdminDashboardAccommodationActiveComponent implements OnInit {
 
     ngOnInit(): void {
         this.userService.setUserLatestOperationPerformedAsAdmin(Number(localStorage.getItem("id")), PopularOperationTitle.ACTIVE_ACCOMMODATIONS).subscribe();
+        this.userService.updateUserOperationsCount(Number(localStorage.getItem("id")), PopularOperationTitle.ACTIVE_ACCOMMODATIONS).subscribe();
         this.route.queryParams.subscribe(params => {
             this.activeAccommodationsPageNumber = params['page'] ? +params['page'] : 0;
             this.activeAccommodationsPageSize = params['size'] ? +params['size'] : 6;

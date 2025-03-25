@@ -34,6 +34,7 @@ export class AdminDashboardMetricsComponent implements OnInit {
 
   ngOnInit(): void {
     this.userService.setUserLatestOperationPerformedAsAdmin(Number(localStorage.getItem("id")), PopularOperationTitle.METRICS).subscribe();
+    this.userService.updateUserOperationsCount(Number(localStorage.getItem("id")), PopularOperationTitle.METRICS).subscribe();
     
     this.route.data.subscribe(
       data => {

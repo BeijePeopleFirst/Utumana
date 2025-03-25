@@ -37,6 +37,7 @@ export class AdminDashboardAccommodationAllComponent {
 
   ngOnInit(): void {
       this.userService.setUserLatestOperationPerformedAsAdmin(Number(localStorage.getItem("id")), PopularOperationTitle.ALL_ACCOMMODATIONS).subscribe();
+      this.userService.updateUserOperationsCount(Number(localStorage.getItem("id")), PopularOperationTitle.ALL_ACCOMMODATIONS).subscribe();
       this.route.queryParams.subscribe(params => {
           this.allAccommodationsPageNumber = params['page'] ? +params['page'] : 0;
           this.allAccommodationsPageSize = params['size'] ? +params['size'] : 6;

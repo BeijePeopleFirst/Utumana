@@ -34,6 +34,7 @@ export class AdminDashboardUsersMakeNewAdminComponent {
 
   ngOnInit() {
     this.userService.setUserLatestOperationPerformedAsAdmin(Number(localStorage.getItem("id")), PopularOperationTitle.ADMINS).subscribe();
+    this.userService.updateUserOperationsCount(Number(localStorage.getItem("id")), PopularOperationTitle.ADMINS).subscribe();
     this.userService.getAllAdminsDTO().subscribe(users => {
       this.admins = users;
     });

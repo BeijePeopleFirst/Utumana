@@ -35,7 +35,7 @@ public class AdminPerformedOperation {
     @Column(name = "number_of_times")
     private Integer numberOfTimes;
 
-    @Column(name = "latest_update")
+    @Column(name = "latest_update", nullable = false)
     private LocalDateTime latestUpdate;
 
 

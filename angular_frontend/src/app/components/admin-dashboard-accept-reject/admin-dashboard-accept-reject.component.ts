@@ -27,6 +27,7 @@ export class AdminDashboardAcceptRejectComponent implements OnInit{
 
   ngOnInit() {
     this.userService.setUserLatestOperationPerformedAsAdmin(Number(localStorage.getItem("id")), PopularOperationTitle.APPROVE_REJECT_ACCOMMODATIONS).subscribe();
+    this.userService.updateUserOperationsCount(Number(localStorage.getItem("id")), PopularOperationTitle.APPROVE_REJECT_ACCOMMODATIONS).subscribe();
     this.pendingAccommodationsPageSize = 3;
     this.pendingAccommodationsPageNumber = 0;
     this.loadPendingAccommodations();

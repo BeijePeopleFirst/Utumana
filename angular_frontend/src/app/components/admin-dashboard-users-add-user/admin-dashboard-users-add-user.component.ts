@@ -21,6 +21,7 @@ export class AdminDashboardUsersAddUserComponent implements OnInit {
 
   ngOnInit(): void {
     this.userService.setUserLatestOperationPerformedAsAdmin(Number(localStorage.getItem("id")), PopularOperationTitle.ADD_USER).subscribe();
+    this.userService.updateUserOperationsCount(Number(localStorage.getItem("id")), PopularOperationTitle.ADD_USER).subscribe();
   }
 
   createUser(){

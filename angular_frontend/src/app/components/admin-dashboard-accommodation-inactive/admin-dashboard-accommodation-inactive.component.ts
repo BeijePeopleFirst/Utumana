@@ -31,6 +31,7 @@ export class AdminDashboardAccommodationInactiveComponent {
 
     ngOnInit(): void {
         this.userService.setUserLatestOperationPerformedAsAdmin(Number(localStorage.getItem("id")), PopularOperationTitle.INACTIVE_ACCOMMODATIONS).subscribe();
+        this.userService.updateUserOperationsCount(Number(localStorage.getItem("id")), PopularOperationTitle.INACTIVE_ACCOMMODATIONS).subscribe();
         this.route.queryParams.subscribe(params => {
             this.inactiveAccommodationsPageNumber = params['page'] ? +params['page'] : 0;
             this.inactiveAccommodationsPageSize = params['size'] ? +params['size'] : 6;

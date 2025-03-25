@@ -130,9 +130,9 @@ public class User implements Serializable, UserDetails {
 
 	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	@JsonProperty(value = "admin_performed_operations")
-	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
 	@Schema(description = "Admin operation count over time")
-	private List<AdminPerformedOperation> adminPerformedOperations;
+	private List<AdminPerformedOperation> adminPerformedOperations = new ArrayList<AdminPerformedOperation>();
 	
 //	public List<Badge> getBadges() {
 //		return badges;
