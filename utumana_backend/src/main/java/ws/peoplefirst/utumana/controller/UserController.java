@@ -29,6 +29,7 @@ import ws.peoplefirst.utumana.model.BadgeAward;
 import ws.peoplefirst.utumana.model.User;
 import ws.peoplefirst.utumana.service.PopularOperationService;
 import ws.peoplefirst.utumana.service.UserService;
+import ws.peoplefirst.utumana.utility.AdminOperationCount;
 import ws.peoplefirst.utumana.utility.AuthorizationUtility;
 import ws.peoplefirst.utumana.utility.PopularOperationTitle;
 
@@ -384,6 +385,18 @@ public class UserController {
 	@PatchMapping(value = "/user/update_user_operations_count/{userId}/{operation}")
 	public boolean updateUserOperationsCount(@PathVariable Long userId, @PathVariable PopularOperationTitle operation, Authentication auth) {
 		return this.userService.updateUserOperationsCount(userId, operation);
+	}
+
+	@Operation(summary = "Gets admin's operations usage", description = "Gets admin's operations usage")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Successfully retrieved"),
+        @ApiResponse(responseCode = "404", description = "IdNotFoundException(\"user not found\")", content=@Content(mediaType = "application/json",
+		schema=@Schema(implementation=ErrorMessage.class)))
+    })
+	@PreAuthorize("hasAuthority('ADMIN')")
+	@GetMapping(value = "/user/get_admin_operations_count/{userId}")
+	public List<AdminOperationCount> getAdminOperationsCount(@PathVariable Long userId, Authentication auth) {
+		return this.userService.getAdminOperationsCount(userId);
 	}
 
 }

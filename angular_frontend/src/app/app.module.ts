@@ -78,6 +78,8 @@ import { NgxEchartsModule } from 'ngx-echarts';
 import { AdminDashboardAveragePriceOverTimeLineChartComponent } from './components/admin-dashboard-average-price-over-time-line-chart/admin-dashboard-average-price-over-time-line-chart.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { AdminDashboardOccupancyPercentageOverTimeChartComponent } from './components/admin-dashboard-occupancy-percentage-over-time-chart/admin-dashboard-occupancy-percentage-over-time-chart.component';
+import { AdminOperationRowComponent } from './components/admin-operation-row/admin-operation-row.component';
+import { AdminOperationRowListComponent } from './components/admin-operation-row-list/admin-operation-row-list.component';
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
@@ -143,7 +145,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     AdminDashboardCustomizeComponent,
     EditAvailabilitiesAccommodationDetailsComponent,
     AdminDashboardAveragePriceOverTimeLineChartComponent,
-    AdminDashboardOccupancyPercentageOverTimeChartComponent
+    AdminDashboardOccupancyPercentageOverTimeChartComponent,
+    AdminOperationRowComponent,
+    AdminOperationRowListComponent
   ],
   imports: [
     BrowserModule,

@@ -206,4 +206,14 @@ export class UserService {
                                                                                           })
                                                                                         )
   }
+
+  getUserAdminOperationsCount(userId: number): Observable<{title: PopularOperationTitle, counter: number}[] | {message: string, status: string, time: string}> {
+    return this.http.get<{title: PopularOperationTitle, counter: number}[] | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/user/get_admin_operations_count/" + userId)
+                      .pipe(
+                        catchError(error => {
+                          console.error(error.error);
+                          return of(error);
+                        })
+                      )
+  }
 }

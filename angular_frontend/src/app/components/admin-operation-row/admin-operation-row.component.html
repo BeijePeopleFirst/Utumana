@@ -1,0 +1,8 @@
+<div *ngIf="name != ''" 
+     class="flex flex-row items-center justify-center w-full p-3 align-middle transition-all duration-300 border rounded-md shadow-md hover:brightness-125 bg-primary-dark sm:p-2">
+    <h2 class="text-3xl text-secondary sm:text-2xl sm:mb-2">{{"admin-operation-row." + name | translate}}</h2>
+    <img src="assets/icons/arrow.png" 
+         class="w-40 ml-5 transition-transform duration-200 hover:scale-105 hover:cursor-pointer sm:w-32 sm:ml-0 sm:mt-2" 
+         (click)="goToSection()" />
+</div>
+

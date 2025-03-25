@@ -29,8 +29,10 @@ import ws.peoplefirst.utumana.model.User;
 import ws.peoplefirst.utumana.model.UserAuthority;
 import ws.peoplefirst.utumana.repository.AccommodationDraftRepository;
 import ws.peoplefirst.utumana.repository.AccommodationRepository;
+import ws.peoplefirst.utumana.repository.AdminPerformedOperationRepository;
 import ws.peoplefirst.utumana.repository.UserAuthorityRepository;
 import ws.peoplefirst.utumana.repository.UserRepository;
+import ws.peoplefirst.utumana.utility.AdminOperationCount;
 import ws.peoplefirst.utumana.utility.Constants;
 import ws.peoplefirst.utumana.utility.PopularOperationTitle;
 
@@ -61,6 +63,9 @@ public class UserService implements UserDetailsService {
 
 	@Autowired
 	private PopularOperationService popularOperationService;
+
+	@Autowired
+	private AdminPerformedOperationRepository adminPerformedOperationRepository;
 
 
 	public void checkUser(User user) {
@@ -374,5 +379,23 @@ public class UserService implements UserDetailsService {
 		this.userRepository.save(user);
 
 		return true;
+	}
+
+	public List<AdminOperationCount> getAdminOperationsCount(Long userId) {
+		User user = this.findById(userId);
+		if(user == null) throw new IdNotFoundException("The specified user id does not exist in the Database");
+
+		List<AdminPerformedOperation> operations = this.adminPerformedOperationRepository.findByUser(user);
+
+		List<AdminOperationCount> result = new ArrayList<AdminOperationCount>();
+		if(operations.size() == 0) return result;
+
+		AdminOperationCount tmp = null;
+		for(AdminPerformedOperation op: operations) {
+			tmp = new AdminOperationCount(op.getOperation().getTitle(), op.getNumberOfTimes());
+			result.add(tmp);
+		}
+
+		return result;
 	}
 }

@@ -124,13 +124,13 @@ public class User implements Serializable, UserDetails {
 	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	@JsonProperty(value = "latest_admin_operation")
 	@JoinColumn(name = "latest_admin_operation")
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
 	@Schema(description = "Latest admin operation", example = "ADD_USER")
 	private PopularOperation latestAdminOperation;
 
 	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	@JsonProperty(value = "admin_performed_operations")
-	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
 	@Schema(description = "Admin operation count over time")
 	private List<AdminPerformedOperation> adminPerformedOperations = new ArrayList<AdminPerformedOperation>();
 	

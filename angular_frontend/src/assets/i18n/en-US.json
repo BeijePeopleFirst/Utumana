@@ -196,6 +196,22 @@
 	"ownerSurname": "Owner Surname",
 	"city": "City"
 },
+"admin-operation-row": {
+	"HOME": "Home",
+    "APPROVE_REJECT_ACCOMMODATIONS": "Accept/Reject accommodations",
+    "ACTIVE_ACCOMMODATIONS": "Active accommodations",
+    "INACTIVE_ACCOMMODATIONS": "Inactive accommodations",
+    "ALL_ACCOMMODATIONS": "All accommodations",
+    "PROFILES": "Profiles",
+    "ADD_USER": "Add user",
+    "ADMINS": "Admins",
+    "METRICS": "Metrics",
+    "CUSTOMIZE": "Customize"
+},
+"admin-operation-row-list": {
+	"most-used": "Most frequent operations",
+	"latest": "Latest operation"
+},
 "adminProfile":  {
 	"name": "Name",
 	"surname": "Surname",

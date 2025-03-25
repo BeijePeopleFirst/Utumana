@@ -1,0 +1,17 @@
+<h2>{{"admin-operation-row-list.most-used" | translate}}</h2>
+
+<div class="flex flex-col items-center justify-center w-full mt-3">
+    <div *ngIf="!thereAreNoOperations" class="flex flex-col items-center justify-center w-full">
+        <div *ngFor="let o of operations" class="w-full mb-1">
+            <app-admin-operation-row [name]="o ? o : ''"></app-admin-operation-row>
+        </div>
+    </div>
+</div>
+
+
+<h2 class="mt-9">{{"admin-operation-row-list.latest" | translate}}</h2>
+<div class="flex flex-col items-center justify-center w-full mt-3">
+    <div *ngIf="!thereIsNoLatestOperation" class="flex flex-col items-center justify-center w-full">
+        <app-admin-operation-row [name]="latestOperation!"></app-admin-operation-row>
+    </div>
+</div>
