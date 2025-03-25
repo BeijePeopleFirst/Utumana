@@ -83,7 +83,6 @@ export class AdminOperationRowListComponent implements OnInit {
               this.thereAreNoOperations = true;
             }
 
-            console.log("operations -> ", this.operations);
           }
         )
       }
