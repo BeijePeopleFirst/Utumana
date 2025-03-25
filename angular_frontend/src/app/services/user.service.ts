@@ -7,6 +7,7 @@ import { LoginResponse } from '../utils/loginResponse';
 import { S3Service } from './s3.service';
 import { UserDTO } from '../dtos/userDTO';
 import { AccommodationOwnerDTO } from '../dtos/accommodationOwnerDTO';
+import { PopularOperationTitle } from '../models/popularOperation';
 
 @Injectable({
   providedIn: 'root'
@@ -182,5 +183,27 @@ export class UserService {
         return of(false);
       })
     );
+  }
+
+  setUserLatestOperationPerformedAsAdmin(userId: number, operationTitle: PopularOperationTitle): Observable<boolean | {message: string, status: string, time: string}> {
+    return this.http.patch<boolean | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/user/set_latest_performed_operation_as_admin/" + userId + "/" + operationTitle, 
+                                                                                          null
+                                                                                        ).pipe(
+                                                                                          catchError(error => {
+                                                                                            console.error(error.error);
+                                                                                            return of(error.error);
+                                                                                          })
+                                                                                        )
+  }
+
+  updateUserOperationsCount(userId: number, operationTitle: PopularOperationTitle): Observable<boolean | {message: string, status: string, time: string}> {
+    return this.http.patch<boolean | {message: string, status: string, time: string}>(BACKEND_URL_PREFIX + "/api/user/update_user_operations_count/" + userId + "/" + operationTitle, 
+                                                                                          null
+                                                                                        ).pipe(
+                                                                                          catchError(error => {
+                                                                                            console.error(error.error);
+                                                                                            return of(error.error);
+                                                                                          })
+                                                                                        )
   }
 }

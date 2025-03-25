@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { PopularOperationTitle } from 'src/app/models/popularOperation';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-admin-dashboard-metrics',
@@ -25,11 +27,13 @@ export class AdminDashboardMetricsComponent implements OnInit {
 
 
   constructor(
+    private userService: UserService,
     private route: ActivatedRoute
   )
   {}
 
   ngOnInit(): void {
+    this.userService.setUserLatestOperationPerformedAsAdmin(Number(localStorage.getItem("id")), PopularOperationTitle.METRICS).subscribe();
     
     this.route.data.subscribe(
       data => {

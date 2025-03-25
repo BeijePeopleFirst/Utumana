@@ -1,5 +1,6 @@
 import { Accommodation } from "./accommodation";
 import { BadgeAward } from "./badgeAward";
+import { PopularOperation } from "./popularOperation";
 import { Review } from "./review";
 
 export interface User {
@@ -17,4 +18,5 @@ export interface User {
 	favourites?: Accommodation[];
 	reviews?: Review[];
 	badges?: BadgeAward[];
+	latest_admin_operation?: PopularOperation;
 }

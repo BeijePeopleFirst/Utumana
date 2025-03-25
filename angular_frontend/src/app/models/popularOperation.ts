@@ -1,0 +1,17 @@
+export interface PopularOperation {
+    id?: number;
+    title: PopularOperationTitle;
+}
+
+export enum PopularOperationTitle {
+    HOME = "HOME",
+    APPROVE_REJECT_ACCOMMODATIONS = "APPROVE_REJECT_ACCOMMODATIONS",
+    ACTIVE_ACCOMMODATIONS = "ACTIVE_ACCOMMODATIONS",
+    INACTIVE_ACCOMMODATIONS = "INACTIVE_ACCOMMODATIONS",
+    ALL_ACCOMMODATIONS = "ALL_ACCOMMODATIONS",
+    PROFILES = "PROFILES",
+    ADD_USER = "ADD_USER",
+    ADMINS = "ADMINS",
+    METRICS = "METRICS",
+    CUSTOMIZE = "CUSTOMIZE"
+}

@@ -2,7 +2,9 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { AccommodationDTO } from 'src/app/dtos/accommodationDTO';
+import { PopularOperationTitle } from 'src/app/models/popularOperation';
 import { AccommodationService } from 'src/app/services/accommodation.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-admin-dashboard-accommodation-inactive',
@@ -22,11 +24,13 @@ export class AdminDashboardAccommodationInactiveComponent {
 
     constructor(
         private accommodationService: AccommodationService,
+        private userService: UserService,
         private route: ActivatedRoute,
         private router: Router
     ) {}
 
     ngOnInit(): void {
+        this.userService.setUserLatestOperationPerformedAsAdmin(Number(localStorage.getItem("id")), PopularOperationTitle.INACTIVE_ACCOMMODATIONS).subscribe();
         this.route.queryParams.subscribe(params => {
             this.inactiveAccommodationsPageNumber = params['page'] ? +params['page'] : 0;
             this.inactiveAccommodationsPageSize = params['size'] ? +params['size'] : 6;

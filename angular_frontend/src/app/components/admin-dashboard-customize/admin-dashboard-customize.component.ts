@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { PopularOperationTitle } from 'src/app/models/popularOperation';
 import { Theme } from 'src/app/models/theme';
 import { SettingsService } from 'src/app/services/settings.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-admin-dashboard-customize',
@@ -17,10 +19,12 @@ export class AdminDashboardCustomizeComponent implements OnInit {
   error: boolean = false;
 
   constructor(
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
+    this.userService.setUserLatestOperationPerformedAsAdmin(Number(localStorage.getItem("id")), PopularOperationTitle.CUSTOMIZE).subscribe();
     this.loadTheme();
   }
 

@@ -1,5 +1,6 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { PopularOperationTitle } from 'src/app/models/popularOperation';
 import { User } from 'src/app/models/user';
 import { UserService } from 'src/app/services/user.service';
 
@@ -8,7 +9,7 @@ import { UserService } from 'src/app/services/user.service';
   templateUrl: './admin-dashboard-users-add-user.component.html',
   styleUrls: ['./admin-dashboard-users-add-user.component.css']
 })
-export class AdminDashboardUsersAddUserComponent {
+export class AdminDashboardUsersAddUserComponent implements OnInit {
   genericError: boolean = false;
   createdMessage: boolean = false;
   user: User = {name: '', surname: '', email: '', password: ''};
@@ -16,6 +17,11 @@ export class AdminDashboardUsersAddUserComponent {
   @ViewChild('form', { static: true }) form!: NgForm;
 
   constructor(private userService: UserService){  }
+
+
+  ngOnInit(): void {
+    this.userService.setUserLatestOperationPerformedAsAdmin(Number(localStorage.getItem("id")), PopularOperationTitle.ADD_USER).subscribe();
+  }
 
   createUser(){
     if(this.form.invalid){

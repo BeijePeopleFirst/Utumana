@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { AccommodationDTO } from 'src/app/dtos/accommodationDTO';
+import { PopularOperationTitle } from 'src/app/models/popularOperation';
 import { AccommodationService } from 'src/app/services/accommodation.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-admin-dashboard-accept-reject',
@@ -17,9 +19,14 @@ export class AdminDashboardAcceptRejectComponent implements OnInit{
   
   isLoading = true;
 
-  constructor(private accommodationService: AccommodationService) {}
+  constructor(
+    private accommodationService: AccommodationService,
+    private userService: UserService
+  ) 
+  {}
 
   ngOnInit() {
+    this.userService.setUserLatestOperationPerformedAsAdmin(Number(localStorage.getItem("id")), PopularOperationTitle.APPROVE_REJECT_ACCOMMODATIONS).subscribe();
     this.pendingAccommodationsPageSize = 3;
     this.pendingAccommodationsPageNumber = 0;
     this.loadPendingAccommodations();
