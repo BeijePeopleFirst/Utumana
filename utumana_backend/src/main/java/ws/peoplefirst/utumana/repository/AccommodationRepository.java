@@ -34,7 +34,7 @@ public interface AccommodationRepository extends JpaRepository<Accommodation, Lo
 	public List<AccommodationDTO> getMostLikedAccommodationsDTO(Pageable pageable);
 	
 
-	@Query(value = "SELECT EXISTS (SELECT * FROM couch_surfing.favourite WHERE accommodation_id = :accommodationId AND user_id = :userId)", nativeQuery = true)
+	@Query(value = "SELECT EXISTS (SELECT * FROM utumana.favourite WHERE accommodation_id = :accommodationId AND user_id = :userId)", nativeQuery = true)
 	public int isFavourite(@Param(value = "accommodationId") Long accommodationId, @Param(value = "userId") Long userId);
 	
 	
