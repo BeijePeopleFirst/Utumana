@@ -124,6 +124,9 @@ public class AvailabilityService {
 	}
 	
 	public Map<LocalDate, Double> findAvailableDatesByMonth(Long accommodationId, String startDateString,  String endDateString, Long userId) {
+
+		log.info("AvailabilityService -> findAvailableDatesByMonth");
+
 		LocalDate startDate = JsonFormatter.parseStringIntoDate(startDateString);
 		LocalDate endDate = JsonFormatter.parseStringIntoDate(endDateString);    
 		
@@ -147,7 +150,7 @@ public class AvailabilityService {
 	            currentDate = currentDate.plusDays(1);
 	        }
 	    }
-		System.out.println("Available dates: " + availableDates);
+		//System.out.println("Available dates: " + availableDates);
 	    
 	    return availableDates;
 	}

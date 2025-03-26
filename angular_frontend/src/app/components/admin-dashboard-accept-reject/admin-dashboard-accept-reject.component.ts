@@ -38,7 +38,7 @@ export class AdminDashboardAcceptRejectComponent implements OnInit{
       this.pendingAccommodationsTotalPages = Math.ceil( accommodations.length / this.pendingAccommodationsPageSize );
       this.accommodationService.getPrices(accommodations).subscribe(updated => {
         this.allPendingAccommodations = updated;
-        this.pendingAccommodations$ = of(updated.slice(this.pendingAccommodationsPageNumber * this.pendingAccommodationsPageSize, this.pendingAccommodationsPageSize));
+        this.pendingAccommodations$ = of(updated.slice(this.pendingAccommodationsPageNumber * this.pendingAccommodationsPageSize, this.pendingAccommodationsPageNumber * this.pendingAccommodationsPageSize + this.pendingAccommodationsPageSize));
         this.isLoading = false;
       });
     });
